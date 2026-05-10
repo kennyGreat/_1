@@ -1,0 +1,15 @@
+User-agent: *
+Disallow: /index.html
+Disallow: /databulge-auth.html
+Disallow: /reset-password.html
+Disallow: /admob.js
+
+Allow: /landing.html
+Allow: /pay-small-small-data.html
+Allow: /buy-data-on-installment-nigeria.html
+Allow: /logo-512.png
+Allow: /favicon.ico
+Allow: /apple-touch-icon.png
+Allow: /site.webmanifest
+
+Sitemap: https://www.databulge.com/sitemap.xml
