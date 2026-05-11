@@ -1098,7 +1098,7 @@ label:has(#m-sub-autorenew){
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
       <span style="font-size:.62rem;font-weight:700;font-family:inherit;">Buy Data</span>
     </button>
-    <button class="bnav-btn" id="tab-subs" data-t="subs" onclick="showTab('subs')" style="flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;">
+    <button class="bnav-btn" id="tab-subs" data-t="subs" onclick="showTab(\'subs\')" style="flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
       <span style="font-size:.62rem;font-weight:700;font-family:inherit;">My Plan</span>
     </button>
@@ -2319,8 +2319,6 @@ function _renderPlans(allPlans) {
         '</div>';
       }
       wrap.innerHTML = html;
-    }
-  );
 }
 
 function setPlanFilter(kind, value) {
@@ -2459,7 +2457,7 @@ function renderSubsList(subs, compact) {
     if (isCompleted) {
       html += '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:7px;margin-top:4px;">' +
         '<div style="flex:1;padding:8px 10px;background:#e8eaff;color:#2A3FA3;border-radius:6px;font-size:.78rem;font-weight:700;text-align:center;">Delivered &#9989; Done</div>' +
-        '<button class="pay-btn" style="flex:1;background:#e5e7eb;color:#555;" onclick="openRefundModal(\'' + esc(s.id) + '\',\'' + (isAirtime ? displayName : esc((pl.data_size||\'\')+\' \'+(pl.network||\'\'))) + '\',\'' + esc(s.phone_number||'') + '\',' + paid + ',\'' + (isAirtime ? \'airtime\' : \'data\') + \')">Report Issue</button>' +
+        '<button class="pay-btn" style="flex:1;background:#e5e7eb;color:#555;" onclick="openRefundModal(\'' + esc(s.id) + '\',\'' + esc(displayName) + '\',\'' + esc(s.phone_number||'') + '\',' + paid + ',\'' + (isAirtime ? 'airtime' : 'data') + '\')">Report Issue</button>' +
       '</div>';
     } else if ((isActive || isPending) && remaining > 0) {
       html += '<button class="pay-btn" onclick="openPayModal(\'' + esc(s.id) + '\',' + (dailyPrice||0) + ',' + remaining + ')">Pay Now</button>';
@@ -2616,7 +2614,7 @@ function _renderSavedPhones() {
     var p = phones[i];
     var isActive = (p === current);
     html +=
-      '<button type="button" onclick="pickSavedPhone('' + p + '')" ' +
+      '<button type="button" onclick="pickSavedPhone(\'' + esc(p) + '\')" ' +
       'style="padding:5px 11px;font-size:.8rem;font-weight:700;border-radius:20px;border:1.5px solid ' +
       (isActive ? '#1A56DB' : '#d0d8ff') + ';background:' +
       (isActive ? '#e8eeff' : '#f5f7ff') + ';color:' +
@@ -4591,12 +4589,12 @@ function renderDynamicStrip() {
   var d=gRetention||{},strip=$('dynamic-strip'),icon=$('dynamic-strip-icon'),text=$('dynamic-strip-text');
   if(!strip)return;
   var msgs=[],cur=parseInt(d.streak)||0,saved=parseFloat(d.month_saved)||0,plans=parseInt(d.plans_total)||0,bal=gBal||0,refs=parseInt(d.referrals_done)||0;
-  if(saved>0)msgs.push({cls:'green',icon:'&#128176;',text:'You've saved ₦'+fmtN(saved)+' this month paying in installments instead of upfront.',action:null});
-  if(cur>=3)msgs.push({cls:'warn',icon:'&#128293;',text:cur+'-day streak — don't break it! Open the app daily to keep it alive.',action:null});
+  if(saved>0)msgs.push({cls:'green',icon:'&#128176;',text:"You've saved ₦"+fmtN(saved)+" this month paying in installments instead of upfront.",action:null});
+  if(cur>=3)msgs.push({cls:'warn',icon:'&#128293;',text:cur+"-day streak — don't break it! Open the app daily to keep it alive.",action:null});
   if(bal>0&&bal<200)msgs.push({cls:'warn',icon:'&#9888;&#65039;',text:'Low wallet balance (₦'+fmtN(bal)+'). Top up to keep your plans active.',action:function(){openModal('m-fund');}});
   if(plans===0)msgs.push({cls:'',icon:'&#128225;',text:'Start your first plan — pick any data bundle and pay small small every day.',action:function(){showTab('plans');}});
   if(refs===0)msgs.push({cls:'promo',icon:'&#127881;',text:'Refer a friend and earn ₦200 wallet credit. Share your code from the dashboard.',action:null});
-  if(plans>=3)msgs.push({cls:'green',icon:'&#127881;',text:'You've completed '+plans+' plans. You're a DataBulge power user!',action:null});
+  if(plans>=3)msgs.push({cls:'green',icon:'&#127881;',text:"You've completed "+plans+" plans. You're a DataBulge power user!",action:null});
   if(!msgs.length)msgs.push({cls:'',icon:'&#128161;',text:'Tip: Enable auto-renew so you never run out of data mid-month.',action:null});
   var idx=Math.floor(Date.now()/30000)%msgs.length,m=msgs[idx];
   strip.className='dynamic-strip'+(m.cls?' '+m.cls:'');
@@ -4660,7 +4658,7 @@ function renderDashActivePlans(subs) {
   var wrap=$('dash-subs-d');
   if(!wrap)return;
   if(!subs||!subs.length){
-    wrap.innerHTML='<div class="empty" style="padding:16px 0;">No active plans yet. <a href="#" onclick="showTab('plans');return false;" style="color:#1A56DB;font-weight:700;">Buy your first plan</a></div>';
+    wrap.innerHTML='<div class="empty" style="padding:16px 0;">No active plans yet. <a href="#" onclick="showTab(\'plans\');return false;" style="color:#1A56DB;font-weight:700;">Buy your first plan</a></div>';
     checkOnboarding();return;
   }
   var html='',i;
@@ -4690,8 +4688,8 @@ function renderDashActivePlans(subs) {
         '</div>'+
       '</div>'+
       '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">'+
-        '<button class="btn btn-blue" onclick="showTab('subs')" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:9px 8px;font-size:.8rem;">View Plan</button>'+
-        (s.status==='pending'?'<button class="btn btn-lite" onclick="openPayModal(''+esc(s.id)+'','+daily+')" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:9px 8px;font-size:.8rem;">Pay Now</button>':'')+
+        '<button class="btn btn-blue" onclick="showTab(\'subs\')" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:9px 8px;font-size:.8rem;">View Plan</button>'+
+        (s.status==='pending'?'<button class="btn btn-lite" onclick="openPayModal(\''+esc(s.id)+'\','+daily+')" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:9px 8px;font-size:.8rem;">Pay Now</button>':'')+
       '</div>'+
     '</div>';
   }
@@ -4836,7 +4834,7 @@ function airRenderSavedPhones() {
   for (var i = 0; i < phones.length; i++) {
     var p = phones[i];
     var isActive = (p === current);
-    html += '<button type="button" onclick="airPickPhone('' + p + '')" style="padding:5px 11px;font-size:.8rem;font-weight:700;border-radius:20px;border:1.5px solid ' +
+    html += '<button type="button" onclick="airPickPhone(\'' + esc(p) + '\')" style="padding:5px 11px;font-size:.8rem;font-weight:700;border-radius:20px;border:1.5px solid ' +
       (isActive ? '#1A56DB' : '#d0d8ff') + ';background:' + (isActive ? '#e8eeff' : '#f5f7ff') + ';color:' +
       (isActive ? '#1A56DB' : '#3c4c8c') + ';cursor:pointer;font-family:inherit;">' + esc(p) + '</button>';
   }
@@ -5177,5 +5175,28 @@ window.detectAndSaveLocation = detectAndSaveLocation;
   setInterval(function(){ if(byId('pg-app') && byId('pg-app').className.indexOf('on')>-1) run(); },4500);
 })();
 </script>
+
+<script>
+/* Production safety: never let the splash trap users forever. */
+(function(){
+  function hasSession(){
+    try{return !!(localStorage.getItem('db_sess')||sessionStorage.getItem('db_sess')||location.hash.indexOf('access_token=')>-1);}catch(e){return false;}
+  }
+  function revealFallback(){
+    var sp=document.getElementById('db-splash');
+    if(sp){sp.style.opacity='0';sp.style.pointerEvents='none';setTimeout(function(){sp.style.display='none';sp.className='hide';},350);}
+    try{
+      var app=document.getElementById('pg-app');
+      if(app && hasSession() && app.className.indexOf('on')<0){app.className+=' on';}
+      if(!hasSession() && location.pathname.indexOf('databulge-auth.html')===-1 && document.getElementById('pg-auth')){
+        if(typeof showPage==='function') showPage('auth');
+      }
+    }catch(e){}
+  }
+  setTimeout(revealFallback, 6500);
+  window.addEventListener('error',function(){setTimeout(revealFallback,700);});
+})();
+</script>
+
 </body>
 </html>
