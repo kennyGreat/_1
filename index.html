@@ -5183,15 +5183,90 @@ window.detectAndSaveLocation = detectAndSaveLocation;
     }catch(e){return 'friend';}
   }
   function safeEsc(s){try{return (typeof esc==='function')?esc(s):(String(s||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}));}catch(e){return String(s||'');}}
-  function todayMessage(){
-    var arr=[
-      ['🌤️','Small money can still keep you connected. Pick a plan and move at your pace.'],
-      ['💚','No pressure today. Fund what you can, when you can.'],
-      ['🚀','Your data life should feel simple. Start small and stay online.'],
-      ['✨','You are one tiny step away from staying connected today.'],
-      ['📶','DataBulge is here to help you breathe easier, not stress you.']
-    ];
-    var d=new Date(); return arr[d.getDay()%arr.length];
+  /* ── HOURLY MOTIVATIONAL NUGGET ─────────────────────────────────
+     24 messages — one per hour of the day. Rotates every hour on
+     the clock. Each message pushes users to keep paying, move forward
+     in life, and stay connected. ES5-safe. No backend required.
+  ─────────────────────────────────────────────────────────────── */
+  var _HOURLY_NUGGETS = [
+    /* 00 */ ['🌙','Midnight hustle is real. While others sleep, you are building. Keep your plan active — data is how you stay ahead.'],
+    /* 01 */ ['⚡','1AM and still going? Respect. One small payment today keeps your connection alive tomorrow. You've got this.'],
+    /* 02 */ ['🔥','2AM grind hits different. Your plan is working for you even now — just keep funding and keep moving forward.'],
+    /* 03 */ ['🌟','3AM. The quiet hours belong to those who are building something real. Stay consistent. Pay small, win big.'],
+    /* 04 */ ['🌅','Early bird energy. The day hasn't started yet and you're already ahead. One installment at a time — that's how progress is made.'],
+    /* 05 */ ['☀️','5AM — the world is waking up but you're already up. Your data plan is your tool. Keep it funded, keep moving.'],
+    /* 06 */ ['🚀','Morning! A new day means a fresh chance to take one step forward. Your plan is waiting. Let's keep it alive.'],
+    /* 07 */ ['💪','7AM energy. Start this day the way you mean to go on — consistent, steady, unstoppable. Fund your plan, build your future.'],
+    /* 08 */ ['🎯','Business hours begin. Your data plan is your lifeline for every opportunity that comes through your phone today. Keep it topped up.'],
+    /* 09 */ ['💡','9AM clarity. Every small payment you make is a vote for who you are becoming — someone who shows up every day. Keep going.'],
+    /* 10 */ ['📈','10AM momentum. Life rewards consistency. You did not come this far to stop now. Stay the course — one installment at a time.'],
+    /* 11 */ ['🙌','Almost midday! You are closer to your goals than you were yesterday. Your plan is your promise to yourself. Keep that promise.'],
+    /* 12 */ ['🌍','Midday. Half the day is already yours. Stay connected, stay in the game. A small payment now keeps big opportunities open later.'],
+    /* 13 */ ['☕','1PM check-in. Consistency is the one thing that separates people who make it from those who almost did. You are making it.'],
+    /* 14 */ ['🏆','2PM power hour. Every installment you pay is a brick in the house you are building. Keep laying. Keep moving forward.'],
+    /* 15 */ ['⚡','3PM — the afternoon dip is real, but you are stronger than a feeling. Fund your plan. Stay online. Stay ahead.'],
+    /* 16 */ ['🌤️','4PM glow-up. You are not the same person you were last month. Keep growing. Keep paying. Keep showing up for yourself.'],
+    /* 17 */ ['🎯','5PM — end-of-day push. Don't let the day close without moving one step forward. Your plan, your payment, your progress.'],
+    /* 18 */ ['🌆','Evening. The hustle doesn't stop at sunset for people building real things. Stay connected. The opportunities are still coming.'],
+    /* 19 */ ['💚','7PM reflection. You worked hard today. Your data plan is the reward you give yourself — staying connected to what matters most.'],
+    /* 20 */ ['🌠','8PM. Think about where you want to be in 6 months. Every small payment today is a direct investment in that version of you.'],
+    /* 21 */ ['🏅','9PM. Most people quit on their goals when things get tight. You are not most people. Small consistent steps. Pay your plan. Win.'],
+    /* 22 */ ['🌙','10PM. You made it through another day. Keep your momentum going — fund your plan tonight and wake up ahead tomorrow.'],
+    /* 23 */ ['✨','11PM. As this day closes, remember: you are in motion. Forward progress, no matter how small, compounds. Don't stop now.']
+  ];
+
+  var _nuggetTimer = null;
+
+  function _getHourlyNugget() {
+    var h = new Date().getHours();
+    return _HOURLY_NUGGETS[h] || _HOURLY_NUGGETS[0];
+  }
+
+  function _updateNuggetDisplay() {
+    var msg   = _getHourlyNugget();
+    var icon  = document.getElementById('friend-daily-icon-inner');
+    var title = document.getElementById('friend-daily-title');
+    var sub   = document.getElementById('friend-daily-sub');
+    var clock = document.getElementById('friend-daily-clock');
+
+    if (icon)  icon.textContent  = msg[0];
+    if (title) title.textContent = _getNuggetTitle();
+    if (sub)   sub.textContent   = msg[1];
+    if (clock) clock.textContent = _getNuggetClock();
+  }
+
+  function _getNuggetTitle() {
+    var h = new Date().getHours();
+    if (h >= 5  && h < 12) return 'Good morning nudge';
+    if (h >= 12 && h < 17) return 'Afternoon motivation';
+    if (h >= 17 && h < 21) return 'Evening push';
+    return 'Late-night fuel';
+  }
+
+  function _getNuggetClock() {
+    var now = new Date();
+    var h   = now.getHours();
+    var m   = now.getMinutes();
+    var ampm = h >= 12 ? 'PM' : 'AM';
+    var h12  = h % 12 || 12;
+    var mStr = m < 10 ? '0' + m : String(m);
+    var nextH = (h + 1) % 24;
+    var nextAmpm = nextH >= 12 ? 'PM' : 'AM';
+    var nextH12  = nextH % 12 || 12;
+    return h12 + ':' + mStr + ' ' + ampm + ' · Next in ' + (60 - m) + 'min';
+  }
+
+  function _startNuggetTimer() {
+    if (_nuggetTimer) clearInterval(_nuggetTimer);
+    // Update every minute so the clock stays live
+    _nuggetTimer = setInterval(function() {
+      _updateNuggetDisplay();
+    }, 60000);
+  }
+
+  function todayMessage() {
+    // Legacy compatibility — still returns [icon, text] for initial render
+    return _getHourlyNugget();
   }
   function ensureCompanionHero(){
     var tc=byId('tc-plans'); if(!tc) return;
@@ -5208,7 +5283,16 @@ window.detectAndSaveLocation = detectAndSaveLocation;
         '<div class="friend-balance"><div><div class="friend-bal-label">Available balance</div><div class="friend-bal-val" id="friend-bal-val">'+bal+'</div></div><div style="font-size:.76rem;opacity:.82;font-weight:800;text-align:right;">Ready when you are</div></div>'+ 
         '<div class="friend-cta-row"><button class="friend-cta primary" onclick="openFundModal()">Add small money</button><button class="friend-cta secondary" onclick="document.getElementById(\'plans-list\').scrollIntoView({behavior:\'smooth\',block:\'start\'});">Find a plan</button></div>'+ 
       '</div>'+ 
-      '<div class="friend-daily" id="friend-daily"><div class="friend-daily-icon">'+msg[0]+'</div><div><div class="friend-daily-title">Today’s friendly nudge</div><div class="friend-daily-sub">'+safeEsc(msg[1])+'</div></div></div>'+ 
+      '<div class="friend-daily" id="friend-daily">' +
+        '<div class="friend-daily-icon" id="friend-daily-icon-box"><span id="friend-daily-icon-inner">'+msg[0]+'</span></div>' +
+        '<div style="-webkit-box-flex:1;-webkit-flex:1;flex:1;min-width:0;">' +
+          '<div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;-webkit-box-align:center;-webkit-align-items:center;align-items:center;margin-bottom:3px;">' +
+            '<div class="friend-daily-title" id="friend-daily-title">'+_getNuggetTitle()+'</div>' +
+            '<div id="friend-daily-clock" style="font-size:.65rem;color:#B45309;font-weight:700;opacity:.75;white-space:nowrap;padding-left:6px;">'+_getNuggetClock()+'</div>' +
+          '</div>' +
+          '<div class="friend-daily-sub" id="friend-daily-sub">'+safeEsc(msg[1])+'</div>' +
+        '</div>' +
+      '</div>'+ 
       '<div class="friend-quick-grid" id="friend-quick-grid"><button class="friend-action-card fund" onclick="openFundModal()"><span class="emoji">💚</span><strong>Fund with ease</strong><span>Your wallet updates automatically after transfer.</span></button><button class="friend-action-card plan" onclick="document.getElementById(\'plans-list\').scrollIntoView({behavior:\'smooth\',block:\'start\'});"><span class="emoji">🎯</span><strong>Choose your vibe</strong><span>MTN, Airtel, Glo or 9mobile — paid your way.</span></button></div>';
     if(old){
       var bv=byId('friend-bal-val'); if(bv) bv.innerHTML=bal;
@@ -5217,6 +5301,8 @@ window.detectAndSaveLocation = detectAndSaveLocation;
     var first=tc.firstChild;
     var box=document.createElement('div'); box.innerHTML=html;
     while(box.firstChild) tc.insertBefore(box.firstChild, first);
+    /* Start hourly nugget live-refresh timer */
+    setTimeout(function(){ _updateNuggetDisplay(); _startNuggetTimer(); }, 80);
   }
   function ensureStickyCTA(){
     if(byId('friend-sticky-cta')) return;
