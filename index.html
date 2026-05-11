@@ -1098,7 +1098,7 @@ label:has(#m-sub-autorenew){
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
       <span style="font-size:.62rem;font-weight:700;font-family:inherit;">Buy Data</span>
     </button>
-    <button class="bnav-btn" id="tab-subs" data-t="subs" onclick="showTab(\'subs\')" style="flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;">
+    <button class="bnav-btn" id="tab-subs" data-t="subs" onclick="showTab('subs')" style="flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
       <span style="font-size:.62rem;font-weight:700;font-family:inherit;">My Plan</span>
     </button>
@@ -1896,7 +1896,7 @@ function doLogin() {
         return;
       }
       _setSession(res.data);
-      bootApp();
+      showPage('app'); hideSplash(); bootApp();
     }
   );
 }
@@ -1931,7 +1931,7 @@ function doSignup() {
         _setSession(res.data);
         // Update profile with name + phone
         restPatch('/profiles', 'user_id=eq.' + gUser.id, { full_name: name, phone: phone }, function() {});
-        bootApp();
+        showPage('app'); hideSplash(); bootApp();
       } else {
         // Email confirmation required
         okShow('s-ok');
@@ -1988,7 +1988,7 @@ function doResetPassword() {
         gRefresh = gRecovRT;
         gRecovAT = gRecovRT = '';
         refreshToken(function(err2) {
-          if (!err2) { bootApp(); } else { showScreen('scr-l'); }
+          if (!err2) { showPage('app'); hideSplash(); bootApp(); } else { showScreen('scr-l'); }
         });
       } else { setTimeout(function() { showScreen('scr-l'); }, 1600); }
     }
@@ -2023,7 +2023,6 @@ function bootApp() {
   updateGreeting(name);
   updateWalletLabel();
 
-  showPage('app');
   showTab('plans');
   updatePayDaysUI();
 
@@ -2320,6 +2319,8 @@ function _renderPlans(allPlans) {
         '</div>';
       }
       wrap.innerHTML = html;
+    }
+  );
 }
 
 function setPlanFilter(kind, value) {
@@ -2455,12 +2456,10 @@ function renderSubsList(subs, compact) {
     html += '</div>';
 
     // Action buttons
-    var refundPlanName = isAirtime ? displayName : ((pl.data_size || '') + ' ' + (pl.network || ''));
-    var refundType = isAirtime ? 'airtime' : 'data';
     if (isCompleted) {
       html += '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:7px;margin-top:4px;">' +
         '<div style="flex:1;padding:8px 10px;background:#e8eaff;color:#2A3FA3;border-radius:6px;font-size:.78rem;font-weight:700;text-align:center;">Delivered &#9989; Done</div>' +
-        '<button class="pay-btn" style="flex:1;background:#e5e7eb;color:#555;" onclick="openRefundModal(\'' + esc(s.id) + '\',\'' + esc(refundPlanName) + '\',\'' + esc(s.phone_number || '') + '\',' + paid + ',\'' + refundType + '\')">Report Issue</button>' +
+        '<button class="pay-btn" style="flex:1;background:#e5e7eb;color:#555;" onclick="openRefundModal(\'' + esc(s.id) + '\',\'' + (isAirtime ? displayName : esc((pl.data_size||\'\')+\' \'+(pl.network||\'\'))) + '\',\'' + esc(s.phone_number||'') + '\',' + paid + ',\'' + (isAirtime ? \'airtime\' : \'data\') + \')">Report Issue</button>' +
       '</div>';
     } else if ((isActive || isPending) && remaining > 0) {
       html += '<button class="pay-btn" onclick="openPayModal(\'' + esc(s.id) + '\',' + (dailyPrice||0) + ',' + remaining + ')">Pay Now</button>';
@@ -2617,7 +2616,7 @@ function _renderSavedPhones() {
     var p = phones[i];
     var isActive = (p === current);
     html +=
-      '<button type="button" onclick="pickSavedPhone(\'' + esc(p) + '\')" ' +
+      '<button type="button" onclick="pickSavedPhone('' + p + '')" ' +
       'style="padding:5px 11px;font-size:.8rem;font-weight:700;border-radius:20px;border:1.5px solid ' +
       (isActive ? '#1A56DB' : '#d0d8ff') + ';background:' +
       (isActive ? '#e8eeff' : '#f5f7ff') + ';color:' +
@@ -3231,9 +3230,10 @@ function parseHash() {
       if (!err && res && res.ok && res.data) {
         _setSession({ access_token: gToken, refresh_token: gRefresh,
                       expires_in: (parseInt(params.expires_in, 10) || 3600), user: res.data });
-        bootApp();
+        showPage('app'); hideSplash(); bootApp();
       } else {
         _clearSession();
+        hideSplash();
         window.location.replace('databulge-auth.html');
       }
     }
@@ -3244,22 +3244,26 @@ function parseHash() {
 /* ── INIT ───────────────────────────────────────────────────── */
 function init() {
   // Handle OAuth / recovery redirect from Supabase first.
-  if (parseHash()) return;
-
-  // Protected page: only logged-in users can access the main app.
-  showPage('app');
+  if (parseHash()) { hideSplash(); return; }
 
   if (_loadSession()) {
     ensureToken(function(err) {
       if (!err && gUser) {
+        // Valid session — show the app and hide the splash
+        showPage('app');
+        hideSplash();
         bootApp();
       } else {
+        // Session expired — clear and redirect
         _clearSession();
-        setTimeout(function(){ window.location.replace('databulge-auth.html'); }, 900);
+        hideSplash();
+        window.location.replace('databulge-auth.html');
       }
     });
   } else {
-    setTimeout(function(){ window.location.replace('databulge-auth.html'); }, 900);
+    // No session — redirect to auth immediately
+    hideSplash();
+    window.location.replace('databulge-auth.html');
   }
 }
 
@@ -3475,23 +3479,25 @@ function wire() {
   $('refresh-subs-btn').onclick = function() { loadSubs(); toast('Refreshing\u2026'); };
 }
 
-function hideSplashSoon() {
+function hideSplash() {
   var sp = document.getElementById('db-splash');
-  if (!sp) return;
-  // Minimum 12 seconds on screen, then fade out smoothly
-  setTimeout(function() {
-    sp.style.webkitTransition = 'opacity .7s ease';
-    sp.style.transition       = 'opacity .7s ease';
-    sp.style.opacity          = '0';
-    setTimeout(function() { sp.className = 'hide'; }, 750);
-  }, 12000);
+  if (!sp || sp.className === 'hide') return;
+  sp.style.webkitTransition = 'opacity .4s ease';
+  sp.style.transition       = 'opacity .4s ease';
+  sp.style.opacity          = '0';
+  setTimeout(function() { sp.className = 'hide'; }, 420);
 }
+// Keep old name as alias so any other callers still work
+function hideSplashSoon() { hideSplash(); }
 
 // Start
+// hideSplash is called from within init() once auth state is resolved.
+// Do NOT call it here — calling it early causes the splash to vanish
+// before the app knows whether to show the app or redirect to auth.
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', function() { hideSplashSoon(); wire(); init(); });
+  document.addEventListener('DOMContentLoaded', function() { wire(); init(); });
 } else {
-  hideSplashSoon(); wire(); init();
+  wire(); init();
 }
 </script>
 
@@ -4151,6 +4157,99 @@ function earnResetAdSlot() {
 .notif-toast.error-toast { background: #dc2626; box-shadow: 0 8px 24px rgba(220,38,38,.3); }
 .notif-toast.warn-toast  { background: #d97706; box-shadow: 0 8px 24px rgba(217,119,6,.3); }
 .notif-toast.success-toast { background: #3d9758; box-shadow: none; }
+
+
+/* ═══════════════════════════════════════════════════════
+   DATABULGE COMPANION EXPERIENCE PATCH
+   Warm, playful, retention-focused frontend layer only.
+   No backend endpoints or core authentication/payment logic changed.
+═══════════════════════════════════════════════════════ */
+:root{
+  --friend-ink:#101828!important;
+  --friend-muted:#667085!important;
+  --friend-bg:#F6F8FC!important;
+  --friend-card:#FFFFFF!important;
+  --friend-blue:#1A56DB!important;
+  --friend-green:#3d9758!important;
+  --friend-mint:#EFFFF6!important;
+  --friend-sun:#FFF7D6!important;
+  --friend-rose:#FFF1F3!important;
+  --friend-violet:#F3EEFF!important;
+  --friend-teal:#E9FFFB!important;
+  --friend-shadow:0 18px 45px rgba(15,23,42,.10)!important;
+}
+html,body{background:radial-gradient(circle at top left,#EEF6FF 0,#F6F8FC 34%,#FDFEFF 100%)!important;color:var(--friend-ink)!important;}
+#pg-app{background:linear-gradient(180deg,#F9FBFF 0%,#F6F8FC 48%,#FFFFFF 100%)!important;}
+.top-bar{background:rgba(255,255,255,.92)!important;backdrop-filter:blur(12px)!important;-webkit-backdrop-filter:blur(12px)!important;border-bottom:1px solid rgba(226,232,240,.78)!important;box-shadow:0 8px 28px rgba(15,23,42,.05)!important;}
+.user-greeting{color:#111827!important;font-weight:950!important;letter-spacing:-.04em!important;}
+.tabs{background:rgba(255,255,255,.82)!important;backdrop-filter:blur(10px)!important;-webkit-backdrop-filter:blur(10px)!important;border-bottom:0!important;box-shadow:0 10px 25px rgba(15,23,42,.05)!important;}
+.tabs .tab{border-radius:18px!important;border:1px solid rgba(226,232,240,.9)!important;background:#fff!important;color:#667085!important;box-shadow:0 5px 12px rgba(15,23,42,.04)!important;}
+.tabs .tab.act{background:linear-gradient(135deg,#1A56DB,#3d9758)!important;color:#fff!important;border-color:transparent!important;box-shadow:0 12px 24px rgba(26,86,219,.20)!important;}
+.card,.sub-row,.tx-row,.va-box,.msg-row,.plan-filter-card{border:0!important;background:rgba(255,255,255,.94)!important;border-radius:26px!important;box-shadow:var(--friend-shadow)!important;}
+.card-title,.sec-title{font-size:.72rem!important;letter-spacing:.10em!important;color:#667085!important;}
+.card-val{font-size:2rem!important;letter-spacing:-.06em!important;}
+.card-sub{font-size:.78rem!important;color:#667085!important;line-height:1.55!important;}
+.friend-hero{position:relative;overflow:hidden;border:0!important;border-radius:30px!important;padding:22px 18px!important;margin-bottom:16px!important;color:#fff!important;background:radial-gradient(circle at 86% 3%,rgba(255,255,255,.28),transparent 25%),linear-gradient(135deg,#132B63 0%,#1A56DB 48%,#3d9758 100%)!important;box-shadow:0 24px 50px rgba(26,86,219,.25)!important;}
+.friend-hero:before{content:'';position:absolute;right:-42px;bottom:-54px;width:190px;height:190px;border-radius:50%;background:rgba(255,255,255,.10);}
+.friend-hero:after{content:'';position:absolute;left:-45px;top:-45px;width:120px;height:120px;border-radius:38px;background:rgba(255,255,255,.08);-webkit-transform:rotate(18deg);transform:rotate(18deg);}
+.friend-hero-top{position:relative;z-index:1;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;gap:12px;-webkit-box-align:start;-webkit-align-items:flex-start;align-items:flex-start;}
+.friend-kicker{font-size:.72rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;opacity:.78;margin-bottom:8px;}
+.friend-title{font-size:1.35rem;line-height:1.1;font-weight:950;letter-spacing:-.05em;margin-bottom:7px;}
+.friend-sub{font-size:.82rem;line-height:1.5;opacity:.88;max-width:260px;}
+.friend-balance{position:relative;z-index:1;margin-top:18px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;-webkit-box-align:end;-webkit-align-items:flex-end;align-items:flex-end;gap:12px;}
+.friend-bal-label{font-size:.70rem;opacity:.72;font-weight:900;text-transform:uppercase;letter-spacing:.10em;}
+.friend-bal-val{font-size:2.15rem;font-weight:950;letter-spacing:-.07em;line-height:1;}
+.friend-cta-row{position:relative;z-index:1;display:-webkit-box;display:-webkit-flex;display:flex;gap:10px;margin-top:18px;}
+.friend-cta{border:0;border-radius:16px;padding:12px 13px;font-size:.84rem;font-weight:950;cursor:pointer;font-family:Arial,Helvetica,sans-serif;-webkit-tap-highlight-color:transparent;}
+.friend-cta.primary{background:#fff!important;color:#1550D4!important;box-shadow:0 12px 25px rgba(15,23,42,.12)!important;-webkit-box-flex:1;-webkit-flex:1;flex:1;}
+.friend-cta.secondary{background:rgba(255,255,255,.16)!important;color:#fff!important;border:1px solid rgba(255,255,255,.30)!important;-webkit-box-flex:1;-webkit-flex:1;flex:1;}
+.friend-pill{position:relative;z-index:1;display:inline-block;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:7px 10px;font-size:.72rem;font-weight:900;white-space:nowrap;}
+.friend-daily{display:-webkit-box;display:-webkit-flex;display:flex;gap:10px;-webkit-box-align:center;-webkit-align-items:center;align-items:center;background:linear-gradient(135deg,#FFF7D6,#FFFFFF)!important;border:1px solid #FFE8A3!important;border-radius:22px!important;padding:13px 14px!important;margin-bottom:14px!important;box-shadow:0 12px 30px rgba(245,158,11,.12)!important;}
+.friend-daily-icon{width:42px;height:42px;border-radius:16px;background:#fff;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;font-size:1.25rem;box-shadow:0 8px 18px rgba(245,158,11,.14);-webkit-flex-shrink:0;flex-shrink:0;}
+.friend-daily-title{font-size:.86rem;font-weight:950;letter-spacing:-.02em;color:#7C4A03;margin-bottom:2px;}
+.friend-daily-sub{font-size:.74rem;line-height:1.45;color:#8A5A0A;}
+.friend-quick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:15px;}
+.friend-action-card{border:0;border-radius:24px;padding:15px 14px;text-align:left;min-height:112px;box-shadow:0 14px 34px rgba(15,23,42,.09);font-family:Arial,Helvetica,sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.friend-action-card strong{display:block;font-size:1rem;letter-spacing:-.04em;margin-bottom:5px;color:#111827;}
+.friend-action-card span{display:block;font-size:.74rem;line-height:1.45;color:#667085;font-weight:700;}
+.friend-action-card .emoji{font-size:1.45rem;margin-bottom:10px;display:block;}
+.friend-action-card.fund{background:linear-gradient(135deg,#EFFFF6,#FFFFFF)!important;}
+.friend-action-card.plan{background:linear-gradient(135deg,#EEF4FF,#FFFFFF)!important;}
+.friend-action-card:hover,.plan-card:hover{-webkit-transform:translateY(-2px);transform:translateY(-2px);}
+.plan-filter-card{padding:16px!important;background:linear-gradient(135deg,#FFFFFF,#F8FBFF)!important;}
+.plan-chip{border-radius:16px!important;padding:10px 14px!important;background:#F7F9FC!important;border:0!important;box-shadow:inset 0 0 0 1px #E6EAF1!important;}
+.plan-chip.act{background:linear-gradient(135deg,#1A56DB,#3d9758)!important;color:#fff!important;box-shadow:0 10px 22px rgba(26,86,219,.18)!important;}
+.plan-count{background:#fff!important;border-radius:999px!important;padding:8px 12px!important;display:inline-block!important;width:auto!important;justify-self:start!important;box-shadow:0 8px 18px rgba(15,23,42,.06)!important;}
+.plan-card{position:relative;overflow:hidden;border:0!important;border-radius:28px!important;box-shadow:0 16px 35px rgba(15,23,42,.10)!important;background:#fff!important;-webkit-transition:.22s ease!important;transition:.22s ease!important;}
+.plan-card:before{content:'';position:absolute;top:-48px;right:-48px;width:108px;height:108px;border-radius:50%;background:rgba(26,86,219,.09);}
+.plan-card.net-mtn-accent{background:linear-gradient(145deg,#FFF9DB,#FFFFFF 58%)!important;}
+.plan-card.net-airtel-accent{background:linear-gradient(145deg,#FFF0F2,#FFFFFF 58%)!important;}
+.plan-card.net-glo-accent{background:linear-gradient(145deg,#ECFFF4,#FFFFFF 58%)!important;}
+.plan-card.net-9mobile-accent{background:linear-gradient(145deg,#E9FFFB,#FFFFFF 58%)!important;}
+.plan-size{font-size:1.15rem!important;line-height:1.18!important;letter-spacing:-.05em!important;}
+.plan-price{font-size:1.55rem!important;color:#111827!important;border-top:0!important;padding-top:12px!important;}
+.plan-sub strong{font-size:1.02rem;color:#3d9758!important;}
+.plan-btn{min-height:44px!important;border-radius:16px!important;background:linear-gradient(135deg,#3d9758,#2F7D49)!important;color:#fff!important;box-shadow:0 12px 22px rgba(61,151,88,.20)!important;}
+.btn-blue,#plans-fund-btn,#d-fund-btn,#af-fund-btn,#m-sub-btn,.pay-btn,#m-pay-btn{background:linear-gradient(135deg,#3d9758,#2F7D49)!important;color:#fff!important;box-shadow:0 12px 22px rgba(61,151,88,.18)!important;}
+.btn-lite{border:0!important;background:#EFF4FF!important;color:#1A56DB!important;}
+.sub-row{background:linear-gradient(135deg,#FFFFFF,#F7FBFF)!important;}
+.prog-bar{height:9px!important;border-radius:999px!important;background:#EEF2F6!important;}
+.prog-fill{border-radius:999px!important;background:linear-gradient(90deg,#1A56DB,#3d9758)!important;}
+.msg-row.unread,.notif-row.unread{background:linear-gradient(135deg,#EEF4FF,#FFFFFF)!important;}
+#toast,.notif-toast.show{border-radius:18px!important;background:linear-gradient(135deg,#111827,#1F2937)!important;box-shadow:0 16px 35px rgba(15,23,42,.24)!important;}
+.friend-sticky-cta{position:fixed;left:12px;right:12px;bottom:78px;z-index:120;display:none;max-width:940px;margin:0 auto;}
+.friend-sticky-inner{display:-webkit-box;display:-webkit-flex;display:flex;gap:10px;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(226,232,240,.9);border-radius:24px;padding:10px;box-shadow:0 18px 45px rgba(15,23,42,.18);}
+.friend-sticky-inner button{border:0;border-radius:16px;padding:12px 12px;font-size:.82rem;font-weight:950;font-family:Arial,Helvetica,sans-serif;-webkit-box-flex:1;-webkit-flex:1;flex:1;}
+.friend-sticky-inner .fund{background:linear-gradient(135deg,#3d9758,#2F7D49);color:#fff;}
+.friend-sticky-inner .plans{background:#EFF4FF;color:#1A56DB;}
+body.friend-show-sticky .friend-sticky-cta{display:block;}
+@-webkit-keyframes friendFloat{0%,100%{-webkit-transform:translateY(0)}50%{-webkit-transform:translateY(-4px)}}
+@keyframes friendFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+.friend-pill,.friend-daily-icon{-webkit-animation:friendFloat 3.5s ease-in-out infinite;animation:friendFloat 3.5s ease-in-out infinite;}
+@media(max-width:360px){.friend-title{font-size:1.18rem}.friend-bal-val{font-size:1.82rem}.friend-quick-grid{grid-template-columns:1fr}.friend-cta-row{flex-direction:column}.friend-sticky-cta{bottom:68px;left:8px;right:8px}.friend-sticky-inner{border-radius:20px;padding:8px}}
+@media(min-width:768px){.friend-sticky-cta{left:50%!important;right:auto!important;width:720px!important;-webkit-transform:translateX(-50%);transform:translateX(-50%);}.friend-hero{padding:26px 24px!important}.friend-title{font-size:1.7rem}.friend-quick-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media(min-width:1024px){.friend-sticky-cta{width:860px!important;bottom:96px}.friend-quick-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media(prefers-reduced-motion:reduce){.friend-pill,.friend-daily-icon,.plan-card:hover,.friend-action-card:hover{-webkit-animation:none!important;animation:none!important;-webkit-transform:none!important;transform:none!important;}}
 </style>
 
 <!-- NOTIFICATION TOAST CONTAINER -->
@@ -4480,7 +4579,7 @@ function renderStreakStrip() {
   if(!strip)return;
   if(cur<1){strip.style.display='none';return;}
   var fire=cur>=7?'&#127942;':cur>=3?'&#128293;':'&#9889;&#65039;';
-  var sub=cur===1?'day streak — keep going!':cur<7?'days in a row — you\'re on fire!':cur<14?'days — incredible streak!':'days — legendary streak!';
+  var sub=cur===1?'day streak — keep going!':cur<7?'days in a row — you are on fire!':cur<14?'days — incredible streak!':'days — legendary streak!';
   if($('streak-fire'))$('streak-fire').innerHTML=fire;
   if($('streak-count'))$('streak-count').textContent=cur;
   if($('streak-sub'))$('streak-sub').textContent=sub;
@@ -4492,12 +4591,12 @@ function renderDynamicStrip() {
   var d=gRetention||{},strip=$('dynamic-strip'),icon=$('dynamic-strip-icon'),text=$('dynamic-strip-text');
   if(!strip)return;
   var msgs=[],cur=parseInt(d.streak)||0,saved=parseFloat(d.month_saved)||0,plans=parseInt(d.plans_total)||0,bal=gBal||0,refs=parseInt(d.referrals_done)||0;
-  if(saved>0)msgs.push({cls:'green',icon:'&#128176;',text:'You\'ve saved ₦'+fmtN(saved)+' this month paying in installments instead of upfront.',action:null});
-  if(cur>=3)msgs.push({cls:'warn',icon:'&#128293;',text:cur+'-day streak — don\'t break it! Open the app daily to keep it alive.',action:null});
+  if(saved>0)msgs.push({cls:'green',icon:'&#128176;',text:'You've saved ₦'+fmtN(saved)+' this month paying in installments instead of upfront.',action:null});
+  if(cur>=3)msgs.push({cls:'warn',icon:'&#128293;',text:cur+'-day streak — don't break it! Open the app daily to keep it alive.',action:null});
   if(bal>0&&bal<200)msgs.push({cls:'warn',icon:'&#9888;&#65039;',text:'Low wallet balance (₦'+fmtN(bal)+'). Top up to keep your plans active.',action:function(){openModal('m-fund');}});
   if(plans===0)msgs.push({cls:'',icon:'&#128225;',text:'Start your first plan — pick any data bundle and pay small small every day.',action:function(){showTab('plans');}});
   if(refs===0)msgs.push({cls:'promo',icon:'&#127881;',text:'Refer a friend and earn ₦200 wallet credit. Share your code from the dashboard.',action:null});
-  if(plans>=3)msgs.push({cls:'green',icon:'&#127881;',text:'You\'ve completed '+plans+' plans. You\'re a DataBulge power user!',action:null});
+  if(plans>=3)msgs.push({cls:'green',icon:'&#127881;',text:'You've completed '+plans+' plans. You're a DataBulge power user!',action:null});
   if(!msgs.length)msgs.push({cls:'',icon:'&#128161;',text:'Tip: Enable auto-renew so you never run out of data mid-month.',action:null});
   var idx=Math.floor(Date.now()/30000)%msgs.length,m=msgs[idx];
   strip.className='dynamic-strip'+(m.cls?' '+m.cls:'');
@@ -4561,7 +4660,7 @@ function renderDashActivePlans(subs) {
   var wrap=$('dash-subs-d');
   if(!wrap)return;
   if(!subs||!subs.length){
-    wrap.innerHTML='<div class="empty" style="padding:16px 0;">No active plans yet. <a href="#" onclick="showTab(\'plans\');return false;" style="color:#1A56DB;font-weight:700;">Buy your first plan</a></div>';
+    wrap.innerHTML='<div class="empty" style="padding:16px 0;">No active plans yet. <a href="#" onclick="showTab('plans');return false;" style="color:#1A56DB;font-weight:700;">Buy your first plan</a></div>';
     checkOnboarding();return;
   }
   var html='',i;
@@ -4591,8 +4690,8 @@ function renderDashActivePlans(subs) {
         '</div>'+
       '</div>'+
       '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">'+
-        '<button class="btn btn-blue" onclick="showTab(\'subs\')" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:9px 8px;font-size:.8rem;">View Plan</button>'+
-        (s.status==='pending'?'<button class="btn btn-lite" onclick="openPayModal(\''+esc(s.id)+'\','+daily+')" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:9px 8px;font-size:.8rem;">Pay Now</button>':'')+
+        '<button class="btn btn-blue" onclick="showTab('subs')" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:9px 8px;font-size:.8rem;">View Plan</button>'+
+        (s.status==='pending'?'<button class="btn btn-lite" onclick="openPayModal(''+esc(s.id)+'','+daily+')" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:9px 8px;font-size:.8rem;">Pay Now</button>':'')+
       '</div>'+
     '</div>';
   }
@@ -4737,7 +4836,7 @@ function airRenderSavedPhones() {
   for (var i = 0; i < phones.length; i++) {
     var p = phones[i];
     var isActive = (p === current);
-    html += '<button type="button" onclick="airPickPhone(\'" + esc(p) + "\')" style="padding:5px 11px;font-size:.8rem;font-weight:700;border-radius:20px;border:1.5px solid ' +
+    html += '<button type="button" onclick="airPickPhone('' + p + '')" style="padding:5px 11px;font-size:.8rem;font-weight:700;border-radius:20px;border:1.5px solid ' +
       (isActive ? '#1A56DB' : '#d0d8ff') + ';background:' + (isActive ? '#e8eeff' : '#f5f7ff') + ';color:' +
       (isActive ? '#1A56DB' : '#3c4c8c') + ';cursor:pointer;font-family:inherit;">' + esc(p) + '</button>';
   }
@@ -4955,5 +5054,128 @@ window.detectAndSaveLocation = detectAndSaveLocation;
 })();
 </script>
 
+
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   DataBulge Companion Experience — frontend-only enhancer
+   ES5-safe. Does not change backend endpoints or payment logic.
+═══════════════════════════════════════════════════════ */
+(function(){
+  'use strict';
+  function byId(id){return document.getElementById(id);}
+  function money(v){try{return (typeof fmtN==='function') ? fmtN(v||0) : ('₦' + (Number(v||0).toFixed(2)));}catch(e){return '₦0.00';}}
+  function firstName(){
+    try{
+      var n=(window.gProfile&&gProfile.full_name)||((window.gUser&&gUser.user_metadata&&gUser.user_metadata.full_name)||'');
+      if(!n && window.gUser && gUser.email) n=gUser.email.split('@')[0];
+      n=(n||'friend').replace(/[._-]+/g,' ');
+      return n.split(' ')[0]||'friend';
+    }catch(e){return 'friend';}
+  }
+  function safeEsc(s){try{return (typeof esc==='function')?esc(s):(String(s||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}));}catch(e){return String(s||'');}}
+  function todayMessage(){
+    var arr=[
+      ['🌤️','Small money can still keep you connected. Pick a plan and move at your pace.'],
+      ['💚','No pressure today. Fund what you can, when you can.'],
+      ['🚀','Your data life should feel simple. Start small and stay online.'],
+      ['✨','You are one tiny step away from staying connected today.'],
+      ['📶','DataBulge is here to help you breathe easier, not stress you.']
+    ];
+    var d=new Date(); return arr[d.getDay()%arr.length];
+  }
+  function ensureCompanionHero(){
+    var tc=byId('tc-plans'); if(!tc) return;
+    var old=byId('friend-hero');
+    var name=firstName();
+    var msg=todayMessage();
+    var bal=money(window.gBal||0);
+    var html=''+
+      '<div class="friend-hero" id="friend-hero">'+
+        '<div class="friend-hero-top"><div><div class="friend-kicker">Welcome back, '+safeEsc(name)+'</div>'+ 
+        '<div class="friend-title">Let’s keep you connected today.</div>'+ 
+        '<div class="friend-sub">Buy data now, pay small small, and stay online without pressure.</div></div>'+ 
+        '<div class="friend-pill">📶 Your data friend</div></div>'+ 
+        '<div class="friend-balance"><div><div class="friend-bal-label">Available balance</div><div class="friend-bal-val" id="friend-bal-val">'+bal+'</div></div><div style="font-size:.76rem;opacity:.82;font-weight:800;text-align:right;">Ready when you are</div></div>'+ 
+        '<div class="friend-cta-row"><button class="friend-cta primary" onclick="openFundModal()">Add small money</button><button class="friend-cta secondary" onclick="document.getElementById(\'plans-list\').scrollIntoView({behavior:\'smooth\',block:\'start\'});">Find a plan</button></div>'+ 
+      '</div>'+ 
+      '<div class="friend-daily" id="friend-daily"><div class="friend-daily-icon">'+msg[0]+'</div><div><div class="friend-daily-title">Today’s friendly nudge</div><div class="friend-daily-sub">'+safeEsc(msg[1])+'</div></div></div>'+ 
+      '<div class="friend-quick-grid" id="friend-quick-grid"><button class="friend-action-card fund" onclick="openFundModal()"><span class="emoji">💚</span><strong>Fund with ease</strong><span>Your wallet updates automatically after transfer.</span></button><button class="friend-action-card plan" onclick="document.getElementById(\'plans-list\').scrollIntoView({behavior:\'smooth\',block:\'start\'});"><span class="emoji">🎯</span><strong>Choose your vibe</strong><span>MTN, Airtel, Glo or 9mobile — paid your way.</span></button></div>';
+    if(old){
+      var bv=byId('friend-bal-val'); if(bv) bv.innerHTML=bal;
+      return;
+    }
+    var first=tc.firstChild;
+    var box=document.createElement('div'); box.innerHTML=html;
+    while(box.firstChild) tc.insertBefore(box.firstChild, first);
+  }
+  function ensureStickyCTA(){
+    if(byId('friend-sticky-cta')) return;
+    var d=document.createElement('div');
+    d.className='friend-sticky-cta'; d.id='friend-sticky-cta';
+    d.innerHTML='<div class="friend-sticky-inner"><button class="fund" onclick="openFundModal()">💚 Fund account</button><button class="plans" onclick="showTab(\'plans\');setTimeout(function(){var p=document.getElementById(\'plans-list\');if(p)p.scrollIntoView({behavior:\'smooth\',block:\'start\'});},80);">📶 Pick plan</button></div>';
+    document.body.appendChild(d);
+    document.body.className += ' friend-show-sticky';
+  }
+  function polishCopy(){
+    var f=byId('plans-fund-btn'); if(f) f.innerHTML='+ Add small money';
+    var dbal=byId('d-va'); if(dbal && /Loading|Virtual|account|Bank/i.test(dbal.textContent||'')){
+      if(!dbal.getAttribute('data-friendly')){ dbal.setAttribute('data-friendly','1'); }
+    }
+    var buttons=document.getElementsByTagName('button');
+    for(var i=0;i<buttons.length;i++){
+      var b=buttons[i];
+      if((b.className||'').indexOf('plan-btn')>-1 && /Subscribe/i.test(b.innerHTML||'')) b.innerHTML='Choose this plan';
+      if((b.innerHTML||'').replace(/\s+/g,' ').indexOf('Fund Account')>-1) b.innerHTML=(b.innerHTML.indexOf('+')>-1?'+ ':'')+'Add small money';
+      if((b.innerHTML||'').indexOf('Pay from Wallet')>-1) b.innerHTML='Pay gently from wallet';
+    }
+    var secs=document.getElementsByClassName('sec-title');
+    for(i=0;i<secs.length;i++){
+      if((secs[i].textContent||'').toLowerCase().indexOf('payment option')>-1) secs[i].innerHTML='Choose how softly you want to pay';
+    }
+  }
+  function celebrate(){
+    for(var i=0;i<14;i++){
+      var c=document.createElement('span');
+      c.className='conf-piece';
+      c.style.left=(50+(Math.random()*30-15))+'%';
+      c.style.bottom='92px';
+      c.style.background=['#1A56DB','#3d9758','#F59E0B','#A855F7'][i%4];
+      c.style.animationDelay=(Math.random()*.18)+'s';
+      c.style.webkitAnimationDelay=c.style.animationDelay;
+      document.body.appendChild(c);
+      (function(el){setTimeout(function(){if(el&&el.parentNode)el.parentNode.removeChild(el);},1300);})(c);
+    }
+  }
+  function run(){ensureCompanionHero();ensureStickyCTA();polishCopy();}
+  var oldToast=window.toast;
+  window.toast=function(msg){
+    if(typeof oldToast==='function') oldToast(msg); else { try{alert(msg);}catch(e){} }
+    if(/paid|fund|credited|active|completed|delivered|subscribed/i.test(String(msg||''))) celebrate();
+  };
+  var oldLoadPlans=window.loadPlans;
+  if(typeof oldLoadPlans==='function'){
+    window.loadPlans=function(){ oldLoadPlans.apply(this,arguments); setTimeout(run,120); setTimeout(polishCopy,700); };
+  }
+  var oldLoadWallet=window.loadWalletTab;
+  if(typeof oldLoadWallet==='function'){
+    window.loadWalletTab=function(){ oldLoadWallet.apply(this,arguments); setTimeout(function(){
+      var w=byId('wallet-tab-content'); if(w && !byId('wallet-friend-note')){
+        var n=document.createElement('div'); n.id='wallet-friend-note'; n.className='friend-daily';
+        n.innerHTML='<div class="friend-daily-icon">💚</div><div><div class="friend-daily-title">Your connection pocket</div><div class="friend-daily-sub">This wallet is here to keep you online. Fund any amount and continue at your pace.</div></div>';
+        w.insertBefore(n,w.firstChild);
+      }
+      polishCopy();
+    },180); };
+  }
+  var oldShowTab=window.showTab;
+  if(typeof oldShowTab==='function'){
+    window.showTab=function(tab){ oldShowTab.apply(this,arguments); setTimeout(run,80); };
+  }
+  document.addEventListener('DOMContentLoaded',function(){run();setTimeout(run,800);setTimeout(run,1800);});
+  window.addEventListener('load',function(){run();setTimeout(run,1000);});
+  setInterval(function(){ if(byId('pg-app') && byId('pg-app').className.indexOf('on')>-1) run(); },4500);
+})();
+</script>
 </body>
 </html>
