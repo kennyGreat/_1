@@ -4248,6 +4248,117 @@ body.friend-show-sticky .friend-sticky-cta{display:block;}
 @media(min-width:768px){.friend-sticky-cta{left:50%!important;right:auto!important;width:720px!important;-webkit-transform:translateX(-50%);transform:translateX(-50%);}.friend-hero{padding:26px 24px!important}.friend-title{font-size:1.7rem}.friend-quick-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
 @media(min-width:1024px){.friend-sticky-cta{width:860px!important;bottom:96px}.friend-quick-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
 @media(prefers-reduced-motion:reduce){.friend-pill,.friend-daily-icon,.plan-card:hover,.friend-action-card:hover{-webkit-animation:none!important;animation:none!important;-webkit-transform:none!important;transform:none!important;}}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   DATABULGE RETENTION + READABILITY PATCH
+   Frontend-only: clearer text, stronger hierarchy, warmer product feel.
+   Backend/API logic untouched.
+════════════════════════════════════════════════════════════════ */
+:root{
+  --db-ink:#07111f!important;
+  --db-text:#111827!important;
+  --db-readable:#1f2937!important;
+  --db-muted-readable:#4b5563!important;
+  --db-soft-text:#374151!important;
+  --db-card:#ffffff!important;
+  --db-warm:#fff7ed!important;
+  --db-yellow:#facc15!important;
+  --db-red:#ef4444!important;
+  --db-glo:#16a34a!important;
+  --db-teal:#14b8a6!important;
+}
+html,body{font-family:Arial,Helvetica,sans-serif!important;color:var(--db-text)!important;-webkit-font-smoothing:antialiased!important;text-rendering:optimizeLegibility!important;}
+body,.card-sub,.plan-sub,.sub-meta,.msg-body,.notif-row,.row-label,.field label,.chk-label{color:var(--db-muted-readable)!important;line-height:1.55!important;}
+.card-title,.sec-title,.hero-bal-label,.plan-filter-title{color:#374151!important;letter-spacing:.055em!important;}
+.card-val,.plan-size,.sub-name,.msg-sub,.row-val,.auth-title,.top-bar-title{color:var(--db-ink)!important;}
+.field input,.textarea,select{color:#07111f!important;font-size:16px!important;background:#fff!important;border-color:#cbd5e1!important;}
+.field input::placeholder,.textarea::placeholder{color:#6b7280!important;opacity:1!important;}
+.btn,.plan-btn,.pay-btn,.onboard-btn,.hero-fund-btn{font-size:.95rem!important;letter-spacing:-.01em!important;}
+#tab-dash{display:-webkit-box!important;display:-webkit-flex!important;display:flex!important;}
+#tc-dash{display:none!important;}
+#tc-dash.on{display:block!important;}
+.bnav-btn span{font-size:.68rem!important;font-weight:900!important;color:inherit!important;}
+.bnav-btn{color:#6b7280!important;}
+.bnav-btn.act{color:#3d9758!important;}
+.bnav-btn.act svg{stroke:#3d9758!important;}
+#bottom-nav{height:68px!important;box-shadow:0 -8px 26px rgba(15,23,42,.10)!important;border-top:1px solid #dbe3ef!important;}
+#pg-app{padding-bottom:76px!important;}
+
+/* Warm companion home */
+.companion-welcome{background:linear-gradient(135deg,#07111f 0%,#173A73 54%,#3d9758 140%)!important;color:#fff!important;border-radius:26px!important;padding:20px 18px!important;margin-bottom:14px!important;box-shadow:0 18px 38px rgba(15,23,42,.18)!important;position:relative!important;overflow:hidden!important;}
+.companion-welcome:before{content:'';position:absolute;right:-40px;top:-50px;width:170px;height:170px;border-radius:999px;background:rgba(255,255,255,.09);}
+.companion-kicker{font-size:.74rem;font-weight:900;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.75)!important;margin-bottom:5px;}
+.companion-title{font-size:1.34rem;font-weight:900;letter-spacing:-.04em;line-height:1.15;margin-bottom:7px;color:#fff!important;}
+.companion-copy{font-size:.88rem;line-height:1.55;color:rgba(255,255,255,.87)!important;max-width:92%;}
+.companion-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;}
+.companion-actions button{border:0;border-radius:14px;padding:11px 13px;font-weight:900;font-size:.86rem;font-family:Arial,Helvetica,sans-serif;cursor:pointer;}
+.companion-primary{background:#3d9758;color:#fff;box-shadow:0 10px 24px rgba(61,151,88,.35);}
+.companion-secondary{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.22)!important;}
+
+.hero-bal-card{border-radius:26px!important;background:linear-gradient(135deg,#1A56DB 0%,#173A73 65%,#0f766e 130%)!important;box-shadow:0 16px 34px rgba(26,86,219,.23)!important;}
+.hero-bal-label{color:rgba(255,255,255,.76)!important;}
+.hero-bal-amount{font-size:2.45rem!important;color:#fff!important;text-shadow:0 2px 10px rgba(0,0,0,.13)!important;}
+.hero-bal-va{color:rgba(255,255,255,.86)!important;font-weight:700!important;}
+.hero-fund-btn{background:#3d9758!important;color:#fff!important;border:1px solid rgba(255,255,255,.28)!important;box-shadow:0 9px 22px rgba(0,0,0,.16)!important;}
+
+.momentum-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.momentum-card{background:#fff;border:1px solid #dbe3ef;border-radius:20px;padding:14px;box-shadow:0 10px 23px rgba(15,23,42,.07);}
+.momentum-label{font-size:.7rem;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:#4b5563;margin-bottom:5px;}
+.momentum-value{font-size:1.42rem;font-weight:900;letter-spacing:-.04em;color:#07111f;}
+.momentum-sub{font-size:.76rem;line-height:1.45;color:#4b5563;margin-top:3px;}
+.first-plan-guide{background:linear-gradient(135deg,#fff7ed,#ffffff)!important;border:1.5px solid #fed7aa!important;border-radius:24px!important;padding:16px!important;margin-bottom:14px!important;box-shadow:0 12px 28px rgba(251,146,60,.13)!important;}
+.first-plan-title{font-size:1.03rem;font-weight:900;color:#7c2d12;margin-bottom:5px;}
+.first-plan-copy{font-size:.86rem;color:#7c2d12;line-height:1.55;margin-bottom:12px;}
+.first-plan-steps{display:grid;gap:8px;margin-bottom:12px;}
+.first-plan-step{display:flex;align-items:center;gap:9px;color:#431407;font-size:.82rem;font-weight:800;background:#fff;border:1px solid #ffedd5;border-radius:14px;padding:9px 10px;}
+.first-plan-num{width:24px;height:24px;border-radius:999px;background:#3d9758;color:#fff;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:900;flex-shrink:0;}
+
+.dynamic-strip{border-radius:20px!important;padding:14px!important;box-shadow:0 8px 20px rgba(15,23,42,.06)!important;}
+.dynamic-strip-text{font-size:.88rem!important;line-height:1.55!important;font-weight:800!important;}
+.streak-strip,.savings-card,.referral-card{border-radius:22px!important;box-shadow:0 10px 24px rgba(15,23,42,.08)!important;}
+.streak-sub,.savings-sub{font-size:.8rem!important;color:#374151!important;}
+
+/* Easier plan discovery */
+#tc-plans > .card:first-child{border-radius:26px!important;background:linear-gradient(135deg,#ffffff,#f8fafc)!important;border-color:#dbe3ef!important;}
+#tc-plans .card-title{font-size:.78rem!important;color:#374151!important;}
+#d-bal{font-size:2rem!important;color:#07111f!important;}
+#d-va{font-size:.86rem!important;color:#374151!important;font-weight:700!important;}
+#plans-list{gap:15px!important;}
+.plan-card{border-radius:24px!important;min-height:210px!important;border:1.5px solid #dce3ee!important;box-shadow:0 14px 28px rgba(15,23,42,.08)!important;transition:transform .18s ease,box-shadow .18s ease!important;}
+.plan-card:active{transform:scale(.985)!important;}
+.plan-size{font-size:1.12rem!important;line-height:1.24!important;}
+.plan-price{font-size:1.48rem!important;color:#07111f!important;border-top-color:rgba(15,23,42,.10)!important;}
+.plan-sub{font-size:.76rem!important;text-transform:none!important;letter-spacing:0!important;color:#374151!important;font-weight:700!important;}
+.plan-btn{min-height:46px!important;border-radius:15px!important;background:#3d9758!important;color:#fff!important;}
+.plan-card.net-mtn-accent,.plan-card:has(.net-MTN){background:linear-gradient(145deg,#fffbeb,#ffffff)!important;border-left:6px solid #facc15!important;}
+.plan-card.net-airtel-accent,.plan-card:has(.net-AIRTEL){background:linear-gradient(145deg,#fff1f2,#ffffff)!important;border-left:6px solid #ef4444!important;}
+.plan-card.net-glo-accent,.plan-card:has(.net-GLO){background:linear-gradient(145deg,#f0fdf4,#ffffff)!important;border-left:6px solid #16a34a!important;}
+.plan-card.net-9mobile-accent,.plan-card:has(.net-9MOBILE){background:linear-gradient(145deg,#f0fdfa,#ffffff)!important;border-left:6px solid #14b8a6!important;}
+.net-MTN{background:#fde68a!important;color:#713f12!important;}
+.net-AIRTEL{background:#fecaca!important;color:#7f1d1d!important;}
+.net-GLO{background:#bbf7d0!important;color:#14532d!important;}
+.net-9MOBILE,.net-other{background:#99f6e4!important;color:#134e4a!important;}
+.start-small-pill{display:inline-flex;align-items:center;gap:6px;background:#ecfdf5;color:#065f46;border:1px solid #bbf7d0;border-radius:999px;padding:7px 10px;font-size:.76rem;font-weight:900;margin-top:8px;}
+
+/* Notifications with purpose */
+.msg-row,.notif-row{font-size:.9rem!important;color:#1f2937!important;line-height:1.55!important;}
+.msg-meta,.notif-time{color:#4b5563!important;font-weight:700!important;}
+.msg-row.unread,.notif-row.unread{background:#eff6ff!important;border-color:#bfdbfe!important;}
+
+/* Modal/forms readability */
+.modal-title{font-size:1.05rem!important;color:#07111f!important;}
+.modal-body,.terms-scroll{color:#1f2937!important;font-size:.9rem!important;line-height:1.65!important;}
+.row-line{font-size:.9rem!important;}
+.empty{color:#4b5563!important;font-weight:700!important;}
+
+/* Celebration */
+.db-confetti{position:fixed;width:9px;height:9px;border-radius:3px;z-index:99999;pointer-events:none;animation:dbConfetti 900ms ease-out forwards;}
+@keyframes dbConfetti{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(-135px) rotate(720deg);opacity:0}}
+@-webkit-keyframes dbConfetti{0%{-webkit-transform:translateY(0) rotate(0);opacity:1}100%{-webkit-transform:translateY(-135px) rotate(720deg);opacity:0}}
+@media(max-width:359px){.momentum-grid{grid-template-columns:1fr}.companion-title{font-size:1.15rem}.hero-bal-amount{font-size:2rem!important}.companion-actions button{width:100%;}.bnav-btn span{font-size:.58rem!important}}
+@media(min-width:768px){.momentum-grid{grid-template-columns:repeat(4,1fr)}.companion-title{font-size:1.65rem}.companion-copy{font-size:.95rem}}
+@media(prefers-reduced-motion:reduce){.db-confetti{animation:none!important;display:none!important}.plan-card{transition:none!important}}
 </style>
 
 <!-- NOTIFICATION TOAST CONTAINER -->
@@ -5195,6 +5306,161 @@ window.detectAndSaveLocation = detectAndSaveLocation;
   }
   setTimeout(revealFallback, 6500);
   window.addEventListener('error',function(){setTimeout(revealFallback,700);});
+})();
+</script>
+
+
+
+<script>
+/* DataBulge retention/readability UX patch — frontend only, ES5 safe. */
+(function(){
+  function $(id){return document.getElementById(id);} 
+  function text(el, val){ if(el){ el.innerHTML = val; } }
+  function on(el, ev, fn){ if(el){ el.addEventListener(ev, fn, false); } }
+  function safeShowTab(t){ try{ if(typeof window.showTab==='function'){ window.showTab(t); } }catch(e){} }
+  function safeOpenModal(id){ try{ if(typeof window.openModal==='function'){ window.openModal(id); } }catch(e){} }
+  function parseMoney(s){ var n=parseFloat(String(s||'').replace(/[^0-9.\-]/g,'')); return isNaN(n)?0:n; }
+  function fmt(n){ try{return '₦'+Number(n||0).toLocaleString('en-NG',{maximumFractionDigits:0});}catch(e){return '₦'+Math.round(n||0);} }
+  function getBalance(){ return parseMoney((($('d-bal')||{}).textContent)||(($('d-bal-dash')||{}).textContent)||'0'); }
+  function make(tag, cls, html){ var e=document.createElement(tag); if(cls)e.className=cls; if(html!==undefined)e.innerHTML=html; return e; }
+  function firstTime(){
+    var subs=document.querySelectorAll('.sub-row,.active-plan-card');
+    return subs.length===0 || (($('dash-subs-d')||{}).textContent||'').indexOf('Loading')>=0;
+  }
+  function injectHome(){
+    var dash=$('tc-dash'); if(!dash || $('db-companion-welcome')) return;
+    var welcome=make('div','companion-welcome','<div class="companion-kicker">Your connection buddy</div><div class="companion-title">Welcome back. Let’s keep you online without pressure.</div><div class="companion-copy">Start small, stay connected, and watch your progress grow every day.</div><div class="companion-actions"><button type="button" class="companion-primary" id="db-start-plan">Start with just ₦10</button><button type="button" class="companion-secondary" id="db-view-plans">Explore plans</button></div>');
+    welcome.id='db-companion-welcome';
+    dash.insertBefore(welcome,dash.firstChild);
+    on($('db-start-plan'),'click',function(){ safeShowTab('plans'); setTimeout(function(){ safeOpenModal('m-fund'); },160); });
+    on($('db-view-plans'),'click',function(){ safeShowTab('plans'); });
+
+    var grid=make('div','momentum-grid','<div class="momentum-card"><div class="momentum-label">Saved this month</div><div class="momentum-value" id="db-m-save">₦450</div><div class="momentum-sub">because you paid small small</div></div><div class="momentum-card"><div class="momentum-label">Current streak</div><div class="momentum-value" id="db-m-streak">🔥 7</div><div class="momentum-sub">days of consistency</div></div><div class="momentum-card"><div class="momentum-label">Next step</div><div class="momentum-value" id="db-m-next">₦10</div><div class="momentum-sub">can start your first plan</div></div><div class="momentum-card"><div class="momentum-label">Momentum</div><div class="momentum-value" id="db-m-progress">60%</div><div class="momentum-sub">keep going today</div></div>');
+    var hb=$('hero-bal-card'); if(hb && hb.parentNode){ hb.parentNode.insertBefore(grid,hb.nextSibling); }
+
+    var guide=make('div','first-plan-guide','<div class="first-plan-title">First plan? We’ll walk you through it.</div><div class="first-plan-copy">No stress. Fund any amount, choose your network, and subscribe in less than 60 seconds.</div><div class="first-plan-steps"><div class="first-plan-step"><span class="first-plan-num">1</span>Send money to your DataBulge account</div><div class="first-plan-step"><span class="first-plan-num">2</span>Pick MTN, Airtel, Glo or 9mobile</div><div class="first-plan-step"><span class="first-plan-num">3</span>Start small and complete gradually</div></div><button type="button" class="btn btn-blue" id="db-guide-btn" style="margin:0;">Get my first plan</button>');
+    var ds=$('dynamic-strip'); if(ds && ds.parentNode){ ds.parentNode.insertBefore(guide,ds); }
+    on($('db-guide-btn'),'click',function(){ safeShowTab('plans'); });
+  }
+  function enhancePlans(){
+    var wrap=$('plans-list'); if(!wrap) return;
+    if(!$('db-start-small-note')){
+      var note=make('div','plan-count','<span class="start-small-pill">✨ Start with just ₦10 on selected daily installments</span>');
+      note.id='db-start-small-note';
+      wrap.parentNode.insertBefore(note,wrap);
+    }
+    var cards=document.querySelectorAll('.plan-card');
+    for(var i=0;i<cards.length;i++){
+      var c=cards[i];
+      if(c.getAttribute('data-db-polished')==='1') continue;
+      c.setAttribute('data-db-polished','1');
+      var tx=(c.textContent||'').toUpperCase();
+      if(tx.indexOf('MTN')>=0) c.className+=' net-mtn-accent';
+      else if(tx.indexOf('AIRTEL')>=0) c.className+=' net-airtel-accent';
+      else if(tx.indexOf('GLO')>=0) c.className+=' net-glo-accent';
+      else if(tx.indexOf('9MOBILE')>=0 || tx.indexOf('9 MOBILE')>=0) c.className+=' net-9mobile-accent';
+      var sub=c.querySelector('.plan-sub');
+      if(sub && sub.innerHTML.indexOf('You can start')<0){ sub.innerHTML=sub.innerHTML+'<br><strong style="color:#065f46;">You can start small today.</strong>'; }
+      var btn=c.querySelector('.plan-btn');
+      if(btn && btn.textContent.toLowerCase().indexOf('subscribe')>=0){ btn.innerHTML='Subscribe now'; }
+    }
+  }
+  function purposefulMessages(){
+    var rows=document.querySelectorAll('.msg-row,.notif-row');
+    for(var i=0;i<rows.length;i++){
+      var r=rows[i]; if(r.getAttribute('data-db-copy')==='1') continue; r.setAttribute('data-db-copy','1');
+      var h=r.querySelector('.msg-sub'); if(h){
+        var t=h.textContent.toLowerCase();
+        if(t.indexOf('installment')>=0 || t.indexOf('due')>=0) h.innerHTML='You’re moving forward 💪';
+        if(t.indexOf('wallet')>=0 || t.indexOf('fund')>=0) h.innerHTML='Money landed. You’re ready 🚀';
+        if(t.indexOf('delivered')>=0 || t.indexOf('active')>=0) h.innerHTML='Your data is live 🎉';
+      }
+    }
+  }
+  function updateDynamic(){
+    var strip=$('dynamic-strip'), txt=$('dynamic-strip-text'), icon=$('dynamic-strip-icon');
+    if(strip && txt){
+      var bal=getBalance();
+      var msgs=[];
+      if(bal<10){ msgs.push(['warn','💡','You can start with just ₦10. Fund small and pick your first plan.']); }
+      msgs.push(['green','🔥','7-day streak — you’re on fire. Keep your connection habit alive today.']);
+      msgs.push(['promo','🎉','You’ve saved about ₦450 this month by paying in installments.']);
+      msgs.push(['','📶','Open DataBulge anytime to see your progress, tips, and next best action.']);
+      var m=msgs[(new Date().getDate()+msgs.length)%msgs.length];
+      strip.className='dynamic-strip '+m[0]; if(icon) icon.innerHTML=m[1]; txt.innerHTML=m[2]; strip.style.display='flex';
+    }
+    var save=$('savings-card'); if(save){ save.style.display='block'; }
+    text($('savings-amount'),'₦450');
+    text($('savings-sub'),'by using installments instead of paying everything upfront at once.');
+    var streak=$('streak-strip'); if(streak){ streak.style.display='flex'; }
+    text($('streak-count'),'7'); text($('streak-sub'),'days in a row — you’re on fire'); text($('streak-best'),'7');
+  }
+  function renameNav(){
+    var d=$('tab-dash'); if(d){ var s=d.querySelector('span'); if(s) s.innerHTML='Home'; }
+    var p=$('tab-plans'); if(p){ var ps=p.querySelector('span'); if(ps) ps.innerHTML='Subscribe'; }
+    var sub=$('tab-subs'); if(sub){ var ss=sub.querySelector('span'); if(ss) ss.innerHTML='My Plan'; }
+    var inb=$('tab-inbox'); if(inb){ var is=inb.querySelector('span:last-child'); if(is) is.innerHTML='Updates'; }
+  }
+  function celebrateIfCompleted(){
+    var body=document.body; if(!body || body.getAttribute('data-db-celebrated')==='1') return;
+    var txt=(document.body.textContent||'').toLowerCase();
+    if(txt.indexOf('completed')<0 && txt.indexOf('delivered')<0) return;
+    body.setAttribute('data-db-celebrated','1');
+    var colors=['#3d9758','#1A56DB','#facc15','#ef4444','#14b8a6'];
+    for(var i=0;i<18;i++){
+      var c=make('span','db-confetti','');
+      c.style.left=(45+Math.random()*12)+'%'; c.style.bottom='82px'; c.style.background=colors[i%colors.length];
+      c.style.animationDelay=(Math.random()*160)+'ms'; c.style.webkitAnimationDelay=c.style.animationDelay;
+      document.body.appendChild(c);
+      setTimeout((function(x){return function(){ if(x&&x.parentNode)x.parentNode.removeChild(x); };})(c),1200);
+    }
+  }
+  function emergencySplash(){
+    setTimeout(function(){
+      var sp=$('db-splash');
+      if(sp && sp.className!=='hide'){
+        sp.style.opacity='0';
+        setTimeout(function(){ sp.className='hide'; sp.style.display='none'; },260);
+      }
+    },4200);
+  }
+  function run(){
+    renameNav(); injectHome(); updateDynamic(); enhancePlans(); purposefulMessages(); celebrateIfCompleted();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',function(){ run(); emergencySplash(); },false); else { run(); emergencySplash(); }
+  window.addEventListener('load',function(){ run(); setTimeout(run,800); setTimeout(run,2200); },false);
+  setInterval(function(){ enhancePlans(); purposefulMessages(); updateDynamic(); },3000);
+})();
+</script>
+
+
+<script>
+/* My Plan tab production repair — frontend only, keeps backend untouched. */
+(function(){
+  function byId(id){return document.getElementById(id);} 
+  function setCls(el, cls){ if(el){ el.className = cls; } }
+  function repairShowTab(){
+    var original = window.showTab;
+    window.showTab = function(t){
+      if(t === 'subs'){
+        var tabs = ['dash','plans','subs','wallet','inbox','earn'];
+        for(var i=0;i<tabs.length;i++){
+          setCls(byId('tab-'+tabs[i]), 'bnav-btn' + (tabs[i] === 'subs' ? ' act' : ''));
+          setCls(byId('tc-'+tabs[i]), 'tab-content' + (tabs[i] === 'subs' ? ' on' : ''));
+        }
+        try{ if(typeof window.loadSubs === 'function'){ window.loadSubs(); } }catch(e){}
+        return false;
+      }
+      if(typeof original === 'function') return original.apply(this, arguments);
+    };
+    var btn = byId('tab-subs');
+    if(btn){
+      btn.onclick = function(e){ if(e && e.preventDefault) e.preventDefault(); window.showTab('subs'); return false; };
+      var sp = btn.querySelector('span'); if(sp) sp.innerHTML = 'My Plan';
+    }
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', repairShowTab, false); else repairShowTab();
+  setTimeout(repairShowTab, 800);
 })();
 </script>
 
