@@ -264,15 +264,16 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 /* App shell */
 #pg-app{background:var(--db-bg)!important;min-height:100vh!important;padding-bottom:22px!important;}
 .top-bar{
-  background:#fff!important;
-  color:var(--db-text)!important;
+  background:#1A56DB!important;
+  background:linear-gradient(135deg,#1A56DB,#1740B0)!important;
+  color:#fff!important;
   padding:14px 16px!important;
-  box-shadow:0 1px 0 rgba(17,24,39,.08)!important;
-  border-bottom:1px solid #E8ECF4!important;
+  box-shadow:0 4px 16px rgba(26,86,219,.28)!important;
+  border-bottom:none!important;
 }
 .top-bar svg{background:transparent!important;}
 .avatar{background:#1A56DB!important;background:linear-gradient(135deg,var(--db-blue),#159A8C)!important;color:#fff!important;box-shadow:0 5px 15px rgba(26,86,219,.22)!important;}
-.logout-btn{background:#fff!important;border:1px solid #D6DCE8!important;color:#667085!important;border-radius:12px!important;padding:7px 10px!important;}
+.logout-btn{background:rgba(255,255,255,.15)!important;border:1px solid rgba(255,255,255,.3)!important;color:#fff!important;border-radius:12px!important;padding:7px 10px!important;}
 .tabs{
   background:#fff!important;
   padding:10px 12px!important;
@@ -425,7 +426,7 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 .plan-filter-title{font-size:.76rem!important;color:#6B7280!important;font-weight:900!important;text-transform:uppercase!important;letter-spacing:.07em!important;margin:2px 0 8px!important;}
 .plan-chip-row{display:-webkit-box!important;display:-webkit-flex!important;display:flex!important;gap:8px!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;padding:2px 0 10px!important;}
 .plan-chip{border:1px solid #E0E5EF!important;background:#fff!important;color:#6B7280!important;border-radius:999px!important;padding:9px 14px!important;font-size:.78rem!important;font-weight:900!important;white-space:nowrap!important;font-family:Arial,Helvetica,sans-serif!important;cursor:pointer!important;-webkit-appearance:none!important;-webkit-tap-highlight-color:transparent!important;}
-.plan-chip.act{background:#EEF2FF!important;color:#1A56DB!important;border-color:#1A56DB!important;}
+.plan-chip.act{background:#3d9758!important;color:#fff!important;border-color:#3d9758!important;font-weight:900!important;}
 .plan-count{grid-column:1/-1!important;font-size:.78rem!important;color:#7B8494!important;font-weight:700!important;margin:2px 2px -4px!important;}
 
 /* Modals */
@@ -613,7 +614,7 @@ button,.btn,.plan-btn,.tab,.logout-btn,.plan-chip,.avatar,.avatar-menu button{
 .top-bar{min-width:0!important;}
 .top-bar-title{min-width:0!important;-webkit-flex:0 1 auto!important;flex:0 1 auto!important;}
 .top-bar-right{min-width:0!important;-webkit-flex:0 0 auto!important;flex:0 0 auto!important;position:relative!important;}
-.user-greeting{font-size:1.05rem!important;font-weight:900!important;color:#1A56DB!important;max-width:160px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;letter-spacing:-.01em!important;}
+.user-greeting{font-size:1.05rem!important;font-weight:900!important;color:#ffffff!important;max-width:160px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;letter-spacing:-.01em!important;}
 .avatar-wrap{position:relative!important;display:inline-block!important;-webkit-flex-shrink:0!important;flex-shrink:0!important;}
 .avatar{border:0!important;cursor:pointer!important;padding:0!important;line-height:1!important;}
 .logout-btn{display:none!important;}
@@ -1041,13 +1042,13 @@ label:has(#m-sub-autorenew){
       </svg>
       <!-- Greeting immediately after icon -->
       <div style="-webkit-box-flex:1;-webkit-flex:1;flex:1;min-width:0;">
-        <div class="user-greeting" id="user-greeting" style="font-size:1.1rem;font-weight:900;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Hi,</div>
+        <div class="user-greeting" id="user-greeting" style="font-size:1.05rem;font-weight:900;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Hi,</div>
       </div>
     </div>
     <div class="top-bar-right">
       <!-- Notification Bell — always visible, never hidden -->
       <div style="position:relative;-webkit-flex-shrink:0;flex-shrink:0;">
-        <button id="notif-bell" onclick="toggleNotifDrawer()" aria-label="Notifications" style="background:#EEF2FF;border:1px solid #C7D2FE;border-radius:10px;width:36px;height:36px;display:-webkit-box!important;display:-webkit-flex!important;display:flex!important;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;cursor:pointer;position:relative;padding:0;-webkit-flex-shrink:0;flex-shrink:0;visibility:visible!important;opacity:1!important;">
+        <button id="notif-bell" onclick="toggleNotifDrawer()" aria-label="Notifications" style="background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.35);border-radius:10px;width:36px;height:36px;display:-webkit-box!important;display:-webkit-flex!important;display:flex!important;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;cursor:pointer;position:relative;padding:0;-webkit-flex-shrink:0;flex-shrink:0;visibility:visible!important;opacity:1!important;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
           <span id="notif-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:#f43f5e;color:#fff;border-radius:10px;font-size:.6rem;font-weight:900;padding:1px 5px;min-width:16px;text-align:center;border:1.5px solid #fff;"></span>
         </button>
@@ -1091,7 +1092,7 @@ label:has(#m-sub-autorenew){
     </button>
     <button class="bnav-btn" id="tab-plans" data-t="plans" onclick="showTab('plans')" style="flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
-      <span style="font-size:.62rem;font-weight:700;font-family:inherit;">Buy Data</span>
+      <span style="font-size:.62rem;font-weight:700;font-family:inherit;">Subscribe</span>
     </button>
     <button class="bnav-btn" id="tab-subs" data-t="subs" onclick="showTab('subs')" style="flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
@@ -1120,16 +1121,20 @@ label:has(#m-sub-autorenew){
       <div class="hero-bal-amount" id="d-bal-dash">&#8358;0.00</div>
       <div class="hero-bal-va" id="d-va-dash"></div>
     </div>
-    <div class="streak-strip" id="streak-strip" style="display:none;">
+    <div class="streak-strip" id="streak-strip" style="display:none;cursor:pointer;" onclick="openStreakDetail()">
       <div class="streak-fire" id="streak-fire">&#128293;</div>
       <div style="-webkit-box-flex:1;-webkit-flex:1;flex:1;">
         <div class="streak-label">Daily Streak</div>
-        <div class="streak-count" id="streak-count">0</div>
+        <div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:baseline;-webkit-align-items:baseline;align-items:baseline;gap:6px;">
+          <div class="streak-count" id="streak-count">0</div>
+          <div style="font-size:.72rem;color:#c2410c;font-weight:700;">days</div>
+        </div>
         <div class="streak-sub" id="streak-sub">days in a row</div>
       </div>
       <div style="text-align:right;-webkit-flex-shrink:0;flex-shrink:0;">
         <div style="font-size:.65rem;color:#9a3412;font-weight:700;text-transform:uppercase;">Best</div>
         <div style="font-size:1rem;font-weight:900;color:#c2410c;" id="streak-best">0</div>
+        <div style="font-size:.62rem;color:#9a3412;margin-top:3px;opacity:.7;">Tap for details ›</div>
       </div>
     </div>
     <div class="onboard-banner" id="onboard-banner" style="display:none;">
@@ -1141,10 +1146,15 @@ label:has(#m-sub-autorenew){
       <div class="dynamic-strip-icon" id="dynamic-strip-icon">&#128161;</div>
       <div class="dynamic-strip-text" id="dynamic-strip-text"></div>
     </div>
-    <div class="savings-card" id="savings-card" style="display:none;">
-      <div class="savings-label">You saved this month</div>
-      <div class="savings-amount" id="savings-amount">&#8358;0</div>
-      <div class="savings-sub" id="savings-sub">by paying in installments instead of upfront</div>
+    <div class="savings-card" id="savings-card" style="display:none;cursor:pointer;" onclick="showTab('wallet')">
+      <div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;-webkit-box-align:flex-start;-webkit-align-items:flex-start;align-items:flex-start;">
+        <div>
+          <div class="savings-label">You saved this month</div>
+          <div class="savings-amount" id="savings-amount">&#8358;0</div>
+          <div class="savings-sub" id="savings-sub">by paying in installments instead of upfront</div>
+        </div>
+        <div style="font-size:.72rem;color:#047857;font-weight:700;opacity:.75;white-space:nowrap;padding-top:2px;">View wallet ›</div>
+      </div>
     </div>
     <div id="dash-subs-d"></div>
     <div class="referral-card" id="referral-card" style="display:none;">
@@ -1274,15 +1284,15 @@ label:has(#m-sub-autorenew){
       <div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;gap:9px;margin-bottom:12px;">
       <div style="-webkit-box-flex:1;-webkit-flex:1 1 80px;flex:1 1 80px;border:1px solid #e5e7eb;border-radius:8px;padding:11px;background:#fff;min-width:0;">
         <div style="font-size:.66rem;font-weight:700;color:#888;text-transform:uppercase;margin-bottom:3px;">Today Funded</div>
-        <div style="font-size:1.05rem;font-weight:900;color:#3d9758;" id="cf-in-d">&#8358;0.00</div>
+        <div style="font-size:1.05rem;font-weight:900;color:#3d9758;cursor:pointer;" id="cf-in-d" onclick="showTab('wallet')" title="View wallet history">&#8358;0.00</div>
       </div>
       <div style="-webkit-box-flex:1;-webkit-flex:1 1 80px;flex:1 1 80px;border:1px solid #e5e7eb;border-radius:8px;padding:11px;background:#fff;min-width:0;">
         <div style="font-size:.66rem;font-weight:700;color:#888;text-transform:uppercase;margin-bottom:3px;">Today Spent</div>
-        <div style="font-size:1.05rem;font-weight:900;color:#dc2626;" id="cf-out-d">&#8358;0.00</div>
+        <div style="font-size:1.05rem;font-weight:900;color:#dc2626;cursor:pointer;" id="cf-out-d" onclick="showTab('wallet')" title="View wallet history">&#8358;0.00</div>
       </div>
       <div style="-webkit-box-flex:1;-webkit-flex:1 1 80px;flex:1 1 80px;border:1px solid #e5e7eb;border-radius:8px;padding:11px;background:#fff;min-width:0;">
         <div style="font-size:.66rem;font-weight:700;color:#888;text-transform:uppercase;margin-bottom:3px;">Completed</div>
-        <div style="font-size:1.05rem;font-weight:900;color:#111;" id="cf-done-d">0</div>
+        <div style="font-size:1.05rem;font-weight:900;color:#111;cursor:pointer;" id="cf-done-d" onclick="showTab('subs')" title="View completed plans">0</div>
       </div>
     </div>
     </div>
@@ -1417,6 +1427,45 @@ label:has(#m-sub-autorenew){
   </div>
 </div>
 
+<!-- RESET PASSWORD MODAL -->
+<div class="modal" id="m-reset-pass">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <div class="modal-title">Set New Password</div>
+      <button class="modal-x" id="m-reset-x">&#215;</button>
+    </div>
+    <div class="modal-body">
+      <div style="background:#EEF2FF;border:1px solid #C7D2FE;border-radius:10px;padding:10px 13px;margin-bottom:14px;font-size:.8rem;color:#1A56DB;font-weight:700;line-height:1.5;">
+        &#128274; You clicked a password reset link. Enter a new password below.
+      </div>
+      <div id="r-exp" style="display:none;background:#fff2f2;border:1px solid #f5c6cb;border-radius:10px;padding:10px 13px;margin-bottom:12px;font-size:.8rem;color:#c0392b;line-height:1.55;">
+        &#9201; This reset link has expired or already been used. Please request a new one from the
+        <button type="button" onclick="closeModal('m-reset-pass');openModal('m-forgot');" style="background:none;border:none;color:#c0392b;font-weight:900;cursor:pointer;font-family:inherit;font-size:inherit;text-decoration:underline;padding:0;">Forgot Password</button> page.
+      </div>
+      <div id="r-err" class="err"></div>
+      <div id="r-ok" class="ok"></div>
+      <div class="field">
+        <label>New Password</label>
+        <div class="pw-wrap">
+          <input id="r-pass" type="password" autocomplete="new-password" placeholder="At least 8 characters" minlength="8">
+          <button type="button" class="eye" onclick="toggleEye('r-pass',this)">&#128065;</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Confirm New Password</label>
+        <div class="pw-wrap">
+          <input id="r-confirm" type="password" autocomplete="new-password" placeholder="Repeat your new password">
+          <button type="button" class="eye" onclick="toggleEye('r-confirm',this)">&#128065;</button>
+        </div>
+      </div>
+      <div id="r-strength" style="margin-top:-6px;margin-bottom:10px;font-size:.74rem;font-weight:700;"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-blue" id="r-btn" style="width:auto;display:inline-block;padding:10px 26px;margin:0;">Save New Password</button>
+    </div>
+  </div>
+</div>
+
 <!-- SUBSCRIBE MODAL -->
 <div class="modal" id="m-sub">
   <div class="modal-box">
@@ -1528,7 +1577,7 @@ label:has(#m-sub-autorenew){
         <h3>6. ELIGIBILITY</h3>
         <ul><li>Must be 18 or older</li><li>One account per person</li><li>Valid mobile number required</li></ul>
         <h3>7. GOVERNING LAW</h3>
-        <p>Governed by Nigerian law. DataBulge is operated by Vortexedge Limited, a Nigerian technology company serving users across Africa and the global diaspora. Contact: info@databulge.com</p>
+        <p>Governed by Nigerian law. DataBulge is operated by Vortexedge Limited, a Nigerian technology company serving users across Africa and the global diaspora. Contact: support@databulge.com</p>
       </div>
     </div>
     <div class="modal-foot">
@@ -1593,7 +1642,7 @@ label:has(#m-sub-autorenew){
     <div class="modal-hdr"><div class="modal-title">New Message</div><button class="modal-x" id="m-compose-x">&#215;</button></div>
     <div class="modal-body">
       <div id="m-compose-err" class="err"></div>
-      <div style="background:#EEF2FF;border:1px solid #C7D2FE;border-radius:10px;padding:9px 12px;margin-bottom:12px;font-size:.78rem;color:#1A56DB;font-weight:700;">&#128231; Messages go to <strong>info@databulge.com</strong> &mdash; we reply to your registered email.</div>
+      <div style="background:#EEF2FF;border:1px solid #C7D2FE;border-radius:10px;padding:9px 12px;margin-bottom:12px;font-size:.78rem;color:#1A56DB;font-weight:700;">&#128231; Messages go to <strong>support@databulge.com</strong> &mdash; we reply to your registered email.</div>
       <div class="field"><label>Subject</label><input id="compose-subject" type="text" placeholder="What do you need help with?"></div>
       <div class="field"><label>Type</label>
         <select id="compose-type" style="display:block;width:100%;padding:11px 12px;border:1.5px solid #ddd;border-radius:6px;font-size:.94rem;color:#111;background:#fff;outline:none;-webkit-appearance:none;">
@@ -1814,7 +1863,7 @@ function showPage(id) {
 var _subsLastLoad  = 0;
 var _inboxLastLoad = 0;
 var _dashLastLoad  = 0;
-var STALE_MS = 30000; // 30s before re-fetching on tab revisit
+var STALE_MS = 60000; // 60s before re-fetching on tab revisit
 
 function showTab(t) {
   var tabs = ['dash','plans','subs','wallet','inbox'];
@@ -1956,39 +2005,94 @@ function doForgot() {
 }
 
 function doResetPassword() {
-  var pass    = $('r-pass').value    || '';
-  var confirm = $('r-confirm').value || '';
-  errHide('r-err'); okHide('r-ok'); $('r-exp').style.display = 'none';
-  if (!pass || pass.length < 6) { errShow('r-err', 'Password must be at least 6 characters.'); return; }
-  if (pass !== confirm) { errShow('r-err', 'Passwords do not match.'); return; }
-  btnLoad('r-btn', true, 'Saving\u2026');
-  // Use the recovery access token to update password via Supabase REST
+  var passEl    = $('r-pass');
+  var confirmEl = $('r-confirm');
+  var pass      = (passEl    ? passEl.value    : '') || '';
+  var confirm   = (confirmEl ? confirmEl.value : '') || '';
+  errHide('r-err'); okHide('r-ok');
+  var rExp = $('r-exp'); if (rExp) rExp.style.display = 'none';
+
+  if (!pass || pass.length < 8) {
+    errShow('r-err', 'Password must be at least 8 characters.'); return;
+  }
+  if (pass !== confirm) {
+    errShow('r-err', 'Passwords do not match.'); return;
+  }
+  if (!gRecovAT) {
+    errShow('r-err', 'Reset session missing. Please request a new reset link.');
+    if (rExp) rExp.style.display = 'block';
+    return;
+  }
+
+  btnLoad('r-btn', true, 'Saving…');
   var h = { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + gRecovAT, 'Content-Type': 'application/json' };
   xhr('PUT', AUTH + '/user', h, JSON.stringify({ password: pass }),
     function(err, res) {
       btnLoad('r-btn', false, 'Save New Password');
       if (err || !res || !res.ok) {
         var d = res && res.data;
-        var ec = d && (d.error || d.error_code || '');
-        if (ec === 'otp_expired' || ec === 'invalid_token' || (d && d.message && d.message.indexOf('expired') !== -1)) {
-          $('r-exp').style.display = 'block';
+        var msg = (d && (d.message || d.error_description || d.error)) || '';
+        var expired = msg.toLowerCase().indexOf('expir') !== -1 ||
+                      msg.toLowerCase().indexOf('invalid') !== -1 ||
+                      msg.toLowerCase().indexOf('otp') !== -1;
+        if (expired && rExp) {
+          rExp.style.display = 'block';
         } else {
-          errShow('r-err', (d && (d.message || d.error)) || 'Update failed. Try again.');
+          errShow('r-err', msg || 'Could not update password. Please try again.');
         }
         return;
       }
-      okShow('r-ok', '\u2705 Password updated! Signing you in\u2026');
-      // Sign in with new password
-      if (gRecovAT && gRecovRT) {
-        gToken = gRecovAT;
+
+      // Success — set session from recovery tokens and boot app
+      okShow('r-ok', '✅ Password updated! Signing you in…');
+      if (passEl)    passEl.value    = '';
+      if (confirmEl) confirmEl.value = '';
+
+      if (gRecovAT) {
+        gToken   = gRecovAT;
         gRefresh = gRecovRT;
-        gRecovAT = gRecovRT = '';
-        refreshToken(function(err2) {
-          if (!err2) { showPage('app'); hideSplash(); bootApp(); } else { showScreen('scr-l'); }
-        });
-      } else { setTimeout(function() { showScreen('scr-l'); }, 1600); }
+        gExpiry  = Date.now() + 3600000;
+        gRecovAT = '';
+        gRecovRT = '';
+        // Fetch user then boot
+        xhr('GET', AUTH + '/user',
+          { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + gToken, 'Content-Type': 'application/json' },
+          null,
+          function(e2, r2) {
+            if (!e2 && r2 && r2.ok && r2.data) {
+              _setSession({ access_token: gToken, refresh_token: gRefresh, expires_in: 3600, user: r2.data });
+            }
+            setTimeout(function() {
+              closeModal('m-reset-pass');
+              bootApp();
+            }, 1200);
+          }
+        );
+      } else {
+        setTimeout(function() {
+          closeModal('m-reset-pass');
+          window.location.replace('databulge-auth.html');
+        }, 1800);
+      }
     }
   );
+}
+
+/* Password strength indicator for reset modal */
+function checkPasswordStrength(val) {
+  var el = $('r-strength');
+  if (!el) return;
+  if (!val) { el.textContent = ''; el.style.color = ''; return; }
+  var score = 0;
+  if (val.length >= 8)  score++;
+  if (val.length >= 12) score++;
+  if (/[A-Z]/.test(val)) score++;
+  if (/[0-9]/.test(val)) score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
+  var labels = ['', 'Weak', 'Fair', 'Good', 'Strong', 'Very strong'];
+  var colors = ['', '#dc2626', '#d97706', '#2563eb', '#16a34a', '#065f46'];
+  el.textContent = labels[score] || '';
+  el.style.color = colors[score] || '';
 }
 
 /* ── BOOT APP ───────────────────────────────────────────────── */
@@ -2029,29 +2133,20 @@ function bootApp() {
   _dashLastLoad  = _now;
 
   // ── BOOT SEQUENCE ─────────────────────────────────────────
-  // Fire wallet + plans in parallel immediately — both are needed
-  // for the first visible screen. loadPlans uses cached data after
-  // the first load so subsequent calls are instant.
-  loadWalletBalance(function() {});
+  // Tier 1 (instant): wallet balance + dashboard + plans — visible immediately
+  loadWalletBalance(function() { loadDashCashflow(); });
   loadPlans();
+  loadRetentionData();
 
-  // My Plan tab — defer 200ms (not visible, low priority)
-  setTimeout(function() { loadSubs(); }, 200);
+  // Tier 2 (50ms): subs + inbox badge — tabs user may switch to immediately
+  setTimeout(function() { loadSubs(); loadInbox(); }, 50);
+  setTimeout(function() { notifLoad(); notifStartRealtime(); }, 100);
 
-  // Inbox badge count — defer 500ms
-  setTimeout(function() { loadInbox(); }, 500);
+  // Tier 3 (300ms): profile/account — lower priority
+  setTimeout(function() { loadAcct(name); }, 300);
 
-  // Dashboard cashflow card — defer 800ms
-  setTimeout(function() { loadDashCashflow(); }, 800);
-
-  // Profile/account data — defer 1000ms
-  setTimeout(function() { loadAcct(name); }, 1000);
-
-  // Auto-pay + delivery check — defer 2s
-  setTimeout(function() { autoActivatePlans(); checkUndeliveredData(); }, 2000);
-
-  // Retention data — streak, savings, dynamic strip, referral
-  setTimeout(function() { loadRetentionData(); }, 1500);
+  // Tier 4 (1.5s): auto-pay check — background, non-blocking
+  setTimeout(function() { autoActivatePlans(); checkUndeliveredData(); }, 1500);
 
   // Wallet polls every 15s — balance reflects within 20s max
   if (_pollTimer) clearInterval(_pollTimer);
@@ -2063,7 +2158,7 @@ function bootApp() {
     loadWalletBalance(function() {});
     _walletPollTick++;
     if (_walletPollTick % 4 === 0) loadInbox(); // inbox every 60s (4 × 15s)
-  }, 15000);
+  }, 8000); /* wallet poll every 8s for faster balance updates */
 }
 
 
@@ -2131,57 +2226,57 @@ function doLogout() {
 /* ── DATA LOADERS ───────────────────────────────────────────── */
 
 // ── Fast single-request balance loader used by all tabs ──────
+function _applyWalletData(w) {
+  if (!w) return;
+  gBal = parseFloat(w.balance) || 0;
+  if (!gProfile) gProfile = {};
+  var acctNum  = w.paystack_dva_account_number || w.virtual_account_number || '';
+  var bankName = w.paystack_dva_bank_name || w.virtual_bank_name || '';
+  var acctName = w.paystack_dva_account_name || '';
+  gProfile.virtual_account_number = acctNum;
+  gProfile.virtual_account_bank   = bankName;
+  gProfile.virtual_account_name   = acctName;
+  var balStr = fmtN(gBal);
+  if ($('d-bal')) $('d-bal').textContent = balStr;
+  var _hb = $('d-bal-dash');
+  if (_hb) {
+    var _prev = parseFloat((_hb.textContent||'0').replace(/[^0-9.]/g,''))||0;
+    if (Math.abs(gBal-_prev)>0.5) {
+      try { animateBalance(_hb,_prev,gBal,400); } catch(ex) { _hb.textContent=balStr; }
+      _hb.className='hero-bal-amount bal-pop';
+      setTimeout(function(){_hb.className='hero-bal-amount';},400);
+    } else { _hb.textContent=balStr; }
+  }
+  // earn tab balance
+  if ($('earn-wallet-bal')) $('earn-wallet-bal').textContent = fmtN(gBal);
+  var va = acctNum
+    ? 'Acc: ' + acctNum + (bankName ? ' • ' + bankName : '')
+    : 'Tap → Fund Account to add funds';
+  if ($('d-va'))      $('d-va').textContent      = va;
+  if ($('d-va-dash')) $('d-va-dash').textContent = va;
+  if (typeof gRetention !== 'undefined' && gRetention) { try { renderDynamicStrip(); } catch(ex){} }
+  updateWalletLabel();
+}
+
 function loadWalletBalance(cb) {
+  // Show cached balance instantly if we already have it
+  if (gBal > 0 && ($('d-bal') || $('d-bal-dash'))) {
+    var bs = fmtN(gBal);
+    if ($('d-bal'))      $('d-bal').textContent      = bs;
+    if ($('d-bal-dash')) $('d-bal-dash').textContent = bs;
+  }
+  if (!gUser) { if (cb) cb(); return; }
   ensureToken(function(err) {
     if (err) { if (cb) cb(); return; }
     restGet('/wallets', 'user_id=eq.' + gUser.id + '&select=balance,virtual_account_number,virtual_bank_name,paystack_dva_account_number,paystack_dva_bank_name,paystack_dva_account_name', function(e, r) {
-      if (r && r.ok && r.data && r.data[0]) {
-        var w = r.data[0];
-        gBal = parseFloat(w.balance) || 0;
-        if (!gProfile) gProfile = {};
-        // Prefer Paystack DVA, fall back to Lenco VA
-        var acctNum  = w.paystack_dva_account_number || w.virtual_account_number || '';
-        var bankName = w.paystack_dva_bank_name || w.virtual_bank_name || '';
-        var acctName = w.paystack_dva_account_name || '';
-        gProfile.virtual_account_number = acctNum;
-        gProfile.virtual_account_bank   = bankName;
-        gProfile.virtual_account_name   = acctName;
-        // Update every balance display at once
-        var balStr = fmtN(gBal);
-        if ($('d-bal')) $('d-bal').textContent = balStr;
-        var _hb = $('d-bal-dash');
-        if (_hb) {
-          var _prev = parseFloat((_hb.textContent||'0').replace(/[^0-9.]/g,''))||0;
-          if (Math.abs(gBal-_prev)>0.5) {
-            animateBalance(_hb,_prev,gBal,400);
-            _hb.className='hero-bal-amount bal-pop';
-            setTimeout(function(){_hb.className='hero-bal-amount';},400);
-          } else { _hb.textContent=balStr; }
-        }
-        var va = '';
-        if (acctNum) {
-          va = 'Acc: ' + acctNum + (bankName ? ' \u2022 ' + bankName : '');
-        } else {
-          va = 'Tap Account \u2192 Fund Account to add funds';
-        }
-        if ($('d-va')) $('d-va').textContent = va;
-        if ($('d-va-dash')) $('d-va-dash').textContent = va;
-        if (typeof gRetention !== 'undefined' && gRetention) { try { renderDynamicStrip(); } catch(e){} }
-        updateWalletLabel();
-      }
+      if (r && r.ok && r.data && r.data[0]) { _applyWalletData(r.data[0]); }
       if (cb) cb();
     });
   });
 }
 
 function loadDashboard() {
-  // Show cached balance instantly, then refresh in background
-  if (gBal > 0) {
-    var bs = fmtN(gBal);
-    if ($('d-bal'))      $('d-bal').textContent      = bs;
-    if ($('d-bal-dash')) $('d-bal-dash').textContent = bs;
-  }
-  loadWalletBalance(function() {});
+  loadWalletBalance(function() { loadDashCashflow(); });
 }
 
 function netCls(net) {
@@ -2195,7 +2290,7 @@ function netCls(net) {
 
 var _plansCache    = null;  // cached plan data — static, never changes mid-session
 var _plansCacheTs  = 0;    // timestamp of last fetch
-var PLANS_CACHE_MS = 5 * 60 * 1000; // re-fetch after 5 minutes max
+var PLANS_CACHE_MS = 10 * 60 * 1000; // re-fetch after 10 minutes
 
 function loadPlans() {
   var wrap = $('plans-list');
@@ -2207,7 +2302,10 @@ function loadPlans() {
     return;
   }
 
-  wrap.innerHTML = '<div class="empty" style="padding:20px 0;">Loading plans\u2026</div>';
+  // Only show loading indicator if wrap is empty (not showing stale render)
+  if (!wrap.innerHTML || wrap.innerHTML.indexOf('plan-card') === -1) {
+    wrap.innerHTML = '<div class="empty" style="padding:20px 0;">Loading plans…</div>';
+  }
 
   restGet('/data_plans',
     'is_active=eq.true&order=network,sort_order,selling_price&select=id,data_size,network,selling_price,daily_price,validity_days,category',
@@ -2288,7 +2386,7 @@ function _renderPlans(allPlans) {
       html += '<div class="plan-count">' + shown.length + ' plan' + (shown.length === 1 ? '' : 's') + ' available</div>';
 
       if (!shown.length) {
-        html += '<div class="empty" style="grid-column:1/-1;">No plan found under this selection.</div>';
+        html += '<div class="empty" style="grid-column:1/-1;padding:24px 0;text-align:center;">No plans match this filter. <button type="button" onclick="setPlanFilter(\'net\',\'ALL\');setPlanFilter(\'type\',\'ALL\')" style="background:none;border:none;color:#1A56DB;font-weight:700;cursor:pointer;font-family:inherit;font-size:.85rem;">Clear filters</button></div>';
         wrap.innerHTML = html;
         return;
       }
@@ -2333,7 +2431,7 @@ function loadSubs() {
       function(e, r) {
         var wrap = $('subs-list');
         if (!r || !r.ok || !r.data || !r.data.length) {
-          wrap.innerHTML = '<div class="empty">No plans yet.</div>';
+          wrap.innerHTML = '<div class="empty" style="padding:30px 0;text-align:center;"><div style="font-size:2rem;margin-bottom:8px;">📱</div><div style="font-size:.88rem;color:#6B7280;">No active plans yet.<br>Tap Subscribe to get started.</div></div>';
           return;
         }
         wrap.innerHTML = renderSubsList(r.data, false);
@@ -2504,7 +2602,7 @@ function loadInbox() {
       }
       restGet('/notifications', 'user_id=eq.' + gUser.id + '&order=created_at.desc&limit=20', function(e, r) {
         if (!r || !r.ok || !r.data || !r.data.length) {
-          wrap.innerHTML = '<div class="empty">No messages or notifications.</div>';
+          wrap.innerHTML = '<div class="empty" style="padding:30px 0;text-align:center;"><div style="font-size:2rem;margin-bottom:8px;">💬</div><div style="font-size:.88rem;color:#6B7280;">No messages yet.<br>Tap New Message to contact support.</div></div>';
           updateInboxBadge(0);
           return;
         }
@@ -2754,7 +2852,7 @@ function confirmSub() {
       }
       _savePhone(phone);      // remember this number for next time
       closeModal('m-sub');
-      toast('\u2705 Subscribed to ' + gSelPlan.data_size + '! Delivering once fully paid.');
+      toast('\u2705 Subscribed! ' + gSelPlan.data_size + ' is on its way.' + '! Delivering once fully paid.');
       if (r.data && r.data.delivery_queued) { setTimeout(function(){try{confettiBurst(window.innerWidth/2,window.innerHeight/3);}catch(e){}},400); }
       // Fire Auto-Fund if enabled
       if (autoFundOn && autoFundAmt >= 100 && gSelPlan) {
@@ -3055,13 +3153,13 @@ function sendMessage() {
       subject:      subject,
       body:         body,
       type:         type,
-      recipient:    'info@databulge.com'
+      recipient:    'support@databulge.com'
     }, function() { /* fire-and-forget — DB record is the source of truth */ });
     closeModal('m-compose');
     $('compose-subject').value = '';
     $('compose-body').value    = '';
     $('compose-type').value    = 'support';
-    toast('Message sent. We’ll respond to ' + userEmail + ' shortly.');
+    toast('Message sent. We’ll get back to you at ' + userEmail + ' from support@databulge.com shortly.');
     loadInbox();
   });
 }
@@ -3082,7 +3180,7 @@ function sendReply() {
       subject:    replySubject,
       body:       body,
       type:       'support',
-      recipient:  'info@databulge.com'
+      recipient:  'support@databulge.com'
     }, function() {});
     $('msg-reply-text').value = '';
     closeModal('m-msg-detail');
@@ -3252,6 +3350,20 @@ function parseHash() {
   gRefresh = params.refresh_token || '';
   gExpiry  = Date.now() + ((parseInt(params.expires_in, 10) || 3600) * 1000);
 
+  // PASSWORD RECOVERY: forward to the dedicated reset-password.html page
+  // (This handles the rare edge case where the link opens the main app instead)
+  if (params.type === 'recovery') {
+    // Store tokens temporarily so reset-password.html can pick them up
+    try {
+      localStorage.setItem('__db_recov_at__', params.access_token);
+      localStorage.setItem('__db_recov_rt__', params.refresh_token || '');
+    } catch(e) {}
+    hideSplash();
+    window.location.replace('https://www.databulge.com/reset-password.html');
+    return true;
+  }
+
+  // NORMAL OAuth login (Google etc.) — log in and boot app
   xhr('GET', AUTH + '/user',
     { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + gToken, 'Content-Type': 'application/json' },
     null,
@@ -3418,7 +3530,7 @@ function loadDashCashflow() {
       function(e3, r3) {
         var wrap = $('dash-subs-d'); if (!wrap) return;
         var data = (r3 && r3.ok && r3.data) ? r3.data : [];
-        if (!data.length) { wrap.innerHTML = '<div class="empty">No active plans. Tap Buy Data to subscribe.</div>'; return; }
+        if (!data.length) { wrap.innerHTML = '<div class="empty">No active plans. Tap Subscribe to get started.</div>'; return; }
         var html = '', i;
         for (i = 0; i < data.length; i++) {
           var s = data[i], pl = s.data_plans || {};
@@ -3507,6 +3619,21 @@ function wire() {
   // Terms modal
   if ($('m-terms-x'))    $('m-terms-x').onclick    = function() { closeModal('m-terms'); };
   if ($('m-terms-agree'))$('m-terms-agree').onclick = function() { closeModal('m-terms'); };
+  // Reset password modal
+  if ($('m-reset-x'))  $('m-reset-x').onclick  = function() { closeModal('m-reset-pass'); gRecovAT = ''; gRecovRT = ''; };
+  if ($('r-btn'))      $('r-btn').onclick       = doResetPassword;
+  if ($('m-reset-pass'))$('m-reset-pass').onclick = function(e) { if (e.target === $('m-reset-pass')) return; /* disallow backdrop close on reset */ };
+  if ($('r-pass'))     $('r-pass').oninput      = function() { checkPasswordStrength(this.value); };
+  // Refund modal
+  if ($('m-refund-x')) $('m-refund-x').onclick = function() { closeModal('m-refund'); };
+  if ($('m-refund'))   $('m-refund').onclick    = function(e) { if (e.target === $('m-refund')) closeModal('m-refund'); };
+  // Forgot modal
+  if ($('m-forgot-x'))   $('m-forgot-x').onclick   = function() { closeModal('m-forgot'); };
+  if ($('fg-send-btn'))  $('fg-send-btn').onclick   = doForgot;
+  if ($('m-forgot'))     $('m-forgot').onclick      = function(e) { if (e.target === $('m-forgot')) closeModal('m-forgot'); };
+  // Terms modal
+  if ($('m-terms-x'))    $('m-terms-x').onclick     = function() { closeModal('m-terms'); };
+  if ($('m-terms-agree'))$('m-terms-agree').onclick  = function() { closeModal('m-terms'); };
   // Logout
   $('logout-btn').onclick = doLogout;
 
@@ -4724,7 +4851,13 @@ function renderStreakStrip() {
   if(!strip)return;
   if(cur<1){strip.style.display='none';return;}
   var fire=cur>=7?'&#127942;':cur>=3?'&#128293;':'&#9889;&#65039;';
-  var sub=cur===1?'day streak — keep going!':cur<7?'days in a row — you are on fire!':cur<14?'days — incredible streak!':'days — legendary streak!';
+  var sub='';
+  if(cur===0) sub='Visit the app daily to build your streak.';
+  else if(cur===1) sub='day — great start! Come back tomorrow.';
+  else if(cur<5) sub='days in a row. Keep opening the app daily!';
+  else if(cur<10) sub='days — you are building a real habit!';
+  else if(cur<30) sub='days straight. You are consistent! Best: '+bst+' days';
+  else sub='day streak — legendary discipline! Best ever: '+bst;
   if($('streak-fire'))$('streak-fire').innerHTML=fire;
   if($('streak-count'))$('streak-count').textContent=cur;
   if($('streak-sub'))$('streak-sub').textContent=sub;
@@ -4736,13 +4869,18 @@ function renderDynamicStrip() {
   var d=gRetention||{},strip=$('dynamic-strip'),icon=$('dynamic-strip-icon'),text=$('dynamic-strip-text');
   if(!strip)return;
   var msgs=[],cur=parseInt(d.streak)||0,saved=parseFloat(d.month_saved)||0,plans=parseInt(d.plans_total)||0,bal=gBal||0,refs=parseInt(d.referrals_done)||0;
-  if(saved>0)msgs.push({cls:'green',icon:'&#128176;',text:"You've saved ₦"+fmtN(saved)+" this month paying in installments instead of upfront.",action:null});
-  if(cur>=3)msgs.push({cls:'warn',icon:'&#128293;',text:cur+"-day streak — don't break it! Open the app daily to keep it alive.",action:null});
-  if(bal>0&&bal<200)msgs.push({cls:'warn',icon:'&#9888;&#65039;',text:'Low wallet balance (₦'+fmtN(bal)+'). Top up to keep your plans active.',action:function(){openModal('m-fund');}});
-  if(plans===0)msgs.push({cls:'',icon:'&#128225;',text:'Start your first plan — pick any data bundle and pay small small every day.',action:function(){showTab('plans');}});
-  if(refs===0)msgs.push({cls:'promo',icon:'&#127881;',text:'Refer a friend and earn ₦200 wallet credit. Share your code from the dashboard.',action:null});
-  if(plans>=3)msgs.push({cls:'green',icon:'&#127881;',text:"You've completed "+plans+" plans. You're a DataBulge power user!",action:null});
-  if(!msgs.length)msgs.push({cls:'',icon:'&#128161;',text:'Tip: Enable auto-renew so you never run out of data mid-month.',action:null});
+  /* Each message is honest — only shows when the data supports it */
+  if(bal>0&&bal<200) msgs.push({cls:'warn',icon:'&#9888;&#65039;',text:'Your wallet has ₦'+fmtN(bal)+' — top up now to avoid missing your daily installment.',action:function(){openModal('m-fund');}});
+  if(saved>0&&plans>0) msgs.push({cls:'green',icon:'&#128176;',text:'You paid installments for '+plans+' plan'+(plans!==1?'s':'')+' this month — ₦'+fmtN(saved)+' saved vs paying upfront.',action:function(){showTab('wallet');}});
+  if(cur>=3&&cur<7) msgs.push({cls:'warn',icon:'&#128293;',text:cur+'-day streak! Open the app every day to protect it. Miss a day and it resets to zero.',action:null});
+  if(cur>=7) msgs.push({cls:'warn',icon:'&#127942;',text:cur+'-day streak! You have been consistent for '+cur+' days straight. Keep it going.',action:null});
+  if(plans===0&&bal<=0) msgs.push({cls:'',icon:'&#128225;',text:'Fund any amount to your wallet, then choose a plan and start paying daily.',action:function(){openModal('m-fund');}});
+  if(plans===0&&bal>0) msgs.push({cls:'green',icon:'&#128225;',text:'Your wallet is funded. Go to Subscribe, pick a plan, and your data journey begins.',action:function(){showTab('plans');}});
+  if(refs===0&&plans>=1) msgs.push({cls:'promo',icon:'&#127881;',text:'You can earn ₦200 for every friend who subscribes using your referral code.',action:function(){var c=$('referral-card');if(c)c.scrollIntoView({behavior:'smooth'});}});
+  if(plans>=1&&bal<100) msgs.push({cls:'warn',icon:'&#128178;',text:'Fund ₦'+fmtN(Math.max(100,Math.ceil(bal/50)*50+100))+' or more to ensure your next installment goes through without issues.',action:function(){openModal('m-fund');}});
+  if(plans>=3&&cur<1) msgs.push({cls:'green',icon:'&#127881;',text:'You have completed '+plans+' plans total. Open the app daily to start building your streak.',action:null});
+  if(!msgs.length&&plans>=1) msgs.push({cls:'',icon:'&#128161;',text:'Tip: Enable auto-renew on your active plan so your data never goes out mid-month.',action:function(){showTab('subs');}});
+  if(!msgs.length) msgs.push({cls:'',icon:'&#128225;',text:'Fund any amount to your wallet and pick your first plan to get started.',action:function(){openModal('m-fund');}});
   var idx=Math.floor(Date.now()/30000)%msgs.length,m=msgs[idx];
   strip.className='dynamic-strip'+(m.cls?' '+m.cls:'');
   if(icon)icon.innerHTML=m.icon;
@@ -4753,12 +4891,64 @@ function renderDynamicStrip() {
 
 function dynamicStripAction(){if(_dynamicStripAction)_dynamicStripAction();}
 
+function openStreakDetail() {
+  var d = gRetention || {};
+  var cur  = parseInt(d.streak) || 0;
+  var best = parseInt(d.longest_streak) || 0;
+  var plans = parseInt(d.plans_total) || 0;
+  var mPlans = parseInt(d.month_plans) || 0;
+  var refs  = parseInt(d.referrals_done) || 0;
+  var fire  = cur >= 7 ? '🏆' : cur >= 3 ? '🔥' : cur >= 1 ? '⚡' : '💤';
+  var msg = '';
+  if (cur === 0) msg = 'You have no active streak yet. Open the app every day and make at least one action (subscribe, pay an installment, or fund your wallet) to build your streak.';
+  else if (cur < 3) msg = 'You started a streak ' + cur + ' day' + (cur !== 1 ? 's' : '') + ' ago. Keep coming back daily — streaks unlock milestones at 3, 7, 14, and 30 days.';
+  else if (cur < 7) msg = cur + ' days in a row! A 7-day streak is within reach. Keep opening the app and taking action daily.';
+  else if (cur < 14) msg = cur + '-day streak! You are in the top tier of consistent users. Milestone at 14 days straight.';
+  else if (cur < 30) msg = cur + ' days of daily consistency — impressive! You are 1 in 20 DataBulge users. Next milestone: 30 days.';
+  else msg = cur + '-day streak — legendary! You are one of the most consistent users on DataBulge.';
+
+  var html = '<div style="text-align:center;padding:8px 0 12px;">' +
+    '<div style="font-size:2.8rem;margin-bottom:6px;">' + fire + '</div>' +
+    '<div style="font-size:2rem;font-weight:900;color:#c2410c;letter-spacing:-.04em;">' + cur + ' day' + (cur !== 1 ? 's' : '') + '</div>' +
+    '<div style="font-size:.78rem;color:#9a3412;font-weight:700;margin-bottom:14px;">Current streak</div>' +
+    '<div style="display:flex;gap:10px;justify-content:center;margin-bottom:16px;">' +
+      '<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:10px 16px;min-width:80px;">' +
+        '<div style="font-size:1.4rem;font-weight:900;color:#c2410c;">' + best + '</div>' +
+        '<div style="font-size:.68rem;color:#9a3412;font-weight:700;">Best ever</div>' +
+      '</div>' +
+      '<div style="background:#eaf5ee;border:1px solid #c8e6d2;border-radius:12px;padding:10px 16px;min-width:80px;">' +
+        '<div style="font-size:1.4rem;font-weight:900;color:#2d7a44;">' + plans + '</div>' +
+        '<div style="font-size:.68rem;color:#2d7a44;font-weight:700;">Plans done</div>' +
+      '</div>' +
+      '<div style="background:#fdf4ff;border:1px solid #e9d5ff;border-radius:12px;padding:10px 16px;min-width:80px;">' +
+        '<div style="font-size:1.4rem;font-weight:900;color:#7c3aed;">' + refs + '</div>' +
+        '<div style="font-size:.68rem;color:#7c3aed;font-weight:700;">Referrals</div>' +
+      '</div>' +
+    '</div>' +
+    '<div style="font-size:.8rem;color:#555;line-height:1.6;background:#f9fafb;border-radius:10px;padding:12px;text-align:left;margin-bottom:14px;">' + msg + '</div>' +
+    (cur < 3 ? '<button class="btn btn-blue" onclick="showTab('plans');closeModal('m-streak')" style="margin:0;">Go subscribe now</button>' :
+              '<button class="btn btn-blue" onclick="closeModal('m-streak')" style="margin:0;">Keep it going ✊</button>') +
+  '</div>';
+
+  /* Reuse the VA modal as a generic detail modal */
+  var box = $('m-va-content');
+  if (box) box.innerHTML = html;
+  var title = $('m-va') && $('m-va').querySelector('.modal-title');
+  if (title) title.textContent = 'Your Streak';
+  openModal('m-va');
+}
+
 function renderSavingsCard() {
-  var d=gRetention||{},saved=parseFloat(d.month_saved)||0,plans=parseInt(d.month_plans)||0,card=$('savings-card');
+  var d=gRetention||{},saved=parseFloat(d.month_saved)||0,plans=parseInt(d.month_plans)||0,paid=parseFloat(d.month_paid)||0,card=$('savings-card');
   if(!card)return;
-  if(saved<50||plans<1){card.style.display='none';return;}
-  if($('savings-amount'))$('savings-amount').textContent='₦'+fmtN(saved);
-  if($('savings-sub'))$('savings-sub').textContent='across '+plans+' plan'+(plans!==1?'s':'')+' this month — paying in installments instead of upfront.';
+  if(saved<1||plans<1){card.style.display='none';return;}
+  if($('savings-amount'))$('savings-amount').textContent='\u20A6'+fmtN(saved);
+  /* Savings = difference between upfront cost and what they actually paid via installments */
+  var surcharge=paid>0?Math.round((paid/(plans>0?plans:1))*0.04):0;
+  var sub='';
+  if(plans===1) sub='You completed 1 plan this month by paying \u20A6'+fmtN(Math.round(paid/plans||0))+' daily instead of all at once.';
+  else sub='Across '+plans+' plans this month. You paid small daily instead of a big upfront amount.';
+  if($('savings-sub'))$('savings-sub').textContent=sub;
   card.style.display='';
 }
 
@@ -4766,7 +4956,18 @@ function checkOnboarding() {
   var banner=$('onboard-banner');
   if(!banner)return;
   var plans=parseInt((gRetention||{}).plans_total)||0;
-  banner.style.display=(plans===0&&gBal<1)?'':'none';
+  var bal=gBal||0;
+  if(plans>0){banner.style.display='none';return;}
+  /* New user with no plans */
+  var h3=banner.querySelector('h3'),p=banner.querySelector('p');
+  if(bal<=0){
+    if(h3)h3.textContent='Get your first data plan in 60 seconds';
+    if(p)p.textContent='Fund any amount to your DataBulge wallet, pick a plan, and start paying small daily. No large upfront payment required.';
+  } else {
+    if(h3)h3.textContent='Your wallet is ready — pick a plan!';
+    if(p)p.innerHTML='You have <strong>₦'+fmtN(bal)+'</strong> in your wallet. Choose any plan and start paying daily. Your data is delivered when you complete payment.';
+  }
+  banner.style.display='';
 }
 
 function renderReferralCard() {
@@ -4775,7 +4976,15 @@ function renderReferralCard() {
   var rc=(gUser.id||'').replace(/-/g,'').slice(0,8).toUpperCase();
   if(code)code.textContent=rc;
   var d=gRetention||{},refs=parseInt(d.referrals_done)||0;
-  if(label)label.textContent=refs>0?refs+' friend'+(refs!==1?'s':'')+' referred — ₦'+fmtN(refs*200)+' earned':'No referrals yet — be the first to share!';
+  var plans=parseInt(d.plans_total)||0;
+  /* Use the actual referral_code from get_retention_data if present */
+  var realCode=d.referral_code||'';
+  if(realCode&&code)code.textContent=realCode;
+  var labelText='';
+  if(refs===0&&plans===0)labelText='Share your code and both you and your friend get ₦200 when they subscribe.';
+  else if(refs===0)labelText='No referrals credited yet. Share your code — you earn ₦200 per friend who subscribes.';
+  else labelText=refs+' friend'+(refs!==1?'s':'')+' referred. You've earned ₦'+fmtN(refs*200)+' in referral credits.';
+  if(label)label.textContent=labelText;
   card.style.display='';
 }
 
@@ -5242,7 +5451,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
         '<div class="friend-sub">Buy data now, pay small small, and stay online without pressure.</div></div>'+ 
         '<div class="friend-pill">📶 Your data friend</div></div>'+ 
         '<div class="friend-balance"><div><div class="friend-bal-label">Available balance</div><div class="friend-bal-val" id="friend-bal-val">'+bal+'</div></div><div style="font-size:.76rem;opacity:.82;font-weight:800;text-align:right;">Ready when you are</div></div>'+ 
-        '<div class="friend-cta-row"><button class="friend-cta primary" onclick="openFundModal()">Add small money</button><button class="friend-cta secondary" onclick="document.getElementById(\'plans-list\').scrollIntoView({behavior:\'smooth\',block:\'start\'});">Find a plan</button></div>'+ 
+        '<div class="friend-cta-row"><button class="friend-cta primary" onclick="openFundModal()">+ Fund Account</button><button class="friend-cta secondary" onclick="document.getElementById(\'plans-list\').scrollIntoView({behavior:\'smooth\',block:\'start\'});">Subscribe</button></div>'+ 
       '</div>'+ 
       '<div class="friend-daily" id="friend-daily"><div class="friend-daily-icon">'+msg[0]+'</div><div><div class="friend-daily-title">Today’s friendly nudge</div><div class="friend-daily-sub">'+safeEsc(msg[1])+'</div></div></div>'+ 
       '<div class="friend-quick-grid" id="friend-quick-grid"><button class="friend-action-card fund" onclick="openFundModal()"><span class="emoji">💚</span><strong>Fund with ease</strong><span>Your wallet updates automatically after transfer.</span></button><button class="friend-action-card plan" onclick="document.getElementById(\'plans-list\').scrollIntoView({behavior:\'smooth\',block:\'start\'});"><span class="emoji">🎯</span><strong>Choose your vibe</strong><span>MTN, Airtel, Glo or 9mobile — paid your way.</span></button></div>';
@@ -5359,13 +5568,13 @@ window.detectAndSaveLocation = detectAndSaveLocation;
   }
   function injectHome(){
     var dash=$('tc-dash'); if(!dash || $('db-companion-welcome')) return;
-    var welcome=make('div','companion-welcome','<div class="companion-kicker">Your connection buddy</div><div class="companion-title">Welcome back. Let’s keep you online without pressure.</div><div class="companion-copy">Start small, stay connected, and watch your progress grow every day.</div><div class="companion-actions"><button type="button" class="companion-primary" id="db-start-plan">Start with just ₦10</button><button type="button" class="companion-secondary" id="db-view-plans">Explore plans</button></div>');
+    var welcome=make('div','companion-welcome','<div class="companion-kicker">Your connection buddy</div><div class="companion-title">Welcome back. Let’s keep you online without pressure.</div><div class="companion-copy">Start small, stay connected, and watch your progress grow every day.</div><div class="companion-actions"><button type="button" class="companion-primary" id="db-start-plan">Start with any amount</button><button type="button" class="companion-secondary" id="db-view-plans">Explore plans</button></div>');
     welcome.id='db-companion-welcome';
     dash.insertBefore(welcome,dash.firstChild);
     on($('db-start-plan'),'click',function(){ safeShowTab('plans'); setTimeout(function(){ safeOpenModal('m-fund'); },160); });
     on($('db-view-plans'),'click',function(){ safeShowTab('plans'); });
 
-    var grid=make('div','momentum-grid','<div class="momentum-card"><div class="momentum-label">Saved this month</div><div class="momentum-value" id="db-m-save">₦450</div><div class="momentum-sub">because you paid small small</div></div><div class="momentum-card"><div class="momentum-label">Current streak</div><div class="momentum-value" id="db-m-streak">🔥 7</div><div class="momentum-sub">days of consistency</div></div><div class="momentum-card"><div class="momentum-label">Next step</div><div class="momentum-value" id="db-m-next">₦10</div><div class="momentum-sub">can start your first plan</div></div><div class="momentum-card"><div class="momentum-label">Momentum</div><div class="momentum-value" id="db-m-progress">60%</div><div class="momentum-sub">keep going today</div></div>');
+    var grid=make('div','momentum-grid','<div class="momentum-card" id="db-mc-save" onclick="safeShowTab(\'wallet\')" style="cursor:pointer;"><div class="momentum-label">Saved This Month</div><div class="momentum-value" id="db-m-save">—</div><div class="momentum-sub" id="db-m-save-sub">loading…</div></div><div class="momentum-card" id="db-mc-streak" onclick="safeShowTab(\'dash\')" style="cursor:pointer;"><div class="momentum-label">Daily Streak</div><div class="momentum-value" id="db-m-streak">—</div><div class="momentum-sub" id="db-m-streak-sub">loading…</div></div><div class="momentum-card" id="db-mc-plans" onclick="safeShowTab(\'subs\')" style="cursor:pointer;"><div class="momentum-label">Plans Completed</div><div class="momentum-value" id="db-m-next">—</div><div class="momentum-sub" id="db-m-next-sub">tap to view</div></div><div class="momentum-card" id="db-mc-wallet" onclick="safeOpenModal(\'m-fund\')" style="cursor:pointer;"><div class="momentum-label">Wallet Balance</div><div class="momentum-value" id="db-m-progress">—</div><div class="momentum-sub" id="db-m-progress-sub">tap to fund</div></div>');
     var hb=$('hero-bal-card'); if(hb && hb.parentNode){ hb.parentNode.insertBefore(grid,hb.nextSibling); }
 
     var guide=make('div','first-plan-guide','<div class="first-plan-title">First plan? We’ll walk you through it.</div><div class="first-plan-copy">No stress. Fund any amount, choose your network, and subscribe in less than 60 seconds.</div><div class="first-plan-steps"><div class="first-plan-step"><span class="first-plan-num">1</span>Send money to your DataBulge account</div><div class="first-plan-step"><span class="first-plan-num">2</span>Pick MTN, Airtel, Glo or 9mobile</div><div class="first-plan-step"><span class="first-plan-num">3</span>Start small and complete gradually</div></div><button type="button" class="btn btn-blue" id="db-guide-btn" style="margin:0;">Get my first plan</button>');
@@ -5375,7 +5584,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
   function enhancePlans(){
     var wrap=$('plans-list'); if(!wrap) return;
     if(!$('db-start-small-note')){
-      var note=make('div','plan-count','<span class="start-small-pill">✨ Start with just ₦10 on selected daily installments</span>');
+      var note=make('div','plan-count','<span class="start-small-pill">✨ Start with any amount on selected daily installments</span>');
       note.id='db-start-small-note';
       wrap.parentNode.insertBefore(note,wrap);
     }
@@ -5392,7 +5601,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
       var sub=c.querySelector('.plan-sub');
       if(sub && sub.innerHTML.indexOf('You can start')<0){ sub.innerHTML=sub.innerHTML+'<br><strong style="color:#065f46;">You can start small today.</strong>'; }
       var btn=c.querySelector('.plan-btn');
-      if(btn && btn.textContent.toLowerCase().indexOf('subscribe')>=0){ btn.innerHTML='Subscribe now'; }
+      if(btn && btn.textContent.toLowerCase().indexOf('subscribe')>=0){ btn.innerHTML='Subscribe'; }
     }
   }
   function purposefulMessages(){
@@ -5408,26 +5617,64 @@ window.detectAndSaveLocation = detectAndSaveLocation;
     }
   }
   function updateDynamic(){
-    var strip=$('dynamic-strip'), txt=$('dynamic-strip-text'), icon=$('dynamic-strip-icon');
-    if(strip && txt){
-      var bal=getBalance();
-      var msgs=[];
-      if(bal<10){ msgs.push(['warn','💡','You can start with just ₦10. Fund small and pick your first plan.']); }
-      msgs.push(['green','🔥','7-day streak — you’re on fire. Keep your connection habit alive today.']);
-      msgs.push(['promo','🎉','You’ve saved about ₦450 this month by paying in installments.']);
-      msgs.push(['','📶','Open DataBulge anytime to see your progress, tips, and next best action.']);
-      var m=msgs[(new Date().getDate()+msgs.length)%msgs.length];
-      strip.className='dynamic-strip '+m[0]; if(icon) icon.innerHTML=m[1]; txt.innerHTML=m[2]; strip.style.display='flex';
+    /* Reads real data from gRetention + gBal — no fake values */
+    var d = (window.gRetention) || {};
+    var bal = parseMoney((($('d-bal')||{}).textContent)||(($('d-bal-dash')||{}).textContent)||'0');
+    if (window.gBal) bal = window.gBal;
+    var cur  = parseInt(d.streak)         || 0;
+    var best = parseInt(d.longest_streak) || 0;
+    var saved  = parseFloat(d.month_saved) || 0;
+    var mPlans = parseInt(d.month_plans)   || 0;
+    var totalPlans = parseInt(d.plans_total) || 0;
+
+    /* Saved this month */
+    if ($('db-m-save')) {
+      text($('db-m-save'), saved > 0 ? '₦' + Math.round(saved).toLocaleString() : '₦0');
+      if ($('db-m-save-sub')) text($('db-m-save-sub'), mPlans > 0 ? mPlans + ' plan' + (mPlans!==1?'s':'') + ' paid this month' : 'No plans completed yet this month');
     }
-    var save=$('savings-card'); if(save){ save.style.display='block'; }
-    text($('savings-amount'),'₦450');
-    text($('savings-sub'),'by using installments instead of paying everything upfront at once.');
-    var streak=$('streak-strip'); if(streak){ streak.style.display='flex'; }
-    text($('streak-count'),'7'); text($('streak-sub'),'days in a row — you’re on fire'); text($('streak-best'),'7');
+    /* Daily streak */
+    if ($('db-m-streak')) {
+      var fireIcon = cur>=7 ? '🏆 ' : cur>=3 ? '🔥 ' : cur>=1 ? '⚡ ' : '';
+      text($('db-m-streak'), fireIcon + (cur || '0'));
+      if ($('db-m-streak-sub')) {
+        if (cur === 0) text($('db-m-streak-sub'), 'Open daily to build your streak');
+        else if (cur === 1) text($('db-m-streak-sub'), 'day — come back tomorrow!');
+        else if (cur < 7) text($('db-m-streak-sub'), 'days in a row — keep it up!');
+        else text($('db-m-streak-sub'), 'days straight! Best: ' + best);
+      }
+    }
+    /* Plans completed */
+    if ($('db-m-next')) {
+      text($('db-m-next'), totalPlans > 0 ? String(totalPlans) : '0');
+      if ($('db-m-next-sub')) {
+        if (totalPlans === 0) text($('db-m-next-sub'), 'Tap Subscribe to start your first plan');
+        else if (totalPlans === 1) text($('db-m-next-sub'), 'plan completed — keep going!');
+        else text($('db-m-next-sub'), 'plans completed — tap to view');
+      }
+    }
+    /* Wallet balance */
+    if ($('db-m-progress')) {
+      text($('db-m-progress'), bal > 0 ? '₦' + Math.round(bal).toLocaleString() : '₦0');
+      if ($('db-m-progress-sub')) {
+        if (bal <= 0) text($('db-m-progress-sub'), 'Tap to fund your wallet');
+        else if (bal < 200) text($('db-m-progress-sub'), 'Low — tap to top up now');
+        else text($('db-m-progress-sub'), 'Ready for your next plan');
+      }
+    }
+    /* Dynamic strip — only update if retention hasn't loaded real data yet */
+    if (!window.gRetention) {
+      var strip = $('dynamic-strip'), txt2 = $('dynamic-strip-text'), icon = $('dynamic-strip-icon');
+      if (strip && txt2 && icon) {
+        icon.innerHTML = '📶';
+        txt2.textContent = bal > 0 ? 'Your wallet is funded. Go to Subscribe and pick a plan.' : 'Fund any amount to your wallet and pick your first plan.';
+        strip.className = 'dynamic-strip' + (bal > 0 ? ' green' : '');
+        strip.style.display = '';
+      }
+    }
   }
   function renameNav(){
     var d=$('tab-dash'); if(d){ var s=d.querySelector('span'); if(s) s.innerHTML='Home'; }
-    var p=$('tab-plans'); if(p){ var ps=p.querySelector('span'); if(ps) ps.innerHTML='Subscribe'; }
+    var p=$('tab-plans'); if(p){ var ps=p.querySelector('span'); /* tab label preserved */ }
     var sub=$('tab-subs'); if(sub){ var ss=sub.querySelector('span'); if(ss) ss.innerHTML='My Plan'; }
     var inb=$('tab-inbox'); if(inb){ var is=inb.querySelector('span:last-child'); if(is) is.innerHTML='Updates'; }
   }
