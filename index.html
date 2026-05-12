@@ -38,7 +38,7 @@
 <style>
 /* ── RESET ── */
 *{-webkit-box-sizing:border-box;box-sizing:border-box;margin:0;padding:0;}
-html,body{width:100%;min-height:100%;background:#fff;font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#111;-webkit-text-size-adjust:100%;}
+html,body{width:100%;min-height:100%;background:#fff;font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#111;-webkit-text-size-adjust:100%;touch-action:manipulation;}
 
 /* ── PAGES ── */
 .pg{display:none;width:100%;min-height:100vh;background:#fff;}
@@ -420,7 +420,9 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 @media(prefers-reduced-motion:reduce){.bal-pop,.plan-card-animate,.conf-piece,.milestone-toast{-webkit-animation:none!important;animation:none!important;}.prog-ring-fill{-webkit-transition:none!important;transition:none!important;}}
 @media(min-width:600px){.active-plan-card{padding:20px;}.hero-bal-amount{font-size:2.6rem;}}
 @media(min-width:900px){.hero-bal-card{padding:28px 24px 22px;}}
-@media(hover:hover){.plan-card:hover{-webkit-box-shadow:0 4px 16px rgba(26,86,219,.12);box-shadow:0 4px 16px rgba(26,86,219,.12);-webkit-transform:translateY(-1px);transform:translateY(-1px);-webkit-transition:all .2s;transition:all .2s;}}
+@media(hover:hover){.plan-card:hover{-webkit-box-shadow:0 4px 16px rgba(26,86,219,.12);box-shadow:0 4px 16px rgba(26,86,219,.12);-webkit-transform:translateY(-1px);transform:translateY(-1px);}}
+/* On touch devices: no hover transition, only instant active scale */
+@media(hover:none){.plan-card{-webkit-transition:none!important;transition:none!important;}}
 /* Plan filter chips — frontend-only list arrangement */
 .plan-filter-card{grid-column:1/-1!important;background:#fff!important;border:1px solid #E6EAF1!important;border-radius:22px!important;box-shadow:0 10px 22px rgba(15,23,42,.06)!important;padding:14px!important;margin-bottom:2px!important;}
 .plan-filter-title{font-size:.76rem!important;color:#6B7280!important;font-weight:900!important;text-transform:uppercase!important;letter-spacing:.07em!important;margin:2px 0 8px!important;}
@@ -430,7 +432,7 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 .plan-count{grid-column:1/-1!important;font-size:.78rem!important;color:#7B8494!important;font-weight:700!important;margin:2px 2px -4px!important;}
 
 /* Modals */
-.modal{backdrop-filter:blur(3px);}
+/* backdrop-filter:blur removed — too expensive on low-end Android */
 .modal-box{overflow:hidden!important;}
 .modal-hdr,.modal-foot{box-shadow:none!important;border-color:#EEF1F6!important;}
 .modal-title{font-weight:900!important;}
@@ -610,6 +612,67 @@ button:focus,.btn:focus,.plan-btn:focus,.tab:focus,.logout-btn:focus,.plan-chip:
 button,.btn,.plan-btn,.tab,.logout-btn,.plan-chip,.avatar,.avatar-menu button{
   -webkit-appearance:none!important;
   appearance:none!important;
+}
+
+/* ── INSTANT TAP RESPONSE — eliminates 300ms Android click delay ── */
+button,
+.btn,
+.plan-btn,
+.plan-chip,
+.tab,
+.bnav-btn,
+.modal-x,
+.logout-btn,
+.eye,
+.forgot-btn,
+.txt-link,
+.onboard-btn,
+.hero-fund-btn,
+.notif-filter,
+.notif-item,
+.plan-card,
+.msg-row,
+.sub-row,
+.dynamic-strip,
+.streak-strip,
+.savings-card,
+.referral-card,
+.friend-cta,
+.friend-action-card,
+[onclick] {
+  -webkit-touch-callout: none !important;     /* iOS: no long-press menu */
+  -webkit-user-select:   none !important;     /* no text selection on tap */
+  user-select:           none !important;
+  touch-action:          manipulation !important; /* removes 300ms delay */
+  -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
+  cursor: pointer;
+}
+
+/* Active press feedback — instant, no transition delay */
+button:active,
+.btn:active,
+.plan-btn:active,
+.plan-chip:active,
+.bnav-btn:active,
+.notif-filter:active,
+.friend-cta:active,
+.friend-action-card:active {
+  -webkit-transform: scale(0.97) !important;
+  transform:         scale(0.97) !important;
+  opacity: 0.88 !important;
+  -webkit-transition: none !important;
+  transition:         none !important;
+}
+
+/* Remove all transitions from buttons — transitions add perceived lag */
+.btn,
+.btn-blue,
+.btn-lite,
+.plan-btn,
+.pay-btn,
+.plan-chip {
+  -webkit-transition: none !important;
+  transition:         none !important;
 }
 .top-bar{min-width:0!important;}
 .top-bar-title{min-width:0!important;-webkit-flex:0 1 auto!important;flex:0 1 auto!important;}
@@ -1787,7 +1850,10 @@ function refreshToken(cb) {
 
 function ensureToken(cb) {
   var now = Date.now();
-  if (gToken && gExpiry > now + 60000) { cb(null); return; }
+  /* Token still valid — fire immediately, no network round trip */
+  if (gToken && gExpiry > now + 120000) { cb(null); return; }
+  /* Token expired or about to expire — refresh */
+  if (!gRefresh) { cb('No session'); return; }
   refreshToken(cb);
 }
 
@@ -1814,7 +1880,9 @@ function _loadSession() {
     if (!s || !s.at) return false;
     gToken   = s.at;
     gRefresh = s.rt;
-    gExpiry  = s.ex || 0;
+    /* If expiry is 0 or missing, assume the token is valid for 1hr
+       so the first ensureToken call fires immediately without refreshing */
+    gExpiry  = (s.ex && s.ex > Date.now()) ? s.ex : (Date.now() + 3600000);
     gUser    = s.user || null;
     return true;
   } catch(e) { return false; }
@@ -1874,6 +1942,8 @@ function showTab(t) {
     if (btn) btn.className = 'bnav-btn' + (tabs[i] === t ? ' act' : '');
     if (tc)  tc.className  = 'tab-content' + (tabs[i] === t ? ' on' : '');
   }
+  /* Instant scroll to top so content is visible immediately */
+  try { window.scrollTo(0, 0); } catch(e) {}
   var now = Date.now();
   if (t === 'dash')   { if (now - _dashLastLoad  > STALE_MS) { _dashLastLoad  = now; loadDashCashflow(); loadRetentionData(); } }
   if (t === 'subs')   { if (now - _subsLastLoad  > STALE_MS) { _subsLastLoad  = now; loadSubs(); } }
@@ -1903,9 +1973,13 @@ function btnLoad(id, on, label) {
     b._lbl = b.textContent;
     b.innerHTML = '<span class="spin"></span>' + (label || '');
     b.disabled = true;
+    b.style.pointerEvents = 'none';
+    b.style.opacity = '0.72';
   } else {
     b.textContent = label || b._lbl || 'Submit';
     b.disabled = false;
+    b.style.pointerEvents = '';
+    b.style.opacity = '';
   }
 }
 
@@ -2133,20 +2207,25 @@ function bootApp() {
   _dashLastLoad  = _now;
 
   // ── BOOT SEQUENCE ─────────────────────────────────────────
-  // Tier 1 (instant): wallet balance + dashboard + plans — visible immediately
+  // All Tier-1 calls fire together — ensureToken returns instantly
+  // when the session was loaded from localStorage (token still valid).
+  // No sequential waiting. Everything loads in parallel.
   loadWalletBalance(function() { loadDashCashflow(); });
   loadPlans();
   loadRetentionData();
+  loadAcct(name);        // account details needed for Fund Account modal
 
-  // Tier 2 (50ms): subs + inbox badge — tabs user may switch to immediately
-  setTimeout(function() { loadSubs(); loadInbox(); }, 50);
-  setTimeout(function() { notifLoad(); notifStartRealtime(); }, 100);
+  // Tier 2 (0ms async tick): subs, inbox, notifications
+  setTimeout(function() {
+    loadSubs();
+    loadInbox();
+    notifLoad();
+    notifStartRealtime();
+    try { if (typeof wireEarnTab === 'function') wireEarnTab(); } catch(ex) {}
+  }, 0);
 
-  // Tier 3 (300ms): profile/account — lower priority
-  setTimeout(function() { loadAcct(name); }, 300);
-
-  // Tier 4 (1.5s): auto-pay check — background, non-blocking
-  setTimeout(function() { autoActivatePlans(); checkUndeliveredData(); }, 1500);
+  // Tier 3 (background): auto-pay and delivery checks
+  setTimeout(function() { autoActivatePlans(); checkUndeliveredData(); }, 1200);
 
   // Wallet polls every 15s — balance reflects within 20s max
   if (_pollTimer) clearInterval(_pollTimer);
@@ -2398,7 +2477,7 @@ function _renderPlans(allPlans) {
         var nn = normNet(p.network);
         var pillC = netCls(nn);
         var _acl=(_acl||'');_acl=(p.network||'').toUpperCase();var _accentC=_acl==='MTN'?'net-mtn-accent':_acl==='AIRTEL'?'net-airtel-accent':_acl==='GLO'?'net-glo-accent':_acl==='9MOBILE'?'net-9mobile-accent':'';
-        html += '<div class="plan-card plan-card-animate ' + _accentC + '">' +
+        html += '<div class="plan-card ' + _accentC + '">' +
           '<div>' +
             '<div class="plan-top">' +
               '<span class="plan-net ' + pillC + '">' + esc2(nn) + '</span>' +
@@ -2627,28 +2706,93 @@ function loadInbox() {
 }
 
 function loadAcct(name) {
+  if (!gUser) return;
   var wrap = $('acct-rows');
-  var baseHtml = '<div class="row-line"><span class="row-label">Name</span><span class="row-val">' + esc(name) + '</span></div>' +
+  var baseHtml =
+    '<div class="row-line"><span class="row-label">Name</span><span class="row-val">' + esc(name) + '</span></div>' +
     '<div class="row-line"><span class="row-label">Email</span><span class="row-val">' + esc(gUser.email) + '</span></div>';
   if (wrap) wrap.innerHTML = baseHtml;
-  // Load phone from profile
+
   ensureToken(function(err) {
     if (err) return;
-    restGet('/profiles', 'user_id=eq.' + gUser.id + '&select=phone,full_name,virtual_account_number,virtual_bank_name,paystack_dva_account_number,paystack_dva_bank_name,paystack_dva_account_name', function(e, r) {
-      if (r && r.ok && r.data && r.data[0]) {
-        var p = r.data[0]; gProfile = p;
-        if (p.full_name) updateGreeting(p.full_name);
-        var extra = '';
-        if (p.phone) extra += '<div class="row-line"><span class="row-label">Phone</span><span class="row-val">' + esc(p.phone) + '</span></div>';
-        if (p.virtual_account_number || p.paystack_dva_account_number) {
-          var pAcct = p.paystack_dva_account_number || p.virtual_account_number || '';
-          var pBank = p.paystack_dva_bank_name || p.virtual_bank_name || '';
-          extra += '<div class="row-line"><span class="row-label">Account Number</span><span class="row-val">' + esc(pAcct) + '</span></div>';
-          if (pBank) extra += '<div class="row-line"><span class="row-label">Bank</span><span class="row-val">' + esc(pBank) + '</span></div>';
-        }
-        if (wrap) wrap.innerHTML = baseHtml + extra;
+    /* Fetch profile + wallet VA in a single parallel batch */
+    var done = 0;
+    var profileData = null, walletData = null;
+
+    function mergeAndRender() {
+      done++;
+      if (done < 2) return; /* wait for both */
+
+      var p = profileData;
+      var w = walletData;
+
+      /* Populate gProfile with everything we know */
+      if (!gProfile) gProfile = {};
+      if (p) {
+        gProfile.phone              = p.phone         || gProfile.phone  || '';
+        gProfile.full_name          = p.full_name      || gProfile.full_name || '';
+        gProfile.referral_code      = p.referral_code  || gProfile.referral_code || '';
       }
-    });
+      if (w) {
+        /* Prefer Paystack DVA, fall back to Lenco VA */
+        gProfile.virtual_account_number = w.paystack_dva_account_number || w.virtual_account_number || gProfile.virtual_account_number || '';
+        gProfile.virtual_account_bank   = w.paystack_dva_bank_name      || w.virtual_bank_name      || gProfile.virtual_account_bank   || '';
+        gProfile.virtual_account_name   = w.paystack_dva_account_name   || gProfile.virtual_account_name || '';
+        /* Update balance too while we have fresh wallet data */
+        if (w.balance !== undefined) {
+          gBal = parseFloat(w.balance) || 0;
+          var bs = fmtN(gBal);
+          if ($('d-bal'))      $('d-bal').textContent      = bs;
+          if ($('d-bal-dash')) $('d-bal-dash').textContent = bs;
+          if ($('earn-wallet-bal')) $('earn-wallet-bal').textContent = bs;
+        }
+      }
+
+      /* Update greeting with real name */
+      if (gProfile.full_name) updateGreeting(gProfile.full_name);
+
+      /* Render account rows */
+      var extra = '';
+      if (gProfile.phone)
+        extra += '<div class="row-line"><span class="row-label">Phone</span><span class="row-val">' + esc(gProfile.phone) + '</span></div>';
+      if (gProfile.virtual_account_number) {
+        extra += '<div class="row-line"><span class="row-label">Account No.</span><span class="row-val" style="font-weight:900;font-size:1rem;letter-spacing:.04em;">' + esc(gProfile.virtual_account_number) + '</span></div>';
+        if (gProfile.virtual_account_bank)
+          extra += '<div class="row-line"><span class="row-label">Bank</span><span class="row-val">' + esc(gProfile.virtual_account_bank) + '</span></div>';
+        if (gProfile.virtual_account_name)
+          extra += '<div class="row-line"><span class="row-label">Account Name</span><span class="row-val">' + esc(gProfile.virtual_account_name) + '</span></div>';
+      }
+      if (wrap) wrap.innerHTML = baseHtml + extra;
+
+      /* Update VA display everywhere */
+      var vaStr = gProfile.virtual_account_number
+        ? 'Acc: ' + gProfile.virtual_account_number + (gProfile.virtual_account_bank ? ' • ' + gProfile.virtual_account_bank : '')
+        : 'Tap + Fund Account to add money';
+      if ($('d-va'))      $('d-va').textContent      = vaStr;
+      if ($('d-va-dash')) $('d-va-dash').textContent = vaStr;
+
+      updateWalletLabel();
+    }
+
+    /* Parallel fetch 1: profile */
+    restGet('/profiles',
+      'user_id=eq.' + gUser.id +
+      '&select=phone,full_name,referral_code,virtual_account_number,virtual_bank_name,paystack_dva_account_number,paystack_dva_bank_name,paystack_dva_account_name',
+      function(e, r) {
+        profileData = (r && r.ok && r.data && r.data[0]) ? r.data[0] : null;
+        mergeAndRender();
+      }
+    );
+
+    /* Parallel fetch 2: wallet (balance + VA — single source of truth) */
+    restGet('/wallets',
+      'user_id=eq.' + gUser.id +
+      '&select=balance,virtual_account_number,virtual_bank_name,paystack_dva_account_number,paystack_dva_bank_name,paystack_dva_account_name',
+      function(e, r) {
+        walletData = (r && r.ok && r.data && r.data[0]) ? r.data[0] : null;
+        mergeAndRender();
+      }
+    );
   });
 }
 
@@ -2929,22 +3073,36 @@ function copyText(txt) {
 function openFundModal() {
   errHide('m-fund-err');
   _loadWalletMandate();
-  var vaHtml = getVAHtml(true);
-  $('m-fund-va').style.display = 'block';
-  $('m-fund-va').innerHTML = vaHtml || '<div class="empty">No account details found yet. Please wait a moment for account generation or contact support.</div>';
   openModal('m-fund');
-  if (vaHtml) return;
+
+  /* Show VA instantly from cached profile — no network wait */
+  var vaHtml = getVAHtml(true);
+  var vaBox = $('m-fund-va');
+  if (vaBox) {
+    vaBox.style.display = 'block';
+    if (vaHtml) {
+      vaBox.innerHTML = vaHtml;
+      return; /* Already have details — done */
+    }
+    /* VA not in cache yet — show a loading state, then fetch */
+    vaBox.innerHTML = '<div class="empty" style="padding:14px 0;font-size:.82rem;">&#8987; Loading account details…</div>';
+  }
+
+  /* Fetch VA from edge function (only runs if not already in gProfile) */
   ensureToken(function(err) {
     if (err) return;
     edgeFn('paystackVirtualAccount', {}, function(e, r) {
+      if (!vaBox) return;
       if (r && r.ok && r.data) {
         if (!gProfile) gProfile = {};
-        gProfile.virtual_account_number = r.data.account_number || r.data.virtual_account_number || gProfile.virtual_account_number;
-        gProfile.virtual_account_bank = r.data.bank_name || r.data.virtual_account_bank || gProfile.virtual_account_bank;
-        $('m-fund-va').innerHTML = getVAHtml(true) || '<div class="empty">Account setup is not available right now.</div>';
-        loadDashboard();
-        loadWalletTab();
-        loadAcct((gUser.user_metadata && gUser.user_metadata.full_name) || (gUser.email || 'User'));
+        gProfile.virtual_account_number = r.data.account_number || r.data.virtual_account_number || (gProfile && gProfile.virtual_account_number) || '';
+        gProfile.virtual_account_bank   = r.data.bank_name      || r.data.virtual_account_bank   || (gProfile && gProfile.virtual_account_bank) || '';
+        gProfile.virtual_account_name   = r.data.account_name   || r.data.virtual_account_name   || (gProfile && gProfile.virtual_account_name) || '';
+        vaBox.innerHTML = getVAHtml(true) || '<div class="empty">Account setup is not available right now. Please contact support.</div>';
+        /* Refresh balance display too */
+        loadWalletBalance(function() {});
+      } else {
+        vaBox.innerHTML = '<div class="empty" style="padding:14px 0;font-size:.82rem;">Could not load account details. Please try again.</div>';
       }
     });
   });
@@ -3061,17 +3219,27 @@ function loadWalletTab() {
     if (err) return;
     var wrap = $('wallet-tab-content');
     if (!wrap) return;
-    // Show cached balance instantly — no spinner
+    /* Render instantly from cached data — no waiting */
+    var vaHtml = getVAHtml(false);
     var html = '';
     html += '<button class="btn btn-blue" onclick="openFundModal()" style="margin-bottom:12px;">+ Fund Account</button>';
-    html += '<div class="card"><div class="card-title">Account Balance</div><div class="card-val">' + fmtN(gBal) + '</div><div class="card-sub">Updates after funding or installment payment.</div></div>';
-    var vaHtml = getVAHtml(false);
-    if (vaHtml) html += vaHtml;
-    if ($('acct-rows') && $('acct-rows').innerHTML) html += '<div class="card"><div class="sec-title">Profile</div>' + $('acct-rows').innerHTML + '</div>';
-    html += '<div id="wallet-tx-list"><div class="empty" style="font-size:.75rem;">Loading transactions\u2026</div></div>';
+    html += '<div class="card">' +
+      '<div class="card-title">Wallet Balance</div>' +
+      '<div class="card-val">' + fmtN(gBal) + '</div>' +
+      '<div class="card-sub">Last updated: ' + (new Date().toLocaleTimeString('en-NG', {hour:'2-digit',minute:'2-digit'})) + '</div>' +
+      '</div>';
+    if (vaHtml) {
+      html += vaHtml;
+    } else {
+      html += '<div class="va-box" style="opacity:.6;"><div class="va-bank">Loading account details…</div></div>';
+    }
+    if ($('acct-rows') && $('acct-rows').innerHTML) {
+      html += '<div class="card"><div class="sec-title">Profile</div>' + $('acct-rows').innerHTML + '</div>';
+    }
+    html += '<div id="wallet-tx-list"><div class="empty" style="font-size:.75rem;">Loading transactions…</div></div>';
     wrap.innerHTML = html;
     // Only fetch transactions (balance already cached)
-    restGet('/wallet_transactions', 'user_id=eq.' + gUser.id + '&select=type,amount,reference,metadata,created_at&order=created_at.desc&limit=20', function(e2, r2) {
+    restGet('/wallet_transactions', 'user_id=eq.' + gUser.id + '&select=type,amount,description,reference,metadata,created_at&order=created_at.desc&limit=20', function(e2, r2) {
       var txWrap = $('wallet-tx-list');
       if (!txWrap) return;
       var list = (r2 && r2.ok && r2.data) ? r2.data : [];
@@ -3080,7 +3248,7 @@ function loadWalletTab() {
       for (i = 0; i < list.length; i++) {
         t = list[i]; type = t.type || 'credit';
         icon = type === 'debit' ? '\u2212' : (type === 'refund' ? '\u21ba' : '+');
-        desc = ((t.description || (t.metadata && t.metadata.description))) ? t.metadata.description : type;
+        desc = t.description || (t.metadata && t.metadata.description) || type;
         txHtml += '<div class="tx-row">' +
           '<div class="tx-left"><div class="tx-ico">' + icon + '</div><div>' +
           '<div class="tx-desc">' + esc(desc) + '</div>' +
@@ -3388,19 +3556,24 @@ function init() {
   if (parseHash()) { hideSplash(); return; }
 
   if (_loadSession()) {
-    ensureToken(function(err) {
-      if (!err && gUser) {
-        // Valid session — show the app and hide the splash
-        showPage('app');
-        hideSplash();
-        bootApp();
-      } else {
-        // Session expired — clear and redirect
-        _clearSession();
-        hideSplash();
-        window.location.replace('databulge-auth.html');
-      }
-    });
+    /* Show app immediately — token is assumed valid from _loadSession.
+       Each fetch will refresh if needed. This eliminates the auth
+       round-trip delay on every cold boot. */
+    showPage('app');
+    hideSplash();
+    if (gUser) {
+      bootApp();
+    } else {
+      /* Session token exists but no user object — refresh to get user */
+      refreshToken(function(err) {
+        if (!err && gUser) {
+          bootApp();
+        } else {
+          _clearSession();
+          window.location.replace('databulge-auth.html');
+        }
+      });
+    }
   } else {
     // No session — redirect to auth immediately
     hideSplash();
@@ -3639,6 +3812,36 @@ function wire() {
 
   // Refresh subs
   $('refresh-subs-btn').onclick = function() { loadSubs(); toast('Refreshing\u2026'); };
+
+  // ── TOUCHSTART FAST PATH ──
+  (function() {
+    function fastTap(id, fn) {
+      var el = document.getElementById(id);
+      if (!el || !el.addEventListener) return;
+      var _used = false;
+      el.addEventListener('touchstart', function() {
+        _used = true; fn();
+        el.style.opacity = '0.75';
+        el.style.webkitTransform = 'scale(0.96)';
+        el.style.transform = 'scale(0.96)';
+        setTimeout(function() { el.style.opacity=''; el.style.webkitTransform=''; el.style.transform=''; }, 150);
+      }, { passive: true });
+      el.addEventListener('click', function() { if (_used) { _used = false; return; } fn(); });
+    }
+    var navIds = ['tab-dash','tab-plans','tab-subs','tab-wallet','tab-inbox'];
+    for (var ni = 0; ni < navIds.length; ni++) {
+      (function(nid) {
+        var el = document.getElementById(nid);
+        if (!el) return;
+        var t = el.getAttribute('data-t'); if (!t) return;
+        fastTap(nid, (function(tab){ return function(){ showTab(tab); }; })(t));
+      })(navIds[ni]);
+    }
+    fastTap('plans-fund-btn', openFundModal);
+    fastTap('d-fund-btn', openFundModal);
+    fastTap('notif-bell', toggleNotifDrawer);
+    fastTap('av', toggleAvatarMenu);
+  })();
 }
 
 function hideSplash() {
@@ -4342,9 +4545,9 @@ function earnResetAdSlot() {
 }
 html,body{background:radial-gradient(circle at top left,#EEF6FF 0,#F6F8FC 34%,#FDFEFF 100%)!important;color:var(--friend-ink)!important;}
 #pg-app{background:linear-gradient(180deg,#F9FBFF 0%,#F6F8FC 48%,#FFFFFF 100%)!important;}
-.top-bar{background:rgba(255,255,255,.92)!important;backdrop-filter:blur(12px)!important;-webkit-backdrop-filter:blur(12px)!important;border-bottom:1px solid rgba(226,232,240,.78)!important;box-shadow:0 8px 28px rgba(15,23,42,.05)!important;}
+.top-bar{background:#fff!important;border-bottom:1px solid rgba(226,232,240,.78)!important;box-shadow:0 4px 16px rgba(26,86,219,.1)!important;}
 .user-greeting{color:#111827!important;font-weight:950!important;letter-spacing:-.04em!important;}
-.tabs{background:rgba(255,255,255,.82)!important;backdrop-filter:blur(10px)!important;-webkit-backdrop-filter:blur(10px)!important;border-bottom:0!important;box-shadow:0 10px 25px rgba(15,23,42,.05)!important;}
+.tabs{background:#fff!important;border-bottom:1px solid #E7EAF1!important;box-shadow:0 4px 16px rgba(15,23,42,.04)!important;}
 .tabs .tab{border-radius:18px!important;border:1px solid rgba(226,232,240,.9)!important;background:#fff!important;color:#667085!important;box-shadow:0 5px 12px rgba(15,23,42,.04)!important;}
 .tabs .tab.act{background:linear-gradient(135deg,#1A56DB,#3d9758)!important;color:#fff!important;border-color:transparent!important;box-shadow:0 12px 24px rgba(26,86,219,.20)!important;}
 .card,.sub-row,.tx-row,.va-box,.msg-row,.plan-filter-card{border:0!important;background:rgba(255,255,255,.94)!important;border-radius:26px!important;box-shadow:var(--friend-shadow)!important;}
@@ -4400,7 +4603,7 @@ html,body{background:radial-gradient(circle at top left,#EEF6FF 0,#F6F8FC 34%,#F
 .msg-row.unread,.notif-row.unread{background:linear-gradient(135deg,#EEF4FF,#FFFFFF)!important;}
 #toast,.notif-toast.show{border-radius:18px!important;background:linear-gradient(135deg,#111827,#1F2937)!important;box-shadow:0 16px 35px rgba(15,23,42,.24)!important;}
 .friend-sticky-cta{position:fixed;left:12px;right:12px;bottom:78px;z-index:120;display:none;max-width:940px;margin:0 auto;}
-.friend-sticky-inner{display:-webkit-box;display:-webkit-flex;display:flex;gap:10px;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(226,232,240,.9);border-radius:24px;padding:10px;box-shadow:0 18px 45px rgba(15,23,42,.18);}
+.friend-sticky-inner{display:-webkit-box;display:-webkit-flex;display:flex;gap:10px;background:#fff;border:1px solid rgba(226,232,240,.9);border-radius:24px;padding:10px;box-shadow:0 18px 45px rgba(15,23,42,.18);}
 .friend-sticky-inner button{border:0;border-radius:16px;padding:12px 12px;font-size:.82rem;font-weight:950;font-family:Arial,Helvetica,sans-serif;-webkit-box-flex:1;-webkit-flex:1;flex:1;}
 .friend-sticky-inner .fund{background:linear-gradient(135deg,#3d9758,#2F7D49);color:#fff;}
 .friend-sticky-inner .plans{background:#EFF4FF;color:#1A56DB;}
