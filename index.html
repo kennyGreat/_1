@@ -932,10 +932,7 @@ label:has(#m-sub-autorenew){
 
 /* ── REQUEST PATCH: ACCOUNT STATS + MENU LAYOUT ONLY ──
    Frontend-only styling. Backend/API logic untouched. */
-#tab-dash,
-#tc-dash{
-  display:none !important;
-}
+/* tab-dash and tc-dash display managed by JS */
 .tabs{
   justify-content:flex-start !important;
   gap:10px !important;
@@ -1050,7 +1047,7 @@ label:has(#m-sub-autorenew){
     <div class="top-bar-right">
       <!-- Notification Bell — always visible, never hidden -->
       <div style="position:relative;-webkit-flex-shrink:0;flex-shrink:0;">
-        <button id="notif-bell" onclick="toggleNotifDrawer()" aria-label="Notifications" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:10px;width:36px;height:36px;display:-webkit-box!important;display:-webkit-flex!important;display:flex!important;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;cursor:pointer;position:relative;padding:0;-webkit-flex-shrink:0;flex-shrink:0;visibility:visible!important;opacity:1!important;">
+        <button id="notif-bell" onclick="toggleNotifDrawer()" aria-label="Notifications" style="background:#EEF2FF;border:1px solid #C7D2FE;border-radius:10px;width:36px;height:36px;display:-webkit-box!important;display:-webkit-flex!important;display:flex!important;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;cursor:pointer;position:relative;padding:0;-webkit-flex-shrink:0;flex-shrink:0;visibility:visible!important;opacity:1!important;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
           <span id="notif-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:#f43f5e;color:#fff;border-radius:10px;font-size:.6rem;font-weight:900;padding:1px 5px;min-width:16px;text-align:center;border:1.5px solid #fff;"></span>
         </button>
@@ -1083,9 +1080,7 @@ label:has(#m-sub-autorenew){
       <button class="notif-filter"     data-cat="data_usage" onclick="notifFilter(this,'data_usage')">Data Usage</button>
       <button class="notif-filter"     data-cat="ad"         onclick="notifFilter(this,'ad')">Earn</button>
     </div>
-    <div id="notif-list" style="-webkit-box-flex:1;-webkit-flex:1;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;">
-      <div style="text-align:center;padding:40px 20px;color:#9ca3af;font-size:.85rem;">Loading&hellip;</div>
-    </div>
+    <div id="notif-list" style="-webkit-box-flex:1;-webkit-flex:1;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;"></div>
   </div>
 
   <!-- Bottom Navigation Bar (WhatsApp style) -->
@@ -1098,7 +1093,7 @@ label:has(#m-sub-autorenew){
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
       <span style="font-size:.62rem;font-weight:700;font-family:inherit;">Buy Data</span>
     </button>
-    <button class="bnav-btn" id="tab-subs" data-t="subs" onclick="showTab(\'subs\')" style="flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;">
+    <button class="bnav-btn" id="tab-subs" data-t="subs" onclick="showTab('subs')" style="flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
       <span style="font-size:.62rem;font-weight:700;font-family:inherit;">My Plan</span>
     </button>
@@ -1111,19 +1106,19 @@ label:has(#m-sub-autorenew){
       <span id="inbox-badge" style="display:none;position:absolute;top:4px;right:10px;background:#f43f5e;color:#fff;border-radius:10px;font-size:.55rem;font-weight:800;padding:1px 4px;min-width:14px;text-align:center;"></span>
       <span style="font-size:.62rem;font-weight:700;font-family:inherit;">Messages</span>
     </button>
-    <button class="bnav-btn" id="tab-earn" data-t="earn" onclick="showTab('earn')" style="display:none!important;" style="flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;">
+    <button class="bnav-btn" id="tab-earn" data-t="earn" onclick="showTab('earn')" style="display:none!important;flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
       <span style="font-size:.62rem;font-weight:700;font-family:inherit;">Earn</span>
     </button>
   </nav>
 
   <!-- DASHBOARD TAB - RETENTION REDESIGN -->
-  <div id="tc-dash" class="tab-content">
+  <div id="tc-dash" class="tab-content on">
     <div class="hero-bal-card" id="hero-bal-card">
       <button class="hero-fund-btn" id="d-fund-btn">+ Fund</button>
       <div class="hero-bal-label">Wallet Balance</div>
       <div class="hero-bal-amount" id="d-bal-dash">&#8358;0.00</div>
-      <div class="hero-bal-va" id="d-va-dash">Loading&#8230;</div>
+      <div class="hero-bal-va" id="d-va-dash"></div>
     </div>
     <div class="streak-strip" id="streak-strip" style="display:none;">
       <div class="streak-fire" id="streak-fire">&#128293;</div>
@@ -1151,7 +1146,7 @@ label:has(#m-sub-autorenew){
       <div class="savings-amount" id="savings-amount">&#8358;0</div>
       <div class="savings-sub" id="savings-sub">by paying in installments instead of upfront</div>
     </div>
-    <div id="dash-subs-d"><div class="empty" style="padding:16px 0;">Loading&#8230;</div></div>
+    <div id="dash-subs-d"></div>
     <div class="referral-card" id="referral-card" style="display:none;">
       <div style="font-size:.78rem;font-weight:900;color:#7c3aed;margin-bottom:4px;">&#127881; Earn &#8358;200 per referral</div>
       <div style="font-size:.74rem;color:#581c87;line-height:1.5;margin-bottom:6px;">Share your code. Every friend who subscribes earns you &#8358;200 wallet credit automatically.</div>
@@ -1165,13 +1160,13 @@ label:has(#m-sub-autorenew){
   </div>
 
   <!-- Buy Data / Airtime -->
-  <div id="tc-plans" class="tab-content on">
+  <div id="tc-plans" class="tab-content">
     <div class="card" style="margin-bottom:12px;">
       <div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:10px;">
         <div>
           <div class="card-title">Account Balance</div>
           <div class="card-val" id="d-bal">&#8358;0.00</div>
-          <div class="card-sub" id="d-va" style="margin-top:2px;">Loading&#8230;</div>
+          <div class="card-sub" id="d-va" style="margin-top:2px;"></div>
         </div>
         <button class="btn btn-blue" id="plans-fund-btn" style="margin:0;padding:9px 14px;font-size:.82rem;-webkit-flex-shrink:0;flex-shrink:0;width:auto;">+ Fund Account</button>
       </div>
@@ -1180,7 +1175,7 @@ label:has(#m-sub-autorenew){
     <div class="card" style="display:none!important;margin-bottom:12px;padding:10px;">
       <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:0;border-radius:8px;overflow:hidden;border:1.5px solid #1A56DB;">
         <button id="mode-data-btn" onclick="switchBuyMode('data')" style="flex:1;-webkit-box-flex:1;padding:9px 0;border:none;border-radius:0;font-size:.88rem;font-weight:900;cursor:pointer;background:#1A56DB;color:#fff;font-family:inherit;-webkit-tap-highlight-color:transparent;">&#128225; Buy Data</button>
-        <button id="mode-airtime-btn" onclick="switchBuyMode('airtime')" style="display:none!important;flex:1;-webkit-box-flex:1;padding:9px 0;border:none;border-radius:0;font-size:.88rem;font-weight:900;cursor:pointer;background:#fff;color:#1A56DB;font-family:inherit;-webkit-tap-highlight-color:transparent;">&#128222; Buy Airtime</button>
+        <button id="mode-airtime-btn" onclick="switchBuyMode('airtime')" style="display:none;flex:1;-webkit-box-flex:1;padding:9px 0;border:none;border-radius:0;font-size:.88rem;font-weight:900;cursor:pointer;background:#fff;color:#1A56DB;font-family:inherit;-webkit-tap-highlight-color:transparent;">&#128222; Buy Airtime</button>
       </div>
     </div>
     <!-- Data mode -->
@@ -1193,10 +1188,10 @@ label:has(#m-sub-autorenew){
         </div>
         <div class="card-sub" style="margin-top:10px;">Daily payment updates automatically based on the payment option you choose.</div>
       </div>
-      <div id="plans-list"><div class="empty">Loading plans&hellip;</div></div>
+      <div id="plans-list"></div>
     </div>
     <!-- Airtime mode -->
-    <div id="buy-mode-airtime" style="display:none!important;">
+    <div id="buy-mode-airtime" style="display:none;">
       <div class="card" style="margin-bottom:12px;">
         <div class="card-title" style="margin-bottom:10px;">Buy Airtime</div>
         <div class="field" style="margin-bottom:10px;">
@@ -1270,7 +1265,7 @@ label:has(#m-sub-autorenew){
   <!-- My Plans -->
   <div id="tc-subs" class="tab-content">
     <button class="btn btn-lite" id="refresh-subs-btn" style="margin-bottom:12px;">&#8635; Refresh</button>
-    <div id="subs-list"><div class="empty">Loading&hellip;</div></div>
+    <div id="subs-list"></div>
   </div>
 
   <!-- Account -->
@@ -1291,7 +1286,7 @@ label:has(#m-sub-autorenew){
       </div>
     </div>
     </div>
-    <div id="wallet-tab-content"><div class="empty">Loading account&hellip;</div></div>
+    <div id="wallet-tab-content"></div>
   </div>
 
   <!-- Inbox -->
@@ -1300,7 +1295,7 @@ label:has(#m-sub-autorenew){
       <button class="btn btn-lite" id="mark-read-btn">Mark all read</button>
       <button class="btn btn-blue" id="compose-btn-open">New Message</button>
     </div>
-    <div id="inbox-list"><div class="empty">Loading&hellip;</div></div>
+    <div id="inbox-list"></div>
     <div style="text-align:center;padding:18px 14px 8px;font-size:.73rem;color:#bbb;">&#169; 2026 Vortexedge Limited. All rights reserved.</div>
   </div>
 
@@ -1533,7 +1528,7 @@ label:has(#m-sub-autorenew){
         <h3>6. ELIGIBILITY</h3>
         <ul><li>Must be 18 or older</li><li>One account per person</li><li>Valid mobile number required</li></ul>
         <h3>7. GOVERNING LAW</h3>
-        <p>Governed by Nigerian law. DataBulge is operated by Vortexedge Limited, a Nigerian technology company serving users across Africa and the global diaspora. Contact: support@databulge.com</p>
+        <p>Governed by Nigerian law. DataBulge is operated by Vortexedge Limited, a Nigerian technology company serving users across Africa and the global diaspora. Contact: info@databulge.com</p>
       </div>
     </div>
     <div class="modal-foot">
@@ -1598,6 +1593,7 @@ label:has(#m-sub-autorenew){
     <div class="modal-hdr"><div class="modal-title">New Message</div><button class="modal-x" id="m-compose-x">&#215;</button></div>
     <div class="modal-body">
       <div id="m-compose-err" class="err"></div>
+      <div style="background:#EEF2FF;border:1px solid #C7D2FE;border-radius:10px;padding:9px 12px;margin-bottom:12px;font-size:.78rem;color:#1A56DB;font-weight:700;">&#128231; Messages go to <strong>info@databulge.com</strong> &mdash; we reply to your registered email.</div>
       <div class="field"><label>Subject</label><input id="compose-subject" type="text" placeholder="What do you need help with?"></div>
       <div class="field"><label>Type</label>
         <select id="compose-type" style="display:block;width:100%;padding:11px 12px;border:1.5px solid #ddd;border-radius:6px;font-size:.94rem;color:#111;background:#fff;outline:none;-webkit-appearance:none;">
@@ -1830,7 +1826,7 @@ function showTab(t) {
     if (tc)  tc.className  = 'tab-content' + (tabs[i] === t ? ' on' : '');
   }
   var now = Date.now();
-  if (t === 'dash')   { if (now - _dashLastLoad  > STALE_MS) { _dashLastLoad  = now; loadDashCashflow(); } }
+  if (t === 'dash')   { if (now - _dashLastLoad  > STALE_MS) { _dashLastLoad  = now; loadDashCashflow(); loadRetentionData(); } }
   if (t === 'subs')   { if (now - _subsLastLoad  > STALE_MS) { _subsLastLoad  = now; loadSubs(); } }
   if (t === 'wallet') loadWalletTab();
   if (t === 'inbox')  { if (now - _inboxLastLoad > STALE_MS) { _inboxLastLoad = now; loadInbox(); } updateInboxBadge(0); }
@@ -2006,7 +2002,7 @@ function bootPublicApp() {
   if ($('d-va')) $('d-va').textContent = 'Sign in required for wallet features';
   if ($('d-va-dash')) $('d-va-dash').textContent = 'Sign in required for wallet features';
   updateWalletLabel();
-  showTab('plans');
+  showTab('dash');
   updatePayDaysUI();
   loadPlans();
 }
@@ -2023,7 +2019,7 @@ function bootApp() {
   updateGreeting(name);
   updateWalletLabel();
 
-  showTab('plans');
+  showTab('dash');
   updatePayDaysUI();
 
   // Reset stale guards — first boot always loads everything fresh
@@ -2310,7 +2306,7 @@ function _renderPlans(allPlans) {
               '<span class="plan-net ' + pillC + '">' + esc2(nn) + '</span>' +
               '<span class="plan-net net-other" style="background:#eaf5ee!important;color:#2d7a44!important;">' + esc2(type) + '</span>' +
             '</div>' +
-            '<div class="plan-size">' + esc2(nn) + '<br>' + esc2(p.data_size) + '</div>' +
+            '<div class="plan-size">' + esc2(p.data_size) + '</div>' +
             '<div class="plan-sub" style="margin-top:5px;text-transform:none;letter-spacing:0;">' + (p.validity_days || 30) + '-Day Plan</div>' +
             '<div class="plan-price">' + fmtN(p.selling_price) + '</div>' +
             '<div class="plan-sub">Daily: <strong>' + fmtN(pc.daily) + '</strong> &bull; ' + gPayDays + ' days</div>' +
@@ -2748,7 +2744,7 @@ function confirmSub() {
   ensureToken(function(err) {
     if (err) { btnLoad('m-sub-btn', false, 'Subscribe Now'); errShow('m-sub-err', 'Session error. Please sign out and back in.'); return; }
     var h = { 'Authorization': 'Bearer ' + gToken, 'Content-Type': 'application/json', 'apikey': ANON_KEY };
-    var body = JSON.stringify({ user_id: gUser.id, plan_id: gSelPlan.id, phone_number: phone, payment_days: days, auto_renew: autoRenew });
+    var body = JSON.stringify({ user_id: gUser.id, plan_id: gSelPlan.id, phone_number: phone, payment_days: days, auto_renew: autoRenew, network: (gSelPlan.network || gSelNet || '') });
     xhr('POST', FN + '/createSubscription', h, body, function(e, r) {
       btnLoad('m-sub-btn', false, 'Subscribe Now');
       if (e || !r || !r.ok || (r.data && r.data.error)) {
@@ -2986,7 +2982,7 @@ function loadWalletTab() {
       for (i = 0; i < list.length; i++) {
         t = list[i]; type = t.type || 'credit';
         icon = type === 'debit' ? '\u2212' : (type === 'refund' ? '\u21ba' : '+');
-        desc = (t.metadata && t.metadata.description) ? t.metadata.description : type;
+        desc = ((t.description || (t.metadata && t.metadata.description))) ? t.metadata.description : type;
         txHtml += '<div class="tx-row">' +
           '<div class="tx-left"><div class="tx-ico">' + icon + '</div><div>' +
           '<div class="tx-desc">' + esc(desc) + '</div>' +
@@ -3038,11 +3034,34 @@ function sendMessage() {
   errHide('m-compose-err');
   if (!subject || !body) { errShow('m-compose-err', 'Enter subject and message.'); return; }
   btnLoad('compose-send-btn', true, 'Sending…');
-  restPost('/messages', { user_id: gUser.id, direction: 'inbound', subject: subject, body: body, type: type }, function(e, r) {
+  var userName  = (gUser.user_metadata && gUser.user_metadata.full_name) || gUser.email || 'User';
+  var userEmail = gUser.email || '';
+  var msgRecord = {
+    user_id:   gUser.id,
+    direction: 'inbound',
+    subject:   subject,
+    body:      body,
+    type:      type
+  };
+  restPost('/messages', msgRecord, function(e, r) {
     btnLoad('compose-send-btn', false, 'Send Message');
-    if (e || !r || !r.ok) { errShow('m-compose-err', 'Failed to send message.'); return; }
+    if (e || !r || !r.ok) { errShow('m-compose-err', 'Failed to send. Check your connection and try again.'); return; }
+    /* Forward complaint to info@databulge.com via notifyAdmin edge function */
+    edgeFn('notifyAdmin', {
+      event:        'user_message',
+      user_id:      gUser.id,
+      user_name:    userName,
+      user_email:   userEmail,
+      subject:      subject,
+      body:         body,
+      type:         type,
+      recipient:    'info@databulge.com'
+    }, function() { /* fire-and-forget — DB record is the source of truth */ });
     closeModal('m-compose');
-    toast('Message sent.');
+    $('compose-subject').value = '';
+    $('compose-body').value    = '';
+    $('compose-type').value    = 'support';
+    toast('Message sent. We’ll respond to ' + userEmail + ' shortly.');
     loadInbox();
   });
 }
@@ -3051,9 +3070,21 @@ function sendReply() {
   var body = ($('msg-reply-text').value || '').replace(/^\s+|\s+$/g, '');
   if (!body) { toast('Type your reply first'); return; }
   btnLoad('reply-btn', true, 'Sending…');
-  restPost('/messages', { user_id: gUser.id, direction: 'inbound', subject: 'Re: ' + ($('msg-detail-title').textContent || 'Message'), body: body, type: 'support', replied_to: gCurrentMsgId }, function(e, r) {
+  var replySubject = 'Re: ' + ($('msg-detail-title').textContent || 'Message');
+  restPost('/messages', { user_id: gUser.id, direction: 'inbound', subject: replySubject, body: body, type: 'support', replied_to: gCurrentMsgId }, function(e, r) {
     btnLoad('reply-btn', false, 'Send Reply');
-    if (e || !r || !r.ok) { toast('Reply failed'); return; }
+    if (e || !r || !r.ok) { toast('Reply failed. Check your connection.'); return; }
+    /* Forward reply to info@databulge.com */
+    edgeFn('notifyAdmin', {
+      event:      'user_reply',
+      user_id:    gUser.id,
+      user_email: gUser.email || '',
+      subject:    replySubject,
+      body:       body,
+      type:       'support',
+      recipient:  'info@databulge.com'
+    }, function() {});
+    $('msg-reply-text').value = '';
     closeModal('m-msg-detail');
     toast('Reply sent.');
     loadInbox();
@@ -3470,6 +3501,12 @@ function wire() {
     if (wrap && t && !wrap.contains(t)) closeAvatarMenu();
   };
 
+  // Forgot password modal close + send
+  if ($('m-forgot-x'))  $('m-forgot-x').onclick  = function() { closeModal('m-forgot'); };
+  if ($('fg-send-btn')) $('fg-send-btn').onclick  = doForgot;
+  // Terms modal
+  if ($('m-terms-x'))    $('m-terms-x').onclick    = function() { closeModal('m-terms'); };
+  if ($('m-terms-agree'))$('m-terms-agree').onclick = function() { closeModal('m-terms'); };
   // Logout
   $('logout-btn').onclick = doLogout;
 
@@ -4276,8 +4313,7 @@ body,.card-sub,.plan-sub,.sub-meta,.msg-body,.notif-row,.row-label,.field label,
 .field input::placeholder,.textarea::placeholder{color:#6b7280!important;opacity:1!important;}
 .btn,.plan-btn,.pay-btn,.onboard-btn,.hero-fund-btn{font-size:.95rem!important;letter-spacing:-.01em!important;}
 #tab-dash{display:-webkit-box!important;display:-webkit-flex!important;display:flex!important;}
-#tc-dash{display:none!important;}
-#tc-dash.on{display:block!important;}
+/* tc-dash display controlled by showTab() */
 .bnav-btn span{font-size:.68rem!important;font-weight:900!important;color:inherit!important;}
 .bnav-btn{color:#6b7280!important;}
 .bnav-btn.act{color:#3d9758!important;}
@@ -4799,7 +4835,7 @@ function renderDashActivePlans(subs) {
         '</div>'+
       '</div>'+
       '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">'+
-        '<button class="btn btn-blue" onclick="showTab(\'subs\')" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:9px 8px;font-size:.8rem;">View Plan</button>'+
+        '<button class="btn btn-blue" onclick="showTab('subs')" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:9px 8px;font-size:.8rem;">View Plan</button>'+
         (s.status==='pending'?'<button class="btn btn-lite" onclick="openPayModal(\''+esc(s.id)+'\','+daily+')" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:9px 8px;font-size:.8rem;">Pay Now</button>':'')+
       '</div>'+
     '</div>';
@@ -5183,90 +5219,15 @@ window.detectAndSaveLocation = detectAndSaveLocation;
     }catch(e){return 'friend';}
   }
   function safeEsc(s){try{return (typeof esc==='function')?esc(s):(String(s||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}));}catch(e){return String(s||'');}}
-  /* ── HOURLY MOTIVATIONAL NUGGET ─────────────────────────────────
-     24 messages — one per hour of the day. Rotates every hour on
-     the clock. Each message pushes users to keep paying, move forward
-     in life, and stay connected. ES5-safe. No backend required.
-  ─────────────────────────────────────────────────────────────── */
-  var _HOURLY_NUGGETS = [
-    /* 00 */ ['🌙','Midnight hustle is real. While others sleep, you are building. Keep your plan active — data is how you stay ahead.'],
-    /* 01 */ ['⚡','1AM and still going? Respect. One small payment today keeps your connection alive tomorrow. You've got this.'],
-    /* 02 */ ['🔥','2AM grind hits different. Your plan is working for you even now — just keep funding and keep moving forward.'],
-    /* 03 */ ['🌟','3AM. The quiet hours belong to those who are building something real. Stay consistent. Pay small, win big.'],
-    /* 04 */ ['🌅','Early bird energy. The day hasn't started yet and you're already ahead. One installment at a time — that's how progress is made.'],
-    /* 05 */ ['☀️','5AM — the world is waking up but you're already up. Your data plan is your tool. Keep it funded, keep moving.'],
-    /* 06 */ ['🚀','Morning! A new day means a fresh chance to take one step forward. Your plan is waiting. Let's keep it alive.'],
-    /* 07 */ ['💪','7AM energy. Start this day the way you mean to go on — consistent, steady, unstoppable. Fund your plan, build your future.'],
-    /* 08 */ ['🎯','Business hours begin. Your data plan is your lifeline for every opportunity that comes through your phone today. Keep it topped up.'],
-    /* 09 */ ['💡','9AM clarity. Every small payment you make is a vote for who you are becoming — someone who shows up every day. Keep going.'],
-    /* 10 */ ['📈','10AM momentum. Life rewards consistency. You did not come this far to stop now. Stay the course — one installment at a time.'],
-    /* 11 */ ['🙌','Almost midday! You are closer to your goals than you were yesterday. Your plan is your promise to yourself. Keep that promise.'],
-    /* 12 */ ['🌍','Midday. Half the day is already yours. Stay connected, stay in the game. A small payment now keeps big opportunities open later.'],
-    /* 13 */ ['☕','1PM check-in. Consistency is the one thing that separates people who make it from those who almost did. You are making it.'],
-    /* 14 */ ['🏆','2PM power hour. Every installment you pay is a brick in the house you are building. Keep laying. Keep moving forward.'],
-    /* 15 */ ['⚡','3PM — the afternoon dip is real, but you are stronger than a feeling. Fund your plan. Stay online. Stay ahead.'],
-    /* 16 */ ['🌤️','4PM glow-up. You are not the same person you were last month. Keep growing. Keep paying. Keep showing up for yourself.'],
-    /* 17 */ ['🎯','5PM — end-of-day push. Don't let the day close without moving one step forward. Your plan, your payment, your progress.'],
-    /* 18 */ ['🌆','Evening. The hustle doesn't stop at sunset for people building real things. Stay connected. The opportunities are still coming.'],
-    /* 19 */ ['💚','7PM reflection. You worked hard today. Your data plan is the reward you give yourself — staying connected to what matters most.'],
-    /* 20 */ ['🌠','8PM. Think about where you want to be in 6 months. Every small payment today is a direct investment in that version of you.'],
-    /* 21 */ ['🏅','9PM. Most people quit on their goals when things get tight. You are not most people. Small consistent steps. Pay your plan. Win.'],
-    /* 22 */ ['🌙','10PM. You made it through another day. Keep your momentum going — fund your plan tonight and wake up ahead tomorrow.'],
-    /* 23 */ ['✨','11PM. As this day closes, remember: you are in motion. Forward progress, no matter how small, compounds. Don't stop now.']
-  ];
-
-  var _nuggetTimer = null;
-
-  function _getHourlyNugget() {
-    var h = new Date().getHours();
-    return _HOURLY_NUGGETS[h] || _HOURLY_NUGGETS[0];
-  }
-
-  function _updateNuggetDisplay() {
-    var msg   = _getHourlyNugget();
-    var icon  = document.getElementById('friend-daily-icon-inner');
-    var title = document.getElementById('friend-daily-title');
-    var sub   = document.getElementById('friend-daily-sub');
-    var clock = document.getElementById('friend-daily-clock');
-
-    if (icon)  icon.textContent  = msg[0];
-    if (title) title.textContent = _getNuggetTitle();
-    if (sub)   sub.textContent   = msg[1];
-    if (clock) clock.textContent = _getNuggetClock();
-  }
-
-  function _getNuggetTitle() {
-    var h = new Date().getHours();
-    if (h >= 5  && h < 12) return 'Good morning nudge';
-    if (h >= 12 && h < 17) return 'Afternoon motivation';
-    if (h >= 17 && h < 21) return 'Evening push';
-    return 'Late-night fuel';
-  }
-
-  function _getNuggetClock() {
-    var now = new Date();
-    var h   = now.getHours();
-    var m   = now.getMinutes();
-    var ampm = h >= 12 ? 'PM' : 'AM';
-    var h12  = h % 12 || 12;
-    var mStr = m < 10 ? '0' + m : String(m);
-    var nextH = (h + 1) % 24;
-    var nextAmpm = nextH >= 12 ? 'PM' : 'AM';
-    var nextH12  = nextH % 12 || 12;
-    return h12 + ':' + mStr + ' ' + ampm + ' · Next in ' + (60 - m) + 'min';
-  }
-
-  function _startNuggetTimer() {
-    if (_nuggetTimer) clearInterval(_nuggetTimer);
-    // Update every minute so the clock stays live
-    _nuggetTimer = setInterval(function() {
-      _updateNuggetDisplay();
-    }, 60000);
-  }
-
-  function todayMessage() {
-    // Legacy compatibility — still returns [icon, text] for initial render
-    return _getHourlyNugget();
+  function todayMessage(){
+    var arr=[
+      ['🌤️','Small money can still keep you connected. Pick a plan and move at your pace.'],
+      ['💚','No pressure today. Fund what you can, when you can.'],
+      ['🚀','Your data life should feel simple. Start small and stay online.'],
+      ['✨','You are one tiny step away from staying connected today.'],
+      ['📶','DataBulge is here to help you breathe easier, not stress you.']
+    ];
+    var d=new Date(); return arr[d.getDay()%arr.length];
   }
   function ensureCompanionHero(){
     var tc=byId('tc-plans'); if(!tc) return;
@@ -5283,16 +5244,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
         '<div class="friend-balance"><div><div class="friend-bal-label">Available balance</div><div class="friend-bal-val" id="friend-bal-val">'+bal+'</div></div><div style="font-size:.76rem;opacity:.82;font-weight:800;text-align:right;">Ready when you are</div></div>'+ 
         '<div class="friend-cta-row"><button class="friend-cta primary" onclick="openFundModal()">Add small money</button><button class="friend-cta secondary" onclick="document.getElementById(\'plans-list\').scrollIntoView({behavior:\'smooth\',block:\'start\'});">Find a plan</button></div>'+ 
       '</div>'+ 
-      '<div class="friend-daily" id="friend-daily">' +
-        '<div class="friend-daily-icon" id="friend-daily-icon-box"><span id="friend-daily-icon-inner">'+msg[0]+'</span></div>' +
-        '<div style="-webkit-box-flex:1;-webkit-flex:1;flex:1;min-width:0;">' +
-          '<div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;-webkit-box-align:center;-webkit-align-items:center;align-items:center;margin-bottom:3px;">' +
-            '<div class="friend-daily-title" id="friend-daily-title">'+_getNuggetTitle()+'</div>' +
-            '<div id="friend-daily-clock" style="font-size:.65rem;color:#B45309;font-weight:700;opacity:.75;white-space:nowrap;padding-left:6px;">'+_getNuggetClock()+'</div>' +
-          '</div>' +
-          '<div class="friend-daily-sub" id="friend-daily-sub">'+safeEsc(msg[1])+'</div>' +
-        '</div>' +
-      '</div>'+ 
+      '<div class="friend-daily" id="friend-daily"><div class="friend-daily-icon">'+msg[0]+'</div><div><div class="friend-daily-title">Today’s friendly nudge</div><div class="friend-daily-sub">'+safeEsc(msg[1])+'</div></div></div>'+ 
       '<div class="friend-quick-grid" id="friend-quick-grid"><button class="friend-action-card fund" onclick="openFundModal()"><span class="emoji">💚</span><strong>Fund with ease</strong><span>Your wallet updates automatically after transfer.</span></button><button class="friend-action-card plan" onclick="document.getElementById(\'plans-list\').scrollIntoView({behavior:\'smooth\',block:\'start\'});"><span class="emoji">🎯</span><strong>Choose your vibe</strong><span>MTN, Airtel, Glo or 9mobile — paid your way.</span></button></div>';
     if(old){
       var bv=byId('friend-bal-val'); if(bv) bv.innerHTML=bal;
@@ -5301,8 +5253,6 @@ window.detectAndSaveLocation = detectAndSaveLocation;
     var first=tc.firstChild;
     var box=document.createElement('div'); box.innerHTML=html;
     while(box.firstChild) tc.insertBefore(box.firstChild, first);
-    /* Start hourly nugget live-refresh timer */
-    setTimeout(function(){ _updateNuggetDisplay(); _startNuggetTimer(); }, 80);
   }
   function ensureStickyCTA(){
     if(byId('friend-sticky-cta')) return;
@@ -5317,13 +5267,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
     var dbal=byId('d-va'); if(dbal && /Loading|Virtual|account|Bank/i.test(dbal.textContent||'')){
       if(!dbal.getAttribute('data-friendly')){ dbal.setAttribute('data-friendly','1'); }
     }
-    var buttons=document.getElementsByTagName('button');
-    for(var i=0;i<buttons.length;i++){
-      var b=buttons[i];
-      if((b.className||'').indexOf('plan-btn')>-1 && /Subscribe/i.test(b.innerHTML||'')) b.innerHTML='Choose this plan';
-      if((b.innerHTML||'').replace(/\s+/g,' ').indexOf('Fund Account')>-1) b.innerHTML=(b.innerHTML.indexOf('+')>-1?'+ ':'')+'Add small money';
-      if((b.innerHTML||'').indexOf('Pay from Wallet')>-1) b.innerHTML='Pay gently from wallet';
-    }
+    /* button text overrides removed — preserved by design */
     var secs=document.getElementsByClassName('sec-title');
     for(i=0;i<secs.length;i++){
       if((secs[i].textContent||'').toLowerCase().indexOf('payment option')>-1) secs[i].innerHTML='Choose how softly you want to pay';
