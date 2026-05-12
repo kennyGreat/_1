@@ -2207,24 +2207,21 @@ function bootApp() {
   _dashLastLoad  = _now;
 
   // ── BOOT SEQUENCE ─────────────────────────────────────────
-  // All Tier-1 calls fire together — ensureToken returns instantly
-  // when the session was loaded from localStorage (token still valid).
-  // No sequential waiting. Everything loads in parallel.
-  loadWalletBalance(function() { loadDashCashflow(); });
-  loadPlans();
-  loadRetentionData();
-  loadAcct(name);        // account details needed for Fund Account modal
+  // Single get_boot_data() RPC returns wallet balance, VA details,
+  // profile, all plans, and active subscriptions in ONE network call.
+  // This replaces 5 separate REST calls and fires the moment the
+  // token is valid — typically under 200ms total on 3G.
+  _bootFromRPC(name);
 
-  // Tier 2 (0ms async tick): subs, inbox, notifications
+  // Inbox + notifications — fire in parallel, not critical path
   setTimeout(function() {
-    loadSubs();
     loadInbox();
     notifLoad();
     notifStartRealtime();
     try { if (typeof wireEarnTab === 'function') wireEarnTab(); } catch(ex) {}
   }, 0);
 
-  // Tier 3 (background): auto-pay and delivery checks
+  // Background: auto-pay and delivery checks
   setTimeout(function() { autoActivatePlans(); checkUndeliveredData(); }, 1200);
 
   // Wallet polls every 15s — balance reflects within 20s max
@@ -2240,6 +2237,160 @@ function bootApp() {
   }, 8000); /* wallet poll every 8s for faster balance updates */
 }
 
+
+/* ── _bootFromRPC — single round trip for all startup data ──────
+   Calls get_boot_data() which returns wallet balance, VA, profile,
+   plans, and subscriptions in one SQL function call.
+   Falls back to individual REST calls if RPC fails.
+────────────────────────────────────────────────────────────────── */
+function _bootFromRPC(name) {
+  ensureToken(function(err) {
+    if (err) {
+      /* Token error — fallback to individual calls */
+      loadWalletBalance(function() { loadDashCashflow(); });
+      loadPlans();
+      loadRetentionData();
+      loadAcct(name);
+      setTimeout(function() { loadSubs(); }, 0);
+      return;
+    }
+
+    rpc('get_boot_data', JSON.stringify({ p_user_id: gUser.id }), function(e, r) {
+      if (e || !r || !r.ok || !r.data) {
+        /* RPC failed — fallback to individual calls */
+        loadWalletBalance(function() { loadDashCashflow(); });
+        loadPlans();
+        loadRetentionData();
+        loadAcct(name);
+        setTimeout(function() { loadSubs(); }, 0);
+        return;
+      }
+
+      var d = r.data;
+
+      /* ── 1. Apply wallet balance immediately ── */
+      gBal = parseFloat(d.balance) || 0;
+      var balStr = fmtN(gBal);
+      if ($('d-bal'))           $('d-bal').textContent           = balStr;
+      if ($('d-bal-dash'))      $('d-bal-dash').textContent      = balStr;
+      if ($('earn-wallet-bal')) $('earn-wallet-bal').textContent = balStr;
+
+      /* ── 2. Apply VA and profile to gProfile ── */
+      if (!gProfile) gProfile = {};
+      gProfile.virtual_account_number = d.va_number   || '';
+      gProfile.virtual_account_bank   = d.va_bank     || '';
+      gProfile.virtual_account_name   = d.va_name     || '';
+      gProfile.full_name              = d.full_name   || '';
+      gProfile.phone                  = d.phone       || '';
+      gProfile.referral_code          = d.referral_code || '';
+
+      /* Update greeting with real name from DB */
+      var realName = d.full_name || name;
+      updateGreeting(realName);
+      if ($('av')) {
+        var initials = '', parts = realName.split(' '), i;
+        for (i = 0; i < Math.min(parts.length,2); i++) { if(parts[i]) initials += parts[i][0].toUpperCase(); }
+        $('av').textContent = initials || 'U';
+      }
+
+      /* Update VA display in buy data tab */
+      var vaStr = d.va_number
+        ? 'Acc: ' + d.va_number + (d.va_bank ? ' • ' + d.va_bank : '')
+        : 'Tap + Fund Account to add money';
+      if ($('d-va'))      $('d-va').textContent      = vaStr;
+      if ($('d-va-dash')) $('d-va-dash').textContent = vaStr;
+
+      /* Update account rows */
+      var wrap = $('acct-rows');
+      if (wrap) {
+        var aHtml =
+          '<div class="row-line"><span class="row-label">Name</span><span class="row-val">' + esc(realName) + '</span></div>' +
+          '<div class="row-line"><span class="row-label">Email</span><span class="row-val">' + esc(gUser.email) + '</span></div>';
+        if (d.phone) aHtml += '<div class="row-line"><span class="row-label">Phone</span><span class="row-val">' + esc(d.phone) + '</span></div>';
+        if (d.va_number) {
+          aHtml += '<div class="row-line"><span class="row-label">Account No.</span><span class="row-val" style="font-weight:900;font-size:1rem;">' + esc(d.va_number) + '</span></div>';
+          if (d.va_bank) aHtml += '<div class="row-line"><span class="row-label">Bank</span><span class="row-val">' + esc(d.va_bank) + '</span></div>';
+          if (d.va_name) aHtml += '<div class="row-line"><span class="row-label">Account Name</span><span class="row-val">' + esc(d.va_name) + '</span></div>';
+        }
+        wrap.innerHTML = aHtml;
+      }
+
+      /* ── 3. Render plans immediately from RPC data ── */
+      if (d.plans && d.plans.length) {
+        _plansCache   = d.plans;
+        _plansCacheTs = Date.now();
+        _renderPlans(d.plans);
+      } else {
+        loadPlans(); /* fallback if no plans returned */
+      }
+
+      /* ── 4. Render subscriptions from RPC data ── */
+      if (d.subscriptions) {
+        _renderSubsFromBoot(d.subscriptions);
+      } else {
+        loadSubs();
+      }
+
+      /* ── 5. Apply today's cashflow stats ── */
+      if ($('cf-in-d'))  $('cf-in-d').textContent  = d.today_in  > 0 ? fmtN(d.today_in)  : '₦0.00';
+      if ($('cf-out-d')) $('cf-out-d').textContent = d.today_out > 0 ? fmtN(d.today_out) : '₦0.00';
+
+      /* ── 6. Load retention data (streak, savings, referral) ── */
+      loadRetentionData();
+
+      /* ── 7. Update wallet label and dynamic strips ── */
+      updateWalletLabel();
+      try { renderDynamicStrip(); } catch(ex) {}
+      checkOnboarding();
+    });
+  });
+}
+
+/* Render subscriptions list from boot RPC data (same format as loadSubs) */
+function _renderSubsFromBoot(subs) {
+  /* Render in dash active plans */
+  renderDashActivePlans(subs);
+
+  /* Render in My Plan tab */
+  var wrap = $('subs-list');
+  if (!wrap) return;
+  if (!subs || !subs.length) {
+    wrap.innerHTML = '<div class="empty" style="padding:30px 0;text-align:center;"><div style="font-size:2rem;margin-bottom:8px;">📱</div><div style="font-size:.88rem;color:#6B7280;">No active plans yet.<br>Tap Subscribe to get started.</div></div>';
+    return;
+  }
+
+  var html = '', i, s, pl, paid, total, pct, days;
+  for (i = 0; i < subs.length; i++) {
+    s  = subs[i];
+    pl = s.data_plans || {};
+    paid  = parseFloat(s.amount_paid)  || 0;
+    total = parseFloat(s.total_price)  || 1;
+    pct   = Math.min(100, Math.round((paid / total) * 100));
+    days  = s.payment_days || 7;
+
+    html += '<div class="sub-row">' +
+      '<div class="sub-top">' +
+        '<span class="sub-name">' + esc(pl.data_size || 'Data Plan') + ' (' + esc(pl.network || '') + ')</span>' +
+        '<span class="sub-status status-' + esc(s.status) + '">' + esc(s.status) + '</span>' +
+      '</div>' +
+      '<div class="prog-bar"><div class="prog-fill" style="width:' + pct + '%;"></div></div>' +
+      '<div class="sub-meta">Paid ' + fmtN(paid) + ' of ' + fmtN(total) + ' &bull; ' + pct + '% &bull; ' + days + '-day plan</div>' +
+      (s.status === 'pending' || s.status === 'active'
+        ? '<button class="pay-btn" onclick="openPayModal('' + esc(s.id) + '',' + (parseFloat(s.daily_price)||0) + ',' + (total-paid) + ')">Pay Installment</button>'
+        : '') +
+    '</div>';
+  }
+
+  /* Completed plans count */
+  var completed = subs.filter(function(x) { return x.status === 'completed'; }).length;
+  if (completed > 0) {
+    html += '<div class="empty" style="font-size:.78rem;color:#888;text-align:center;padding:8px 0;">' + completed + ' completed plan' + (completed !== 1 ? 's' : '') + '</div>';
+  }
+  wrap.innerHTML = html;
+
+  /* Update completed count in account stats */
+  if ($('cf-done-d')) $('cf-done-d').textContent = completed;
+}
 
 function firstNameFromUser(fallbackName) {
   var raw = fallbackName || '';
