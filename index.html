@@ -38,7 +38,7 @@
 <style>
 /* ── RESET ── */
 *{-webkit-box-sizing:border-box;box-sizing:border-box;margin:0;padding:0;}
-html,body{width:100%;min-height:100%;background:#fff;font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#111;-webkit-text-size-adjust:100%;touch-action:manipulation;}
+html,body{width:100%;min-height:100%;background:#fff;font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#111;-webkit-text-size-adjust:100%;}
 
 /* ── PAGES ── */
 .pg{display:none;width:100%;min-height:100vh;background:#fff;}
@@ -273,7 +273,7 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 }
 .top-bar svg{background:transparent!important;}
 .avatar{background:#1A56DB!important;background:linear-gradient(135deg,var(--db-blue),#159A8C)!important;color:#fff!important;box-shadow:0 5px 15px rgba(26,86,219,.22)!important;}
-.logout-btn{background:rgba(255,255,255,.15)!important;border:1px solid rgba(255,255,255,.3)!important;color:#fff!important;border-radius:12px!important;padding:7px 10px!important;}
+.logout-btn{background:#fff!important;border:1px solid #D6DCE8!important;color:#667085!important;border-radius:12px!important;padding:7px 10px!important;}
 .tabs{
   background:#fff!important;
   padding:10px 12px!important;
@@ -420,19 +420,17 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 @media(prefers-reduced-motion:reduce){.bal-pop,.plan-card-animate,.conf-piece,.milestone-toast{-webkit-animation:none!important;animation:none!important;}.prog-ring-fill{-webkit-transition:none!important;transition:none!important;}}
 @media(min-width:600px){.active-plan-card{padding:20px;}.hero-bal-amount{font-size:2.6rem;}}
 @media(min-width:900px){.hero-bal-card{padding:28px 24px 22px;}}
-@media(hover:hover){.plan-card:hover{-webkit-box-shadow:0 4px 16px rgba(26,86,219,.12);box-shadow:0 4px 16px rgba(26,86,219,.12);-webkit-transform:translateY(-1px);transform:translateY(-1px);}}
-/* On touch devices: no hover transition, only instant active scale */
-@media(hover:none){.plan-card{-webkit-transition:none!important;transition:none!important;}}
+@media(hover:hover){.plan-card:hover{-webkit-box-shadow:0 4px 16px rgba(26,86,219,.12);box-shadow:0 4px 16px rgba(26,86,219,.12);-webkit-transform:translateY(-1px);transform:translateY(-1px);-webkit-transition:all .2s;transition:all .2s;}}
 /* Plan filter chips — frontend-only list arrangement */
 .plan-filter-card{grid-column:1/-1!important;background:#fff!important;border:1px solid #E6EAF1!important;border-radius:22px!important;box-shadow:0 10px 22px rgba(15,23,42,.06)!important;padding:14px!important;margin-bottom:2px!important;}
 .plan-filter-title{font-size:.76rem!important;color:#6B7280!important;font-weight:900!important;text-transform:uppercase!important;letter-spacing:.07em!important;margin:2px 0 8px!important;}
 .plan-chip-row{display:-webkit-box!important;display:-webkit-flex!important;display:flex!important;gap:8px!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;padding:2px 0 10px!important;}
 .plan-chip{border:1px solid #E0E5EF!important;background:#fff!important;color:#6B7280!important;border-radius:999px!important;padding:9px 14px!important;font-size:.78rem!important;font-weight:900!important;white-space:nowrap!important;font-family:Arial,Helvetica,sans-serif!important;cursor:pointer!important;-webkit-appearance:none!important;-webkit-tap-highlight-color:transparent!important;}
-.plan-chip.act{background:#3d9758!important;color:#fff!important;border-color:#3d9758!important;font-weight:900!important;}
+.plan-chip.act{background:#EEF2FF!important;color:#1A56DB!important;border-color:#1A56DB!important;}
 .plan-count{grid-column:1/-1!important;font-size:.78rem!important;color:#7B8494!important;font-weight:700!important;margin:2px 2px -4px!important;}
 
 /* Modals */
-/* backdrop-filter:blur removed — too expensive on low-end Android */
+.modal{backdrop-filter:blur(3px);}
 .modal-box{overflow:hidden!important;}
 .modal-hdr,.modal-foot{box-shadow:none!important;border-color:#EEF1F6!important;}
 .modal-title{font-weight:900!important;}
@@ -613,71 +611,10 @@ button,.btn,.plan-btn,.tab,.logout-btn,.plan-chip,.avatar,.avatar-menu button{
   -webkit-appearance:none!important;
   appearance:none!important;
 }
-
-/* ── INSTANT TAP RESPONSE — eliminates 300ms Android click delay ── */
-button,
-.btn,
-.plan-btn,
-.plan-chip,
-.tab,
-.bnav-btn,
-.modal-x,
-.logout-btn,
-.eye,
-.forgot-btn,
-.txt-link,
-.onboard-btn,
-.hero-fund-btn,
-.notif-filter,
-.notif-item,
-.plan-card,
-.msg-row,
-.sub-row,
-.dynamic-strip,
-.streak-strip,
-.savings-card,
-.referral-card,
-.friend-cta,
-.friend-action-card,
-[onclick] {
-  -webkit-touch-callout: none !important;     /* iOS: no long-press menu */
-  -webkit-user-select:   none !important;     /* no text selection on tap */
-  user-select:           none !important;
-  touch-action:          manipulation !important; /* removes 300ms delay */
-  -webkit-tap-highlight-color: rgba(0,0,0,0) !important;
-  cursor: pointer;
-}
-
-/* Active press feedback — instant, no transition delay */
-button:active,
-.btn:active,
-.plan-btn:active,
-.plan-chip:active,
-.bnav-btn:active,
-.notif-filter:active,
-.friend-cta:active,
-.friend-action-card:active {
-  -webkit-transform: scale(0.97) !important;
-  transform:         scale(0.97) !important;
-  opacity: 0.88 !important;
-  -webkit-transition: none !important;
-  transition:         none !important;
-}
-
-/* Remove all transitions from buttons — transitions add perceived lag */
-.btn,
-.btn-blue,
-.btn-lite,
-.plan-btn,
-.pay-btn,
-.plan-chip {
-  -webkit-transition: none !important;
-  transition:         none !important;
-}
 .top-bar{min-width:0!important;}
 .top-bar-title{min-width:0!important;-webkit-flex:0 1 auto!important;flex:0 1 auto!important;}
 .top-bar-right{min-width:0!important;-webkit-flex:0 0 auto!important;flex:0 0 auto!important;position:relative!important;}
-.user-greeting{font-size:1.05rem!important;font-weight:900!important;color:#ffffff!important;max-width:160px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;letter-spacing:-.01em!important;}
+.user-greeting{font-size:1.05rem!important;font-weight:900!important;color:#1A56DB!important;max-width:160px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;letter-spacing:-.01em!important;}
 .avatar-wrap{position:relative!important;display:inline-block!important;-webkit-flex-shrink:0!important;flex-shrink:0!important;}
 .avatar{border:0!important;cursor:pointer!important;padding:0!important;line-height:1!important;}
 .logout-btn{display:none!important;}
@@ -996,7 +933,10 @@ label:has(#m-sub-autorenew){
 
 /* ── REQUEST PATCH: ACCOUNT STATS + MENU LAYOUT ONLY ──
    Frontend-only styling. Backend/API logic untouched. */
-/* tab-dash and tc-dash display managed by JS */
+#tab-dash,
+#tc-dash{
+  display:none !important;
+}
 .tabs{
   justify-content:flex-start !important;
   gap:10px !important;
@@ -1105,13 +1045,13 @@ label:has(#m-sub-autorenew){
       </svg>
       <!-- Greeting immediately after icon -->
       <div style="-webkit-box-flex:1;-webkit-flex:1;flex:1;min-width:0;">
-        <div class="user-greeting" id="user-greeting" style="font-size:1.05rem;font-weight:900;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Hi,</div>
+        <div class="user-greeting" id="user-greeting" style="font-size:1.1rem;font-weight:900;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Hi,</div>
       </div>
     </div>
     <div class="top-bar-right">
       <!-- Notification Bell — always visible, never hidden -->
       <div style="position:relative;-webkit-flex-shrink:0;flex-shrink:0;">
-        <button id="notif-bell" onclick="toggleNotifDrawer()" aria-label="Notifications" style="background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.35);border-radius:10px;width:36px;height:36px;display:-webkit-box!important;display:-webkit-flex!important;display:flex!important;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;cursor:pointer;position:relative;padding:0;-webkit-flex-shrink:0;flex-shrink:0;visibility:visible!important;opacity:1!important;">
+        <button id="notif-bell" onclick="toggleNotifDrawer()" aria-label="Notifications" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:10px;width:36px;height:36px;display:-webkit-box!important;display:-webkit-flex!important;display:flex!important;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;cursor:pointer;position:relative;padding:0;-webkit-flex-shrink:0;flex-shrink:0;visibility:visible!important;opacity:1!important;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
           <span id="notif-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:#f43f5e;color:#fff;border-radius:10px;font-size:.6rem;font-weight:900;padding:1px 5px;min-width:16px;text-align:center;border:1.5px solid #fff;"></span>
         </button>
@@ -1144,7 +1084,9 @@ label:has(#m-sub-autorenew){
       <button class="notif-filter"     data-cat="data_usage" onclick="notifFilter(this,'data_usage')">Data Usage</button>
       <button class="notif-filter"     data-cat="ad"         onclick="notifFilter(this,'ad')">Earn</button>
     </div>
-    <div id="notif-list" style="-webkit-box-flex:1;-webkit-flex:1;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;"></div>
+    <div id="notif-list" style="-webkit-box-flex:1;-webkit-flex:1;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;">
+      <div style="text-align:center;padding:40px 20px;color:#9ca3af;font-size:.85rem;">Loading&hellip;</div>
+    </div>
   </div>
 
   <!-- Bottom Navigation Bar (WhatsApp style) -->
@@ -1155,9 +1097,9 @@ label:has(#m-sub-autorenew){
     </button>
     <button class="bnav-btn" id="tab-plans" data-t="plans" onclick="showTab('plans')" style="flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
-      <span style="font-size:.62rem;font-weight:700;font-family:inherit;">Subscribe</span>
+      <span style="font-size:.62rem;font-weight:700;font-family:inherit;">Buy Data</span>
     </button>
-    <button class="bnav-btn" id="tab-subs" data-t="subs" onclick="showTab('subs')" style="flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;">
+    <button class="bnav-btn" id="tab-subs" data-t="subs" onclick="showTab(\'subs\')" style="flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
       <span style="font-size:.62rem;font-weight:700;font-family:inherit;">My Plan</span>
     </button>
@@ -1170,34 +1112,30 @@ label:has(#m-sub-autorenew){
       <span id="inbox-badge" style="display:none;position:absolute;top:4px;right:10px;background:#f43f5e;color:#fff;border-radius:10px;font-size:.55rem;font-weight:800;padding:1px 4px;min-width:14px;text-align:center;"></span>
       <span style="font-size:.62rem;font-weight:700;font-family:inherit;">Messages</span>
     </button>
-    <button class="bnav-btn" id="tab-earn" data-t="earn" onclick="showTab('earn')" style="display:none!important;flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;">
+    <button class="bnav-btn" id="tab-earn" data-t="earn" onclick="showTab('earn')" style="display:none!important;" style="flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
       <span style="font-size:.62rem;font-weight:700;font-family:inherit;">Earn</span>
     </button>
   </nav>
 
   <!-- DASHBOARD TAB - RETENTION REDESIGN -->
-  <div id="tc-dash" class="tab-content on">
+  <div id="tc-dash" class="tab-content">
     <div class="hero-bal-card" id="hero-bal-card">
       <button class="hero-fund-btn" id="d-fund-btn">+ Fund</button>
       <div class="hero-bal-label">Wallet Balance</div>
       <div class="hero-bal-amount" id="d-bal-dash">&#8358;0.00</div>
-      <div class="hero-bal-va" id="d-va-dash"></div>
+      <div class="hero-bal-va" id="d-va-dash">Loading&#8230;</div>
     </div>
-    <div class="streak-strip" id="streak-strip" style="display:none;cursor:pointer;" onclick="openStreakDetail()">
+    <div class="streak-strip" id="streak-strip" style="display:none;">
       <div class="streak-fire" id="streak-fire">&#128293;</div>
       <div style="-webkit-box-flex:1;-webkit-flex:1;flex:1;">
         <div class="streak-label">Daily Streak</div>
-        <div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:baseline;-webkit-align-items:baseline;align-items:baseline;gap:6px;">
-          <div class="streak-count" id="streak-count">0</div>
-          <div style="font-size:.72rem;color:#c2410c;font-weight:700;">days</div>
-        </div>
+        <div class="streak-count" id="streak-count">0</div>
         <div class="streak-sub" id="streak-sub">days in a row</div>
       </div>
       <div style="text-align:right;-webkit-flex-shrink:0;flex-shrink:0;">
         <div style="font-size:.65rem;color:#9a3412;font-weight:700;text-transform:uppercase;">Best</div>
         <div style="font-size:1rem;font-weight:900;color:#c2410c;" id="streak-best">0</div>
-        <div style="font-size:.62rem;color:#9a3412;margin-top:3px;opacity:.7;">Tap for details ›</div>
       </div>
     </div>
     <div class="onboard-banner" id="onboard-banner" style="display:none;">
@@ -1209,17 +1147,12 @@ label:has(#m-sub-autorenew){
       <div class="dynamic-strip-icon" id="dynamic-strip-icon">&#128161;</div>
       <div class="dynamic-strip-text" id="dynamic-strip-text"></div>
     </div>
-    <div class="savings-card" id="savings-card" style="display:none;cursor:pointer;" onclick="showTab('wallet')">
-      <div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;-webkit-box-align:flex-start;-webkit-align-items:flex-start;align-items:flex-start;">
-        <div>
-          <div class="savings-label">You saved this month</div>
-          <div class="savings-amount" id="savings-amount">&#8358;0</div>
-          <div class="savings-sub" id="savings-sub">by paying in installments instead of upfront</div>
-        </div>
-        <div style="font-size:.72rem;color:#047857;font-weight:700;opacity:.75;white-space:nowrap;padding-top:2px;">View wallet ›</div>
-      </div>
+    <div class="savings-card" id="savings-card" style="display:none;">
+      <div class="savings-label">You saved this month</div>
+      <div class="savings-amount" id="savings-amount">&#8358;0</div>
+      <div class="savings-sub" id="savings-sub">by paying in installments instead of upfront</div>
     </div>
-    <div id="dash-subs-d"></div>
+    <div id="dash-subs-d"><div class="empty" style="padding:16px 0;">Loading&#8230;</div></div>
     <div class="referral-card" id="referral-card" style="display:none;">
       <div style="font-size:.78rem;font-weight:900;color:#7c3aed;margin-bottom:4px;">&#127881; Earn &#8358;200 per referral</div>
       <div style="font-size:.74rem;color:#581c87;line-height:1.5;margin-bottom:6px;">Share your code. Every friend who subscribes earns you &#8358;200 wallet credit automatically.</div>
@@ -1233,13 +1166,13 @@ label:has(#m-sub-autorenew){
   </div>
 
   <!-- Buy Data / Airtime -->
-  <div id="tc-plans" class="tab-content">
+  <div id="tc-plans" class="tab-content on">
     <div class="card" style="margin-bottom:12px;">
       <div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:10px;">
         <div>
           <div class="card-title">Account Balance</div>
           <div class="card-val" id="d-bal">&#8358;0.00</div>
-          <div class="card-sub" id="d-va" style="margin-top:2px;"></div>
+          <div class="card-sub" id="d-va" style="margin-top:2px;">Loading&#8230;</div>
         </div>
         <button class="btn btn-blue" id="plans-fund-btn" style="margin:0;padding:9px 14px;font-size:.82rem;-webkit-flex-shrink:0;flex-shrink:0;width:auto;">+ Fund Account</button>
       </div>
@@ -1248,7 +1181,7 @@ label:has(#m-sub-autorenew){
     <div class="card" style="display:none!important;margin-bottom:12px;padding:10px;">
       <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:0;border-radius:8px;overflow:hidden;border:1.5px solid #1A56DB;">
         <button id="mode-data-btn" onclick="switchBuyMode('data')" style="flex:1;-webkit-box-flex:1;padding:9px 0;border:none;border-radius:0;font-size:.88rem;font-weight:900;cursor:pointer;background:#1A56DB;color:#fff;font-family:inherit;-webkit-tap-highlight-color:transparent;">&#128225; Buy Data</button>
-        <button id="mode-airtime-btn" onclick="switchBuyMode('airtime')" style="display:none;flex:1;-webkit-box-flex:1;padding:9px 0;border:none;border-radius:0;font-size:.88rem;font-weight:900;cursor:pointer;background:#fff;color:#1A56DB;font-family:inherit;-webkit-tap-highlight-color:transparent;">&#128222; Buy Airtime</button>
+        <button id="mode-airtime-btn" onclick="switchBuyMode('airtime')" style="display:none!important;flex:1;-webkit-box-flex:1;padding:9px 0;border:none;border-radius:0;font-size:.88rem;font-weight:900;cursor:pointer;background:#fff;color:#1A56DB;font-family:inherit;-webkit-tap-highlight-color:transparent;">&#128222; Buy Airtime</button>
       </div>
     </div>
     <!-- Data mode -->
@@ -1261,10 +1194,10 @@ label:has(#m-sub-autorenew){
         </div>
         <div class="card-sub" style="margin-top:10px;">Daily payment updates automatically based on the payment option you choose.</div>
       </div>
-      <div id="plans-list"></div>
+      <div id="plans-list"><div class="empty">Loading plans&hellip;</div></div>
     </div>
     <!-- Airtime mode -->
-    <div id="buy-mode-airtime" style="display:none;">
+    <div id="buy-mode-airtime" style="display:none!important;">
       <div class="card" style="margin-bottom:12px;">
         <div class="card-title" style="margin-bottom:10px;">Buy Airtime</div>
         <div class="field" style="margin-bottom:10px;">
@@ -1338,7 +1271,7 @@ label:has(#m-sub-autorenew){
   <!-- My Plans -->
   <div id="tc-subs" class="tab-content">
     <button class="btn btn-lite" id="refresh-subs-btn" style="margin-bottom:12px;">&#8635; Refresh</button>
-    <div id="subs-list"></div>
+    <div id="subs-list"><div class="empty">Loading&hellip;</div></div>
   </div>
 
   <!-- Account -->
@@ -1347,19 +1280,19 @@ label:has(#m-sub-autorenew){
       <div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;gap:9px;margin-bottom:12px;">
       <div style="-webkit-box-flex:1;-webkit-flex:1 1 80px;flex:1 1 80px;border:1px solid #e5e7eb;border-radius:8px;padding:11px;background:#fff;min-width:0;">
         <div style="font-size:.66rem;font-weight:700;color:#888;text-transform:uppercase;margin-bottom:3px;">Today Funded</div>
-        <div style="font-size:1.05rem;font-weight:900;color:#3d9758;cursor:pointer;" id="cf-in-d" onclick="showTab('wallet')" title="View wallet history">&#8358;0.00</div>
+        <div style="font-size:1.05rem;font-weight:900;color:#3d9758;" id="cf-in-d">&#8358;0.00</div>
       </div>
       <div style="-webkit-box-flex:1;-webkit-flex:1 1 80px;flex:1 1 80px;border:1px solid #e5e7eb;border-radius:8px;padding:11px;background:#fff;min-width:0;">
         <div style="font-size:.66rem;font-weight:700;color:#888;text-transform:uppercase;margin-bottom:3px;">Today Spent</div>
-        <div style="font-size:1.05rem;font-weight:900;color:#dc2626;cursor:pointer;" id="cf-out-d" onclick="showTab('wallet')" title="View wallet history">&#8358;0.00</div>
+        <div style="font-size:1.05rem;font-weight:900;color:#dc2626;" id="cf-out-d">&#8358;0.00</div>
       </div>
       <div style="-webkit-box-flex:1;-webkit-flex:1 1 80px;flex:1 1 80px;border:1px solid #e5e7eb;border-radius:8px;padding:11px;background:#fff;min-width:0;">
         <div style="font-size:.66rem;font-weight:700;color:#888;text-transform:uppercase;margin-bottom:3px;">Completed</div>
-        <div style="font-size:1.05rem;font-weight:900;color:#111;cursor:pointer;" id="cf-done-d" onclick="showTab('subs')" title="View completed plans">0</div>
+        <div style="font-size:1.05rem;font-weight:900;color:#111;" id="cf-done-d">0</div>
       </div>
     </div>
     </div>
-    <div id="wallet-tab-content"></div>
+    <div id="wallet-tab-content"><div class="empty">Loading account&hellip;</div></div>
   </div>
 
   <!-- Inbox -->
@@ -1368,7 +1301,7 @@ label:has(#m-sub-autorenew){
       <button class="btn btn-lite" id="mark-read-btn">Mark all read</button>
       <button class="btn btn-blue" id="compose-btn-open">New Message</button>
     </div>
-    <div id="inbox-list"></div>
+    <div id="inbox-list"><div class="empty">Loading&hellip;</div></div>
     <div style="text-align:center;padding:18px 14px 8px;font-size:.73rem;color:#bbb;">&#169; 2026 Vortexedge Limited. All rights reserved.</div>
   </div>
 
@@ -1486,45 +1419,6 @@ label:has(#m-sub-autorenew){
     </div>
     <div class="modal-foot">
       <button class="btn btn-blue" id="fg-send-btn" style="width:auto;display:inline-block;padding:10px 22px;margin:0;">Send Reset Link</button>
-    </div>
-  </div>
-</div>
-
-<!-- RESET PASSWORD MODAL -->
-<div class="modal" id="m-reset-pass">
-  <div class="modal-box">
-    <div class="modal-hdr">
-      <div class="modal-title">Set New Password</div>
-      <button class="modal-x" id="m-reset-x">&#215;</button>
-    </div>
-    <div class="modal-body">
-      <div style="background:#EEF2FF;border:1px solid #C7D2FE;border-radius:10px;padding:10px 13px;margin-bottom:14px;font-size:.8rem;color:#1A56DB;font-weight:700;line-height:1.5;">
-        &#128274; You clicked a password reset link. Enter a new password below.
-      </div>
-      <div id="r-exp" style="display:none;background:#fff2f2;border:1px solid #f5c6cb;border-radius:10px;padding:10px 13px;margin-bottom:12px;font-size:.8rem;color:#c0392b;line-height:1.55;">
-        &#9201; This reset link has expired or already been used. Please request a new one from the
-        <button type="button" onclick="closeModal('m-reset-pass');openModal('m-forgot');" style="background:none;border:none;color:#c0392b;font-weight:900;cursor:pointer;font-family:inherit;font-size:inherit;text-decoration:underline;padding:0;">Forgot Password</button> page.
-      </div>
-      <div id="r-err" class="err"></div>
-      <div id="r-ok" class="ok"></div>
-      <div class="field">
-        <label>New Password</label>
-        <div class="pw-wrap">
-          <input id="r-pass" type="password" autocomplete="new-password" placeholder="At least 8 characters" minlength="8">
-          <button type="button" class="eye" onclick="toggleEye('r-pass',this)">&#128065;</button>
-        </div>
-      </div>
-      <div class="field">
-        <label>Confirm New Password</label>
-        <div class="pw-wrap">
-          <input id="r-confirm" type="password" autocomplete="new-password" placeholder="Repeat your new password">
-          <button type="button" class="eye" onclick="toggleEye('r-confirm',this)">&#128065;</button>
-        </div>
-      </div>
-      <div id="r-strength" style="margin-top:-6px;margin-bottom:10px;font-size:.74rem;font-weight:700;"></div>
-    </div>
-    <div class="modal-foot">
-      <button class="btn btn-blue" id="r-btn" style="width:auto;display:inline-block;padding:10px 26px;margin:0;">Save New Password</button>
     </div>
   </div>
 </div>
@@ -1705,7 +1599,6 @@ label:has(#m-sub-autorenew){
     <div class="modal-hdr"><div class="modal-title">New Message</div><button class="modal-x" id="m-compose-x">&#215;</button></div>
     <div class="modal-body">
       <div id="m-compose-err" class="err"></div>
-      <div style="background:#EEF2FF;border:1px solid #C7D2FE;border-radius:10px;padding:9px 12px;margin-bottom:12px;font-size:.78rem;color:#1A56DB;font-weight:700;">&#128231; Messages go to <strong>support@databulge.com</strong> &mdash; we reply to your registered email.</div>
       <div class="field"><label>Subject</label><input id="compose-subject" type="text" placeholder="What do you need help with?"></div>
       <div class="field"><label>Type</label>
         <select id="compose-type" style="display:block;width:100%;padding:11px 12px;border:1.5px solid #ddd;border-radius:6px;font-size:.94rem;color:#111;background:#fff;outline:none;-webkit-appearance:none;">
@@ -1850,10 +1743,7 @@ function refreshToken(cb) {
 
 function ensureToken(cb) {
   var now = Date.now();
-  /* Token still valid — fire immediately, no network round trip */
-  if (gToken && gExpiry > now + 120000) { cb(null); return; }
-  /* Token expired or about to expire — refresh */
-  if (!gRefresh) { cb('No session'); return; }
+  if (gToken && gExpiry > now + 60000) { cb(null); return; }
   refreshToken(cb);
 }
 
@@ -1880,9 +1770,7 @@ function _loadSession() {
     if (!s || !s.at) return false;
     gToken   = s.at;
     gRefresh = s.rt;
-    /* If expiry is 0 or missing, assume the token is valid for 1hr
-       so the first ensureToken call fires immediately without refreshing */
-    gExpiry  = (s.ex && s.ex > Date.now()) ? s.ex : (Date.now() + 3600000);
+    gExpiry  = s.ex || 0;
     gUser    = s.user || null;
     return true;
   } catch(e) { return false; }
@@ -1931,7 +1819,7 @@ function showPage(id) {
 var _subsLastLoad  = 0;
 var _inboxLastLoad = 0;
 var _dashLastLoad  = 0;
-var STALE_MS = 60000; // 60s before re-fetching on tab revisit
+var STALE_MS = 30000; // 30s before re-fetching on tab revisit
 
 function showTab(t) {
   var tabs = ['dash','plans','subs','wallet','inbox'];
@@ -1942,10 +1830,8 @@ function showTab(t) {
     if (btn) btn.className = 'bnav-btn' + (tabs[i] === t ? ' act' : '');
     if (tc)  tc.className  = 'tab-content' + (tabs[i] === t ? ' on' : '');
   }
-  /* Instant scroll to top so content is visible immediately */
-  try { window.scrollTo(0, 0); } catch(e) {}
   var now = Date.now();
-  if (t === 'dash')   { if (now - _dashLastLoad  > STALE_MS) { _dashLastLoad  = now; loadDashCashflow(); loadRetentionData(); } }
+  if (t === 'dash')   { if (now - _dashLastLoad  > STALE_MS) { _dashLastLoad  = now; loadDashCashflow(); } }
   if (t === 'subs')   { if (now - _subsLastLoad  > STALE_MS) { _subsLastLoad  = now; loadSubs(); } }
   if (t === 'wallet') loadWalletTab();
   if (t === 'inbox')  { if (now - _inboxLastLoad > STALE_MS) { _inboxLastLoad = now; loadInbox(); } updateInboxBadge(0); }
@@ -1973,13 +1859,9 @@ function btnLoad(id, on, label) {
     b._lbl = b.textContent;
     b.innerHTML = '<span class="spin"></span>' + (label || '');
     b.disabled = true;
-    b.style.pointerEvents = 'none';
-    b.style.opacity = '0.72';
   } else {
     b.textContent = label || b._lbl || 'Submit';
     b.disabled = false;
-    b.style.pointerEvents = '';
-    b.style.opacity = '';
   }
 }
 
@@ -2079,94 +1961,39 @@ function doForgot() {
 }
 
 function doResetPassword() {
-  var passEl    = $('r-pass');
-  var confirmEl = $('r-confirm');
-  var pass      = (passEl    ? passEl.value    : '') || '';
-  var confirm   = (confirmEl ? confirmEl.value : '') || '';
-  errHide('r-err'); okHide('r-ok');
-  var rExp = $('r-exp'); if (rExp) rExp.style.display = 'none';
-
-  if (!pass || pass.length < 8) {
-    errShow('r-err', 'Password must be at least 8 characters.'); return;
-  }
-  if (pass !== confirm) {
-    errShow('r-err', 'Passwords do not match.'); return;
-  }
-  if (!gRecovAT) {
-    errShow('r-err', 'Reset session missing. Please request a new reset link.');
-    if (rExp) rExp.style.display = 'block';
-    return;
-  }
-
-  btnLoad('r-btn', true, 'Saving…');
+  var pass    = $('r-pass').value    || '';
+  var confirm = $('r-confirm').value || '';
+  errHide('r-err'); okHide('r-ok'); $('r-exp').style.display = 'none';
+  if (!pass || pass.length < 6) { errShow('r-err', 'Password must be at least 6 characters.'); return; }
+  if (pass !== confirm) { errShow('r-err', 'Passwords do not match.'); return; }
+  btnLoad('r-btn', true, 'Saving\u2026');
+  // Use the recovery access token to update password via Supabase REST
   var h = { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + gRecovAT, 'Content-Type': 'application/json' };
   xhr('PUT', AUTH + '/user', h, JSON.stringify({ password: pass }),
     function(err, res) {
       btnLoad('r-btn', false, 'Save New Password');
       if (err || !res || !res.ok) {
         var d = res && res.data;
-        var msg = (d && (d.message || d.error_description || d.error)) || '';
-        var expired = msg.toLowerCase().indexOf('expir') !== -1 ||
-                      msg.toLowerCase().indexOf('invalid') !== -1 ||
-                      msg.toLowerCase().indexOf('otp') !== -1;
-        if (expired && rExp) {
-          rExp.style.display = 'block';
+        var ec = d && (d.error || d.error_code || '');
+        if (ec === 'otp_expired' || ec === 'invalid_token' || (d && d.message && d.message.indexOf('expired') !== -1)) {
+          $('r-exp').style.display = 'block';
         } else {
-          errShow('r-err', msg || 'Could not update password. Please try again.');
+          errShow('r-err', (d && (d.message || d.error)) || 'Update failed. Try again.');
         }
         return;
       }
-
-      // Success — set session from recovery tokens and boot app
-      okShow('r-ok', '✅ Password updated! Signing you in…');
-      if (passEl)    passEl.value    = '';
-      if (confirmEl) confirmEl.value = '';
-
-      if (gRecovAT) {
-        gToken   = gRecovAT;
+      okShow('r-ok', '\u2705 Password updated! Signing you in\u2026');
+      // Sign in with new password
+      if (gRecovAT && gRecovRT) {
+        gToken = gRecovAT;
         gRefresh = gRecovRT;
-        gExpiry  = Date.now() + 3600000;
-        gRecovAT = '';
-        gRecovRT = '';
-        // Fetch user then boot
-        xhr('GET', AUTH + '/user',
-          { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + gToken, 'Content-Type': 'application/json' },
-          null,
-          function(e2, r2) {
-            if (!e2 && r2 && r2.ok && r2.data) {
-              _setSession({ access_token: gToken, refresh_token: gRefresh, expires_in: 3600, user: r2.data });
-            }
-            setTimeout(function() {
-              closeModal('m-reset-pass');
-              bootApp();
-            }, 1200);
-          }
-        );
-      } else {
-        setTimeout(function() {
-          closeModal('m-reset-pass');
-          window.location.replace('databulge-auth.html');
-        }, 1800);
-      }
+        gRecovAT = gRecovRT = '';
+        refreshToken(function(err2) {
+          if (!err2) { showPage('app'); hideSplash(); bootApp(); } else { showScreen('scr-l'); }
+        });
+      } else { setTimeout(function() { showScreen('scr-l'); }, 1600); }
     }
   );
-}
-
-/* Password strength indicator for reset modal */
-function checkPasswordStrength(val) {
-  var el = $('r-strength');
-  if (!el) return;
-  if (!val) { el.textContent = ''; el.style.color = ''; return; }
-  var score = 0;
-  if (val.length >= 8)  score++;
-  if (val.length >= 12) score++;
-  if (/[A-Z]/.test(val)) score++;
-  if (/[0-9]/.test(val)) score++;
-  if (/[^A-Za-z0-9]/.test(val)) score++;
-  var labels = ['', 'Weak', 'Fair', 'Good', 'Strong', 'Very strong'];
-  var colors = ['', '#dc2626', '#d97706', '#2563eb', '#16a34a', '#065f46'];
-  el.textContent = labels[score] || '';
-  el.style.color = colors[score] || '';
 }
 
 /* ── BOOT APP ───────────────────────────────────────────────── */
@@ -2180,7 +2007,7 @@ function bootPublicApp() {
   if ($('d-va')) $('d-va').textContent = 'Sign in required for wallet features';
   if ($('d-va-dash')) $('d-va-dash').textContent = 'Sign in required for wallet features';
   updateWalletLabel();
-  showTab('dash');
+  showTab('plans');
   updatePayDaysUI();
   loadPlans();
 }
@@ -2197,7 +2024,7 @@ function bootApp() {
   updateGreeting(name);
   updateWalletLabel();
 
-  showTab('dash');
+  showTab('plans');
   updatePayDaysUI();
 
   // Reset stale guards — first boot always loads everything fresh
@@ -2207,22 +2034,29 @@ function bootApp() {
   _dashLastLoad  = _now;
 
   // ── BOOT SEQUENCE ─────────────────────────────────────────
-  // Single get_boot_data() RPC returns wallet balance, VA details,
-  // profile, all plans, and active subscriptions in ONE network call.
-  // This replaces 5 separate REST calls and fires the moment the
-  // token is valid — typically under 200ms total on 3G.
-  _bootFromRPC(name);
+  // Fire wallet + plans in parallel immediately — both are needed
+  // for the first visible screen. loadPlans uses cached data after
+  // the first load so subsequent calls are instant.
+  loadWalletBalance(function() {});
+  loadPlans();
 
-  // Inbox + notifications — fire in parallel, not critical path
-  setTimeout(function() {
-    loadInbox();
-    notifLoad();
-    notifStartRealtime();
-    try { if (typeof wireEarnTab === 'function') wireEarnTab(); } catch(ex) {}
-  }, 0);
+  // My Plan tab — defer 200ms (not visible, low priority)
+  setTimeout(function() { loadSubs(); }, 200);
 
-  // Background: auto-pay and delivery checks
-  setTimeout(function() { autoActivatePlans(); checkUndeliveredData(); }, 1200);
+  // Inbox badge count — defer 500ms
+  setTimeout(function() { loadInbox(); }, 500);
+
+  // Dashboard cashflow card — defer 800ms
+  setTimeout(function() { loadDashCashflow(); }, 800);
+
+  // Profile/account data — defer 1000ms
+  setTimeout(function() { loadAcct(name); }, 1000);
+
+  // Auto-pay + delivery check — defer 2s
+  setTimeout(function() { autoActivatePlans(); checkUndeliveredData(); }, 2000);
+
+  // Retention data — streak, savings, dynamic strip, referral
+  setTimeout(function() { loadRetentionData(); }, 1500);
 
   // Wallet polls every 15s — balance reflects within 20s max
   if (_pollTimer) clearInterval(_pollTimer);
@@ -2234,163 +2068,9 @@ function bootApp() {
     loadWalletBalance(function() {});
     _walletPollTick++;
     if (_walletPollTick % 4 === 0) loadInbox(); // inbox every 60s (4 × 15s)
-  }, 8000); /* wallet poll every 8s for faster balance updates */
+  }, 15000);
 }
 
-
-/* ── _bootFromRPC — single round trip for all startup data ──────
-   Calls get_boot_data() which returns wallet balance, VA, profile,
-   plans, and subscriptions in one SQL function call.
-   Falls back to individual REST calls if RPC fails.
-────────────────────────────────────────────────────────────────── */
-function _bootFromRPC(name) {
-  ensureToken(function(err) {
-    if (err) {
-      /* Token error — fallback to individual calls */
-      loadWalletBalance(function() { loadDashCashflow(); });
-      loadPlans();
-      loadRetentionData();
-      loadAcct(name);
-      setTimeout(function() { loadSubs(); }, 0);
-      return;
-    }
-
-    rpc('get_boot_data', JSON.stringify({ p_user_id: gUser.id }), function(e, r) {
-      if (e || !r || !r.ok || !r.data) {
-        /* RPC failed — fallback to individual calls */
-        loadWalletBalance(function() { loadDashCashflow(); });
-        loadPlans();
-        loadRetentionData();
-        loadAcct(name);
-        setTimeout(function() { loadSubs(); }, 0);
-        return;
-      }
-
-      var d = r.data;
-
-      /* ── 1. Apply wallet balance immediately ── */
-      gBal = parseFloat(d.balance) || 0;
-      var balStr = fmtN(gBal);
-      if ($('d-bal'))           $('d-bal').textContent           = balStr;
-      if ($('d-bal-dash'))      $('d-bal-dash').textContent      = balStr;
-      if ($('earn-wallet-bal')) $('earn-wallet-bal').textContent = balStr;
-
-      /* ── 2. Apply VA and profile to gProfile ── */
-      if (!gProfile) gProfile = {};
-      gProfile.virtual_account_number = d.va_number   || '';
-      gProfile.virtual_account_bank   = d.va_bank     || '';
-      gProfile.virtual_account_name   = d.va_name     || '';
-      gProfile.full_name              = d.full_name   || '';
-      gProfile.phone                  = d.phone       || '';
-      gProfile.referral_code          = d.referral_code || '';
-
-      /* Update greeting with real name from DB */
-      var realName = d.full_name || name;
-      updateGreeting(realName);
-      if ($('av')) {
-        var initials = '', parts = realName.split(' '), i;
-        for (i = 0; i < Math.min(parts.length,2); i++) { if(parts[i]) initials += parts[i][0].toUpperCase(); }
-        $('av').textContent = initials || 'U';
-      }
-
-      /* Update VA display in buy data tab */
-      var vaStr = d.va_number
-        ? 'Acc: ' + d.va_number + (d.va_bank ? ' • ' + d.va_bank : '')
-        : 'Tap + Fund Account to add money';
-      if ($('d-va'))      $('d-va').textContent      = vaStr;
-      if ($('d-va-dash')) $('d-va-dash').textContent = vaStr;
-
-      /* Update account rows */
-      var wrap = $('acct-rows');
-      if (wrap) {
-        var aHtml =
-          '<div class="row-line"><span class="row-label">Name</span><span class="row-val">' + esc(realName) + '</span></div>' +
-          '<div class="row-line"><span class="row-label">Email</span><span class="row-val">' + esc(gUser.email) + '</span></div>';
-        if (d.phone) aHtml += '<div class="row-line"><span class="row-label">Phone</span><span class="row-val">' + esc(d.phone) + '</span></div>';
-        if (d.va_number) {
-          aHtml += '<div class="row-line"><span class="row-label">Account No.</span><span class="row-val" style="font-weight:900;font-size:1rem;">' + esc(d.va_number) + '</span></div>';
-          if (d.va_bank) aHtml += '<div class="row-line"><span class="row-label">Bank</span><span class="row-val">' + esc(d.va_bank) + '</span></div>';
-          if (d.va_name) aHtml += '<div class="row-line"><span class="row-label">Account Name</span><span class="row-val">' + esc(d.va_name) + '</span></div>';
-        }
-        wrap.innerHTML = aHtml;
-      }
-
-      /* ── 3. Render plans immediately from RPC data ── */
-      if (d.plans && d.plans.length) {
-        _plansCache   = d.plans;
-        _plansCacheTs = Date.now();
-        _renderPlans(d.plans);
-      } else {
-        loadPlans(); /* fallback if no plans returned */
-      }
-
-      /* ── 4. Render subscriptions from RPC data ── */
-      if (d.subscriptions) {
-        _renderSubsFromBoot(d.subscriptions);
-      } else {
-        loadSubs();
-      }
-
-      /* ── 5. Apply today's cashflow stats ── */
-      if ($('cf-in-d'))  $('cf-in-d').textContent  = d.today_in  > 0 ? fmtN(d.today_in)  : '₦0.00';
-      if ($('cf-out-d')) $('cf-out-d').textContent = d.today_out > 0 ? fmtN(d.today_out) : '₦0.00';
-
-      /* ── 6. Load retention data (streak, savings, referral) ── */
-      loadRetentionData();
-
-      /* ── 7. Update wallet label and dynamic strips ── */
-      updateWalletLabel();
-      try { renderDynamicStrip(); } catch(ex) {}
-      checkOnboarding();
-    });
-  });
-}
-
-/* Render subscriptions list from boot RPC data (same format as loadSubs) */
-function _renderSubsFromBoot(subs) {
-  /* Render in dash active plans */
-  renderDashActivePlans(subs);
-
-  /* Render in My Plan tab */
-  var wrap = $('subs-list');
-  if (!wrap) return;
-  if (!subs || !subs.length) {
-    wrap.innerHTML = '<div class="empty" style="padding:30px 0;text-align:center;"><div style="font-size:2rem;margin-bottom:8px;">📱</div><div style="font-size:.88rem;color:#6B7280;">No active plans yet.<br>Tap Subscribe to get started.</div></div>';
-    return;
-  }
-
-  var html = '', i, s, pl, paid, total, pct, days;
-  for (i = 0; i < subs.length; i++) {
-    s  = subs[i];
-    pl = s.data_plans || {};
-    paid  = parseFloat(s.amount_paid)  || 0;
-    total = parseFloat(s.total_price)  || 1;
-    pct   = Math.min(100, Math.round((paid / total) * 100));
-    days  = s.payment_days || 7;
-
-    html += '<div class="sub-row">' +
-      '<div class="sub-top">' +
-        '<span class="sub-name">' + esc(pl.data_size || 'Data Plan') + ' (' + esc(pl.network || '') + ')</span>' +
-        '<span class="sub-status status-' + esc(s.status) + '">' + esc(s.status) + '</span>' +
-      '</div>' +
-      '<div class="prog-bar"><div class="prog-fill" style="width:' + pct + '%;"></div></div>' +
-      '<div class="sub-meta">Paid ' + fmtN(paid) + ' of ' + fmtN(total) + ' &bull; ' + pct + '% &bull; ' + days + '-day plan</div>' +
-      (s.status === 'pending' || s.status === 'active'
-        ? '<button class="pay-btn" onclick="openPayModal('' + esc(s.id) + '',' + (parseFloat(s.daily_price)||0) + ',' + (total-paid) + ')">Pay Installment</button>'
-        : '') +
-    '</div>';
-  }
-
-  /* Completed plans count */
-  var completed = subs.filter(function(x) { return x.status === 'completed'; }).length;
-  if (completed > 0) {
-    html += '<div class="empty" style="font-size:.78rem;color:#888;text-align:center;padding:8px 0;">' + completed + ' completed plan' + (completed !== 1 ? 's' : '') + '</div>';
-  }
-  wrap.innerHTML = html;
-
-  /* Update completed count in account stats */
-  if ($('cf-done-d')) $('cf-done-d').textContent = completed;
-}
 
 function firstNameFromUser(fallbackName) {
   var raw = fallbackName || '';
@@ -2456,57 +2136,57 @@ function doLogout() {
 /* ── DATA LOADERS ───────────────────────────────────────────── */
 
 // ── Fast single-request balance loader used by all tabs ──────
-function _applyWalletData(w) {
-  if (!w) return;
-  gBal = parseFloat(w.balance) || 0;
-  if (!gProfile) gProfile = {};
-  var acctNum  = w.paystack_dva_account_number || w.virtual_account_number || '';
-  var bankName = w.paystack_dva_bank_name || w.virtual_bank_name || '';
-  var acctName = w.paystack_dva_account_name || '';
-  gProfile.virtual_account_number = acctNum;
-  gProfile.virtual_account_bank   = bankName;
-  gProfile.virtual_account_name   = acctName;
-  var balStr = fmtN(gBal);
-  if ($('d-bal')) $('d-bal').textContent = balStr;
-  var _hb = $('d-bal-dash');
-  if (_hb) {
-    var _prev = parseFloat((_hb.textContent||'0').replace(/[^0-9.]/g,''))||0;
-    if (Math.abs(gBal-_prev)>0.5) {
-      try { animateBalance(_hb,_prev,gBal,400); } catch(ex) { _hb.textContent=balStr; }
-      _hb.className='hero-bal-amount bal-pop';
-      setTimeout(function(){_hb.className='hero-bal-amount';},400);
-    } else { _hb.textContent=balStr; }
-  }
-  // earn tab balance
-  if ($('earn-wallet-bal')) $('earn-wallet-bal').textContent = fmtN(gBal);
-  var va = acctNum
-    ? 'Acc: ' + acctNum + (bankName ? ' • ' + bankName : '')
-    : 'Tap → Fund Account to add funds';
-  if ($('d-va'))      $('d-va').textContent      = va;
-  if ($('d-va-dash')) $('d-va-dash').textContent = va;
-  if (typeof gRetention !== 'undefined' && gRetention) { try { renderDynamicStrip(); } catch(ex){} }
-  updateWalletLabel();
-}
-
 function loadWalletBalance(cb) {
-  // Show cached balance instantly if we already have it
-  if (gBal > 0 && ($('d-bal') || $('d-bal-dash'))) {
-    var bs = fmtN(gBal);
-    if ($('d-bal'))      $('d-bal').textContent      = bs;
-    if ($('d-bal-dash')) $('d-bal-dash').textContent = bs;
-  }
-  if (!gUser) { if (cb) cb(); return; }
   ensureToken(function(err) {
     if (err) { if (cb) cb(); return; }
     restGet('/wallets', 'user_id=eq.' + gUser.id + '&select=balance,virtual_account_number,virtual_bank_name,paystack_dva_account_number,paystack_dva_bank_name,paystack_dva_account_name', function(e, r) {
-      if (r && r.ok && r.data && r.data[0]) { _applyWalletData(r.data[0]); }
+      if (r && r.ok && r.data && r.data[0]) {
+        var w = r.data[0];
+        gBal = parseFloat(w.balance) || 0;
+        if (!gProfile) gProfile = {};
+        // Prefer Paystack DVA, fall back to Lenco VA
+        var acctNum  = w.paystack_dva_account_number || w.virtual_account_number || '';
+        var bankName = w.paystack_dva_bank_name || w.virtual_bank_name || '';
+        var acctName = w.paystack_dva_account_name || '';
+        gProfile.virtual_account_number = acctNum;
+        gProfile.virtual_account_bank   = bankName;
+        gProfile.virtual_account_name   = acctName;
+        // Update every balance display at once
+        var balStr = fmtN(gBal);
+        if ($('d-bal')) $('d-bal').textContent = balStr;
+        var _hb = $('d-bal-dash');
+        if (_hb) {
+          var _prev = parseFloat((_hb.textContent||'0').replace(/[^0-9.]/g,''))||0;
+          if (Math.abs(gBal-_prev)>0.5) {
+            animateBalance(_hb,_prev,gBal,400);
+            _hb.className='hero-bal-amount bal-pop';
+            setTimeout(function(){_hb.className='hero-bal-amount';},400);
+          } else { _hb.textContent=balStr; }
+        }
+        var va = '';
+        if (acctNum) {
+          va = 'Acc: ' + acctNum + (bankName ? ' \u2022 ' + bankName : '');
+        } else {
+          va = 'Tap Account \u2192 Fund Account to add funds';
+        }
+        if ($('d-va')) $('d-va').textContent = va;
+        if ($('d-va-dash')) $('d-va-dash').textContent = va;
+        if (typeof gRetention !== 'undefined' && gRetention) { try { renderDynamicStrip(); } catch(e){} }
+        updateWalletLabel();
+      }
       if (cb) cb();
     });
   });
 }
 
 function loadDashboard() {
-  loadWalletBalance(function() { loadDashCashflow(); });
+  // Show cached balance instantly, then refresh in background
+  if (gBal > 0) {
+    var bs = fmtN(gBal);
+    if ($('d-bal'))      $('d-bal').textContent      = bs;
+    if ($('d-bal-dash')) $('d-bal-dash').textContent = bs;
+  }
+  loadWalletBalance(function() {});
 }
 
 function netCls(net) {
@@ -2520,7 +2200,7 @@ function netCls(net) {
 
 var _plansCache    = null;  // cached plan data — static, never changes mid-session
 var _plansCacheTs  = 0;    // timestamp of last fetch
-var PLANS_CACHE_MS = 10 * 60 * 1000; // re-fetch after 10 minutes
+var PLANS_CACHE_MS = 5 * 60 * 1000; // re-fetch after 5 minutes max
 
 function loadPlans() {
   var wrap = $('plans-list');
@@ -2532,10 +2212,7 @@ function loadPlans() {
     return;
   }
 
-  // Only show loading indicator if wrap is empty (not showing stale render)
-  if (!wrap.innerHTML || wrap.innerHTML.indexOf('plan-card') === -1) {
-    wrap.innerHTML = '<div class="empty" style="padding:20px 0;">Loading plans…</div>';
-  }
+  wrap.innerHTML = '<div class="empty" style="padding:20px 0;">Loading plans\u2026</div>';
 
   restGet('/data_plans',
     'is_active=eq.true&order=network,sort_order,selling_price&select=id,data_size,network,selling_price,daily_price,validity_days,category',
@@ -2616,7 +2293,7 @@ function _renderPlans(allPlans) {
       html += '<div class="plan-count">' + shown.length + ' plan' + (shown.length === 1 ? '' : 's') + ' available</div>';
 
       if (!shown.length) {
-        html += '<div class="empty" style="grid-column:1/-1;padding:24px 0;text-align:center;">No plans match this filter. <button type="button" onclick="setPlanFilter(\'net\',\'ALL\');setPlanFilter(\'type\',\'ALL\')" style="background:none;border:none;color:#1A56DB;font-weight:700;cursor:pointer;font-family:inherit;font-size:.85rem;">Clear filters</button></div>';
+        html += '<div class="empty" style="grid-column:1/-1;">No plan found under this selection.</div>';
         wrap.innerHTML = html;
         return;
       }
@@ -2628,13 +2305,13 @@ function _renderPlans(allPlans) {
         var nn = normNet(p.network);
         var pillC = netCls(nn);
         var _acl=(_acl||'');_acl=(p.network||'').toUpperCase();var _accentC=_acl==='MTN'?'net-mtn-accent':_acl==='AIRTEL'?'net-airtel-accent':_acl==='GLO'?'net-glo-accent':_acl==='9MOBILE'?'net-9mobile-accent':'';
-        html += '<div class="plan-card ' + _accentC + '">' +
+        html += '<div class="plan-card plan-card-animate ' + _accentC + '">' +
           '<div>' +
             '<div class="plan-top">' +
               '<span class="plan-net ' + pillC + '">' + esc2(nn) + '</span>' +
               '<span class="plan-net net-other" style="background:#eaf5ee!important;color:#2d7a44!important;">' + esc2(type) + '</span>' +
             '</div>' +
-            '<div class="plan-size">' + esc2(p.data_size) + '</div>' +
+            '<div class="plan-size">' + esc2(nn) + '<br>' + esc2(p.data_size) + '</div>' +
             '<div class="plan-sub" style="margin-top:5px;text-transform:none;letter-spacing:0;">' + (p.validity_days || 30) + '-Day Plan</div>' +
             '<div class="plan-price">' + fmtN(p.selling_price) + '</div>' +
             '<div class="plan-sub">Daily: <strong>' + fmtN(pc.daily) + '</strong> &bull; ' + gPayDays + ' days</div>' +
@@ -2661,7 +2338,7 @@ function loadSubs() {
       function(e, r) {
         var wrap = $('subs-list');
         if (!r || !r.ok || !r.data || !r.data.length) {
-          wrap.innerHTML = '<div class="empty" style="padding:30px 0;text-align:center;"><div style="font-size:2rem;margin-bottom:8px;">📱</div><div style="font-size:.88rem;color:#6B7280;">No active plans yet.<br>Tap Subscribe to get started.</div></div>';
+          wrap.innerHTML = '<div class="empty">No plans yet.</div>';
           return;
         }
         wrap.innerHTML = renderSubsList(r.data, false);
@@ -2832,7 +2509,7 @@ function loadInbox() {
       }
       restGet('/notifications', 'user_id=eq.' + gUser.id + '&order=created_at.desc&limit=20', function(e, r) {
         if (!r || !r.ok || !r.data || !r.data.length) {
-          wrap.innerHTML = '<div class="empty" style="padding:30px 0;text-align:center;"><div style="font-size:2rem;margin-bottom:8px;">💬</div><div style="font-size:.88rem;color:#6B7280;">No messages yet.<br>Tap New Message to contact support.</div></div>';
+          wrap.innerHTML = '<div class="empty">No messages or notifications.</div>';
           updateInboxBadge(0);
           return;
         }
@@ -2857,93 +2534,28 @@ function loadInbox() {
 }
 
 function loadAcct(name) {
-  if (!gUser) return;
   var wrap = $('acct-rows');
-  var baseHtml =
-    '<div class="row-line"><span class="row-label">Name</span><span class="row-val">' + esc(name) + '</span></div>' +
+  var baseHtml = '<div class="row-line"><span class="row-label">Name</span><span class="row-val">' + esc(name) + '</span></div>' +
     '<div class="row-line"><span class="row-label">Email</span><span class="row-val">' + esc(gUser.email) + '</span></div>';
   if (wrap) wrap.innerHTML = baseHtml;
-
+  // Load phone from profile
   ensureToken(function(err) {
     if (err) return;
-    /* Fetch profile + wallet VA in a single parallel batch */
-    var done = 0;
-    var profileData = null, walletData = null;
-
-    function mergeAndRender() {
-      done++;
-      if (done < 2) return; /* wait for both */
-
-      var p = profileData;
-      var w = walletData;
-
-      /* Populate gProfile with everything we know */
-      if (!gProfile) gProfile = {};
-      if (p) {
-        gProfile.phone              = p.phone         || gProfile.phone  || '';
-        gProfile.full_name          = p.full_name      || gProfile.full_name || '';
-        gProfile.referral_code      = p.referral_code  || gProfile.referral_code || '';
-      }
-      if (w) {
-        /* Prefer Paystack DVA, fall back to Lenco VA */
-        gProfile.virtual_account_number = w.paystack_dva_account_number || w.virtual_account_number || gProfile.virtual_account_number || '';
-        gProfile.virtual_account_bank   = w.paystack_dva_bank_name      || w.virtual_bank_name      || gProfile.virtual_account_bank   || '';
-        gProfile.virtual_account_name   = w.paystack_dva_account_name   || gProfile.virtual_account_name || '';
-        /* Update balance too while we have fresh wallet data */
-        if (w.balance !== undefined) {
-          gBal = parseFloat(w.balance) || 0;
-          var bs = fmtN(gBal);
-          if ($('d-bal'))      $('d-bal').textContent      = bs;
-          if ($('d-bal-dash')) $('d-bal-dash').textContent = bs;
-          if ($('earn-wallet-bal')) $('earn-wallet-bal').textContent = bs;
+    restGet('/profiles', 'user_id=eq.' + gUser.id + '&select=phone,full_name,virtual_account_number,virtual_bank_name,paystack_dva_account_number,paystack_dva_bank_name,paystack_dva_account_name', function(e, r) {
+      if (r && r.ok && r.data && r.data[0]) {
+        var p = r.data[0]; gProfile = p;
+        if (p.full_name) updateGreeting(p.full_name);
+        var extra = '';
+        if (p.phone) extra += '<div class="row-line"><span class="row-label">Phone</span><span class="row-val">' + esc(p.phone) + '</span></div>';
+        if (p.virtual_account_number || p.paystack_dva_account_number) {
+          var pAcct = p.paystack_dva_account_number || p.virtual_account_number || '';
+          var pBank = p.paystack_dva_bank_name || p.virtual_bank_name || '';
+          extra += '<div class="row-line"><span class="row-label">Account Number</span><span class="row-val">' + esc(pAcct) + '</span></div>';
+          if (pBank) extra += '<div class="row-line"><span class="row-label">Bank</span><span class="row-val">' + esc(pBank) + '</span></div>';
         }
+        if (wrap) wrap.innerHTML = baseHtml + extra;
       }
-
-      /* Update greeting with real name */
-      if (gProfile.full_name) updateGreeting(gProfile.full_name);
-
-      /* Render account rows */
-      var extra = '';
-      if (gProfile.phone)
-        extra += '<div class="row-line"><span class="row-label">Phone</span><span class="row-val">' + esc(gProfile.phone) + '</span></div>';
-      if (gProfile.virtual_account_number) {
-        extra += '<div class="row-line"><span class="row-label">Account No.</span><span class="row-val" style="font-weight:900;font-size:1rem;letter-spacing:.04em;">' + esc(gProfile.virtual_account_number) + '</span></div>';
-        if (gProfile.virtual_account_bank)
-          extra += '<div class="row-line"><span class="row-label">Bank</span><span class="row-val">' + esc(gProfile.virtual_account_bank) + '</span></div>';
-        if (gProfile.virtual_account_name)
-          extra += '<div class="row-line"><span class="row-label">Account Name</span><span class="row-val">' + esc(gProfile.virtual_account_name) + '</span></div>';
-      }
-      if (wrap) wrap.innerHTML = baseHtml + extra;
-
-      /* Update VA display everywhere */
-      var vaStr = gProfile.virtual_account_number
-        ? 'Acc: ' + gProfile.virtual_account_number + (gProfile.virtual_account_bank ? ' • ' + gProfile.virtual_account_bank : '')
-        : 'Tap + Fund Account to add money';
-      if ($('d-va'))      $('d-va').textContent      = vaStr;
-      if ($('d-va-dash')) $('d-va-dash').textContent = vaStr;
-
-      updateWalletLabel();
-    }
-
-    /* Parallel fetch 1: profile */
-    restGet('/profiles',
-      'user_id=eq.' + gUser.id +
-      '&select=phone,full_name,referral_code,virtual_account_number,virtual_bank_name,paystack_dva_account_number,paystack_dva_bank_name,paystack_dva_account_name',
-      function(e, r) {
-        profileData = (r && r.ok && r.data && r.data[0]) ? r.data[0] : null;
-        mergeAndRender();
-      }
-    );
-
-    /* Parallel fetch 2: wallet (balance + VA — single source of truth) */
-    restGet('/wallets',
-      'user_id=eq.' + gUser.id +
-      '&select=balance,virtual_account_number,virtual_bank_name,paystack_dva_account_number,paystack_dva_bank_name,paystack_dva_account_name',
-      function(e, r) {
-        walletData = (r && r.ok && r.data && r.data[0]) ? r.data[0] : null;
-        mergeAndRender();
-      }
-    );
+    });
   });
 }
 
@@ -3137,7 +2749,7 @@ function confirmSub() {
   ensureToken(function(err) {
     if (err) { btnLoad('m-sub-btn', false, 'Subscribe Now'); errShow('m-sub-err', 'Session error. Please sign out and back in.'); return; }
     var h = { 'Authorization': 'Bearer ' + gToken, 'Content-Type': 'application/json', 'apikey': ANON_KEY };
-    var body = JSON.stringify({ user_id: gUser.id, plan_id: gSelPlan.id, phone_number: phone, payment_days: days, auto_renew: autoRenew, network: (gSelPlan.network || gSelNet || '') });
+    var body = JSON.stringify({ user_id: gUser.id, plan_id: gSelPlan.id, phone_number: phone, payment_days: days, auto_renew: autoRenew });
     xhr('POST', FN + '/createSubscription', h, body, function(e, r) {
       btnLoad('m-sub-btn', false, 'Subscribe Now');
       if (e || !r || !r.ok || (r.data && r.data.error)) {
@@ -3147,7 +2759,7 @@ function confirmSub() {
       }
       _savePhone(phone);      // remember this number for next time
       closeModal('m-sub');
-      toast('\u2705 Subscribed! ' + gSelPlan.data_size + ' is on its way.' + '! Delivering once fully paid.');
+      toast('\u2705 Subscribed to ' + gSelPlan.data_size + '! Delivering once fully paid.');
       if (r.data && r.data.delivery_queued) { setTimeout(function(){try{confettiBurst(window.innerWidth/2,window.innerHeight/3);}catch(e){}},400); }
       // Fire Auto-Fund if enabled
       if (autoFundOn && autoFundAmt >= 100 && gSelPlan) {
@@ -3224,36 +2836,22 @@ function copyText(txt) {
 function openFundModal() {
   errHide('m-fund-err');
   _loadWalletMandate();
-  openModal('m-fund');
-
-  /* Show VA instantly from cached profile — no network wait */
   var vaHtml = getVAHtml(true);
-  var vaBox = $('m-fund-va');
-  if (vaBox) {
-    vaBox.style.display = 'block';
-    if (vaHtml) {
-      vaBox.innerHTML = vaHtml;
-      return; /* Already have details — done */
-    }
-    /* VA not in cache yet — show a loading state, then fetch */
-    vaBox.innerHTML = '<div class="empty" style="padding:14px 0;font-size:.82rem;">&#8987; Loading account details…</div>';
-  }
-
-  /* Fetch VA from edge function (only runs if not already in gProfile) */
+  $('m-fund-va').style.display = 'block';
+  $('m-fund-va').innerHTML = vaHtml || '<div class="empty">No account details found yet. Please wait a moment for account generation or contact support.</div>';
+  openModal('m-fund');
+  if (vaHtml) return;
   ensureToken(function(err) {
     if (err) return;
     edgeFn('paystackVirtualAccount', {}, function(e, r) {
-      if (!vaBox) return;
       if (r && r.ok && r.data) {
         if (!gProfile) gProfile = {};
-        gProfile.virtual_account_number = r.data.account_number || r.data.virtual_account_number || (gProfile && gProfile.virtual_account_number) || '';
-        gProfile.virtual_account_bank   = r.data.bank_name      || r.data.virtual_account_bank   || (gProfile && gProfile.virtual_account_bank) || '';
-        gProfile.virtual_account_name   = r.data.account_name   || r.data.virtual_account_name   || (gProfile && gProfile.virtual_account_name) || '';
-        vaBox.innerHTML = getVAHtml(true) || '<div class="empty">Account setup is not available right now. Please contact support.</div>';
-        /* Refresh balance display too */
-        loadWalletBalance(function() {});
-      } else {
-        vaBox.innerHTML = '<div class="empty" style="padding:14px 0;font-size:.82rem;">Could not load account details. Please try again.</div>';
+        gProfile.virtual_account_number = r.data.account_number || r.data.virtual_account_number || gProfile.virtual_account_number;
+        gProfile.virtual_account_bank = r.data.bank_name || r.data.virtual_account_bank || gProfile.virtual_account_bank;
+        $('m-fund-va').innerHTML = getVAHtml(true) || '<div class="empty">Account setup is not available right now.</div>';
+        loadDashboard();
+        loadWalletTab();
+        loadAcct((gUser.user_metadata && gUser.user_metadata.full_name) || (gUser.email || 'User'));
       }
     });
   });
@@ -3370,27 +2968,17 @@ function loadWalletTab() {
     if (err) return;
     var wrap = $('wallet-tab-content');
     if (!wrap) return;
-    /* Render instantly from cached data — no waiting */
-    var vaHtml = getVAHtml(false);
+    // Show cached balance instantly — no spinner
     var html = '';
     html += '<button class="btn btn-blue" onclick="openFundModal()" style="margin-bottom:12px;">+ Fund Account</button>';
-    html += '<div class="card">' +
-      '<div class="card-title">Wallet Balance</div>' +
-      '<div class="card-val">' + fmtN(gBal) + '</div>' +
-      '<div class="card-sub">Last updated: ' + (new Date().toLocaleTimeString('en-NG', {hour:'2-digit',minute:'2-digit'})) + '</div>' +
-      '</div>';
-    if (vaHtml) {
-      html += vaHtml;
-    } else {
-      html += '<div class="va-box" style="opacity:.6;"><div class="va-bank">Loading account details…</div></div>';
-    }
-    if ($('acct-rows') && $('acct-rows').innerHTML) {
-      html += '<div class="card"><div class="sec-title">Profile</div>' + $('acct-rows').innerHTML + '</div>';
-    }
-    html += '<div id="wallet-tx-list"><div class="empty" style="font-size:.75rem;">Loading transactions…</div></div>';
+    html += '<div class="card"><div class="card-title">Account Balance</div><div class="card-val">' + fmtN(gBal) + '</div><div class="card-sub">Updates after funding or installment payment.</div></div>';
+    var vaHtml = getVAHtml(false);
+    if (vaHtml) html += vaHtml;
+    if ($('acct-rows') && $('acct-rows').innerHTML) html += '<div class="card"><div class="sec-title">Profile</div>' + $('acct-rows').innerHTML + '</div>';
+    html += '<div id="wallet-tx-list"><div class="empty" style="font-size:.75rem;">Loading transactions\u2026</div></div>';
     wrap.innerHTML = html;
     // Only fetch transactions (balance already cached)
-    restGet('/wallet_transactions', 'user_id=eq.' + gUser.id + '&select=type,amount,description,reference,metadata,created_at&order=created_at.desc&limit=20', function(e2, r2) {
+    restGet('/wallet_transactions', 'user_id=eq.' + gUser.id + '&select=type,amount,reference,metadata,created_at&order=created_at.desc&limit=20', function(e2, r2) {
       var txWrap = $('wallet-tx-list');
       if (!txWrap) return;
       var list = (r2 && r2.ok && r2.data) ? r2.data : [];
@@ -3399,7 +2987,7 @@ function loadWalletTab() {
       for (i = 0; i < list.length; i++) {
         t = list[i]; type = t.type || 'credit';
         icon = type === 'debit' ? '\u2212' : (type === 'refund' ? '\u21ba' : '+');
-        desc = t.description || (t.metadata && t.metadata.description) || type;
+        desc = (t.metadata && t.metadata.description) ? t.metadata.description : type;
         txHtml += '<div class="tx-row">' +
           '<div class="tx-left"><div class="tx-ico">' + icon + '</div><div>' +
           '<div class="tx-desc">' + esc(desc) + '</div>' +
@@ -3451,34 +3039,11 @@ function sendMessage() {
   errHide('m-compose-err');
   if (!subject || !body) { errShow('m-compose-err', 'Enter subject and message.'); return; }
   btnLoad('compose-send-btn', true, 'Sending…');
-  var userName  = (gUser.user_metadata && gUser.user_metadata.full_name) || gUser.email || 'User';
-  var userEmail = gUser.email || '';
-  var msgRecord = {
-    user_id:   gUser.id,
-    direction: 'inbound',
-    subject:   subject,
-    body:      body,
-    type:      type
-  };
-  restPost('/messages', msgRecord, function(e, r) {
+  restPost('/messages', { user_id: gUser.id, direction: 'inbound', subject: subject, body: body, type: type }, function(e, r) {
     btnLoad('compose-send-btn', false, 'Send Message');
-    if (e || !r || !r.ok) { errShow('m-compose-err', 'Failed to send. Check your connection and try again.'); return; }
-    /* Forward complaint to info@databulge.com via notifyAdmin edge function */
-    edgeFn('notifyAdmin', {
-      event:        'user_message',
-      user_id:      gUser.id,
-      user_name:    userName,
-      user_email:   userEmail,
-      subject:      subject,
-      body:         body,
-      type:         type,
-      recipient:    'support@databulge.com'
-    }, function() { /* fire-and-forget — DB record is the source of truth */ });
+    if (e || !r || !r.ok) { errShow('m-compose-err', 'Failed to send message.'); return; }
     closeModal('m-compose');
-    $('compose-subject').value = '';
-    $('compose-body').value    = '';
-    $('compose-type').value    = 'support';
-    toast('Message sent. We’ll get back to you at ' + userEmail + ' from support@databulge.com shortly.');
+    toast('Message sent.');
     loadInbox();
   });
 }
@@ -3487,21 +3052,9 @@ function sendReply() {
   var body = ($('msg-reply-text').value || '').replace(/^\s+|\s+$/g, '');
   if (!body) { toast('Type your reply first'); return; }
   btnLoad('reply-btn', true, 'Sending…');
-  var replySubject = 'Re: ' + ($('msg-detail-title').textContent || 'Message');
-  restPost('/messages', { user_id: gUser.id, direction: 'inbound', subject: replySubject, body: body, type: 'support', replied_to: gCurrentMsgId }, function(e, r) {
+  restPost('/messages', { user_id: gUser.id, direction: 'inbound', subject: 'Re: ' + ($('msg-detail-title').textContent || 'Message'), body: body, type: 'support', replied_to: gCurrentMsgId }, function(e, r) {
     btnLoad('reply-btn', false, 'Send Reply');
-    if (e || !r || !r.ok) { toast('Reply failed. Check your connection.'); return; }
-    /* Forward reply to info@databulge.com */
-    edgeFn('notifyAdmin', {
-      event:      'user_reply',
-      user_id:    gUser.id,
-      user_email: gUser.email || '',
-      subject:    replySubject,
-      body:       body,
-      type:       'support',
-      recipient:  'support@databulge.com'
-    }, function() {});
-    $('msg-reply-text').value = '';
+    if (e || !r || !r.ok) { toast('Reply failed'); return; }
     closeModal('m-msg-detail');
     toast('Reply sent.');
     loadInbox();
@@ -3669,20 +3222,6 @@ function parseHash() {
   gRefresh = params.refresh_token || '';
   gExpiry  = Date.now() + ((parseInt(params.expires_in, 10) || 3600) * 1000);
 
-  // PASSWORD RECOVERY: forward to the dedicated reset-password.html page
-  // (This handles the rare edge case where the link opens the main app instead)
-  if (params.type === 'recovery') {
-    // Store tokens temporarily so reset-password.html can pick them up
-    try {
-      localStorage.setItem('__db_recov_at__', params.access_token);
-      localStorage.setItem('__db_recov_rt__', params.refresh_token || '');
-    } catch(e) {}
-    hideSplash();
-    window.location.replace('https://www.databulge.com/reset-password.html');
-    return true;
-  }
-
-  // NORMAL OAuth login (Google etc.) — log in and boot app
   xhr('GET', AUTH + '/user',
     { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + gToken, 'Content-Type': 'application/json' },
     null,
@@ -3707,24 +3246,19 @@ function init() {
   if (parseHash()) { hideSplash(); return; }
 
   if (_loadSession()) {
-    /* Show app immediately — token is assumed valid from _loadSession.
-       Each fetch will refresh if needed. This eliminates the auth
-       round-trip delay on every cold boot. */
-    showPage('app');
-    hideSplash();
-    if (gUser) {
-      bootApp();
-    } else {
-      /* Session token exists but no user object — refresh to get user */
-      refreshToken(function(err) {
-        if (!err && gUser) {
-          bootApp();
-        } else {
-          _clearSession();
-          window.location.replace('databulge-auth.html');
-        }
-      });
-    }
+    ensureToken(function(err) {
+      if (!err && gUser) {
+        // Valid session — show the app and hide the splash
+        showPage('app');
+        hideSplash();
+        bootApp();
+      } else {
+        // Session expired — clear and redirect
+        _clearSession();
+        hideSplash();
+        window.location.replace('databulge-auth.html');
+      }
+    });
   } else {
     // No session — redirect to auth immediately
     hideSplash();
@@ -3854,7 +3388,7 @@ function loadDashCashflow() {
       function(e3, r3) {
         var wrap = $('dash-subs-d'); if (!wrap) return;
         var data = (r3 && r3.ok && r3.data) ? r3.data : [];
-        if (!data.length) { wrap.innerHTML = '<div class="empty">No active plans. Tap Subscribe to get started.</div>'; return; }
+        if (!data.length) { wrap.innerHTML = '<div class="empty">No active plans. Tap Buy Data to subscribe.</div>'; return; }
         var html = '', i;
         for (i = 0; i < data.length; i++) {
           var s = data[i], pl = s.data_plans || {};
@@ -3937,62 +3471,11 @@ function wire() {
     if (wrap && t && !wrap.contains(t)) closeAvatarMenu();
   };
 
-  // Forgot password modal close + send
-  if ($('m-forgot-x'))  $('m-forgot-x').onclick  = function() { closeModal('m-forgot'); };
-  if ($('fg-send-btn')) $('fg-send-btn').onclick  = doForgot;
-  // Terms modal
-  if ($('m-terms-x'))    $('m-terms-x').onclick    = function() { closeModal('m-terms'); };
-  if ($('m-terms-agree'))$('m-terms-agree').onclick = function() { closeModal('m-terms'); };
-  // Reset password modal
-  if ($('m-reset-x'))  $('m-reset-x').onclick  = function() { closeModal('m-reset-pass'); gRecovAT = ''; gRecovRT = ''; };
-  if ($('r-btn'))      $('r-btn').onclick       = doResetPassword;
-  if ($('m-reset-pass'))$('m-reset-pass').onclick = function(e) { if (e.target === $('m-reset-pass')) return; /* disallow backdrop close on reset */ };
-  if ($('r-pass'))     $('r-pass').oninput      = function() { checkPasswordStrength(this.value); };
-  // Refund modal
-  if ($('m-refund-x')) $('m-refund-x').onclick = function() { closeModal('m-refund'); };
-  if ($('m-refund'))   $('m-refund').onclick    = function(e) { if (e.target === $('m-refund')) closeModal('m-refund'); };
-  // Forgot modal
-  if ($('m-forgot-x'))   $('m-forgot-x').onclick   = function() { closeModal('m-forgot'); };
-  if ($('fg-send-btn'))  $('fg-send-btn').onclick   = doForgot;
-  if ($('m-forgot'))     $('m-forgot').onclick      = function(e) { if (e.target === $('m-forgot')) closeModal('m-forgot'); };
-  // Terms modal
-  if ($('m-terms-x'))    $('m-terms-x').onclick     = function() { closeModal('m-terms'); };
-  if ($('m-terms-agree'))$('m-terms-agree').onclick  = function() { closeModal('m-terms'); };
   // Logout
   $('logout-btn').onclick = doLogout;
 
   // Refresh subs
   $('refresh-subs-btn').onclick = function() { loadSubs(); toast('Refreshing\u2026'); };
-
-  // ── TOUCHSTART FAST PATH ──
-  (function() {
-    function fastTap(id, fn) {
-      var el = document.getElementById(id);
-      if (!el || !el.addEventListener) return;
-      var _used = false;
-      el.addEventListener('touchstart', function() {
-        _used = true; fn();
-        el.style.opacity = '0.75';
-        el.style.webkitTransform = 'scale(0.96)';
-        el.style.transform = 'scale(0.96)';
-        setTimeout(function() { el.style.opacity=''; el.style.webkitTransform=''; el.style.transform=''; }, 150);
-      }, { passive: true });
-      el.addEventListener('click', function() { if (_used) { _used = false; return; } fn(); });
-    }
-    var navIds = ['tab-dash','tab-plans','tab-subs','tab-wallet','tab-inbox'];
-    for (var ni = 0; ni < navIds.length; ni++) {
-      (function(nid) {
-        var el = document.getElementById(nid);
-        if (!el) return;
-        var t = el.getAttribute('data-t'); if (!t) return;
-        fastTap(nid, (function(tab){ return function(){ showTab(tab); }; })(t));
-      })(navIds[ni]);
-    }
-    fastTap('plans-fund-btn', openFundModal);
-    fastTap('d-fund-btn', openFundModal);
-    fastTap('notif-bell', toggleNotifDrawer);
-    fastTap('av', toggleAvatarMenu);
-  })();
 }
 
 function hideSplash() {
@@ -4696,9 +4179,9 @@ function earnResetAdSlot() {
 }
 html,body{background:radial-gradient(circle at top left,#EEF6FF 0,#F6F8FC 34%,#FDFEFF 100%)!important;color:var(--friend-ink)!important;}
 #pg-app{background:linear-gradient(180deg,#F9FBFF 0%,#F6F8FC 48%,#FFFFFF 100%)!important;}
-.top-bar{background:#fff!important;border-bottom:1px solid rgba(226,232,240,.78)!important;box-shadow:0 4px 16px rgba(26,86,219,.1)!important;}
+.top-bar{background:rgba(255,255,255,.92)!important;backdrop-filter:blur(12px)!important;-webkit-backdrop-filter:blur(12px)!important;border-bottom:1px solid rgba(226,232,240,.78)!important;box-shadow:0 8px 28px rgba(15,23,42,.05)!important;}
 .user-greeting{color:#111827!important;font-weight:950!important;letter-spacing:-.04em!important;}
-.tabs{background:#fff!important;border-bottom:1px solid #E7EAF1!important;box-shadow:0 4px 16px rgba(15,23,42,.04)!important;}
+.tabs{background:rgba(255,255,255,.82)!important;backdrop-filter:blur(10px)!important;-webkit-backdrop-filter:blur(10px)!important;border-bottom:0!important;box-shadow:0 10px 25px rgba(15,23,42,.05)!important;}
 .tabs .tab{border-radius:18px!important;border:1px solid rgba(226,232,240,.9)!important;background:#fff!important;color:#667085!important;box-shadow:0 5px 12px rgba(15,23,42,.04)!important;}
 .tabs .tab.act{background:linear-gradient(135deg,#1A56DB,#3d9758)!important;color:#fff!important;border-color:transparent!important;box-shadow:0 12px 24px rgba(26,86,219,.20)!important;}
 .card,.sub-row,.tx-row,.va-box,.msg-row,.plan-filter-card{border:0!important;background:rgba(255,255,255,.94)!important;border-radius:26px!important;box-shadow:var(--friend-shadow)!important;}
@@ -4754,7 +4237,7 @@ html,body{background:radial-gradient(circle at top left,#EEF6FF 0,#F6F8FC 34%,#F
 .msg-row.unread,.notif-row.unread{background:linear-gradient(135deg,#EEF4FF,#FFFFFF)!important;}
 #toast,.notif-toast.show{border-radius:18px!important;background:linear-gradient(135deg,#111827,#1F2937)!important;box-shadow:0 16px 35px rgba(15,23,42,.24)!important;}
 .friend-sticky-cta{position:fixed;left:12px;right:12px;bottom:78px;z-index:120;display:none;max-width:940px;margin:0 auto;}
-.friend-sticky-inner{display:-webkit-box;display:-webkit-flex;display:flex;gap:10px;background:#fff;border:1px solid rgba(226,232,240,.9);border-radius:24px;padding:10px;box-shadow:0 18px 45px rgba(15,23,42,.18);}
+.friend-sticky-inner{display:-webkit-box;display:-webkit-flex;display:flex;gap:10px;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(226,232,240,.9);border-radius:24px;padding:10px;box-shadow:0 18px 45px rgba(15,23,42,.18);}
 .friend-sticky-inner button{border:0;border-radius:16px;padding:12px 12px;font-size:.82rem;font-weight:950;font-family:Arial,Helvetica,sans-serif;-webkit-box-flex:1;-webkit-flex:1;flex:1;}
 .friend-sticky-inner .fund{background:linear-gradient(135deg,#3d9758,#2F7D49);color:#fff;}
 .friend-sticky-inner .plans{background:#EFF4FF;color:#1A56DB;}
@@ -4794,7 +4277,8 @@ body,.card-sub,.plan-sub,.sub-meta,.msg-body,.notif-row,.row-label,.field label,
 .field input::placeholder,.textarea::placeholder{color:#6b7280!important;opacity:1!important;}
 .btn,.plan-btn,.pay-btn,.onboard-btn,.hero-fund-btn{font-size:.95rem!important;letter-spacing:-.01em!important;}
 #tab-dash{display:-webkit-box!important;display:-webkit-flex!important;display:flex!important;}
-/* tc-dash display controlled by showTab() */
+#tc-dash{display:none!important;}
+#tc-dash.on{display:block!important;}
 .bnav-btn span{font-size:.68rem!important;font-weight:900!important;color:inherit!important;}
 .bnav-btn{color:#6b7280!important;}
 .bnav-btn.act{color:#3d9758!important;}
@@ -5245,64 +4729,12 @@ function renderDynamicStrip() {
 
 function dynamicStripAction(){if(_dynamicStripAction)_dynamicStripAction();}
 
-function openStreakDetail() {
-  var d = gRetention || {};
-  var cur  = parseInt(d.streak) || 0;
-  var best = parseInt(d.longest_streak) || 0;
-  var plans = parseInt(d.plans_total) || 0;
-  var mPlans = parseInt(d.month_plans) || 0;
-  var refs  = parseInt(d.referrals_done) || 0;
-  var fire  = cur >= 7 ? '🏆' : cur >= 3 ? '🔥' : cur >= 1 ? '⚡' : '💤';
-  var msg = '';
-  if (cur === 0) msg = 'You have no active streak yet. Open the app every day and make at least one action (subscribe, pay an installment, or fund your wallet) to build your streak.';
-  else if (cur < 3) msg = 'You started a streak ' + cur + ' day' + (cur !== 1 ? 's' : '') + ' ago. Keep coming back daily — streaks unlock milestones at 3, 7, 14, and 30 days.';
-  else if (cur < 7) msg = cur + ' days in a row! A 7-day streak is within reach. Keep opening the app and taking action daily.';
-  else if (cur < 14) msg = cur + '-day streak! You are in the top tier of consistent users. Milestone at 14 days straight.';
-  else if (cur < 30) msg = cur + ' days of daily consistency — impressive! You are 1 in 20 DataBulge users. Next milestone: 30 days.';
-  else msg = cur + '-day streak — legendary! You are one of the most consistent users on DataBulge.';
-
-  var html = '<div style="text-align:center;padding:8px 0 12px;">' +
-    '<div style="font-size:2.8rem;margin-bottom:6px;">' + fire + '</div>' +
-    '<div style="font-size:2rem;font-weight:900;color:#c2410c;letter-spacing:-.04em;">' + cur + ' day' + (cur !== 1 ? 's' : '') + '</div>' +
-    '<div style="font-size:.78rem;color:#9a3412;font-weight:700;margin-bottom:14px;">Current streak</div>' +
-    '<div style="display:flex;gap:10px;justify-content:center;margin-bottom:16px;">' +
-      '<div style="background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:10px 16px;min-width:80px;">' +
-        '<div style="font-size:1.4rem;font-weight:900;color:#c2410c;">' + best + '</div>' +
-        '<div style="font-size:.68rem;color:#9a3412;font-weight:700;">Best ever</div>' +
-      '</div>' +
-      '<div style="background:#eaf5ee;border:1px solid #c8e6d2;border-radius:12px;padding:10px 16px;min-width:80px;">' +
-        '<div style="font-size:1.4rem;font-weight:900;color:#2d7a44;">' + plans + '</div>' +
-        '<div style="font-size:.68rem;color:#2d7a44;font-weight:700;">Plans done</div>' +
-      '</div>' +
-      '<div style="background:#fdf4ff;border:1px solid #e9d5ff;border-radius:12px;padding:10px 16px;min-width:80px;">' +
-        '<div style="font-size:1.4rem;font-weight:900;color:#7c3aed;">' + refs + '</div>' +
-        '<div style="font-size:.68rem;color:#7c3aed;font-weight:700;">Referrals</div>' +
-      '</div>' +
-    '</div>' +
-    '<div style="font-size:.8rem;color:#555;line-height:1.6;background:#f9fafb;border-radius:10px;padding:12px;text-align:left;margin-bottom:14px;">' + msg + '</div>' +
-    (cur < 3 ? '<button class="btn btn-blue" onclick="showTab('plans');closeModal('m-streak')" style="margin:0;">Go subscribe now</button>' :
-              '<button class="btn btn-blue" onclick="closeModal('m-streak')" style="margin:0;">Keep it going ✊</button>') +
-  '</div>';
-
-  /* Reuse the VA modal as a generic detail modal */
-  var box = $('m-va-content');
-  if (box) box.innerHTML = html;
-  var title = $('m-va') && $('m-va').querySelector('.modal-title');
-  if (title) title.textContent = 'Your Streak';
-  openModal('m-va');
-}
-
 function renderSavingsCard() {
-  var d=gRetention||{},saved=parseFloat(d.month_saved)||0,plans=parseInt(d.month_plans)||0,paid=parseFloat(d.month_paid)||0,card=$('savings-card');
+  var d=gRetention||{},saved=parseFloat(d.month_saved)||0,plans=parseInt(d.month_plans)||0,card=$('savings-card');
   if(!card)return;
-  if(saved<1||plans<1){card.style.display='none';return;}
-  if($('savings-amount'))$('savings-amount').textContent='\u20A6'+fmtN(saved);
-  /* Savings = difference between upfront cost and what they actually paid via installments */
-  var surcharge=paid>0?Math.round((paid/(plans>0?plans:1))*0.04):0;
-  var sub='';
-  if(plans===1) sub='You completed 1 plan this month by paying \u20A6'+fmtN(Math.round(paid/plans||0))+' daily instead of all at once.';
-  else sub='Across '+plans+' plans this month. You paid small daily instead of a big upfront amount.';
-  if($('savings-sub'))$('savings-sub').textContent=sub;
+  if(saved<50||plans<1){card.style.display='none';return;}
+  if($('savings-amount'))$('savings-amount').textContent='₦'+fmtN(saved);
+  if($('savings-sub'))$('savings-sub').textContent='across '+plans+' plan'+(plans!==1?'s':'')+' this month — paying in installments instead of upfront.';
   card.style.display='';
 }
 
@@ -5310,18 +4742,7 @@ function checkOnboarding() {
   var banner=$('onboard-banner');
   if(!banner)return;
   var plans=parseInt((gRetention||{}).plans_total)||0;
-  var bal=gBal||0;
-  if(plans>0){banner.style.display='none';return;}
-  /* New user with no plans */
-  var h3=banner.querySelector('h3'),p=banner.querySelector('p');
-  if(bal<=0){
-    if(h3)h3.textContent='Get your first data plan in 60 seconds';
-    if(p)p.textContent='Fund any amount to your DataBulge wallet, pick a plan, and start paying small daily. No large upfront payment required.';
-  } else {
-    if(h3)h3.textContent='Your wallet is ready — pick a plan!';
-    if(p)p.innerHTML='You have <strong>₦'+fmtN(bal)+'</strong> in your wallet. Choose any plan and start paying daily. Your data is delivered when you complete payment.';
-  }
-  banner.style.display='';
+  banner.style.display=(plans===0&&gBal<1)?'':'none';
 }
 
 function renderReferralCard() {
@@ -5330,15 +4751,7 @@ function renderReferralCard() {
   var rc=(gUser.id||'').replace(/-/g,'').slice(0,8).toUpperCase();
   if(code)code.textContent=rc;
   var d=gRetention||{},refs=parseInt(d.referrals_done)||0;
-  var plans=parseInt(d.plans_total)||0;
-  /* Use the actual referral_code from get_retention_data if present */
-  var realCode=d.referral_code||'';
-  if(realCode&&code)code.textContent=realCode;
-  var labelText='';
-  if(refs===0&&plans===0)labelText='Share your code and both you and your friend get ₦200 when they subscribe.';
-  else if(refs===0)labelText='No referrals credited yet. Share your code — you earn ₦200 per friend who subscribes.';
-  else labelText=refs+' friend'+(refs!==1?'s':'')+' referred. You've earned ₦'+fmtN(refs*200)+' in referral credits.';
-  if(label)label.textContent=labelText;
+  if(label)label.textContent=refs>0?refs+' friend'+(refs!==1?'s':'')+' referred — ₦'+fmtN(refs*200)+' earned':'No referrals yet — be the first to share!';
   card.style.display='';
 }
 
@@ -5398,7 +4811,7 @@ function renderDashActivePlans(subs) {
         '</div>'+
       '</div>'+
       '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">'+
-        '<button class="btn btn-blue" onclick="showTab('subs')" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:9px 8px;font-size:.8rem;">View Plan</button>'+
+        '<button class="btn btn-blue" onclick="showTab(\'subs\')" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:9px 8px;font-size:.8rem;">View Plan</button>'+
         (s.status==='pending'?'<button class="btn btn-lite" onclick="openPayModal(\''+esc(s.id)+'\','+daily+')" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:9px 8px;font-size:.8rem;">Pay Now</button>':'')+
       '</div>'+
     '</div>';
@@ -5805,7 +5218,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
         '<div class="friend-sub">Buy data now, pay small small, and stay online without pressure.</div></div>'+ 
         '<div class="friend-pill">📶 Your data friend</div></div>'+ 
         '<div class="friend-balance"><div><div class="friend-bal-label">Available balance</div><div class="friend-bal-val" id="friend-bal-val">'+bal+'</div></div><div style="font-size:.76rem;opacity:.82;font-weight:800;text-align:right;">Ready when you are</div></div>'+ 
-        '<div class="friend-cta-row"><button class="friend-cta primary" onclick="openFundModal()">+ Fund Account</button><button class="friend-cta secondary" onclick="document.getElementById(\'plans-list\').scrollIntoView({behavior:\'smooth\',block:\'start\'});">Subscribe</button></div>'+ 
+        '<div class="friend-cta-row"><button class="friend-cta primary" onclick="openFundModal()">Add small money</button><button class="friend-cta secondary" onclick="document.getElementById(\'plans-list\').scrollIntoView({behavior:\'smooth\',block:\'start\'});">Find a plan</button></div>'+ 
       '</div>'+ 
       '<div class="friend-daily" id="friend-daily"><div class="friend-daily-icon">'+msg[0]+'</div><div><div class="friend-daily-title">Today’s friendly nudge</div><div class="friend-daily-sub">'+safeEsc(msg[1])+'</div></div></div>'+ 
       '<div class="friend-quick-grid" id="friend-quick-grid"><button class="friend-action-card fund" onclick="openFundModal()"><span class="emoji">💚</span><strong>Fund with ease</strong><span>Your wallet updates automatically after transfer.</span></button><button class="friend-action-card plan" onclick="document.getElementById(\'plans-list\').scrollIntoView({behavior:\'smooth\',block:\'start\'});"><span class="emoji">🎯</span><strong>Choose your vibe</strong><span>MTN, Airtel, Glo or 9mobile — paid your way.</span></button></div>';
@@ -5830,7 +5243,13 @@ window.detectAndSaveLocation = detectAndSaveLocation;
     var dbal=byId('d-va'); if(dbal && /Loading|Virtual|account|Bank/i.test(dbal.textContent||'')){
       if(!dbal.getAttribute('data-friendly')){ dbal.setAttribute('data-friendly','1'); }
     }
-    /* button text overrides removed — preserved by design */
+    var buttons=document.getElementsByTagName('button');
+    for(var i=0;i<buttons.length;i++){
+      var b=buttons[i];
+      if((b.className||'').indexOf('plan-btn')>-1 && /Subscribe/i.test(b.innerHTML||'')) b.innerHTML='Choose this plan';
+      if((b.innerHTML||'').replace(/\s+/g,' ').indexOf('Fund Account')>-1) b.innerHTML=(b.innerHTML.indexOf('+')>-1?'+ ':'')+'Add small money';
+      if((b.innerHTML||'').indexOf('Pay from Wallet')>-1) b.innerHTML='Pay gently from wallet';
+    }
     var secs=document.getElementsByClassName('sec-title');
     for(i=0;i<secs.length;i++){
       if((secs[i].textContent||'').toLowerCase().indexOf('payment option')>-1) secs[i].innerHTML='Choose how softly you want to pay';
@@ -6095,5 +5514,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
 })();
 </script>
 
+
+<!-- DataBulge merge note: databulge_my_plan_tab_FIXED used as base; selected UI polish, feature prompts, and grammatical flow aligned from databulge_final (5). Backend logic preserved. -->
 </body>
 </html>
