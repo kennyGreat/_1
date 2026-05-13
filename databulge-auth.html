@@ -522,6 +522,9 @@ button,.btn,.plan-btn,.tab,.logout-btn,.plan-chip,.avatar,.avatar-menu button{
       <button class="btn btn-lite" id="w-signup-btn">Create New Account</button>
     </div>
 
+    <!-- Inline success message shown after forgot-password email is sent -->
+    <div id="fg-ok-inline" class="ok" style="display:none;margin-bottom:14px;"></div>
+
     <!-- LOGIN -->
     <div id="scr-l" style="display:none;">
       <button class="txt-link" id="l-back-btn" style="margin-bottom:14px;display:block;">&#8592; Back</button>
@@ -1323,8 +1326,8 @@ function doForgot() {
   errHide('fg-err'); okHide('fg-ok');
   if (!email) { errShow('fg-err', 'Please enter your email.'); return; }
   btnLoad('fg-send-btn', true, 'Sending\u2026');
-  // Always redirect to the dedicated reset page. The email link must open /reset-password, not this auth page.
-  var redirectUrl = 'https://www.databulge.com/reset-password';
+  // CRITICAL: redirect_to must be THIS exact file's URL so parseHash() can read the token.
+  var redirectUrl = window.location.origin + window.location.pathname;
 
   xhr('POST', AUTH + '/recover',
     { 'apikey': ANON_KEY, 'Content-Type': 'application/json' },
@@ -1416,11 +1419,15 @@ function parseHash() {
     }
   }
 
-  // Supabase password-recovery link must be handled by the dedicated reset page.
-  // If Supabase ever lands here with recovery tokens, forward the full hash to /reset-password.
+  // Recovery token lands on THIS page — capture it here and show the reset screen.
   if (params.type === 'recovery' && params.access_token) {
-    var resetTarget = 'https://www.databulge.com/reset-password' + (window.location.hash || '');
-    try { window.location.replace(resetTarget); } catch(e) { window.location.href = resetTarget; }
+    gRecovAT = params.access_token;
+    gRecovRT = params.refresh_token || '';
+    try { window.history.replaceState({}, document.title, window.location.pathname); } catch(e) {}
+    // Show the reset screen (scr-r already exists in this file)
+    showPage('auth');
+    showScreen('scr-r');
+    hideSplashSoon();
     return true;
   }
 
