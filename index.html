@@ -976,33 +976,6 @@ label:has(#m-sub-autorenew){
 .bnav-btn svg { stroke: #9ca3af; }
 /* Push page content above bottom nav */
 #pg-app { padding-bottom: 70px !important; }
-
-
-/* ── SINGLE-FILE PASSWORD RESET SCREEN ────────────────────────
-   This keeps Supabase recovery inside index.html so the reset token
-   is not lost by redirecting through separate auth/reset pages. */
-#pg-reset{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:100000;background:linear-gradient(160deg,#0f2952 0%,#1a3a72 50%,#1A56DB 100%);padding:22px 16px;overflow:auto;-webkit-overflow-scrolling:touch;}
-#pg-reset.on{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;}
-.reset-box{width:100%;max-width:390px;background:#fff;border-radius:22px;padding:28px 22px 24px;-webkit-box-shadow:0 18px 44px rgba(0,0,0,.22);box-shadow:0 18px 44px rgba(0,0,0,.22);}
-.reset-brand{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:12px;margin-bottom:22px;}
-.reset-logo-svg{width:44px;height:44px;-webkit-flex-shrink:0;flex-shrink:0;}
-.reset-brand-text h1{font-size:1.18rem;font-weight:900;letter-spacing:-.02em;margin-bottom:2px;color:#111;}
-.reset-brand-text p{font-size:.82rem;color:#666;line-height:1.4;}
-.reset-field{margin-bottom:14px;}
-.reset-field label{display:block;font-size:.78rem;font-weight:800;color:#555;margin-bottom:5px;}
-.reset-pw-wrap{position:relative;}
-.reset-field input{display:block;width:100%;height:46px;border:1.5px solid #E1E5EF;border-radius:12px;background:#FBFCFF;padding:0 42px 0 13px;font-size:.97rem;color:#111;outline:none;-webkit-appearance:none;}
-.reset-field input:focus{border-color:#1A56DB;-webkit-box-shadow:0 0 0 3px rgba(26,86,219,.10);box-shadow:0 0 0 3px rgba(26,86,219,.10);}
-.reset-eye{position:absolute;right:11px;top:50%;margin-top:-11px;background:none;border:none;cursor:pointer;font-size:.95rem;padding:2px;color:#888;line-height:1;}
-.reset-strength{font-size:.72rem;font-weight:700;margin-top:5px;min-height:16px;}
-.reset-btn{display:block;width:100%;height:48px;border:none;border-radius:12px;margin-top:18px;background:#3d9758;color:#fff;font-weight:900;font-size:.97rem;cursor:pointer;-webkit-appearance:none;}
-.reset-btn:disabled{opacity:.65;cursor:default;}
-.reset-msg{display:none;margin-top:14px;border-radius:12px;padding:11px 13px;font-size:.83rem;line-height:1.55;}
-.reset-msg.err{display:block;background:#fff2f2;border:1px solid #f5c6cb;color:#b42318;}
-.reset-msg.ok{display:block;background:#eaf5ee;border:1px solid #b7dec2;color:#26733c;}
-.reset-back{font-size:.8rem;color:#888;text-align:center;margin-top:16px;}
-.reset-back button{color:#1A56DB;font-weight:800;text-decoration:none;background:none;border:none;cursor:pointer;font-size:inherit;font-family:inherit;padding:0;}
-
 </style>
 </head>
 <body>
@@ -1036,54 +1009,6 @@ label:has(#m-sub-autorenew){
   </div>
 </div>
 
-
-
-
-
-<!-- ═══ SINGLE-FILE PASSWORD RESET SCREEN ═══════════════════════
-     Supabase recovery email opens index.html#access_token=...&type=recovery.
-     This screen appears before the protected app, lets the user save a new
-     password, clears the recovery session, then returns to sign-in. -->
-<div id="pg-reset" aria-label="DataBulge password reset screen">
-  <div class="reset-box">
-    <div class="reset-brand">
-      <svg class="reset-logo-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="DataBulge">
-        <circle cx="50" cy="50" r="50" fill="#1A56DB"/>
-        <circle cx="50" cy="54" r="22" fill="#fff" opacity=".15"/>
-        <rect x="35" y="58" width="5" height="11" rx="2" fill="#fff"/>
-        <rect x="43" y="52" width="5" height="17" rx="2" fill="#fff"/>
-        <rect x="51" y="45" width="5" height="24" rx="2" fill="#fff"/>
-        <rect x="59" y="38" width="5" height="31" rx="2" fill="#fff"/>
-        <circle cx="27" cy="68" r="4" fill="#1A56DB" opacity=".7"/>
-      </svg>
-      <div class="reset-brand-text">
-        <h1>Set New Password</h1>
-        <p>Enter a strong password for your DataBulge account.</p>
-      </div>
-    </div>
-
-    <div class="reset-field">
-      <label for="db-reset-pass">New password</label>
-      <div class="reset-pw-wrap">
-        <input id="db-reset-pass" type="password" placeholder="At least 8 characters" autocomplete="new-password">
-        <button type="button" class="reset-eye" id="db-reset-eye1" onclick="dbToggleResetEye('db-reset-pass','db-reset-eye1')">&#128065;</button>
-      </div>
-      <div class="reset-strength" id="db-reset-strength"></div>
-    </div>
-
-    <div class="reset-field">
-      <label for="db-reset-confirm">Confirm password</label>
-      <div class="reset-pw-wrap">
-        <input id="db-reset-confirm" type="password" placeholder="Repeat your new password" autocomplete="new-password">
-        <button type="button" class="reset-eye" id="db-reset-eye2" onclick="dbToggleResetEye('db-reset-confirm','db-reset-eye2')">&#128065;</button>
-      </div>
-    </div>
-
-    <button class="reset-btn" id="db-reset-save" type="button" onclick="dbSaveResetPassword()">Save New Password</button>
-    <div class="reset-msg" id="db-reset-msg"></div>
-    <div class="reset-back"><button type="button" onclick="dbBackToSignIn()">&#8592; Back to sign in</button></div>
-  </div>
-</div>
 
 
 <!-- ═══ MAIN APP ═══════════════════════════════════════════════ -->
@@ -1732,7 +1657,6 @@ var gSelPlan    = null;   // plan being subscribed to
 var gSelSub     = null;   // subscription for pay modal
 var gRecovAT    = '';     // password recovery access token
 var gRecovRT    = '';     // password recovery refresh token
-var gInResetFlow = false; // TRUE while password reset screen is active — blocks all tab/page switches
 var _toastTimer = null;
 var _pollTimer  = null;
 
@@ -1888,7 +1812,6 @@ function showScreen(id) {
 }
 
 function showPage(id) {
-  if (gInResetFlow) return; // never reroute while reset screen is active
   var app = $('pg-app');
   if (app) app.className = 'pg on';
 }
@@ -1899,7 +1822,6 @@ var _dashLastLoad  = 0;
 var STALE_MS = 30000; // 30s before re-fetching on tab revisit
 
 function showTab(t) {
-  if (gInResetFlow) return; // never touch tabs while reset screen is active
   var tabs = ['dash','plans','subs','wallet','inbox'];
   var i;
   for (i = 0; i < tabs.length; i++) {
@@ -2026,20 +1948,14 @@ function doForgot() {
   var email = ($('fg-email').value || '').replace(/^\s+|\s+$/g, '');
   errHide('fg-err'); okHide('fg-ok');
   if (!email) { errShow('fg-err', 'Please enter your email.'); return; }
-
-  // Build redirect URL dynamically — works on GitHub Pages, custom domain, and localhost.
-  // The hash #type=recovery&access_token=... lands back on this same file.
-  var redirectTo = window.location.origin + window.location.pathname;
-  // Supabase strips the hash before appending its own, so pathname alone is correct.
-
   btnLoad('fg-send-btn', true, 'Sending\u2026');
   xhr('POST', AUTH + '/recover',
     { 'apikey': ANON_KEY, 'Content-Type': 'application/json' },
-    JSON.stringify({ email: email, redirect_to: redirectTo }),
+    JSON.stringify({ email: email, redirect_to: 'https://www.databulge.com/reset-password.html' }),
     function(err, res) {
       btnLoad('fg-send-btn', false, 'Send Reset Link');
       if (err || !res || !res.ok) { errShow('fg-err', 'Failed to send reset link. Try again.'); return; }
-      okShow('fg-ok', 'Reset link sent! Open the email link to set your new password inside this app.');
+      okShow('fg-ok', 'Reset link sent! Check your inbox and spam folder.');
     }
   );
 }
@@ -3293,30 +3209,14 @@ function parseHash() {
   for (var i = 0; i < pairs.length; i++) {
     var eq = pairs[i].indexOf('=');
     if (eq > -1) {
-      try {
-        params[decodeURIComponent(pairs[i].slice(0, eq))] =
-          decodeURIComponent(pairs[i].slice(eq + 1));
-      } catch(e) {}
+      params[decodeURIComponent(pairs[i].slice(0, eq))] =
+        decodeURIComponent(pairs[i].slice(eq + 1));
     }
   }
-
-  /* Supabase password recovery must NOT be treated like normal login.
-     Show the embedded reset screen first so the user can save a new password. */
-  if (params.type === 'recovery' && params.access_token) {
-    gRecovAT = params.access_token;
-    gRecovRT = params.refresh_token || '';
-    try { window.history.replaceState({}, document.title, window.location.pathname); } catch(e0) {}
-    try { _clearSession(); } catch(e1) {}
-    showPage('app');
-    showResetScreen();
-    hideSplash();
-    return true;
-  }
-
   if (!params.access_token) return false;
 
   // Clear the hash from the URL immediately so it isn't re-processed on refresh.
-  try { window.history.replaceState({}, document.title, window.location.pathname); } catch(e2) {}
+  try { window.history.replaceState({}, document.title, window.location.pathname); } catch(e) {}
 
   gToken   = params.access_token;
   gRefresh = params.refresh_token || '';
@@ -3339,123 +3239,6 @@ function parseHash() {
   );
   return true;
 }
-
-
-
-
-/* ── SINGLE-FILE PASSWORD RESET HELPERS ─────────────────────── */
-function showResetScreen() {
-  gInResetFlow = true;
-  var r = $('pg-reset');
-  if (r) r.className = 'on';
-  var m = $('db-reset-msg');
-  if (m) { m.className = 'reset-msg'; m.textContent = ''; }
-  setTimeout(function(){ var p=$('db-reset-pass'); if(p) p.focus(); }, 80);
-}
-
-function hideResetScreen() {
-  gInResetFlow = false;
-  var r = $('pg-reset');
-  if (r) r.className = '';
-}
-
-function dbResetMsg(type, text) {
-  var m = $('db-reset-msg');
-  if (!m) return;
-  m.className = 'reset-msg ' + type;
-  m.textContent = text;
-}
-
-function dbToggleResetEye(inputId, btnId) {
-  var inp = $(inputId), btn = $(btnId);
-  if (!inp) return;
-  inp.type = (inp.type === 'password') ? 'text' : 'password';
-  if (btn) btn.innerHTML = (inp.type === 'password') ? '&#128065;' : '&#128064;';
-}
-
-function dbCheckResetStrength(val) {
-  var el = $('db-reset-strength');
-  if (!el) return;
-  if (!val) { el.textContent = ''; el.style.color = ''; return; }
-  var score = 0;
-  if (val.length >= 8) score++;
-  if (val.length >= 12) score++;
-  if (/[A-Z]/.test(val)) score++;
-  if (/[0-9]/.test(val)) score++;
-  if (/[^A-Za-z0-9]/.test(val)) score++;
-  var labels = ['', 'Weak', 'Fair', 'Good', 'Strong', 'Very strong'];
-  var colors = ['', '#dc2626', '#d97706', '#2563eb', '#16a34a', '#065f46'];
-  el.textContent = labels[score] || '';
-  el.style.color = colors[score] || '';
-}
-
-function dbSaveResetPassword() {
-  var btn = $('db-reset-save');
-  var pass = (($('db-reset-pass')||{}).value || '').replace(/^\s+|\s+$/g, '');
-  var confirm = (($('db-reset-confirm')||{}).value || '').replace(/^\s+|\s+$/g, '');
-  dbResetMsg('', '');
-
-  if (pass.length < 8) { dbResetMsg('err', 'Password must be at least 8 characters.'); return; }
-  if (pass !== confirm) { dbResetMsg('err', 'Passwords do not match.'); return; }
-  if (!gRecovAT) { dbResetMsg('err', 'Reset session expired. Please request a new reset link.'); return; }
-
-  if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
-  xhr('PUT', AUTH + '/user',
-    { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + gRecovAT, 'Content-Type': 'application/json' },
-    JSON.stringify({ password: pass }),
-    function(err, res) {
-      if (btn) { btn.disabled = false; btn.textContent = 'Save New Password'; }
-      if (err || !res || !res.ok) {
-        var d = res && res.data;
-        var ec = String((d && (d.error_code || d.error)) || '').toLowerCase();
-        var em = String((d && (d.message || d.msg)) || '').toLowerCase();
-        if (ec.indexOf('expir') !== -1 || ec.indexOf('invalid') !== -1 || em.indexOf('expir') !== -1 || em.indexOf('invalid') !== -1) {
-          dbResetMsg('err', 'Reset link has expired. Please request a new link from the sign-in page.');
-        } else {
-          dbResetMsg('err', (d && (d.message || d.error)) || 'Failed to update password. Please try again.');
-        }
-        return;
-      }
-
-      dbResetMsg('ok', '✅ Password updated. Please sign in with your new password.');
-      try {
-        _clearSession();
-        localStorage.removeItem('db_sess');
-        sessionStorage.removeItem('db_sess');
-        localStorage.removeItem('__db_session_at__');
-        localStorage.removeItem('__db_session_rt__');
-        localStorage.removeItem('__db_session_exp__');
-      } catch(e) {}
-      gRecovAT = ''; gRecovRT = ''; gToken = null; gRefresh = null; gExpiry = 0; gUser = null;
-      gInResetFlow = false;
-      setTimeout(function(){ window.location.replace('databulge-auth.html'); }, 1400);
-    }
-  );
-}
-
-function dbBackToSignIn() {
-  try { _clearSession(); } catch(e) {}
-  gRecovAT = ''; gRecovRT = '';
-  gInResetFlow = false;
-  window.location.replace('databulge-auth.html');
-}
-
-(function(){
-  function wireSingleReset() {
-    var p = $('db-reset-pass');
-    var c = $('db-reset-confirm');
-    if (p) {
-      p.oninput = function(){ dbCheckResetStrength(this.value); };
-      p.onkeydown = function(e){ if ((e && e.key === 'Enter') || (e && e.keyCode === 13)) { if(c)c.focus(); } };
-    }
-    if (c) c.onkeydown = function(e){ if ((e && e.key === 'Enter') || (e && e.keyCode === 13)) dbSaveResetPassword(); };
-    // Wire forgot email Enter key
-    var fgEmail = $('fg-email');
-    if (fgEmail) fgEmail.onkeydown = function(e){ if ((e && e.key === 'Enter') || (e && e.keyCode === 13)) doForgot(); };
-  }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wireSingleReset);
-  else wireSingleReset();
-})();
 
 /* ── INIT ───────────────────────────────────────────────────── */
 function init() {
@@ -3673,8 +3456,6 @@ function wire() {
 
   // Backdrop close
   $('m-forgot').onclick  = function(e) { if (e.target === $('m-forgot'))  closeModal('m-forgot'); };
-  $('m-forgot-x').onclick = function() { closeModal('m-forgot'); };
-  $('fg-send-btn').onclick = doForgot;
   $('m-terms').onclick   = function(e) { if (e.target === $('m-terms'))   closeModal('m-terms'); };
   $('m-sub').onclick     = function(e) { if (e.target === $('m-sub'))     closeModal('m-sub'); };
   $('m-pay').onclick     = function(e) { if (e.target === $('m-pay'))     closeModal('m-pay'); };
@@ -5525,7 +5306,6 @@ window.detectAndSaveLocation = detectAndSaveLocation;
     try{return !!(localStorage.getItem('db_sess')||sessionStorage.getItem('db_sess')||location.hash.indexOf('access_token=')>-1);}catch(e){return false;}
   }
   function revealFallback(){
-    if (window.gInResetFlow) return; // reset screen is active — do not touch anything
     var sp=document.getElementById('db-splash');
     if(sp){sp.style.opacity='0';sp.style.pointerEvents='none';setTimeout(function(){sp.style.display='none';sp.className='hide';},350);}
     try{
