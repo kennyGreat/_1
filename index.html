@@ -976,6 +976,27 @@ label:has(#m-sub-autorenew){
 .bnav-btn svg { stroke: #9ca3af; }
 /* Push page content above bottom nav */
 #pg-app { padding-bottom: 70px !important; }
+
+/* ── WALLET CREDIT REALTIME TOAST ── */
+#db-credit-toast{position:fixed;top:0;left:0;right:0;bottom:0;z-index:9998;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;pointer-events:none;opacity:0;-webkit-transition:opacity .3s ease;transition:opacity .3s ease;}
+#db-credit-toast.show{opacity:1;pointer-events:auto;}
+#db-credit-toast .ct-bd{position:absolute;inset:0;background:rgba(0,0,0,.52);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);}
+#db-credit-toast .ct-card{position:relative;z-index:1;background:-webkit-linear-gradient(145deg,#0d1b2a,#0a2540);background:linear-gradient(145deg,#0d1b2a,#0a2540);border:1.5px solid rgba(0,229,190,.35);border-radius:22px;padding:32px 36px;text-align:center;max-width:300px;width:86vw;box-shadow:0 8px 40px rgba(0,229,190,.16),0 2px 14px rgba(0,0,0,.55);-webkit-animation:ct-pop .45s cubic-bezier(.34,1.56,.64,1) forwards;animation:ct-pop .45s cubic-bezier(.34,1.56,.64,1) forwards;}
+@-webkit-keyframes ct-pop{from{-webkit-transform:scale(.7) translateY(28px);opacity:0}to{-webkit-transform:scale(1) translateY(0);opacity:1}}
+@keyframes ct-pop{from{transform:scale(.7) translateY(28px);opacity:0}to{transform:scale(1) translateY(0);opacity:1}}
+#db-credit-toast .ct-icon{font-size:52px;line-height:1;margin-bottom:10px;-webkit-animation:ct-bounce .7s ease .3s both;animation:ct-bounce .7s ease .3s both;}
+@-webkit-keyframes ct-bounce{0%{-webkit-transform:scale(0)}60%{-webkit-transform:scale(1.25)}80%{-webkit-transform:scale(.9)}100%{-webkit-transform:scale(1)}}
+@keyframes ct-bounce{0%{transform:scale(0)}60%{transform:scale(1.25)}80%{transform:scale(.9)}100%{transform:scale(1)}}
+#db-credit-toast .ct-lbl{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:5px;}
+#db-credit-toast .ct-amt{font-size:34px;font-weight:900;color:#00e5be;letter-spacing:-.02em;margin-bottom:3px;}
+#db-credit-toast .ct-bal{font-size:12px;color:rgba(255,255,255,.45);margin-bottom:18px;}
+#db-credit-toast .ct-msg{font-size:14px;color:rgba(255,255,255,.82);line-height:1.45;margin-bottom:22px;}
+#db-credit-toast .ct-btn{background:-webkit-linear-gradient(135deg,#00c9a7,#1A56DB);background:linear-gradient(135deg,#00c9a7,#1A56DB);color:#fff;border:none;border-radius:50px;padding:12px 32px;font-size:14px;font-weight:700;cursor:pointer;width:100%;font-family:Arial,Helvetica,sans-serif;}
+#db-credit-toast .ct-btn:active{opacity:.88;}
+.db-ct-confetti{position:fixed;top:-10px;width:9px;height:9px;border-radius:2px;z-index:9999;pointer-events:none;-webkit-animation:db-ct-fall linear forwards;animation:db-ct-fall linear forwards;}
+@-webkit-keyframes db-ct-fall{to{-webkit-transform:translateY(110vh) rotate(720deg);opacity:0}}
+@keyframes db-ct-fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
+.db-bal-glow{color:#00e5be!important;text-shadow:0 0 16px rgba(0,229,190,.5);}
 </style>
 </head>
 <body>
@@ -1660,6 +1681,188 @@ var gRecovRT    = '';     // password recovery refresh token
 var _toastTimer = null;
 var _pollTimer  = null;
 
+/* ── WALLET REALTIME CREDIT LISTENER ───────────────────────
+   Uses the Supabase Realtime WebSocket protocol directly —
+   no library, pure ES5, works on Android 4.4+.
+   Listens for UPDATE on the user's wallets row and shows a
+   celebratory toast whenever balance increases.
+──────────────────────────────────────────────────────────── */
+var _dbRtWs       = null;   // WebSocket connection
+var _dbRtHb       = null;   // heartbeat interval
+var _dbRtCreditTimer = null; // auto-dismiss timer
+
+function dbFmtNaira(n) {
+  return '\u20A6' + Number(n).toLocaleString('en-NG', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function dbCountUpBalance(el, to, ms) {
+  if (!el) return;
+  var raw = (el.textContent || '0').replace(/[^\d.]/g, '');
+  var from = parseFloat(raw) || 0;
+  var diff = to - from;
+  var start = null;
+  ms = ms || 900;
+  function step(ts) {
+    if (!start) start = ts;
+    var p = Math.min((ts - start) / ms, 1);
+    var e = 1 - Math.pow(1 - p, 3);
+    el.textContent = dbFmtNaira(from + diff * e);
+    if (p < 1) { window.requestAnimationFrame(step); }
+    else { el.textContent = dbFmtNaira(to); }
+  }
+  if (window.requestAnimationFrame) {
+    window.requestAnimationFrame(step);
+  } else {
+    el.textContent = dbFmtNaira(to);
+  }
+}
+
+function dbBurstConfetti(n) {
+  var colors = ['#00e5be','#1A56DB','#ff6b6b','#ffd93d','#a29bfe','#3d9758'];
+  n = n || 28;
+  for (var i = 0; i < n; i++) {
+    (function() {
+      var el = document.createElement('span');
+      el.className = 'db-ct-confetti';
+      el.style.left = (Math.random() * 100) + 'vw';
+      el.style.background = colors[Math.floor(Math.random() * colors.length)];
+      var dur = (1.5 + Math.random() * 2).toFixed(2) + 's';
+      var del = (Math.random() * 0.5).toFixed(2) + 's';
+      el.style.webkitAnimationDuration = dur;
+      el.style.animationDuration = dur;
+      el.style.webkitAnimationDelay = del;
+      el.style.animationDelay = del;
+      el.style.width  = (6 + Math.floor(Math.random() * 7)) + 'px';
+      el.style.height = el.style.width;
+      document.body.appendChild(el);
+      setTimeout(function() { if (el && el.parentNode) el.parentNode.removeChild(el); }, 3500);
+    })();
+  }
+}
+
+function dbShowCreditToast(credited, newBalance) {
+  var toast = document.getElementById('db-credit-toast');
+  var amtEl = document.getElementById('db-ct-amt');
+  var balEl = document.getElementById('db-ct-bal');
+  if (!toast) return;
+  if (amtEl) amtEl.textContent = dbFmtNaira(credited);
+  if (balEl) balEl.textContent = 'New balance: ' + dbFmtNaira(newBalance);
+  toast.className = toast.className + ' show';
+  dbBurstConfetti(36);
+  clearTimeout(_dbRtCreditTimer);
+  _dbRtCreditTimer = setTimeout(dbCloseCreditToast, 8000);
+}
+
+function dbCloseCreditToast() {
+  var toast = document.getElementById('db-credit-toast');
+  if (toast) toast.className = toast.className.replace(' show', '').replace(/\bshow\b/, '');
+}
+
+function dbApplyWalletUpdate(newBal, oldBal) {
+  var credited = newBal - oldBal;
+  // Update gBal
+  gBal = newBal;
+  // Count-up all balance elements
+  var balStr = dbFmtNaira(newBal);
+  var hb = document.getElementById('d-bal-dash');
+  if (hb) {
+    hb.className = 'hero-bal-amount db-bal-glow';
+    dbCountUpBalance(hb, newBal, 900);
+    setTimeout(function() { hb.className = 'hero-bal-amount'; }, 1200);
+  }
+  var db = document.getElementById('d-bal');
+  if (db) db.textContent = balStr;
+  // Update any other mirrors
+  var mirrors = document.querySelectorAll ? document.querySelectorAll('[data-wallet-balance]') : [];
+  for (var i = 0; i < mirrors.length; i++) {
+    dbCountUpBalance(mirrors[i], newBal, 900);
+  }
+  // Update wallet tab card if visible
+  var wCard = document.getElementById('wallet-tab-content');
+  if (wCard) {
+    var cVal = wCard.querySelector('.card-val');
+    if (cVal) { dbCountUpBalance(cVal, newBal, 900); }
+  }
+  // Update wallet label badge
+  if (typeof updateWalletLabel === 'function') { try { updateWalletLabel(); } catch(e) {} }
+  // Celebration if actual credit
+  if (credited > 0.01) {
+    dbShowCreditToast(credited, newBal);
+  }
+}
+
+function dbStartWalletRealtime() {
+  if (!gUser || !gToken) return;
+  dbStopWalletRealtime();
+
+  var wsUrl = 'wss://dplxnpxxztkjczaoyetl.supabase.co/realtime/v1/websocket?apikey=' + ANON_KEY + '&vsn=1.0.0';
+  var ws;
+  try { ws = new WebSocket(wsUrl); } catch(e) { return; }
+  _dbRtWs = ws;
+
+  ws.onopen = function() {
+    // Join the realtime channel for this user's wallet row
+    var joinMsg = JSON.stringify({
+      topic: 'realtime:public:wallets:user_id=eq.' + gUser.id,
+      event: 'phx_join',
+      payload: {
+        config: {
+          postgres_changes: [{
+            event: 'UPDATE',
+            schema: 'public',
+            table: 'wallets',
+            filter: 'user_id=eq.' + gUser.id
+          }]
+        },
+        access_token: gToken
+      },
+      ref: '1'
+    });
+    ws.send(joinMsg);
+
+    // Heartbeat every 30s to keep the connection alive
+    _dbRtHb = setInterval(function() {
+      if (ws.readyState === 1) {
+        ws.send(JSON.stringify({ topic: 'phoenix', event: 'heartbeat', payload: {}, ref: null }));
+      }
+    }, 30000);
+  };
+
+  ws.onmessage = function(evt) {
+    var msg;
+    try { msg = JSON.parse(evt.data); } catch(e) { return; }
+
+    // Handle postgres_changes UPDATE
+    if (msg && msg.event === 'postgres_changes' &&
+        msg.payload && msg.payload.data && msg.payload.data.type === 'UPDATE') {
+      var row = msg.payload.data.record;
+      var old = msg.payload.data.old_record;
+      if (!row) return;
+      var newBal = parseFloat(row.balance) || 0;
+      var oldBal = parseFloat((old && old.balance != null) ? old.balance : newBal);
+      if (newBal !== oldBal) {
+        dbApplyWalletUpdate(newBal, oldBal);
+      }
+    }
+  };
+
+  ws.onerror = function() { /* silent — polling is the fallback */ };
+  ws.onclose = function() {
+    clearInterval(_dbRtHb);
+    _dbRtHb = null;
+    _dbRtWs = null;
+  };
+}
+
+function dbStopWalletRealtime() {
+  clearInterval(_dbRtHb);
+  _dbRtHb = null;
+  if (_dbRtWs) {
+    try { _dbRtWs.close(); } catch(e) {}
+    _dbRtWs = null;
+  }
+}
+
 /* ── SAFE STORAGE ──────────────────────────────────────────── */
 var _store = (function() {
   var mem = {};
@@ -2069,6 +2272,10 @@ function bootApp() {
     _walletPollTick++;
     if (_walletPollTick % 4 === 0) loadInbox(); // inbox every 60s (4 × 15s)
   }, 15000);
+
+  // Start Supabase Realtime listener — balance updates reflect instantly
+  // (< 5s) without waiting for the poll cycle.
+  dbStartWalletRealtime();
 }
 
 
@@ -2121,6 +2328,7 @@ function closeAvatarMenu() {
 
 function doLogout() {
   if (_pollTimer) { clearInterval(_pollTimer); _pollTimer = null; }
+  dbStopWalletRealtime();
   // Sign out server-side (best effort), clear local session, then leave the protected app.
   if (gToken) {
     xhr('POST', AUTH + '/logout',
@@ -5516,5 +5724,18 @@ window.detectAndSaveLocation = detectAndSaveLocation;
 
 
 <!-- DataBulge merge note: databulge_my_plan_tab_FIXED used as base; selected UI polish, feature prompts, and grammatical flow aligned from databulge_final (5). Backend logic preserved. -->
+
+<!-- ── WALLET CREDIT REALTIME TOAST ── -->
+<div id="db-credit-toast">
+  <div class="ct-bd" id="db-ct-bd"></div>
+  <div class="ct-card">
+    <div class="ct-icon">&#127881;</div>
+    <div class="ct-lbl">Wallet Credited</div>
+    <div class="ct-amt" id="db-ct-amt">&#8358;0</div>
+    <div class="ct-bal" id="db-ct-bal">New balance: &#8358;0</div>
+    <div class="ct-msg">Your DataBulge wallet has been topped up successfully!</div>
+    <button class="ct-btn" onclick="dbCloseCreditToast()">Awesome, thanks! &#128640;</button>
+  </div>
+</div>
 </body>
 </html>
