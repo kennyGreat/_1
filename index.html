@@ -1732,6 +1732,7 @@ var gSelPlan    = null;   // plan being subscribed to
 var gSelSub     = null;   // subscription for pay modal
 var gRecovAT    = '';     // password recovery access token
 var gRecovRT    = '';     // password recovery refresh token
+var gInResetFlow = false; // TRUE while password reset screen is active — blocks all tab/page switches
 var _toastTimer = null;
 var _pollTimer  = null;
 
@@ -1887,6 +1888,7 @@ function showScreen(id) {
 }
 
 function showPage(id) {
+  if (gInResetFlow) return; // never reroute while reset screen is active
   var app = $('pg-app');
   if (app) app.className = 'pg on';
 }
@@ -1897,6 +1899,7 @@ var _dashLastLoad  = 0;
 var STALE_MS = 30000; // 30s before re-fetching on tab revisit
 
 function showTab(t) {
+  if (gInResetFlow) return; // never touch tabs while reset screen is active
   var tabs = ['dash','plans','subs','wallet','inbox'];
   var i;
   for (i = 0; i < tabs.length; i++) {
@@ -2023,10 +2026,16 @@ function doForgot() {
   var email = ($('fg-email').value || '').replace(/^\s+|\s+$/g, '');
   errHide('fg-err'); okHide('fg-ok');
   if (!email) { errShow('fg-err', 'Please enter your email.'); return; }
+
+  // Build redirect URL dynamically — works on GitHub Pages, custom domain, and localhost.
+  // The hash #type=recovery&access_token=... lands back on this same file.
+  var redirectTo = window.location.origin + window.location.pathname;
+  // Supabase strips the hash before appending its own, so pathname alone is correct.
+
   btnLoad('fg-send-btn', true, 'Sending\u2026');
   xhr('POST', AUTH + '/recover',
     { 'apikey': ANON_KEY, 'Content-Type': 'application/json' },
-    JSON.stringify({ email: email, redirect_to: 'https://www.databulge.com/index.html' }),
+    JSON.stringify({ email: email, redirect_to: redirectTo }),
     function(err, res) {
       btnLoad('fg-send-btn', false, 'Send Reset Link');
       if (err || !res || !res.ok) { errShow('fg-err', 'Failed to send reset link. Try again.'); return; }
@@ -3336,6 +3345,7 @@ function parseHash() {
 
 /* ── SINGLE-FILE PASSWORD RESET HELPERS ─────────────────────── */
 function showResetScreen() {
+  gInResetFlow = true;
   var r = $('pg-reset');
   if (r) r.className = 'on';
   var m = $('db-reset-msg');
@@ -3344,6 +3354,7 @@ function showResetScreen() {
 }
 
 function hideResetScreen() {
+  gInResetFlow = false;
   var r = $('pg-reset');
   if (r) r.className = '';
 }
@@ -3416,6 +3427,7 @@ function dbSaveResetPassword() {
         localStorage.removeItem('__db_session_exp__');
       } catch(e) {}
       gRecovAT = ''; gRecovRT = ''; gToken = null; gRefresh = null; gExpiry = 0; gUser = null;
+      gInResetFlow = false;
       setTimeout(function(){ window.location.replace('databulge-auth.html'); }, 1400);
     }
   );
@@ -3424,6 +3436,7 @@ function dbSaveResetPassword() {
 function dbBackToSignIn() {
   try { _clearSession(); } catch(e) {}
   gRecovAT = ''; gRecovRT = '';
+  gInResetFlow = false;
   window.location.replace('databulge-auth.html');
 }
 
@@ -3436,6 +3449,9 @@ function dbBackToSignIn() {
       p.onkeydown = function(e){ if ((e && e.key === 'Enter') || (e && e.keyCode === 13)) { if(c)c.focus(); } };
     }
     if (c) c.onkeydown = function(e){ if ((e && e.key === 'Enter') || (e && e.keyCode === 13)) dbSaveResetPassword(); };
+    // Wire forgot email Enter key
+    var fgEmail = $('fg-email');
+    if (fgEmail) fgEmail.onkeydown = function(e){ if ((e && e.key === 'Enter') || (e && e.keyCode === 13)) doForgot(); };
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wireSingleReset);
   else wireSingleReset();
@@ -3657,6 +3673,8 @@ function wire() {
 
   // Backdrop close
   $('m-forgot').onclick  = function(e) { if (e.target === $('m-forgot'))  closeModal('m-forgot'); };
+  $('m-forgot-x').onclick = function() { closeModal('m-forgot'); };
+  $('fg-send-btn').onclick = doForgot;
   $('m-terms').onclick   = function(e) { if (e.target === $('m-terms'))   closeModal('m-terms'); };
   $('m-sub').onclick     = function(e) { if (e.target === $('m-sub'))     closeModal('m-sub'); };
   $('m-pay').onclick     = function(e) { if (e.target === $('m-pay'))     closeModal('m-pay'); };
@@ -5507,6 +5525,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
     try{return !!(localStorage.getItem('db_sess')||sessionStorage.getItem('db_sess')||location.hash.indexOf('access_token=')>-1);}catch(e){return false;}
   }
   function revealFallback(){
+    if (window.gInResetFlow) return; // reset screen is active — do not touch anything
     var sp=document.getElementById('db-splash');
     if(sp){sp.style.opacity='0';sp.style.pointerEvents='none';setTimeout(function(){sp.style.display='none';sp.className='hide';},350);}
     try{
