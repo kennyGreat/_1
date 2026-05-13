@@ -555,7 +555,7 @@ button,.btn,.plan-btn,.tab,.logout-btn,.plan-chip,.avatar,.avatar-menu button{
       <div class="field"><label>Phone number</label><input id="s-phone" type="tel" autocomplete="tel" placeholder="08012345678"></div>
       <div class="field"><label>Email address</label><input id="s-email" type="email" autocomplete="email" placeholder="you@example.com"></div>
       <div class="field"><label>Password</label>
-        <div class="pw-wrap"><input id="s-pass" type="password" autocomplete="new-password" placeholder="Min. 6 characters"><button class="eye" id="s-eye">&#128065;</button></div>
+        <div class="pw-wrap"><input id="s-pass" type="password" autocomplete="new-password" placeholder="At least 8 characters"><button class="eye" id="s-eye">&#128065;</button></div>
       </div>
       <div class="chk-row">
         <input type="checkbox" id="s-terms">
@@ -573,7 +573,7 @@ button,.btn,.plan-btn,.tab,.logout-btn,.plan-chip,.avatar,.avatar-menu button{
       <div id="r-err" class="err"></div>
       <div id="r-ok" class="ok"></div>
       <div id="r-exp" style="display:none;background:#fff8e1;border:1px solid #ffe082;color:#795548;padding:9px 11px;border-radius:6px;font-size:.79rem;margin-bottom:12px;">Link expired. <button class="txt-link" id="r-req-btn" style="color:#795548;font-weight:700;">Request a new one</button></div>
-      <div class="field"><label>New password</label><input id="r-pass" type="password" autocomplete="new-password" placeholder="Min. 6 characters"></div>
+      <div class="field"><label>New password</label><input id="r-pass" type="password" autocomplete="new-password" placeholder="At least 8 characters"></div>
       <div class="field"><label>Confirm password</label><input id="r-confirm" type="password" autocomplete="new-password" placeholder="Repeat password"></div>
       <button class="btn btn-blue" id="r-btn">Save New Password</button>
       <button class="txt-link" id="r-back-btn" style="display:block;text-align:center;width:100%;margin-top:8px;">&#8592; Back to Log In</button>
@@ -1326,8 +1326,19 @@ function doForgot() {
   errHide('fg-err'); okHide('fg-ok');
   if (!email) { errShow('fg-err', 'Please enter your email.'); return; }
   btnLoad('fg-send-btn', true, 'Sending\u2026');
-  // CRITICAL: redirect_to must be THIS exact file's URL so parseHash() can read the token.
-  var redirectUrl = window.location.origin + window.location.pathname;
+
+  /* SINGLE-FILE RESET FIX:
+     The reset email must return to this same auth file, not to index.html and not to
+     a separate reset page. Supabase will append the recovery token to this URL.
+     When the user opens the email link, parseHash() below detects type=recovery
+     and shows the built-in Set New Password screen before any sign-in redirect. */
+  var current = window.location.href.split('#')[0].split('?')[0];
+  var redirectUrl;
+  if (current.indexOf('file://') === 0 || current.indexOf('file:///android_asset') === 0) {
+    redirectUrl = current;
+  } else {
+    redirectUrl = window.location.origin + '/databulge-auth.html';
+  }
 
   xhr('POST', AUTH + '/recover',
     { 'apikey': ANON_KEY, 'Content-Type': 'application/json' },
@@ -1335,7 +1346,7 @@ function doForgot() {
     function(err, res) {
       btnLoad('fg-send-btn', false, 'Send Reset Link');
       if (err || !res || !res.ok) { errShow('fg-err', 'Failed to send reset link. Try again.'); return; }
-      okShow('fg-ok', '✅ Reset link sent to ' + email + '. Check your inbox and spam folder.');
+      okShow('fg-ok', '\u2705 Reset link sent to ' + email + '. Open the link to set your new password.');
     }
   );
 }
@@ -1345,45 +1356,59 @@ function doResetPassword() {
   var confirm = ($('r-confirm') ? $('r-confirm').value : '') || '';
   errHide('r-err'); okHide('r-ok');
   if ($('r-exp')) $('r-exp').style.display = 'none';
-  if (!pass || pass.length < 6) { errShow('r-err', 'Password must be at least 6 characters.'); return; }
+
+  /* Match the dedicated reset-password page behavior: password must be saved first,
+     then all recovery/session tokens are cleared, then the user returns to SIGN IN. */
+  if (!pass || pass.length < 8) { errShow('r-err', 'Password must be at least 8 characters.'); return; }
   if (pass !== confirm)          { errShow('r-err', 'Passwords do not match.'); return; }
   if (!gRecovAT)                 { errShow('r-err', 'Reset session expired. Please request a new link.'); return; }
-  btnLoad('r-btn', true, 'Saving…');
 
-  // Update password directly using the recovery token as the auth bearer
-  var h = { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + gRecovAT, 'Content-Type': 'application/json' };
-  xhr('PUT', AUTH + '/user', h, JSON.stringify({ password: pass }),
+  btnLoad('r-btn', true, 'Saving\u2026');
+
+  xhr('PUT', AUTH + '/user',
+    { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + gRecovAT, 'Content-Type': 'application/json' },
+    JSON.stringify({ password: pass }),
     function(err, res) {
       btnLoad('r-btn', false, 'Save New Password');
       if (err || !res || !res.ok) {
         var d  = res && res.data;
-        var ec = d && (d.error_code || d.error || '');
-        var em = d && (d.message || d.msg || '');
-        if (ec === 'otp_expired' || ec === 'invalid_token' ||
-            (em && (em.indexOf('expired') !== -1 || em.indexOf('invalid') !== -1))) {
+        var ec = String((d && (d.error_code || d.error)) || '').toLowerCase();
+        var em = String((d && (d.message || d.msg)) || '').toLowerCase();
+        var expired = ec.indexOf('expir') !== -1 || ec.indexOf('invalid') !== -1 ||
+                      em.indexOf('expir') !== -1 || em.indexOf('invalid') !== -1;
+        if (expired) {
           if ($('r-exp')) $('r-exp').style.display = 'block';
+          else errShow('r-err', 'Reset link has expired. Please request a new one.');
         } else {
-          errShow('r-err', em || ec || 'Update failed. Please request a new reset link.');
+          errShow('r-err', (d && (d.message || d.error)) || 'Failed to update password. Please try again.');
         }
         return;
       }
-      okShow('r-ok', '✅ Password updated! Signing you in…');
-      // Auto-login: fetch user with recovery token then boot app
-      gToken   = gRecovAT;
-      gRefresh = gRecovRT;
-      gRecovAT = gRecovRT = '';
-      xhr('GET', AUTH + '/user',
-        { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + gToken, 'Content-Type': 'application/json' },
-        null,
-        function(err2, res2) {
-          if (!err2 && res2 && res2.ok && res2.data) {
-            _setSession({ access_token: gToken, refresh_token: gRefresh, expires_in: 3600, user: res2.data });
-            setTimeout(function() { goMainApp(); }, 1200);
-          } else {
-            setTimeout(function() { showScreen('scr-l'); }, 1600);
-          }
-        }
-      );
+
+      okShow('r-ok', '\u2705 Password updated successfully. Please sign in with your new password.');
+      if ($('r-pass')) $('r-pass').value = '';
+      if ($('r-confirm')) $('r-confirm').value = '';
+
+      /* Critical: do NOT auto-login after reset. Clear recovery and app sessions so
+         the user is not redirected to the app before using the new password. */
+      gRecovAT = '';
+      gRecovRT = '';
+      _clearSession();
+      try {
+        localStorage.removeItem('__db_session_at__');
+        localStorage.removeItem('__db_session_rt__');
+        localStorage.removeItem('__db_session_exp__');
+        localStorage.removeItem('__db_recov_at__');
+        localStorage.removeItem('__db_recov_rt__');
+        sessionStorage.removeItem('db_sess');
+      } catch(e) {}
+
+      setTimeout(function() {
+        showPage('auth');
+        showScreen('scr-l');
+        if ($('l-pass')) $('l-pass').value = '';
+        toast('Password updated. Sign in with your new password.');
+      }, 1400);
     }
   );
 }
