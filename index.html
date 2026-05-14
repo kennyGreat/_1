@@ -2152,49 +2152,66 @@ function doForgot() {
   errHide('fg-err'); okHide('fg-ok');
   if (!email) { errShow('fg-err', 'Please enter your email.'); return; }
   btnLoad('fg-send-btn', true, 'Sending\u2026');
+
+  // Build redirect URL dynamically — works on any domain/repo without hardcoding.
+  var current = window.location.href.split('#')[0].split('?')[0];
+  var redirectUrl;
+  if (current.indexOf('file://') === 0 || current.indexOf('file:///android_asset') === 0) {
+    redirectUrl = 'file:///android_asset/reset-password.html';
+  } else {
+    // Replace current filename with reset-password.html, preserving the full path/repo prefix
+    redirectUrl = current.replace(/\/[^\/]*$/, '/reset-password.html');
+  }
+
   xhr('POST', AUTH + '/recover',
     { 'apikey': ANON_KEY, 'Content-Type': 'application/json' },
-    JSON.stringify({ email: email, redirect_to: 'https://www.databulge.com/reset-password.html' }),
+    JSON.stringify({ email: email, redirect_to: redirectUrl }),
     function(err, res) {
       btnLoad('fg-send-btn', false, 'Send Reset Link');
       if (err || !res || !res.ok) { errShow('fg-err', 'Failed to send reset link. Try again.'); return; }
-      okShow('fg-ok', 'Reset link sent! Check your inbox and spam folder.');
+      okShow('fg-ok', '\u2705 Reset link sent to ' + email + '. Open the link to set your new password.');
     }
   );
 }
 
 function doResetPassword() {
-  var pass    = $('r-pass').value    || '';
-  var confirm = $('r-confirm').value || '';
-  errHide('r-err'); okHide('r-ok'); $('r-exp').style.display = 'none';
-  if (!pass || pass.length < 6) { errShow('r-err', 'Password must be at least 6 characters.'); return; }
-  if (pass !== confirm) { errShow('r-err', 'Passwords do not match.'); return; }
+  var pass    = ($('r-pass')    ? $('r-pass').value    : '') || '';
+  var confirm = ($('r-confirm') ? $('r-confirm').value : '') || '';
+  errHide('r-err'); okHide('r-ok');
+  if ($('r-exp')) $('r-exp').style.display = 'none';
+  if (!pass || pass.length < 8) { errShow('r-err', 'Password must be at least 8 characters.'); return; }
+  if (pass !== confirm)          { errShow('r-err', 'Passwords do not match.'); return; }
+  if (!gRecovAT)                 { errShow('r-err', 'Reset session expired. Please request a new link.'); return; }
   btnLoad('r-btn', true, 'Saving\u2026');
-  // Use the recovery access token to update password via Supabase REST
   var h = { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + gRecovAT, 'Content-Type': 'application/json' };
   xhr('PUT', AUTH + '/user', h, JSON.stringify({ password: pass }),
     function(err, res) {
       btnLoad('r-btn', false, 'Save New Password');
       if (err || !res || !res.ok) {
-        var d = res && res.data;
-        var ec = d && (d.error || d.error_code || '');
-        if (ec === 'otp_expired' || ec === 'invalid_token' || (d && d.message && d.message.indexOf('expired') !== -1)) {
-          $('r-exp').style.display = 'block';
+        var d  = res && res.data;
+        var ec = String((d && (d.error_code || d.error)) || '').toLowerCase();
+        var em = String((d && (d.message || d.msg))     || '').toLowerCase();
+        var expired = ec.indexOf('expir') !== -1 || ec.indexOf('invalid') !== -1 ||
+                      em.indexOf('expir') !== -1 || em.indexOf('invalid') !== -1;
+        if (expired) {
+          if ($('r-exp')) $('r-exp').style.display = 'block';
+          else errShow('r-err', 'Reset link has expired. Please request a new one.');
         } else {
-          errShow('r-err', (d && (d.message || d.error)) || 'Update failed. Try again.');
+          errShow('r-err', (d && (d.message || d.error)) || 'Failed to update password. Please try again.');
         }
         return;
       }
-      okShow('r-ok', '\u2705 Password updated! Signing you in\u2026');
-      // Sign in with new password
-      if (gRecovAT && gRecovRT) {
-        gToken = gRecovAT;
-        gRefresh = gRecovRT;
-        gRecovAT = gRecovRT = '';
-        refreshToken(function(err2) {
-          if (!err2) { showPage('app'); hideSplash(); bootApp(); } else { showScreen('scr-l'); }
-        });
-      } else { setTimeout(function() { showScreen('scr-l'); }, 1600); }
+      okShow('r-ok', '\u2705 Password updated successfully. Please sign in with your new password.');
+      if ($('r-pass'))    $('r-pass').value    = '';
+      if ($('r-confirm')) $('r-confirm').value = '';
+      gRecovAT = ''; gRecovRT = '';
+      _clearSession();
+      try {
+        localStorage.removeItem('__db_session_at__'); localStorage.removeItem('__db_session_rt__');
+        localStorage.removeItem('__db_session_exp__'); localStorage.removeItem('__db_recov_at__');
+        localStorage.removeItem('__db_recov_rt__');   sessionStorage.removeItem('db_sess');
+      } catch(e) {}
+      setTimeout(function() { window.location.replace('databulge-auth.html'); }, 1600);
     }
   );
 }
@@ -3423,9 +3440,22 @@ function parseHash() {
   }
   if (!params.access_token) return false;
 
-  // Clear the hash from the URL immediately so it isn't re-processed on refresh.
   try { window.history.replaceState({}, document.title, window.location.pathname); } catch(e) {}
 
+  // Recovery token — pass to reset-password.html via localStorage and redirect.
+  if (params.type === 'recovery') {
+    try {
+      localStorage.setItem('__db_recov_at__', params.access_token);
+      localStorage.setItem('__db_recov_rt__', params.refresh_token || '');
+    } catch(e) {}
+    hideSplash();
+    var resetUrl = window.location.href.split('#')[0].split('?')[0]
+                     .replace(/\/[^\/]*$/, '/reset-password.html');
+    window.location.replace(resetUrl);
+    return true;
+  }
+
+  // OAuth / SSO callback — set session and boot the app.
   gToken   = params.access_token;
   gRefresh = params.refresh_token || '';
   gExpiry  = Date.now() + ((parseInt(params.expires_in, 10) || 3600) * 1000);
