@@ -1327,17 +1327,15 @@ function doForgot() {
   if (!email) { errShow('fg-err', 'Please enter your email.'); return; }
   btnLoad('fg-send-btn', true, 'Sending\u2026');
 
-  /* SINGLE-FILE RESET FIX:
-     The reset email must return to this same auth file, not to index.html and not to
-     a separate reset page. Supabase will append the recovery token to this URL.
-     When the user opens the email link, parseHash() below detects type=recovery
-     and shows the built-in Set New Password screen before any sign-in redirect. */
+  // Send the reset link directly to reset-password.html.
+  // Supabase appends #access_token=...&type=recovery to this URL.
+  // reset-password.html reads the token straight from the hash.
   var current = window.location.href.split('#')[0].split('?')[0];
   var redirectUrl;
   if (current.indexOf('file://') === 0 || current.indexOf('file:///android_asset') === 0) {
-    redirectUrl = current;
+    redirectUrl = current.replace(/\/[^\/]*$/, '/reset-password.html');
   } else {
-    redirectUrl = window.location.origin + '/databulge-auth.html';
+    redirectUrl = window.location.origin + '/reset-password.html';
   }
 
   xhr('POST', AUTH + '/recover',
