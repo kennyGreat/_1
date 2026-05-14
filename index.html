@@ -3482,8 +3482,10 @@ function esc(str) {
 function parseHash() {
   var hash = (window.location.hash || '').replace(/^#/, '');
   if (!hash) return false;
+
   var params = {};
   var pairs = hash.split('&');
+
   for (var i = 0; i < pairs.length; i++) {
     var eq = pairs[i].indexOf('=');
     if (eq > -1) {
@@ -3493,16 +3495,35 @@ function parseHash() {
       } catch(e) {}
     }
   }
+
   if (!params.access_token) return false;
 
-  // Clear hash immediately — prevents token re-use on refresh
-  try { window.history.replaceState({}, document.title, window.location.pathname); } catch(e) {}
-
-  // PASSWORD_RECOVERY — intercept before anything else.
-  // Show the reset screen and call verifyOtp; never boot the main app with this token.
+  // PASSWORD_RECOVERY: Supabase already verified the email link and returned
+  // a recovery access_token in the URL hash. Do NOT call /verify again here,
+  // because that consumes the token and makes the link appear expired.
   if (params.type === 'recovery') {
-    rpShowScreen();
-    rpVerifyAndReady(params.access_token);
+    gRecovAT = params.access_token;
+    gRecovRT = params.refresh_token || '';
+
+    try { window.history.replaceState({}, document.title, window.location.pathname); } catch(e) {}
+
+    hideSplash();
+
+    var el = $('scr-r');
+    if (el) { el.style.display = '-webkit-box'; el.style.display = 'flex'; }
+
+    var verEl = $('rp-verifying');
+    if (verEl) verEl.style.display = 'none';
+
+    var fatalEl = $('rp-fatal');
+    if (fatalEl) fatalEl.style.display = 'none';
+
+    var formEl = $('rp-form');
+    if (formEl) { formEl.style.display = 'block'; }
+
+    var inp = $('rp-pass');
+    if (inp) setTimeout(function() { try { inp.focus(); } catch(e) {} }, 100);
+
     return true;
   }
 
@@ -3510,6 +3531,8 @@ function parseHash() {
   gToken   = params.access_token;
   gRefresh = params.refresh_token || '';
   gExpiry  = Date.now() + ((parseInt(params.expires_in, 10) || 3600) * 1000);
+
+  try { window.history.replaceState({}, document.title, window.location.pathname); } catch(e) {}
 
   xhr('GET', AUTH + '/user',
     { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + gToken, 'Content-Type': 'application/json' },
@@ -3542,31 +3565,7 @@ function rpShowScreen() {
   if (el) { el.style.display = '-webkit-box'; el.style.display = 'flex'; }
 }
 
-function rpVerifyAndReady(rawToken) {
-  // POST /auth/v1/verify — exchange raw OTP for verified PASSWORD_RECOVERY session
-  xhr('POST', AUTH + '/verify',
-    { 'apikey': ANON_KEY, 'Content-Type': 'application/json' },
-    JSON.stringify({ token_hash: rawToken, type: 'recovery' }),
-    function(err, res) {
-      var verEl = $('rp-verifying');
-      if (!err && res && res.ok && res.data && res.data.access_token) {
-        gRecovAT = res.data.access_token;
-        gRecovRT = res.data.refresh_token || '';
-        if (verEl) verEl.style.display = 'none';
-        var formEl = $('rp-form');
-        if (formEl) { formEl.style.display = 'block'; }
-        var inp = $('rp-pass');
-        if (inp) setTimeout(function() { inp.focus(); }, 100);
-      } else {
-        if (verEl) verEl.style.display = 'none';
-        var fatEl = $('rp-fatal');
-        var fatMsg = $('rp-fatal-msg');
-        if (fatEl) fatEl.style.display = 'block';
-        if (fatMsg) fatMsg.innerHTML = 'This reset link has expired or has already been used.<br><br><button onclick="rpGoSignIn()" style="background:#1A56DB;color:#fff;border:none;border-radius:8px;padding:10px 22px;font-weight:900;font-size:.9rem;cursor:pointer;">Request a New Link</button>';
-      }
-    }
-  );
-}
+/* rpVerifyAndReady removed intentionally. Supabase recovery links already provide a recovery access token; re-verifying it causes instant expiry. */
 
 function rpToggleEye(inputId, btn) {
   var inp = $(inputId);
