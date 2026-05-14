@@ -977,7 +977,7 @@ label:has(#m-sub-autorenew){
 /* Push page content above bottom nav */
 #pg-app { padding-bottom: 70px !important; }
 
-/* ── Inline reset password screen (scr-r) ── */
+/* ── Inline reset password screen ── */
 #scr-r{display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:9000;
   background:linear-gradient(160deg,#0f2952 0%,#1a3a72 50%,#1A56DB 100%);
   -webkit-box-align:center;-webkit-align-items:center;align-items:center;
@@ -1005,7 +1005,7 @@ label:has(#m-sub-autorenew){
   margin-top:16px;background:#1A56DB;color:#fff;font-weight:900;font-size:.97rem;
   cursor:pointer;-webkit-appearance:none;-webkit-transition:background .2s;transition:background .2s;}
 #scr-r .rp-save-btn:disabled{opacity:.65;cursor:default;}
-#scr-r .rp-save-btn.rp-saved{background:#26733c;}
+#scr-r .rp-save-btn.rp-saved{background:#26733c !important;}
 /* congrats */
 #scr-r .rp-congrats{display:none;text-align:center;padding:8px 0 4px;}
 #scr-r .rp-congrats.on{display:block;}
@@ -1470,7 +1470,7 @@ label:has(#m-sub-autorenew){
 
 </div><!-- /#pg-app -->
 
-<!-- ── INLINE RESET PASSWORD SCREEN ── -->
+<!-- ── INLINE RESET PASSWORD SCREEN (magic link flow) ── -->
 <div id="scr-r">
   <div class="rp-box">
     <div id="rp-form">
@@ -2231,62 +2231,25 @@ function doForgot() {
   var email = ($('fg-email').value || '').replace(/^\s+|\s+$/g, '');
   errHide('fg-err'); okHide('fg-ok');
   if (!email) { errShow('fg-err', 'Please enter your email.'); return; }
-  btnLoad('fg-send-btn', true, 'Sending…');
-
-  // Magic link flow: Supabase sends a sign-in link that creates a full valid
-  // session when clicked. The hash token is a real JWT — no OTP verification
-  // needed. parseHash() detects type=magiclink and shows the reset screen
-  // before opening the main app.
-  var redirectTo = window.location.origin + '/index.html';
+  btnLoad('fg-send-btn', true, 'Sending\u2026');
+  // Magic link — Supabase sends a sign-in link that creates a full valid JWT session.
+  // When the user taps it, they land on index.html with #access_token=...&type=magiclink.
+  // parseHash() intercepts it, sets gToken, then shows the reset screen (scr-r).
+  var redirectTo = window.location.origin + (window.location.pathname.indexOf('index.html') >= 0 ? window.location.pathname : (window.location.pathname.replace(/\/$/, '') + '/index.html'));
+  if (redirectTo.indexOf('file://') === 0) redirectTo = 'file:///android_asset/index.html';
   xhr('POST', AUTH + '/magiclink',
     { 'apikey': ANON_KEY, 'Content-Type': 'application/json' },
     JSON.stringify({ email: email, redirect_to: redirectTo }),
     function(err, res) {
       btnLoad('fg-send-btn', false, 'Send Reset Link');
-      if (err || !res || !res.ok) {
-        errShow('fg-err', 'Failed to send reset link. Please try again.');
-        return;
-      }
-      okShow('fg-ok', '✅ Reset link sent to ' + email + '. Tap the link in your email to set your new password.');
+      if (err || !res || !res.ok) { errShow('fg-err', 'Failed to send reset link. Please try again.'); return; }
+      okShow('fg-ok', '\u2705 Reset link sent to ' + email + '. Tap the link in your email to set your new password.');
     }
   );
 }
 
-function doResetPassword() {
-  var pass    = $('r-pass').value    || '';
-  var confirm = $('r-confirm').value || '';
-  errHide('r-err'); okHide('r-ok'); $('r-exp').style.display = 'none';
-  if (!pass || pass.length < 6) { errShow('r-err', 'Password must be at least 6 characters.'); return; }
-  if (pass !== confirm) { errShow('r-err', 'Passwords do not match.'); return; }
-  btnLoad('r-btn', true, 'Saving\u2026');
-  // Use the recovery access token to update password via Supabase REST
-  var h = { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + gRecovAT, 'Content-Type': 'application/json' };
-  xhr('PUT', AUTH + '/user', h, JSON.stringify({ password: pass }),
-    function(err, res) {
-      btnLoad('r-btn', false, 'Save New Password');
-      if (err || !res || !res.ok) {
-        var d = res && res.data;
-        var ec = d && (d.error || d.error_code || '');
-        if (ec === 'otp_expired' || ec === 'invalid_token' || (d && d.message && d.message.indexOf('expired') !== -1)) {
-          $('r-exp').style.display = 'block';
-        } else {
-          errShow('r-err', (d && (d.message || d.error)) || 'Update failed. Try again.');
-        }
-        return;
-      }
-      okShow('r-ok', '\u2705 Password updated! Signing you in\u2026');
-      // Sign in with new password
-      if (gRecovAT && gRecovRT) {
-        gToken = gRecovAT;
-        gRefresh = gRecovRT;
-        gRecovAT = gRecovRT = '';
-        refreshToken(function(err2) {
-          if (!err2) { showPage('app'); hideSplash(); bootApp(); } else { showScreen('scr-l'); }
-        });
-      } else { setTimeout(function() { showScreen('scr-l'); }, 1600); }
-    }
-  );
-}
+/* doResetPassword kept for legacy compat but no longer called */
+function doResetPassword() { rpSavePassword(); }
 
 /* ── BOOT APP ───────────────────────────────────────────────── */
 function bootPublicApp() {
@@ -3403,206 +3366,29 @@ function openRefundModal(subId, planName, phone, paidAmt, itemType) {
     var html = '<div class="modal" id="m-refund"><div class="modal-box"><div class="modal-hdr"><div class="modal-title">Refund / Help</div><button class="modal-x" id="m-refund-x">&#215;</button></div><div class="modal-body"><div id="m-refund-info"></div><div id="m-refund-err" class="err"></div><div class="field"><label>Reason</label><select id="refund-reason" style="display:block;width:100%;padding:11px 12px;border:1.5px solid #ddd;border-radius:6px;font-size:.94rem;color:#111;background:#fff;outline:none;-webkit-appearance:none;"></select></div><div class="field"><label>Correct Number (optional)</label><input id="refund-correct-num" type="tel" placeholder="08012345678"></div><div class="field"><label>Details (optional)</label><textarea id="refund-details" class="textarea" placeholder="Add more details"></textarea></div></div><div class="modal-foot"><button class="btn btn-blue" id="m-refund-btn" style="width:auto;display:inline-block;padding:10px 22px;margin:0;">Submit Request</button></div></div></div>';
     document.body.insertAdjacentHTML('beforeend', html);
     $('m-refund-x').onclick = function(){ closeModal('m-refund'); };
-    $('m-refund-btn').ofunction parseHash() {
-  // Check query string first for ?token_hash= (newer Supabase format)
-  var search = (window.location.search || '').replace(/^\?/, '');
-  if (search) {
-    var qp = {};
-    search.split('&').forEach(function(p) {
-      var eq = p.indexOf('=');
-      if (eq > -1) { try { qp[decodeURIComponent(p.slice(0,eq))] = decodeURIComponent(p.slice(eq+1)); } catch(e){} }
-    });
-    if (qp.token_hash && qp.type === 'magiclink') {
-      try { window.history.replaceState({}, document.title, window.location.pathname); } catch(e) {}
-      rpActivateWithToken(qp.token_hash, 'magiclink');
-      return true;
-    }
+    $('m-refund-btn').onclick = confirmRefund;
+    $('m-refund').onclick = function(e){ if (e.target === $('m-refund')) closeModal('m-refund'); };
   }
-
-  var hash = (window.location.hash || '').replace(/^#/, '');
-  if (!hash) return false;
-  var params = {};
-  hash.split('&').forEach(function(p) {
-    var eq = p.indexOf('=');
-    if (eq > -1) { try { params[decodeURIComponent(p.slice(0,eq))] = decodeURIComponent(p.slice(eq+1)); } catch(e){} }
-  });
-  if (!params.access_token) return false;
-
-  try { window.history.replaceState({}, document.title, window.location.pathname); } catch(e) {}
-
-  // Magic link used for password reset — token is a real valid JWT session.
-  // Set the session, then show the reset screen BEFORE booting the main app.
-  if (params.type === 'magiclink' || params.type === 'recovery') {
-    gToken   = params.access_token;
-    gRefresh = params.refresh_token || '';
-    gExpiry  = Date.now() + ((parseInt(params.expires_in, 10) || 3600) * 1000);
-    xhr('GET', AUTH + '/user',
-      { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + gToken, 'Content-Type': 'application/json' },
-      null,
-      function(err, res) {
-        if (!err && res && res.ok && res.data) {
-          _setSession({ access_token: gToken, refresh_token: gRefresh,
-                        expires_in: (parseInt(params.expires_in, 10) || 3600), user: res.data });
-          // Show reset screen — user must set password before entering the app
-          rpShowScreen();
-        } else {
-          _clearSession(); hideSplash();
-          window.location.replace('databulge-auth.html');
-        }
-      }
-    );
-    return true;
+  // Populate reasons based on item type
+  var reasonSel = $('refund-reason');
+  if (isAirtime) {
+    reasonSel.innerHTML =
+      '<option value="wrong_number">Wrong phone number</option>' +
+      '<option value="not_credited">Airtime not received</option>' +
+      '<option value="duplicate">Duplicate order</option>' +
+      '<option value="other">Other issue</option>';
+  } else {
+    reasonSel.innerHTML =
+      '<option value="wrong_number">Wrong phone number</option>' +
+      '<option value="not_credited">Data not credited</option>' +
+      '<option value="duplicate">Duplicate subscription</option>' +
+      '<option value="other">Other issue</option>';
   }
-
-  // Regular OAuth / SSO callback — boot app normally
-  gToken   = params.access_token;
-  gRefresh = params.refresh_token || '';
-  gExpiry  = Date.now() + ((parseInt(params.expires_in, 10) || 3600) * 1000);
-  xhr('GET', AUTH + '/user',
-    { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + gToken, 'Content-Type': 'application/json' },
-    null,
-    function(err, res) {
-      if (!err && res && res.ok && res.data) {
-        _setSession({ access_token: gToken, refresh_token: gRefresh,
-                      expires_in: (parseInt(params.expires_in, 10) || 3600), user: res.data });
-        showPage('app'); hideSplash(); bootApp();
-      } else {
-        _clearSession(); hideSplash();
-        window.location.replace('databulge-auth.html');
-      }
-    }
-  );
-  return true;
-}
-
-/* ═══════════════════════════════════════════════════════════
-   INLINE RESET PASSWORD SCREEN — rp* functions
-   Magic link creates a full valid session. gToken is a real
-   JWT that PUT /user accepts directly. No OTP verify needed.
-═══════════════════════════════════════════════════════════ */
-function rpShowScreen() {
-  hideSplash();
-  var el = $('scr-r');
-  if (el) el.className = (el.className || '').replace(/on/,'').trim() + ' on';
-  setTimeout(function() { var i = $('rp-pass'); if(i) i.focus(); }, 200);
-}
-
-function rpActivateWithToken(tokenHash, type) {
-  // For token_hash query param flow — not normally hit with magic links
-  // but handle gracefully
-  xhr('POST', AUTH + '/verify',
-    { 'apikey': ANON_KEY, 'Content-Type': 'application/json' },
-    JSON.stringify({ token_hash: tokenHash, type: type }),
-    function(err, res) {
-      if (!err && res && res.ok && res.data && res.data.access_token) {
-        gToken   = res.data.access_token;
-        gRefresh = res.data.refresh_token || '';
-        _setSession({ access_token: gToken, refresh_token: gRefresh, expires_in: 3600, user: res.data.user || null });
-        rpShowScreen();
-      } else {
-        hideSplash();
-        window.location.replace('databulge-auth.html');
-      }
-    }
-  );
-}
-
-function rpToggleEye(inputId, btn) {
-  var inp = $(inputId);
-  if (!inp) return;
-  inp.type = (inp.type === 'password') ? 'text' : 'password';
-  if (btn) btn.innerHTML = (inp.type === 'password') ? '&#128065;' : '&#128064;';
-}
-
-function rpCheckStrength(val) {
-  var el = $('rp-strength');
-  if (!el) return;
-  if (!val) { el.textContent = ''; return; }
-  var s = 0;
-  if (val.length >= 8)          s++;
-  if (val.length >= 12)         s++;
-  if (/[A-Z]/.test(val))        s++;
-  if (/[0-9]/.test(val))        s++;
-  if (/[^A-Za-z0-9]/.test(val)) s++;
-  var lb = ['','Weak','Fair','Good','Strong','Very strong'];
-  var cl = ['','#dc2626','#d97706','#2563eb','#16a34a','#065f46'];
-  el.textContent = lb[s] || ''; el.style.color = cl[s] || '';
-}
-
-function rpSavePassword() {
-  var btn     = $('rp-save-btn');
-  var errEl   = $('rp-err');
-  var pass    = ($('rp-pass')    ? $('rp-pass').value    : '').replace(/^\s+|\s+$/g,'');
-  var confirm = ($('rp-confirm') ? $('rp-confirm').value : '').replace(/^\s+|\s+$/g,'');
-
-  if (errEl) errEl.style.display = 'none';
-  if (pass.length < 8)  { if(errEl){errEl.textContent='Password must be at least 8 characters.';errEl.style.display='block';} return; }
-  if (pass !== confirm) { if(errEl){errEl.textContent='Passwords do not match.';errEl.style.display='block';} return; }
-
-  // Guard: ensure we have a token. If gToken isn't set yet (async GET /user
-  // still in flight), read it back from the session store as a fallback.
-  if (!gToken) { _loadSession(); }
-  if (!gToken) {
-    if(errEl){errEl.textContent='Session expired. Please request a new link.';errEl.style.display='block';}
-    return;
-  }
-
-  btn.disabled    = true;
-  btn.textContent = 'Saving…';
-
-  // Use the verified session token to update the password
-  xhr('PUT', AUTH + '/user',
-    { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + gToken, 'Content-Type': 'application/json' },
-    JSON.stringify({ password: pass }),
-    function(err, res) {
-      if (err || !res || !res.ok) {
-        btn.disabled    = false;
-        btn.textContent = 'Save New Password';
-        var d   = res && res.data;
-        var msg = (d && (d.message || d.error)) || 'Failed to update. Please try again.';
-        if (errEl) { errEl.textContent = msg; errEl.style.display = 'block'; }
-        return;
-      }
-      // ── Success ──
-      if ($('rp-pass'))    $('rp-pass').value    = '';
-      if ($('rp-confirm')) $('rp-confirm').value = '';
-      btn.classList.add('rp-saved');
-      btn.textContent = 'Password Saved ✓';
-
-      // Clear session — user must sign in fresh with new password
-      _clearSession();
-      try {
-        localStorage.removeItem('db_sess');     sessionStorage.removeItem('db_sess');
-        localStorage.removeItem('__db_session_at__'); localStorage.removeItem('__db_session_rt__');
-        localStorage.removeItem('__db_session_exp__');
-      } catch(e) {}
-      gToken = ''; gRefresh = ''; gRecovAT = ''; gRecovRT = '';
-
-      setTimeout(function() {
-        var f = $('rp-form');     if (f) f.style.display = 'none';
-        var c = $('rp-congrats'); if (c) c.className = 'rp-congrats on';
-      }, 400);
-    }
-  );
-}
-
-function rpGoSignIn() {
-  window.location.replace('databulge-auth.html');
-}
-
-(function() {
-  function wireRp() {
-    var pp = $('rp-pass'), pc = $('rp-confirm');
-    if (pp) {
-      pp.addEventListener('input', function(){ rpCheckStrength(this.value); });
-      pp.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.keyCode===13){ var c=$('rp-confirm'); if(c) c.focus(); } });
-    }
-    if (pc) pc.addEventListener('keydown', function(e){ if(e.key==='Enter'||e.keyCode===13) rpSavePassword(); });
-  }
-  if (document.readyState==='loading') document.addEventListener('DOMContentLoaded', wireRp); else wireRp();
-})();
-
-;
+  $('m-refund-info').innerHTML = '<div class="row-line"><span class="row-label">' + (isAirtime ? 'Airtime' : 'Plan') + '</span><span class="row-val">' + planName + '</span></div><div class="row-line"><span class="row-label">Phone</span><span class="row-val">' + phone + '</span></div><div class="row-line"><span class="row-label">Paid</span><span class="row-val">' + fmtN(paidAmt) + '</span></div>';
+  $('refund-reason').value = 'wrong_number';
+  $('refund-correct-num').value = '';
+  $('refund-details').value = '';
+  errHide('m-refund-err');
   openModal('m-refund');
 }
 
@@ -3683,19 +3469,44 @@ function parseHash() {
   for (var i = 0; i < pairs.length; i++) {
     var eq = pairs[i].indexOf('=');
     if (eq > -1) {
-      params[decodeURIComponent(pairs[i].slice(0, eq))] =
-        decodeURIComponent(pairs[i].slice(eq + 1));
+      try {
+        params[decodeURIComponent(pairs[i].slice(0, eq))] =
+          decodeURIComponent(pairs[i].slice(eq + 1));
+      } catch(e) {}
     }
   }
   if (!params.access_token) return false;
-
-  // Clear the hash from the URL immediately so it isn't re-processed on refresh.
   try { window.history.replaceState({}, document.title, window.location.pathname); } catch(e) {}
 
+  // Magic link or recovery — intercept BEFORE booting the main app.
+  // gToken is a real valid JWT from Supabase; use it directly for PUT /user.
+  if (params.type === 'magiclink' || params.type === 'recovery') {
+    gToken   = params.access_token;
+    gRefresh = params.refresh_token || '';
+    gExpiry  = Date.now() + ((parseInt(params.expires_in, 10) || 3600) * 1000);
+    // Verify the token and show the reset screen
+    xhr('GET', AUTH + '/user',
+      { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + gToken, 'Content-Type': 'application/json' },
+      null,
+      function(err, res) {
+        if (!err && res && res.ok && res.data) {
+          _setSession({ access_token: gToken, refresh_token: gRefresh,
+                        expires_in: (parseInt(params.expires_in, 10) || 3600), user: res.data });
+          rpShowScreen();
+        } else {
+          _clearSession(); hideSplash();
+          window.location.replace('databulge-auth.html');
+        }
+      }
+    );
+    hideSplash();
+    return true;
+  }
+
+  // Regular OAuth / SSO — set session and boot app
   gToken   = params.access_token;
   gRefresh = params.refresh_token || '';
   gExpiry  = Date.now() + ((parseInt(params.expires_in, 10) || 3600) * 1000);
-
   xhr('GET', AUTH + '/user',
     { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + gToken, 'Content-Type': 'application/json' },
     null,
@@ -3705,14 +3516,131 @@ function parseHash() {
                       expires_in: (parseInt(params.expires_in, 10) || 3600), user: res.data });
         showPage('app'); hideSplash(); bootApp();
       } else {
-        _clearSession();
-        hideSplash();
+        _clearSession(); hideSplash();
         window.location.replace('databulge-auth.html');
       }
     }
   );
   return true;
 }
+
+/* ═══════════════════════════════════════════════════════
+   INLINE RESET PASSWORD — rp* functions
+   Called after magic link lands on this page.
+   gToken is a real Supabase JWT — PUT /user accepts it directly.
+═══════════════════════════════════════════════════════ */
+function rpShowScreen() {
+  hideSplash();
+  var el = $('scr-r');
+  if (el) el.className = (el.className || '').replace(/\bon\b/, '').trim() + ' on';
+  setTimeout(function() { var i = $('rp-pass'); if (i) { try { i.focus(); } catch(e) {} } }, 200);
+}
+
+function rpToggleEye(inputId, btn) {
+  var inp = $(inputId);
+  if (!inp) return;
+  inp.type = (inp.type === 'password') ? 'text' : 'password';
+  if (btn) btn.innerHTML = (inp.type === 'password') ? '&#128065;' : '&#128064;';
+}
+
+function rpCheckStrength(val) {
+  var el = $('rp-strength');
+  if (!el) return;
+  if (!val) { el.textContent = ''; return; }
+  var s = 0;
+  if (val.length >= 8)          s++;
+  if (val.length >= 12)         s++;
+  if (/[A-Z]/.test(val))        s++;
+  if (/[0-9]/.test(val))        s++;
+  if (/[^A-Za-z0-9]/.test(val)) s++;
+  var lb = ['', 'Weak', 'Fair', 'Good', 'Strong', 'Very strong'];
+  var cl = ['', '#dc2626', '#d97706', '#2563eb', '#16a34a', '#065f46'];
+  el.textContent = lb[s] || '';
+  el.style.color = cl[s] || '';
+}
+
+function rpSavePassword() {
+  var btn     = $('rp-save-btn');
+  var errEl   = $('rp-err');
+  var pass    = ($('rp-pass')    ? $('rp-pass').value    : '').replace(/^\s+|\s+$/g, '');
+  var confirm = ($('rp-confirm') ? $('rp-confirm').value : '').replace(/^\s+|\s+$/g, '');
+
+  if (errEl) errEl.style.display = 'none';
+  if (pass.length < 8)  { if (errEl) { errEl.textContent = 'Password must be at least 8 characters.'; errEl.style.display = 'block'; } return; }
+  if (pass !== confirm) { if (errEl) { errEl.textContent = 'Passwords do not match.'; errEl.style.display = 'block'; } return; }
+
+  // Ensure token — try gToken (magic link session) then fall back to localStorage
+  if (!gToken) { _loadSession(); }
+  if (!gToken) {
+    if (errEl) { errEl.textContent = 'Session expired. Please request a new reset link.'; errEl.style.display = 'block'; }
+    return;
+  }
+
+  btn.disabled    = true;
+  btn.textContent = 'Saving\u2026';
+
+  // PUT /user with the magic link JWT — Supabase accepts this directly
+  xhr('PUT', AUTH + '/user',
+    { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + gToken, 'Content-Type': 'application/json' },
+    JSON.stringify({ password: pass }),
+    function(err, res) {
+      if (err || !res || !res.ok) {
+        btn.disabled    = false;
+        btn.textContent = 'Save New Password';
+        var d   = res && res.data;
+        var msg = (d && (d.message || d.error)) || 'Failed to update password. Please try again.';
+        if (errEl) { errEl.textContent = msg; errEl.style.display = 'block'; }
+        return;
+      }
+
+      // ── 1. Button turns green ──
+      if ($('rp-pass'))    $('rp-pass').value    = '';
+      if ($('rp-confirm')) $('rp-confirm').value = '';
+      btn.disabled = true;
+      btn.textContent = 'Password Saved \u2713';
+      btn.className = (btn.className || '') + ' rp-saved';
+
+      // ── 2. Clear all tokens — user must sign in fresh ──
+      _clearSession();
+      gToken = ''; gRefresh = ''; gRecovAT = ''; gRecovRT = '';
+      try {
+        localStorage.removeItem('db_sess');       sessionStorage.removeItem('db_sess');
+        localStorage.removeItem('__db_session_at__'); localStorage.removeItem('__db_session_rt__');
+        localStorage.removeItem('__db_session_exp__');
+      } catch(e) {}
+
+      // ── 3. After 400ms: hide form, show congrats card ──
+      setTimeout(function() {
+        var f = $('rp-form');     if (f) f.style.display = 'none';
+        var c = $('rp-congrats'); if (c) c.className = 'rp-congrats on';
+      }, 400);
+    }
+  );
+}
+
+function rpGoSignIn() {
+  window.location.replace('databulge-auth.html');
+}
+
+// Wire keyboard events on reset form
+(function() {
+  function wireRp() {
+    var pp = $('rp-pass'), pc = $('rp-confirm');
+    if (pp) {
+      pp.addEventListener('input', function() { rpCheckStrength(this.value); });
+      pp.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.keyCode === 13) { var c = $('rp-confirm'); if (c) c.focus(); }
+      });
+    }
+    if (pc) {
+      pc.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.keyCode === 13) rpSavePassword();
+      });
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wireRp);
+  else wireRp();
+})();
 
 /* ── INIT ───────────────────────────────────────────────────── */
 function init() {
