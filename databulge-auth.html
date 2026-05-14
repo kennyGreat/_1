@@ -1327,15 +1327,17 @@ function doForgot() {
   if (!email) { errShow('fg-err', 'Please enter your email.'); return; }
   btnLoad('fg-send-btn', true, 'Sending\u2026');
 
-  // Send the reset link directly to reset-password.html.
-  // Supabase appends #access_token=...&type=recovery to this URL.
-  // reset-password.html reads the token straight from the hash.
+  /* SINGLE-FILE RESET FIX:
+     The reset email must return to this same auth file, not to index.html and not to
+     a separate reset page. Supabase will append the recovery token to this URL.
+     When the user opens the email link, parseHash() below detects type=recovery
+     and shows the built-in Set New Password screen before any sign-in redirect. */
   var current = window.location.href.split('#')[0].split('?')[0];
   var redirectUrl;
   if (current.indexOf('file://') === 0 || current.indexOf('file:///android_asset') === 0) {
-    redirectUrl = current.replace(/\/[^\/]*$/, '/reset-password.html');
+    redirectUrl = current;
   } else {
-    redirectUrl = window.location.origin + '/reset-password.html';
+    redirectUrl = window.location.origin + '/databulge-auth.html';
   }
 
   xhr('POST', AUTH + '/recover',
@@ -1383,12 +1385,12 @@ function doResetPassword() {
         return;
       }
 
-      okShow('r-ok', '\u2705 Password updated successfully. Please sign in with your new password.');
+      okShow('r-ok', '\u2705 Password updated! Redirecting to sign in\u2026');
       if ($('r-pass')) $('r-pass').value = '';
       if ($('r-confirm')) $('r-confirm').value = '';
 
-      /* Critical: do NOT auto-login after reset. Clear recovery and app sessions so
-         the user is not redirected to the app before using the new password. */
+      // Invalidate the recovery session so it cannot be reused
+      var deadToken = gRecovAT;
       gRecovAT = '';
       gRecovRT = '';
       _clearSession();
@@ -1400,6 +1402,15 @@ function doResetPassword() {
         localStorage.removeItem('__db_recov_rt__');
         sessionStorage.removeItem('db_sess');
       } catch(e) {}
+
+      // Sign out the recovery session server-side (fire-and-forget)
+      if (deadToken) {
+        xhr('POST', AUTH + '/logout',
+          { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + deadToken, 'Content-Type': 'application/json' },
+          JSON.stringify({ scope: 'local' }),
+          function() {} // ignore result
+        );
+      }
 
       setTimeout(function() {
         showPage('auth');
@@ -1426,8 +1437,61 @@ function esc(str) {
     .replace(/'/g,'&#39;');
 }
 
-/* ── URL HASH PARSER (password recovery) ───────────────────── */
+/* ── URL HASH / QUERY PARSER (password recovery + OAuth) ────── */
 function parseHash() {
+  // ── Step 1: Check query string for PKCE ?code= (Supabase PKCE flow) ──────
+  // Supabase may deliver the recovery token as ?code=... in some configurations.
+  var search = (window.location.search || '').replace(/^\?/, '');
+  var qparams = {};
+  if (search) {
+    search.split('&').forEach(function(p) {
+      var eq = p.indexOf('=');
+      if (eq > -1) {
+        try {
+          qparams[decodeURIComponent(p.slice(0, eq))] = decodeURIComponent(p.slice(eq + 1));
+        } catch(e) {}
+      }
+    });
+  }
+
+  if (qparams.token_hash && qparams.type === 'recovery') {
+    // token_hash flow — verify OTP then show reset screen
+    try { window.history.replaceState({}, document.title, window.location.pathname); } catch(e) {}
+    verifyRecoveryToken(qparams.token_hash, 'recovery');
+    return true;
+  }
+
+  if (qparams.code) {
+    // PKCE code flow — exchange code for session
+    try { window.history.replaceState({}, document.title, window.location.pathname); } catch(e) {}
+    xhr('POST', AUTH + '/token?grant_type=pkce',
+      { 'apikey': ANON_KEY, 'Content-Type': 'application/json' },
+      JSON.stringify({ auth_code: qparams.code }),
+      function(err, res) {
+        if (!err && res && res.ok && res.data && res.data.access_token) {
+          var d = res.data;
+          if (d.type === 'recovery' || qparams.type === 'recovery') {
+            // Recovery via PKCE — token is now verified, show reset screen
+            gRecovAT = d.access_token;
+            gRecovRT = d.refresh_token || '';
+            showPage('auth');
+            showScreen('scr-r');
+            hideSplashSoon();
+          } else {
+            _setSession({ access_token: d.access_token, refresh_token: d.refresh_token, expires_in: d.expires_in || 3600, user: d.user || null });
+            goMainApp();
+          }
+        } else {
+          showPage('auth'); showScreen('scr-w'); hideSplashSoon();
+          toast('Link invalid or expired. Please request a new one.');
+        }
+      }
+    );
+    hideSplashSoon();
+    return true;
+  }
+
+  // ── Step 2: Check URL hash fragment for implicit flow ─────────────────────
   var hash = (window.location.hash || '').replace(/^#/, '');
   if (!hash) return false;
   var params = {};
@@ -1436,48 +1500,95 @@ function parseHash() {
   for (i = 0; i < pairs.length; i++) {
     eq = pairs[i].indexOf('=');
     if (eq > -1) {
-      k = decodeURIComponent(pairs[i].slice(0, eq));
-      v = decodeURIComponent(pairs[i].slice(eq + 1));
-      params[k] = v;
+      try {
+        k = decodeURIComponent(pairs[i].slice(0, eq));
+        v = decodeURIComponent(pairs[i].slice(eq + 1));
+        params[k] = v;
+      } catch(e) {}
     }
   }
 
-  // Recovery token lands on THIS page — capture it here and show the reset screen.
+  // PASSWORD_RECOVERY event — MUST be handled before SIGNED_IN.
+  // Never use the raw access_token directly. Call verifyOtp first so Supabase
+  // issues a proper recovery session without triggering SIGNED_IN.
   if (params.type === 'recovery' && params.access_token) {
-    gRecovAT = params.access_token;
-    gRecovRT = params.refresh_token || '';
     try { window.history.replaceState({}, document.title, window.location.pathname); } catch(e) {}
-    // Show the reset screen (scr-r already exists in this file)
-    showPage('auth');
-    showScreen('scr-r');
-    hideSplashSoon();
+    // Store raw token temporarily; verifyRecoveryToken will exchange it properly
+    verifyRecoveryToken(params.access_token, 'recovery');
     return true;
   }
 
-  // Supabase OAuth / SSO callback: save the returned session, fetch the user, then enter index.html.
-  if (params.access_token) {
-    gToken = params.access_token;
+  // OAuth / SSO callback (non-recovery) — save session and go to app
+  if (params.access_token && params.type !== 'recovery') {
+    try { window.history.replaceState({}, document.title, window.location.pathname); } catch(e2) {}
+    gToken   = params.access_token;
     gRefresh = params.refresh_token || '';
-    gExpiry = Date.now() + ((parseInt(params.expires_in, 10) || 3600) * 1000);
+    gExpiry  = Date.now() + ((parseInt(params.expires_in, 10) || 3600) * 1000);
     xhr('GET', AUTH + '/user',
       { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + gToken, 'Content-Type': 'application/json' },
       null,
       function(err, res) {
         if (!err && res && res.ok && res.data) {
-          _setSession({ access_token: gToken, refresh_token: gRefresh, expires_in: (parseInt(params.expires_in, 10) || 3600), user: res.data });
+          _setSession({ access_token: gToken, refresh_token: gRefresh,
+                        expires_in: (parseInt(params.expires_in, 10) || 3600), user: res.data });
           goMainApp();
         } else {
           _clearSession();
-          showPage('auth');
-          showScreen('scr-w');
+          showPage('auth'); showScreen('scr-w');
           toast('Login failed. Please try again.');
         }
       }
     );
-    try { window.history.replaceState({}, document.title, window.location.pathname); } catch(e2) {}
     return true;
   }
   return false;
+}
+
+/**
+ * verifyRecoveryToken — Step 2 of the Supabase password-reset flow.
+ *
+ * Calls POST /auth/v1/verify with type=recovery to exchange the raw OTP/token
+ * for a verified recovery session. This triggers PASSWORD_RECOVERY (not SIGNED_IN),
+ * which is the correct event for a password-reset flow.
+ *
+ * Only after this succeeds do we show the Set New Password screen.
+ * The verified access_token is stored in gRecovAT and used by doResetPassword.
+ */
+function verifyRecoveryToken(token, type) {
+  showPage('auth');
+  // Show the reset screen immediately but in a "verifying" state
+  showScreen('scr-r');
+  hideSplashSoon();
+  // Disable the save button while we verify
+  if ($('r-btn')) { $('r-btn').disabled = true; $('r-btn').textContent = 'Verifying…'; }
+  if ($('r-err')) { $('r-err').style.display = 'none'; }
+
+  xhr('POST', AUTH + '/verify',
+    { 'apikey': ANON_KEY, 'Content-Type': 'application/json' },
+    JSON.stringify({ token: token, type: type || 'recovery', redirect_to: '' }),
+    function(err, res) {
+      if ($('r-btn')) { $('r-btn').disabled = false; $('r-btn').textContent = 'Save New Password'; }
+
+      if (err || !res || !res.ok) {
+        var d   = res && res.data;
+        var msg = (d && (d.message || d.error)) || '';
+        // Show expired message — user can request a new link
+        if ($('r-exp')) $('r-exp').style.display = 'block';
+        else errShow('r-err', 'Reset link has expired or is invalid. Please request a new one.');
+        return;
+      }
+
+      var d = res.data || {};
+      // Supabase returns a new access_token scoped to PASSWORD_RECOVERY
+      if (d.access_token) {
+        gRecovAT = d.access_token;
+        gRecovRT = d.refresh_token || '';
+        // Form is now ready — user can type their new password
+      } else {
+        if ($('r-exp')) $('r-exp').style.display = 'block';
+      }
+    }
+  );
 }
 
 /* ── INIT ───────────────────────────────────────────────────── */
