@@ -5748,146 +5748,98 @@ window.detectAndSaveLocation = detectAndSaveLocation;
    Calls PUT /auth/v1/user directly via the resetPassword edge fn.
 ───────────────────────────────────────────────────────────── */
 function openChangePasswordModal() {
-  var modal = document.getElementById('m-chpw');
-  if (!modal) {
-    var box = document.createElement('div');
-    box.innerHTML =
-      '<div class="modal" id="m-chpw">' +
-        '<div class="modal-box">' +
-          '<div class="modal-hdr">' +
-            '<div class="modal-title">&#128274; Change Password</div>' +
-            '<button class="modal-x" onclick="closeModal('m-chpw')">&#215;</button>' +
-          '</div>' +
-          '<div class="modal-body">' +
-            '<p style="font-size:.82rem;color:#888;margin-bottom:14px;">Set a new password for your DataBulge account.</p>' +
-            '<div id="cp-err" class="err"></div>' +
-            '<div id="cp-ok" class="ok" style="display:none;"></div>' +
-            '<div class="field">' +
-              '<label>New password</label>' +
-              '<div class="pw-wrap">' +
-                '<input id="cp-pass" type="password" placeholder="At least 8 characters" autocomplete="new-password">' +
-                '<button type="button" class="eye" onclick="togglePw(&#39;cp-pass&#39;,this)">&#128065;</button>' +
-              '</div>' +
-              '<div id="cp-strength" style="font-size:.71rem;font-weight:700;margin-top:4px;min-height:15px;"></div>' +
-            '</div>' +
-            '<div class="field">' +
-              '<label>Confirm new password</label>' +
-              '<div class="pw-wrap">' +
-                '<input id="cp-confirm" type="password" placeholder="Repeat your new password" autocomplete="new-password">' +
-                '<button type="button" class="eye" onclick="togglePw('cp-confirm',this)">&#128065;</button>' +
-              '</div>' +
-            '</div>' +
-          '</div>' +
-          '<div class="modal-foot">' +
-            '<button class="btn btn-blue" id="cp-save-btn" onclick="doChangePassword()" style="width:auto;display:inline-block;padding:10px 22px;margin:0;">Save New Password</button>' +
-          '</div>' +
-        '</div>' +
-      '</div>';
-    document.body.appendChild(box.firstChild);
-    modal = document.getElementById('m-chpw');
+  // Build modal once, reuse after
+  if (!document.getElementById('m-chpw')) {
+    var div = document.createElement('div');
+    div.innerHTML = [
+      '<div class="modal" id="m-chpw">',
+        '<div class="modal-box">',
+          '<div class="modal-hdr">',
+            '<div class="modal-title">\uD83D\uDD12 Change Password</div>',
+            '<button class="modal-x" onclick="closeModal(\'m-chpw\')">&#215;</button>',
+          '</div>',
+          '<div class="modal-body">',
+            '<p style="font-size:.82rem;color:#888;margin-bottom:14px;">Set a new password for your account.</p>',
+            '<div id="cp-err" class="err"></div>',
+            '<div id="cp-ok" class="ok" style="display:none;"></div>',
+            '<div class="field">',
+              '<label>New password</label>',
+              '<div class="pw-wrap">',
+                '<input id="cp-pass" type="password" placeholder="At least 8 characters" autocomplete="new-password">',
+                '<button type="button" class="eye" id="cp-eye">&#128065;</button>',
+              '</div>',
+            '</div>',
+            '<div class="field">',
+              '<label>Confirm new password</label>',
+              '<input id="cp-confirm" type="password" placeholder="Repeat password" autocomplete="new-password">',
+            '</div>',
+          '</div>',
+          '<div class="modal-foot">',
+            '<button class="btn btn-blue" id="cp-save-btn" style="width:auto;display:inline-block;padding:10px 22px;margin:0;">Save New Password</button>',
+          '</div>',
+        '</div>',
+      '</div>'
+    ].join('');
+    document.body.appendChild(div.firstChild);
 
-    // Backdrop close
-    modal.onclick = function(e) { if (e.target === modal) closeModal('m-chpw'); };
-
-    // Strength meter
-    var pp = document.getElementById('cp-pass');
-    if (pp) {
-      pp.addEventListener('input', function() {
-        var val = this.value;
-        var el = document.getElementById('cp-strength');
-        if (!el) return;
-        if (!val) { el.textContent = ''; return; }
-        var score = 0;
-        if (val.length >= 8)          score++;
-        if (val.length >= 12)         score++;
-        if (/[A-Z]/.test(val))        score++;
-        if (/[0-9]/.test(val))        score++;
-        if (/[^A-Za-z0-9]/.test(val)) score++;
-        var labels = ['','Weak','Fair','Good','Strong','Very strong'];
-        var colors = ['','#dc2626','#d97706','#2563eb','#16a34a','#065f46'];
-        el.textContent = labels[score] || '';
-        el.style.color = colors[score] || '';
-      });
-      pp.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' || e.keyCode === 13) {
-          var c = document.getElementById('cp-confirm'); if (c) c.focus();
-        }
-      });
-    }
-    var pc = document.getElementById('cp-confirm');
-    if (pc) {
-      pc.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter' || e.keyCode === 13) doChangePassword();
-      });
-    }
+    // Wire buttons once
+    document.getElementById('cp-save-btn').onclick = doChangePassword;
+    document.getElementById('cp-eye').onclick = function() { togglePw('cp-pass', 'cp-eye'); };
+    document.getElementById('cp-confirm').onkeydown = function(e) {
+      if ((e || window.event).keyCode === 13) doChangePassword();
+    };
+    document.getElementById('m-chpw').onclick = function(e) {
+      if (e.target === document.getElementById('m-chpw')) closeModal('m-chpw');
+    };
   }
 
-  // Reset form
-  var pp = document.getElementById('cp-pass');
-  var pc = document.getElementById('cp-confirm');
-  var st = document.getElementById('cp-strength');
-  var eb = document.getElementById('cp-save-btn');
-  if (pp) pp.value = '';
-  if (pc) pc.value = '';
-  if (st) st.textContent = '';
-  if (eb) { eb.disabled = false; eb.textContent = 'Save New Password'; eb.classList.remove('saved'); }
-
-  var errEl = document.getElementById('cp-err');
-  var okEl  = document.getElementById('cp-ok');
-  if (errEl) errEl.className = 'err';
-  if (okEl)  okEl.style.display = 'none';
+  // Reset form every open
+  document.getElementById('cp-pass').value    = '';
+  document.getElementById('cp-confirm').value = '';
+  document.getElementById('cp-err').className = 'err';
+  document.getElementById('cp-ok').style.display = 'none';
+  var sb = document.getElementById('cp-save-btn');
+  sb.disabled    = false;
+  sb.textContent = 'Save New Password';
 
   openModal('m-chpw');
-  setTimeout(function() { if (pp) try { pp.focus(); } catch(e) {} }, 120);
+  setTimeout(function() { document.getElementById('cp-pass').focus(); }, 100);
 }
 
 function doChangePassword() {
-  var btn     = document.getElementById('cp-save-btn');
+  var pass    = document.getElementById('cp-pass').value.replace(/^\s+|\s+$/g, '');
+  var confirm = document.getElementById('cp-confirm').value.replace(/^\s+|\s+$/g, '');
   var errEl   = document.getElementById('cp-err');
   var okEl    = document.getElementById('cp-ok');
-  var pass    = (document.getElementById('cp-pass')    ? document.getElementById('cp-pass').value    : '').replace(/^\s+|\s+$/g, '');
-  var confirm = (document.getElementById('cp-confirm') ? document.getElementById('cp-confirm').value : '').replace(/^\s+|\s+$/g, '');
+  var btn     = document.getElementById('cp-save-btn');
 
-  if (errEl) errEl.className = 'err';
-  if (okEl)  okEl.style.display = 'none';
+  errEl.className    = 'err';
+  okEl.style.display = 'none';
 
-  if (pass.length < 8) {
-    if (errEl) { errEl.textContent = 'Password must be at least 8 characters.'; errEl.className = 'err on'; }
-    return;
-  }
-  if (pass !== confirm) {
-    if (errEl) { errEl.textContent = 'Passwords do not match.'; errEl.className = 'err on'; }
-    return;
-  }
-  if (!gToken) {
-    if (errEl) { errEl.textContent = 'Session expired. Please sign in again.'; errEl.className = 'err on'; }
-    return;
-  }
+  if (pass.length < 8)  { errEl.textContent = 'Password must be at least 8 characters.'; errEl.className = 'err on'; return; }
+  if (pass !== confirm) { errEl.textContent = 'Passwords do not match.'; errEl.className = 'err on'; return; }
+  if (!gToken)          { errEl.textContent = 'Session expired. Please sign in again.'; errEl.className = 'err on'; return; }
 
-  if (btn) { btn.disabled = true; btn.textContent = 'Saving\u2026'; }
+  btn.disabled    = true;
+  btn.textContent = 'Saving\u2026';
 
-  // Use active session token — no email link needed for logged-in users
-  xhr('POST', FN + '/resetPassword',
-    { 'apikey': ANON_KEY, 'Content-Type': 'application/json' },
-    JSON.stringify({ action: 'update_password', access_token: gToken, password: pass }),
+  // Direct PUT /auth/v1/user with the active session token — simplest possible
+  xhr('PUT', AUTH + '/user',
+    { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + gToken, 'Content-Type': 'application/json' },
+    JSON.stringify({ password: pass }),
     function(err, res) {
-      if (err || !res || !res.ok || (res.data && res.data.error)) {
-        if (btn) { btn.disabled = false; btn.textContent = 'Save New Password'; }
+      if (err || !res || !res.ok) {
+        btn.disabled    = false;
+        btn.textContent = 'Save New Password';
         var d   = res && res.data;
-        var msg = (d && (d.message || d.error)) || 'Failed to update password. Please try again.';
-        if (errEl) { errEl.textContent = msg; errEl.className = 'err on'; }
+        errEl.textContent = (d && (d.message || d.error)) || 'Failed to update password. Try again.';
+        errEl.className   = 'err on';
         return;
       }
-      // Clear form
-      if (document.getElementById('cp-pass'))    document.getElementById('cp-pass').value    = '';
-      if (document.getElementById('cp-confirm')) document.getElementById('cp-confirm').value = '';
-      if (document.getElementById('cp-strength')) document.getElementById('cp-strength').textContent = '';
-      // Show success
-      if (btn) { btn.classList.add('saved'); btn.textContent = 'Password Saved \u2713'; }
-      if (okEl) { okEl.textContent = '\u2705 Password changed successfully!'; okEl.style.display = 'block'; }
-      if (errEl) errEl.className = 'err';
-      // Close after 1.8s
-      setTimeout(function() { closeModal('m-chpw'); }, 1800);
+      btn.textContent = 'Password Saved \u2713';
+      okEl.textContent = '\u2705 Password changed! You can sign in with your new password.';
+      okEl.style.display = 'block';
+      setTimeout(function() { closeModal('m-chpw'); }, 2000);
     }
   );
 }
