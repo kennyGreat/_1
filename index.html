@@ -1676,7 +1676,7 @@ var gBal        = 0;      // account balance
 var gProfile    = null;
 var gSelPlan    = null;   // plan being subscribed to
 var gSelSub     = null;   // subscription for pay modal
-var gSubsCache  = [];     // cached subscriptions for modal awareness
+var gSubsCache  = [];     // latest loaded subscriptions (for modal awareness)
 var gRecovAT    = '';     // password recovery access token
 var gRecovRT    = '';     // password recovery refresh token
 var _toastTimer = null;
@@ -2550,7 +2550,7 @@ function loadSubs() {
           wrap.innerHTML = '<div class="empty">No plans yet.</div>';
           return;
         }
-        gSubsCache = r.data;
+        gSubsCache = r.data;   // cache for modal awareness
         wrap.innerHTML = renderSubsList(r.data, false);
       }
     );
@@ -2671,13 +2671,20 @@ function renderSubsList(subs, compact) {
         '<button class="pay-btn" style="flex:1;background:#e5e7eb;color:#555;" onclick="openRefundModal(\'' + esc(s.id) + '\',\'' + esc(displayName) + '\',\'' + esc(s.phone_number||'') + '\',' + paid + ',\'' + (isAirtime ? 'airtime' : 'data') + '\')">Report Issue</button>' +
       '</div>';
     } else if ((isActive || isPending) && remaining > 0) {
-      var nudgeMsg = '';
+      // Friendly remaining balance nudge — shows exact amount still needed and encourages
+      var paymentsLeftMsg = '';
       if (paymentsLeft > 0 && perPayment > 0) {
-        nudgeMsg = '<div style="background:#EEF2FF;border-radius:10px;padding:9px 12px;margin-bottom:8px;font-size:.77rem;color:#1A3A8F;line-height:1.55;"><strong>\uD83D\uDCA1 ' + fmtN(remaining) + ' left to unlock your data.</strong> Pay ' + fmtN(perPayment) + ' for ' + paymentsLeft + ' more payment' + (paymentsLeft === 1 ? '' : 's') + ' and your data gets delivered automatically!</div>';
+        paymentsLeftMsg = '<div style="background:#EEF2FF;border-radius:10px;padding:9px 12px;margin-bottom:8px;font-size:.77rem;color:#1A3A8F;line-height:1.55;">' +
+          '<strong>\uD83D\uDCA1 ' + fmtN(remaining) + ' left to unlock your data.</strong> ' +
+          'Pay ' + fmtN(perPayment) + ' for ' + paymentsLeft + ' more payment' + (paymentsLeft === 1 ? '' : 's') +
+          ' and your data gets delivered automatically!' +
+          '</div>';
       } else {
-        nudgeMsg = '<div style="background:#EEF2FF;border-radius:10px;padding:9px 12px;margin-bottom:8px;font-size:.77rem;color:#1A3A8F;line-height:1.55;"><strong>\uD83D\uDCA1 ' + fmtN(remaining) + ' still needed</strong> to complete this plan. Keep going!</div>';
+        paymentsLeftMsg = '<div style="background:#EEF2FF;border-radius:10px;padding:9px 12px;margin-bottom:8px;font-size:.77rem;color:#1A3A8F;line-height:1.55;">' +
+          '<strong>\uD83D\uDCA1 ' + fmtN(remaining) + ' still needed</strong> to complete this plan. Keep going!' +
+          '</div>';
       }
-      html += nudgeMsg;
+      html += paymentsLeftMsg;
       html += '<button class="pay-btn" onclick="openPayModal(\'' + esc(s.id) + '\',' + (dailyPrice||0) + ',' + remaining + ')">Pay Now</button>';
     }
 
@@ -2945,67 +2952,118 @@ function _syncSl(slId, on) {
 function _refreshSubInfo() {
   if (!gSelPlan) return;
   var calc = calcPlanDaily(gSelPlan, gModalPayDays);
-  var exSub = null, _xi;
-  for (_xi = 0; _xi < gSubsCache.length; _xi++) {
-    var _xc = gSubsCache[_xi];
-    if ((_xc.status === 'active' || _xc.status === 'pending') && _xc.data_plans &&
-        String(_xc.data_plans.data_size) === String(gSelPlan.data_size) &&
-        String((_xc.data_plans.network||'').toUpperCase()) === String((gSelPlan.network||'').toUpperCase())) {
-      exSub = _xc; break;
+
+  // Check if user already has an active/pending sub for this plan
+  var existingSub = null;
+  for (var i = 0; i < gSubsCache.length; i++) {
+    var cs = gSubsCache[i];
+    if ((cs.status === 'active' || cs.status === 'pending') &&
+        cs.data_plans && String(cs.data_plans.data_size) === String(gSelPlan.data_size) &&
+        String((cs.data_plans.network||'').toUpperCase()) === String((gSelPlan.network||'').toUpperCase())) {
+      existingSub = cs;
+      break;
     }
   }
-  if (!exSub) {
-    for (_xi = 0; _xi < gSubsCache.length; _xi++) {
-      var _xc2 = gSubsCache[_xi];
-      if ((_xc2.status === 'active' || _xc2.status === 'pending') && _xc2.plan_id && String(_xc2.plan_id) === String(gSelPlan.id)) {
-        exSub = _xc2; break;
+  // Also check by plan_id if available
+  if (!existingSub) {
+    for (var j = 0; j < gSubsCache.length; j++) {
+      var cs2 = gSubsCache[j];
+      if ((cs2.status === 'active' || cs2.status === 'pending') && cs2.plan_id && String(cs2.plan_id) === String(gSelPlan.id)) {
+        existingSub = cs2;
+        break;
       }
     }
   }
-  if (exSub) {
-    var _xp = parseFloat(exSub.amount_paid) || 0;
-    var _xt = parseFloat(exSub.total_price) || parseFloat(gSelPlan.selling_price) || 0;
-    var _xr = Math.max(0, _xt - _xp);
-    var _xpct = _xt > 0 ? Math.min(100, Math.round((_xp / _xt) * 100)) : 0;
-    var _xd = parseFloat(exSub.daily_price) || calc.daily;
-    var _xpl = _xd > 0 ? Math.ceil(_xr / _xd) : 0;
-    var _xbok = gBal >= _xd;
-    var _xban = '';
-    if (_xr <= 0) {
-      _xban = '<div style="background:#ECFDF5;border:1px solid #6EE7B7;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:.80rem;color:#065F46;line-height:1.6;"><strong>&#127881; Fully paid!</strong> Your data delivery is being processed.</div>';
-    } else if (_xpl <= 1) {
-      _xban = '<div style="background:#ECFDF5;border:1px solid #6EE7B7;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:.80rem;color:#065F46;line-height:1.6;"><strong>&#127775; Last payment!</strong> Pay <strong>' + fmtN(_xr) + '</strong> now and your data gets delivered immediately.</div>';
+
+  if (existingSub) {
+    var paid    = parseFloat(existingSub.amount_paid) || 0;
+    var total   = parseFloat(existingSub.total_price) || parseFloat(gSelPlan.selling_price) || 0;
+    var remaining = Math.max(0, total - paid);
+    var pct     = total > 0 ? Math.min(100, Math.round((paid / total) * 100)) : 0;
+    var daily   = parseFloat(existingSub.daily_price) || calc.daily;
+    var pLeft   = daily > 0 ? Math.ceil(remaining / daily) : 0;
+    var balOk   = gBal >= daily;
+
+    // Progress banner
+    var banner = '';
+    if (remaining <= 0) {
+      banner = '<div style="background:#ECFDF5;border:1px solid #6EE7B7;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:.80rem;color:#065F46;line-height:1.6;">' +
+        '<strong>&#127881; Fully paid!</strong> Your data delivery is being processed.' +
+        '</div>';
+    } else if (pLeft <= 1) {
+      banner = '<div style="background:#ECFDF5;border:1px solid #6EE7B7;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:.80rem;color:#065F46;line-height:1.6;">' +
+        '<strong>&#127775; Last payment!</strong> Pay <strong>' + fmtN(remaining) + '</strong> now and your data gets delivered immediately.' +
+        '</div>';
     } else {
-      _xban = '<div style="background:#EEF2FF;border:1px solid #C7D2FE;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:.80rem;color:#1A3A8F;line-height:1.6;"><strong>&#128161; Plan in progress \u2014 ' + _xpct + '% paid.</strong><br>You have paid <strong>' + fmtN(_xp) + '</strong>. You need <strong>' + fmtN(_xr) + '</strong> more to unlock your data.<br><span style="color:#6B7280;">' + _xpl + ' payment' + (_xpl===1?'':'s') + ' of <strong>' + fmtN(_xd) + '</strong> left \u2014 or pay any amount you want below.</span></div>';
+      banner = '<div style="background:#EEF2FF;border:1px solid #C7D2FE;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:.80rem;color:#1A3A8F;line-height:1.6;">' +
+        '<strong>&#128161; Plan in progress &mdash; ' + pct + '% paid.</strong><br>' +
+        'You have paid <strong>' + fmtN(paid) + '</strong>. You need <strong>' + fmtN(remaining) + '</strong> more to unlock your data.<br>' +
+        '<span style="color:#6B7280;">' + pLeft + ' payment' + (pLeft===1?'':'s') + ' of <strong>' + fmtN(daily) + '</strong> left &mdash; or pay any amount you want below.</span>' +
+        '</div>';
     }
-    var _xbar = '<div style="background:#E5E7EB;border-radius:4px;height:7px;margin:6px 0 10px;overflow:hidden;"><div style="background:#1A56DB;height:100%;border-radius:4px;width:' + _xpct + '%;"></div></div>';
-    $('m-sub-info').innerHTML = _xban + _xbar +
-      '<div class="row-line"><span class="row-label">Plan Price</span><span class="row-val">' + fmtN(_xt) + '</span></div>' +
-      '<div class="row-line"><span class="row-label">Already Paid</span><span class="row-val" style="color:#3d9758;font-weight:900;">' + fmtN(_xp) + '</span></div>' +
-      '<div class="row-line"><span class="row-label">Outstanding Left</span><span class="row-val" style="color:#dc2626;font-weight:900;">' + fmtN(_xr) + '</span></div>' +
-      '<div class="row-line"><span class="row-label">Per Payment</span><span class="row-val">' + fmtN(_xd) + '</span></div>' +
-      '<div class="row-line"><span class="row-label">Your Wallet</span><span class="row-val" style="color:' + (_xbok?'#3d9758':'#dc2626') + ';font-weight:900;">' + fmtN(gBal) + '</span></div>';
-    gSelSub = { id: exSub.id, daily: _xd, remaining: _xr, _isExisting: true };
-    $('m-sub-title').textContent = gSelPlan.data_size + ' (' + gSelPlan.network + ') \u2014 Continue Paying';
-    var _xsbtn = $('m-sub-btn'); if (_xsbtn) _xsbtn.textContent = 'Pay Now';
-    var _xdp = $('m-sub-days-7') && $('m-sub-days-7').parentNode && $('m-sub-days-7').parentNode.parentNode;
-    if (_xdp) _xdp.style.display = 'none';
-    var _xfw = $('m-sub-free-amt-wrap');
-    if (!_xfw) {
-      var _xid = $('m-sub-info'), _xwr = document.createElement('div');
-      _xwr.id = 'm-sub-free-amt-wrap'; _xwr.style.cssText = 'margin-top:12px;';
-      _xwr.innerHTML = '<label style="font-size:.80rem;font-weight:700;color:#333;display:block;margin-bottom:5px;">Amount to pay now (\u20A6) \u2014 enter any amount</label><input id="m-sub-free-amt" type="number" placeholder="e.g. ' + Math.round(_xd) + '" style="display:block;width:100%;padding:11px 12px;border:1.5px solid #ddd;border-radius:8px;font-size:.95rem;color:#111;background:#fff;outline:none;-webkit-appearance:none;"><div style="font-size:.74rem;color:#888;margin-top:4px;">Min: \u20A61 \u2022 Max: outstanding balance or your wallet</div>';
-      if (_xid && _xid.parentNode) _xid.parentNode.insertBefore(_xwr, _xid.nextSibling);
-    } else { _xfw.style.display = 'block'; }
-    var _xfi = $('m-sub-free-amt');
-    if (_xfi) _xfi.value = Math.min(_xd, _xr, gBal) > 0 ? Math.round(Math.min(_xd, _xr, gBal)) : '';
+
+    // Progress bar
+    var progBar = '<div style="background:#E5E7EB;border-radius:4px;height:7px;margin:6px 0 10px;overflow:hidden;">' +
+      '<div style="background:#1A56DB;height:100%;border-radius:4px;width:' + pct + '%;"></div></div>';
+
+    $('m-sub-info').innerHTML =
+      banner +
+      progBar +
+      '<div class="row-line"><span class="row-label">Plan Price</span><span class="row-val">' + fmtN(total) + '</span></div>' +
+      '<div class="row-line"><span class="row-label">Already Paid</span><span class="row-val" style="color:#3d9758;font-weight:900;">' + fmtN(paid) + '</span></div>' +
+      '<div class="row-line"><span class="row-label">Outstanding Left</span><span class="row-val" style="color:#dc2626;font-weight:900;">' + fmtN(remaining) + '</span></div>' +
+      '<div class="row-line"><span class="row-label">Per Payment</span><span class="row-val">' + fmtN(daily) + '</span></div>' +
+      '<div class="row-line"><span class="row-label">Your Wallet</span><span class="row-val" style="color:' + (balOk ? '#3d9758' : '#dc2626') + ';font-weight:900;">' + fmtN(gBal) + '</span></div>';
+
+    // Store the existing sub on gSelSub so confirmSub can route to pay instead
+    gSelSub = { id: existingSub.id, daily: daily, remaining: remaining, _isExisting: true };
+
+    // Update modal title and button
+    $('m-sub-title').textContent = gSelPlan.data_size + ' (' + gSelPlan.network + ') — Continue Paying';
+    var subBtn = $('m-sub-btn');
+    if (subBtn) subBtn.textContent = 'Pay Now';
+
+    // Hide payment duration toggle — already locked to original plan
+    var durField = $('m-sub-days-7') && $('m-sub-days-7').parentNode && $('m-sub-days-7').parentNode.parentNode;
+    if (durField) durField.style.display = 'none';
+
+    // Show free-amount input inside m-sub-info area
+    var freeAmt = $('m-sub-free-amt-wrap');
+    if (!freeAmt) {
+      var infoDiv = $('m-sub-info');
+      var wrapper = document.createElement('div');
+      wrapper.id = 'm-sub-free-amt-wrap';
+      wrapper.style.cssText = 'margin-top:12px;';
+      wrapper.innerHTML =
+        '<label style="font-size:.80rem;font-weight:700;color:#333;display:block;margin-bottom:5px;">Amount to pay now (&#8358;) &mdash; enter any amount</label>' +
+        '<input id="m-sub-free-amt" type="number" placeholder="e.g. ' + Math.round(daily) + '" ' +
+        'style="display:block;width:100%;padding:11px 12px;border:1.5px solid #ddd;border-radius:8px;font-size:.95rem;color:#111;background:#fff;outline:none;-webkit-appearance:none;">' +
+        '<div style="font-size:.74rem;color:#888;margin-top:4px;">Min: &#8358;1 &bull; Max: &#8358;' + fmtN(remaining).replace('₦','') + ' (outstanding) or your wallet balance</div>';
+      if (infoDiv && infoDiv.parentNode) infoDiv.parentNode.insertBefore(wrapper, infoDiv.nextSibling);
+    } else {
+      freeAmt.style.display = 'block';
+      var freeInput = $('m-sub-free-amt');
+      if (freeInput) freeInput.placeholder = 'e.g. ' + Math.round(daily);
+    }
+    // Pre-fill with min(daily, remaining, gBal)
+    var freeInput2 = $('m-sub-free-amt');
+    if (freeInput2) freeInput2.value = Math.min(daily, remaining, gBal) > 0 ? Math.round(Math.min(daily, remaining, gBal)) : '';
+
   } else {
+    // No existing sub — first subscription, show normal info
     $('m-sub-title').textContent = 'Subscribe: ' + gSelPlan.data_size + ' (' + gSelPlan.network + ')';
-    var _xsb2 = $('m-sub-btn'); if (_xsb2) _xsb2.textContent = 'Subscribe Now';
+    var subBtn2 = $('m-sub-btn');
+    if (subBtn2) subBtn2.textContent = 'Subscribe Now';
     gSelSub = null;
-    var _xdp2 = $('m-sub-days-7') && $('m-sub-days-7').parentNode && $('m-sub-days-7').parentNode.parentNode;
-    if (_xdp2) _xdp2.style.display = '';
-    var _xfh = $('m-sub-free-amt-wrap'); if (_xfh) _xfh.style.display = 'none';
+
+    // Restore duration toggle visibility
+    var durField2 = $('m-sub-days-7') && $('m-sub-days-7').parentNode && $('m-sub-days-7').parentNode.parentNode;
+    if (durField2) durField2.style.display = '';
+
+    // Hide free-amount input
+    var freeAmtHide = $('m-sub-free-amt-wrap');
+    if (freeAmtHide) freeAmtHide.style.display = 'none';
+
     $('m-sub-info').innerHTML =
       '<div class="row-line"><span class="row-label">Plan Price</span><span class="row-val">' + fmtN(gSelPlan.selling_price) + '</span></div>' +
       '<div class="row-line"><span class="row-label">Duration</span><span class="row-val">' + gModalPayDays + ' days</span></div>' +
@@ -3015,73 +3073,123 @@ function _refreshSubInfo() {
 }
 
 function _friendlySubError(r, e) {
+  // ── HARD TECHNICAL LEAK FILTER ──────────────────────────────────────────────
+  // ANY string that looks like code, a stack trace, a JS error, or a DB message
+  // must NEVER reach the user. This filter runs first, before any other check.
   var raw = '';
   if (r && r.data) raw = String(r.data.error || r.data.message || r.data.msg || '').toLowerCase();
   else if (typeof e === 'string') raw = e.toLowerCase();
-  var techLeak = raw.indexOf('typeerror') > -1 || raw.indexOf('referenceerror') > -1 ||
-    raw.indexOf('is not a function') > -1 || raw.indexOf('is not defined') > -1 ||
-    raw.indexOf('cannot read prop') > -1 || raw.indexOf('undefined is not') > -1 ||
-    raw.indexOf('.catch') > -1 || raw.indexOf('server error:') > -1 ||
-    raw.indexOf('internal server') > -1 || raw.indexOf('supabase') > -1 ||
-    raw.indexOf('postgres') > -1 || raw.indexOf('pg_') > -1 ||
-    raw.indexOf('sb.from') > -1 || raw.indexOf('.insert(') > -1 ||
-    raw.indexOf('edge function') > -1 || raw.indexOf('function ') > -1 ||
-    (raw.indexOf('error') > -1 && raw.indexOf(':') > -1 && raw.length > 80);
-  if (techLeak) return 'We ran into a technical issue. Please check the My Plan tab \u2014 if your plan appears there, you are good! If not, try again.';
+
+  // Catch all technical / developer-facing patterns immediately
+  var isTechLeak = (
+    raw.indexOf('typeerror') > -1 ||
+    raw.indexOf('referenceerror') > -1 ||
+    raw.indexOf('syntaxerror') > -1 ||
+    raw.indexOf('is not a function') > -1 ||
+    raw.indexOf('is not defined') > -1 ||
+    raw.indexOf('cannot read prop') > -1 ||
+    raw.indexOf('cannot read properties') > -1 ||
+    raw.indexOf('undefined is not') > -1 ||
+    raw.indexOf('.catch') > -1 ||
+    raw.indexOf('.then') > -1 ||
+    raw.indexOf('at object') > -1 ||
+    raw.indexOf('stack:') > -1 ||
+    raw.indexOf('server error:') > -1 ||
+    raw.indexOf('internal server') > -1 ||
+    raw.indexOf('supabase') > -1 ||
+    raw.indexOf('postgres') > -1 ||
+    raw.indexOf('pg_') > -1 ||
+    raw.indexOf('sql') > -1 ||
+    raw.indexOf('edge function') > -1 ||
+    raw.indexOf('function ') > -1 ||
+    raw.indexOf('sb.from') > -1 ||
+    raw.indexOf('.insert(') > -1 ||
+    raw.indexOf('.select(') > -1 ||
+    raw.indexOf('.update(') > -1 ||
+    raw.indexOf('rpc(') > -1 ||
+    (raw.indexOf('error') > -1 && raw.indexOf(':') > -1 && raw.length > 80)
+  );
+  if (isTechLeak) {
+    // The subscription was attempted but hit a backend glitch.
+    // Check if it may have partially succeeded (plan might actually exist) — advise checking My Plan tab.
+    return 'We ran into a technical issue while starting your plan. Please check the My Plan tab — if your plan appears there, you are good! If not, try subscribing again.';
+  }
+
+  // ── STATUS-BASED FALLBACK (no raw content at all) ────────────────────────────
   if (!raw) {
     var st = r && r.status;
-    if (!st || st === 0) return 'No internet connection. Please check your network and try again.';
-    if (st === 429)      return 'Too many requests. Please wait a moment and try again.';
-    if (st >= 500)       return 'Our server is temporarily busy. Please try again in a moment.';
+    if (!st || st === 0)  return 'No internet connection. Please check your network and try again.';
+    if (st === 429)       return 'Too many requests. Please wait a moment and try again.';
+    if (st >= 500)        return 'Our server is temporarily busy. Please try again in a moment.';
     return 'Something went wrong. Please try again.';
   }
-  if (raw.indexOf('insufficient') > -1 || raw.indexOf('not enough') > -1 || raw.indexOf('balance') > -1)
-    return 'Your account balance is too low. Please fund your account and try again.';
+
+  // ── KNOWN BUSINESS ERRORS ────────────────────────────────────────────────────
+  if (raw.indexOf('insufficient') > -1 || raw.indexOf('not enough') > -1 || raw.indexOf('low balance') > -1 || raw.indexOf('balance') > -1)
+    return 'Your account balance is too low for today\'s payment. Please fund your account and try again.';
   if (raw.indexOf('already') > -1 && (raw.indexOf('active') > -1 || raw.indexOf('subscri') > -1))
     return 'You already have an active plan for this network. Let it complete first or go to the My Plan tab.';
   if (raw.indexOf('invalid phone') > -1 || raw.indexOf('phone') > -1)
     return 'Please enter a valid Nigerian phone number (e.g. 08012345678).';
   if (raw.indexOf('plan') > -1 && (raw.indexOf('not found') > -1 || raw.indexOf('unavailable') > -1))
     return 'This plan is currently unavailable. Please refresh and pick another plan.';
-  if (raw.indexOf('session') > -1 || raw.indexOf('jwt') > -1 || raw.indexOf('token') > -1)
+  if (raw.indexOf('session') > -1 || raw.indexOf('jwt') > -1 || raw.indexOf('token') > -1 || raw.indexOf('auth') > -1)
     return 'Your session expired. Please sign out and sign back in.';
-  if (raw.indexOf('network') > -1 || raw.indexOf('timeout') > -1)
+  if (raw.indexOf('network') > -1 || raw.indexOf('timeout') > -1 || raw.indexOf('fetch') > -1)
     return 'Network error. Please check your connection and try again.';
+
+  // ── SAFE FALLBACK ─────────────────────────────────────────────────────────────
   return 'Could not start your plan right now. Please try again or contact support if this keeps happening.';
 }
 
 function confirmSub() {
   if (!gSelPlan) { toast('No plan selected.'); return; }
   errHide('m-sub-err');
+
+  // ── EXISTING SUBSCRIPTION PATH ────────────────────────────────────────────
+  // If user already has an active/pending sub for this plan, treat "Pay Now"
+  // as a direct pay_installment call using the free-amount they typed.
   if (gSelSub && gSelSub._isExisting) {
-    var _xfa = $('m-sub-free-amt'), _xam = _xfa ? (parseFloat(_xfa.value) || 0) : 0;
-    if (_xam <= 0) { errShow('m-sub-err', 'Please enter the amount you want to pay.'); return; }
-    if (_xam > gBal) { errShow('m-sub-err', 'Amount exceeds your wallet balance of ' + fmtN(gBal) + '. Please fund your account first.'); return; }
-    var _xmx = gSelSub.remaining || 0;
-    if (_xmx > 0 && _xam > _xmx) { errShow('m-sub-err', 'Amount exceeds the outstanding balance of ' + fmtN(_xmx) + '.'); return; }
+    var freeInput = $('m-sub-free-amt');
+    var freeAmt = freeInput ? (parseFloat(freeInput.value) || 0) : 0;
+    if (freeAmt <= 0) {
+      errShow('m-sub-err', 'Please enter the amount you want to pay.');
+      return;
+    }
+    if (freeAmt > gBal) {
+      errShow('m-sub-err', 'Amount exceeds your wallet balance of ' + fmtN(gBal) + '. Please fund your account first.');
+      return;
+    }
+    var maxPay = gSelSub.remaining || 0;
+    if (maxPay > 0 && freeAmt > maxPay) {
+      errShow('m-sub-err', 'Amount exceeds the outstanding balance of ' + fmtN(maxPay) + '. You only need to pay that much.');
+      return;
+    }
     btnLoad('m-sub-btn', true, 'Paying\u2026');
     ensureToken(function(err) {
       if (err) { btnLoad('m-sub-btn', false, 'Pay Now'); errShow('m-sub-err', 'Your session expired. Please sign out and sign back in.'); return; }
-      rpc('pay_installment', JSON.stringify({ p_user_id: gUser.id, p_subscription_id: gSelSub.id, p_amount: _xam, p_reference: null }),
+      rpc('pay_installment', JSON.stringify({ p_user_id: gUser.id, p_subscription_id: gSelSub.id, p_amount: freeAmt, p_reference: null }),
         function(e, r) {
           btnLoad('m-sub-btn', false, 'Pay Now');
           if (e || !r || !r.ok || (r.data && !r.data.success)) {
-            var _xpr = String((r && r.data && (r.data.error || r.data.message)) || '').toLowerCase();
-            errShow('m-sub-err', (_xpr.indexOf('insufficient') > -1 || _xpr.indexOf('balance') > -1)
+            var _pr = String((r && r.data && (r.data.error || r.data.message)) || '').toLowerCase();
+            var msg = _pr.indexOf('insufficient') > -1 || _pr.indexOf('balance') > -1
               ? 'Not enough balance. Please fund your wallet first.'
-              : 'Payment could not be processed right now. Please try again.');
+              : 'Payment could not be processed right now. Please try again.';
+            errShow('m-sub-err', msg);
             return;
           }
-          var _xd2 = r.data || {};
-          gBal = parseFloat(_xd2.wallet_balance) || gBal - _xam;
-          var _xnr = Math.max(0, (gSelSub.remaining || 0) - _xam);
+          var d = r.data || {};
+          gBal = parseFloat(d.wallet_balance) || gBal - freeAmt;
+          var newRemaining = Math.max(0, (gSelSub.remaining || 0) - freeAmt);
           closeModal('m-sub');
-          if (_xd2.status === 'completed') {
+          if (d.status === 'completed') {
             toast('\uD83C\uDF89 Plan fully paid! Your data is being delivered to your number now.');
-            try { confettiBurst(window.innerWidth/2, window.innerHeight/3); } catch(_e) {}
+            try { confettiBurst(window.innerWidth/2, window.innerHeight/3); } catch(ce) {}
           } else {
-            var _xpl2 = gSelSub.daily > 0 ? Math.ceil(_xnr / gSelSub.daily) : 0;
-            toast('\u2705 ' + fmtN(_xam) + ' paid! ' + (_xpl2 > 0 ? _xpl2 + ' more payment' + (_xpl2===1?'':'s') + ' of ' + fmtN(gSelSub.daily) + ' to go.' : fmtN(_xnr) + ' still outstanding.'));
+            var pLeft = gSelSub.daily > 0 ? Math.ceil(newRemaining / gSelSub.daily) : 0;
+            toast('\u2705 ' + fmtN(freeAmt) + ' paid! ' +
+              (pLeft > 0 ? pLeft + ' more payment' + (pLeft===1?'':'s') + ' of ' + fmtN(gSelSub.daily) + ' to go.' : fmtN(newRemaining) + ' still outstanding.'));
           }
           setTimeout(function() { loadDashboard(); loadSubs(); loadDashCashflow(); }, 1200);
         }
@@ -3089,6 +3197,8 @@ function confirmSub() {
     });
     return;
   }
+
+  // ── NEW SUBSCRIPTION PATH ─────────────────────────────────────────────────
   var phone = ($('m-sub-phone').value || '').replace(/^\s+|\s+$/g, '');
   var days  = gModalPayDays || 7;
   var autoRenew = $('m-sub-autorenew') ? $('m-sub-autorenew').checked : false;
@@ -3109,8 +3219,9 @@ function confirmSub() {
       }
       _savePhone(phone);
       closeModal('m-sub');
-      var _xdd = gSelPlan.selling_price ? (gSelPlan.selling_price / days).toFixed(0) : 0;
-      toast('\u2705 ' + gSelPlan.data_size + ' plan started! Pay \u20A6' + _xdd + ' for ' + days + ' days to get your data.');
+      var daily = gSelPlan.selling_price ? (gSelPlan.selling_price / days).toFixed(0) : 0;
+      var nudge = '\u2705 ' + gSelPlan.data_size + ' plan started! Pay \u20A6' + daily + ' for ' + days + ' days to get your data.';
+      toast(nudge);
       if (r.data && r.data.delivery_queued) { setTimeout(function(){try{confettiBurst(window.innerWidth/2,window.innerHeight/3);}catch(e){}},400); }
       if (autoFundOn && autoFundAmt >= 100 && gSelPlan) {
         var pName = gSelPlan.data_size + ' (' + gSelPlan.network + ')';
@@ -3127,23 +3238,49 @@ function openPayModal(subId, dailyAmt, remaining) {
   gSelSub = { id: subId, daily: dailyAmt, remaining: remaining };
   var sugAmt = Math.min(dailyAmt, remaining, gBal);
   var ok = gBal >= dailyAmt;
-  var pLeft = dailyAmt > 0 ? Math.ceil(remaining / dailyAmt) : 0;
-  var afterPay = Math.max(0, remaining - (sugAmt > 0 ? sugAmt : dailyAmt));
-  var pAfter = dailyAmt > 0 && afterPay > 0 ? Math.ceil(afterPay / dailyAmt) : 0;
-  var banner = '';
+
+  // Work out how many more payments of dailyAmt it takes to clear remaining
+  var paymentsLeft = (dailyAmt > 0) ? Math.ceil(remaining / dailyAmt) : 0;
+
+  // Progress context: how far has the user already come?
+  // We derive total from remaining + what was already paid (not available here directly,
+  // so we use dailyAmt * paymentsLeft as the remaining portion for the message)
+  var afterThisPayment = remaining - (sugAmt > 0 ? sugAmt : dailyAmt);
+  afterThisPayment = afterThisPayment < 0 ? 0 : afterThisPayment;
+  var paymentsAfter = (dailyAmt > 0 && afterThisPayment > 0) ? Math.ceil(afterThisPayment / dailyAmt) : 0;
+
+  // Build the status line
+  var statusLine = '';
   if (!ok) {
-    banner = '<div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:.80rem;color:#B91C1C;line-height:1.6;"><strong>&#9888; Your balance is too low.</strong><br>You need at least <strong>' + fmtN(dailyAmt) + '</strong> but your wallet has <strong>' + fmtN(gBal) + '</strong>. Please fund your account first.</div>';
-  } else if (pLeft <= 1) {
-    banner = '<div style="background:#ECFDF5;border:1px solid #6EE7B7;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:.80rem;color:#065F46;line-height:1.6;"><strong>&#127881; This is your LAST payment!</strong><br>Pay <strong>' + fmtN(sugAmt > 0 ? sugAmt : remaining) + '</strong> now and your data will be delivered immediately.</div>';
-  } else if (pAfter <= 2) {
-    banner = '<div style="background:#ECFDF5;border:1px solid #6EE7B7;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:.80rem;color:#065F46;line-height:1.6;"><strong>&#127775; Almost there!</strong><br>After this payment, just <strong>' + pAfter + ' more payment' + (pAfter === 1 ? '' : 's') + '</strong> of <strong>' + fmtN(dailyAmt) + '</strong> and your data is delivered!</div>';
+    statusLine = '<div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:.80rem;color:#B91C1C;line-height:1.6;">' +
+      '<strong>&#9888; Your balance is too low for this payment.</strong><br>' +
+      'You need at least <strong>' + fmtN(dailyAmt) + '</strong> but your wallet has <strong>' + fmtN(gBal) + '</strong>.<br>' +
+      'Please fund your account first, then come back to pay.' +
+    '</div>';
+  } else if (paymentsLeft <= 1) {
+    statusLine = '<div style="background:#ECFDF5;border:1px solid #6EE7B7;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:.80rem;color:#065F46;line-height:1.6;">' +
+      '<strong>&#127881; This is your LAST payment!</strong><br>' +
+      'Pay <strong>' + fmtN(sugAmt > 0 ? sugAmt : remaining) + '</strong> now and your data will be delivered immediately.' +
+    '</div>';
+  } else if (paymentsAfter <= 2) {
+    statusLine = '<div style="background:#ECFDF5;border:1px solid #6EE7B7;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:.80rem;color:#065F46;line-height:1.6;">' +
+      '<strong>&#127775; Almost there!</strong><br>' +
+      'After this payment, just <strong>' + paymentsAfter + ' more payment' + (paymentsAfter === 1 ? '' : 's') + '</strong> of <strong>' + fmtN(dailyAmt) + '</strong> and your data is delivered!' +
+    '</div>';
   } else {
-    banner = '<div style="background:#EEF2FF;border:1px solid #C7D2FE;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:.80rem;color:#1A3A8F;line-height:1.6;"><strong>&#128161; Good progress!</strong><br>After this payment, <strong>' + pAfter + ' more payment' + (pAfter === 1 ? '' : 's') + '</strong> of <strong>' + fmtN(dailyAmt) + '</strong> to unlock your data.<br><span style="color:#6B7280;">Every payment brings your delivery one step closer.</span></div>';
+    statusLine = '<div style="background:#EEF2FF;border:1px solid #C7D2FE;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:.80rem;color:#1A3A8F;line-height:1.6;">' +
+      '<strong>&#128161; Good progress!</strong><br>' +
+      'After this payment, you'll need <strong>' + paymentsAfter + ' more payment' + (paymentsAfter === 1 ? '' : 's') + '</strong> of <strong>' + fmtN(dailyAmt) + '</strong> to unlock your data.<br>' +
+      '<span style="color:#6B7280;">Every payment brings your delivery one step closer.</span>' +
+    '</div>';
   }
-  $('m-pay-info').innerHTML = banner +
+
+  $('m-pay-info').innerHTML =
+    statusLine +
     '<div class="row-line"><span class="row-label">Payment amount</span><span class="row-val">' + fmtN(dailyAmt) + '</span></div>' +
     '<div class="row-line"><span class="row-label">Still needed to finish</span><span class="row-val" style="font-weight:900;color:#dc2626;">' + fmtN(remaining) + '</span></div>' +
-    '<div class="row-line"><span class="row-label">Your wallet balance</span><span class="row-val" style="color:' + (ok?'#3d9758':'#dc2626') + ';font-weight:900;">' + fmtN(gBal) + '</span></div>';
+    '<div class="row-line"><span class="row-label">Your wallet balance</span><span class="row-val" style="color:' + (ok ? '#3d9758' : '#dc2626') + ';font-weight:900;">' + fmtN(gBal) + '</span></div>';
+
   $('m-pay-amt').value = sugAmt > 0 ? sugAmt : '';
   errHide('m-pay-err');
   openModal('m-pay');
@@ -3153,34 +3290,36 @@ function confirmPay() {
   var amt = parseFloat($('m-pay-amt').value);
   errHide('m-pay-err');
   if (!amt || amt <= 0) { errShow('m-pay-err', 'Enter a valid amount.'); return; }
-  if (amt > gBal) { errShow('m-pay-err', 'Not enough balance in your account. Please fund your wallet first.'); return; }
-  if (!gSelSub) { return; }
+  if (amt > gBal)       { errShow('m-pay-err', 'Insufficient account balance.'); return; }
+  if (!gSelSub)         { return; }
   btnLoad('m-pay-btn', true, 'Paying\u2026');
   ensureToken(function(err) {
-    if (err) { btnLoad('m-pay-btn', false, 'Pay from Wallet'); errShow('m-pay-err', 'Your session expired. Please sign out and sign back in.'); return; }
+    if (err) { btnLoad('m-pay-btn', false, 'Pay from Wallet'); errShow('m-pay-err', 'Session error.'); return; }
     rpc('pay_installment', JSON.stringify({ p_user_id: gUser.id, p_subscription_id: gSelSub.id, p_amount: amt, p_reference: null }),
       function(e, r) {
         btnLoad('m-pay-btn', false, 'Pay from Wallet');
         if (e || !r || !r.ok || (r.data && !r.data.success)) {
           var _pr = String((r && r.data && (r.data.error || r.data.message)) || '').toLowerCase();
-          errShow('m-pay-err', (_pr.indexOf('insufficient') > -1 || _pr.indexOf('balance') > -1)
+          var msg = _pr.indexOf('insufficient') > -1 || _pr.indexOf('balance') > -1
             ? 'Not enough balance in your account. Please fund your wallet first.'
-            : (_pr.indexOf('session') > -1 || _pr.indexOf('jwt') > -1
+            : (_pr.indexOf('session') > -1 || _pr.indexOf('jwt') > -1 || _pr.indexOf('token') > -1
               ? 'Your session expired. Please sign out and sign back in.'
-              : 'Payment could not be processed right now. Please try again.'));
+              : 'Payment could not be processed right now. Please try again.');
+          errShow('m-pay-err', msg);
           return;
         }
         var d = r.data || {};
+        var prevBal = gBal;
         gBal = parseFloat(d.wallet_balance) || gBal - amt;
         closeModal('m-pay');
         if (d.status === 'completed') {
           toast('\uD83C\uDF89 Plan fully paid! Your data is being delivered to your number now.');
-          try { confettiBurst(window.innerWidth/2, window.innerHeight/3); } catch(_ce) {}
         } else {
-          var _nr = Math.max(0, (gSelSub.remaining || 0) - amt);
-          var _pl = gSelSub.daily > 0 && _nr > 0 ? Math.ceil(_nr / gSelSub.daily) : 0;
-          if (_pl > 0) {
-            toast('\u2705 ' + fmtN(amt) + ' paid! ' + _pl + ' more payment' + (_pl===1?'':'s') + ' of ' + fmtN(gSelSub.daily) + ' and you're done.');
+          var newRemaining = (gSelSub.remaining || 0) - amt;
+          var newRemaining2 = newRemaining < 0 ? 0 : newRemaining;
+          var pLeft = (gSelSub.daily > 0 && newRemaining2 > 0) ? Math.ceil(newRemaining2 / gSelSub.daily) : 0;
+          if (pLeft > 0) {
+            toast('\u2705 ' + fmtN(amt) + ' paid! ' + pLeft + ' more payment' + (pLeft === 1 ? '' : 's') + ' of ' + fmtN(gSelSub.daily) + ' and you\'re done.');
           } else {
             toast('\u2705 ' + fmtN(amt) + ' paid! Your wallet balance is now ' + fmtN(gBal) + '.');
           }
@@ -3452,7 +3591,8 @@ function markAllRead() {
   });
 }
 
-/* autoActivatePlans removed — wallet funds are never spent without explicit user action. Users must tap Pay Now to apply their wallet balance to any plan. */
+/* autoActivatePlans removed — wallet funds are never spent without explicit user action.
+   Users must tap Pay Now to apply their wallet balance to any plan. */
 
 function openRefundModal(subId, planName, phone, paidAmt, itemType) {
   gSelSub = { id: subId };
@@ -5383,7 +5523,7 @@ function confirmAirtime() {
     xhr('POST', FN + '/buyAirtime', h, body, function(e, r) {
       if (btn) { btn.disabled = false; btn.textContent = 'Buy Airtime'; }
       if (e || !r || !r.ok || (r.data && r.data.error)) {
-        var msg = (r && r.data && (r.data.error || r.data.message)) || 'Failed to process. Please try again.';
+        var msg = 'Something went wrong. Please try again or contact support.';
         airErr(msg);
         return;
       }
@@ -5551,13 +5691,14 @@ window.detectAndSaveLocation = detectAndSaveLocation;
   }
   function safeEsc(s){try{return (typeof esc==='function')?esc(s):(String(s||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}));}catch(e){return String(s||'');}}
   function todayMessage(){
+    // Educational nuggets that help users understand how their payment pace leads to real data
     var arr=[
-      ['📶','Did you know? If you pay ₦100 every day for 7 days, you can own a data plan without paying all at once. Start small today!'],
+      ['📶','Did you know? If you pay \u20A6100 every day for 7 days, you can own a data plan without paying all at once. Start small today!'],
       ['💡','Tip: On a 28-day plan, spreading your payments means each daily amount is smaller. Great for tight days!'],
       ['🎯','Goal: Pick a plan, note the daily payment, and set it aside each day. Before you know it, your data is delivered!'],
-      ['💰','Did you know? Funding ₦200 a day on a 7-day plan adds up faster than you think. Small drops, big data.'],
+      ['💰','Did you know? Funding \u20A6200 a day on a 7-day plan adds up faster than you think. Small drops, big data.'],
       ['🧠','Smart move: Choose a 28-day plan if you want breathing room. Choose a 7-day plan if you want data sooner.'],
-      ['📱','Your data, your pace. Even ₦50 a day builds up. Every payment brings your plan one step closer to delivery.'],
+      ['📱','Your data, your pace. Even \u20A650 a day builds up. Every payment brings your plan one step closer to delivery.'],
       ['⚙️','Pro tip: Enable Auto-Fund and your wallet tops up automatically each day so you never have to remember.']
     ];
     var d=new Date(); return arr[d.getDay()%arr.length];
