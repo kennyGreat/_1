@@ -2257,7 +2257,7 @@ function bootApp() {
   setTimeout(function() { loadAcct(name); }, 1000);
 
   // Auto-pay + delivery check — defer 2s
-  setTimeout(function() { checkUndeliveredData(); }, 2000);
+  setTimeout(function() { autoActivatePlans(); checkUndeliveredData(); }, 2000);
 
   // Retention data — streak, savings, dynamic strip, referral
   setTimeout(function() { loadRetentionData(); }, 1500);
@@ -3591,8 +3591,33 @@ function markAllRead() {
   });
 }
 
-/* autoActivatePlans removed — wallet funds are never spent without explicit user action.
-   Users must tap Pay Now to apply their wallet balance to any plan. */
+function autoActivatePlans() {
+  if (_autoPayBusy || !gUser) return;
+  _autoPayBusy = true;
+  ensureToken(function(err) {
+    if (err) { _autoPayBusy = false; return; }
+    restGet('/subscriptions', 'user_id=eq.' + gUser.id + '&status=in.(pending,active)&select=id,status,total_price,amount_paid,daily_price,phone_number,data_plans(daily_price)&order=created_at.asc&limit=3', function(e, r) {
+      var list = (r && r.ok && r.data) ? r.data : [];
+      function next(i) {
+        if (i >= list.length) { _autoPayBusy = false; return; }
+        var s = list[i], pl = s.data_plans || {}, daily = parseFloat(s.daily_price) || parseFloat(pl.daily_price) || 0, paid = parseFloat(s.amount_paid) || 0, total = parseFloat(s.total_price) || 0;
+        var remaining = total - paid;
+        if (daily > 0 && remaining > 0 && gBal >= daily) {
+          rpc('pay_installment', { p_user_id: gUser.id, p_subscription_id: s.id, p_amount: Math.min(daily, remaining), p_reference: null }, function(e2, r2) {
+            if (r2 && r2.ok && r2.data) {
+              gBal = parseFloat(r2.data.wallet_balance) || gBal;
+              if (r2.data.status === 'completed') {
+                rpc('trigger_delivery', { p_subscription_id: s.id, p_user_id: gUser.id }, function() {});
+              }
+            }
+            next(i + 1);
+          });
+        } else { next(i + 1); }
+      }
+      next(0);
+    });
+  });
+}
 
 function openRefundModal(subId, planName, phone, paidAmt, itemType) {
   gSelSub = { id: subId };
@@ -3806,7 +3831,7 @@ function launchAutoFund(amt, planLabel, subscriptionId) {
             } else {
               toast('Payment received. Auto-Fund will activate shortly.');
             }
-            setTimeout(function() { loadDashboard(); loadDashCashflow(); }, 1500);
+            setTimeout(function() { loadDashboard(); loadDashCashflow(); autoActivatePlans(); }, 1500);
           });
         });
       },
