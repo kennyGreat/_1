@@ -2222,7 +2222,8 @@ function doForgot() {
   errHide('fg-err'); okHide('fg-ok');
   if (!email) { errShow('fg-err', 'Please enter your email.'); return; }
   btnLoad('fg-send-btn', true, 'Sending\u2026');
-  xhr('POST', AUTH + '/recover',
+  // Use magiclink — gives a real session token on landing, no recovery token complexity
+  xhr('POST', AUTH + '/magiclink',
     { 'apikey': ANON_KEY, 'Content-Type': 'application/json' },
     JSON.stringify({ email: email, redirect_to: 'https://www.databulge.com/index.html' }),
     function(err, res) {
@@ -3501,9 +3502,21 @@ function parseHash() {
   // PASSWORD_RECOVERY: Supabase already verified the email link and returned
   // a recovery access_token in the URL hash. Do NOT call /verify again here,
   // because that consumes the token and makes the link appear expired.
-  if (params.type === 'recovery') {
-    gRecovAT = params.access_token;
-    gRecovRT = params.refresh_token || '';
+  if (params.type === 'recovery' || params.type === 'magiclink') {
+    // For magiclink: token is a real session token — store in gToken so
+    // rpSavePassword() uses it directly via PUT /user with Bearer gToken.
+    // For recovery: store in gRecovAT (legacy path kept for compatibility).
+    if (params.type === 'magiclink') {
+      gToken   = params.access_token;
+      gRefresh = params.refresh_token || '';
+      gExpiry  = Date.now() + ((parseInt(params.expires_in, 10) || 3600) * 1000);
+      if (params.user) { try { gUser = JSON.parse(params.user); } catch(e) {} }
+      // Also set gRecovAT so rpSavePassword works without change
+      gRecovAT = params.access_token;
+    } else {
+      gRecovAT = params.access_token;
+      gRecovRT = params.refresh_token || '';
+    }
 
     try { window.history.replaceState({}, document.title, window.location.pathname); } catch(e) {}
 
