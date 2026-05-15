@@ -977,33 +977,6 @@ label:has(#m-sub-autorenew){
 /* Push page content above bottom nav */
 #pg-app { padding-bottom: 70px !important; }
 
-/* ── Reset password screen (scr-r) ── */
-#scr-r{display:none;}
-#scr-r.on{display:block;}
-#scr-r .rp-box{background:#fff;border-radius:20px;padding:28px 22px 24px;max-width:390px;margin:0 auto;box-shadow:0 18px 44px rgba(0,0,0,.18);}
-#scr-r .rp-icon{text-align:center;font-size:44px;margin-bottom:10px;}
-#scr-r .rp-title{font-size:1.1rem;font-weight:900;color:#111;margin-bottom:4px;text-align:center;}
-#scr-r .rp-sub{font-size:.8rem;color:#888;text-align:center;margin-bottom:18px;line-height:1.45;}
-#scr-r .rp-field{margin-bottom:13px;}
-#scr-r .rp-field label{display:block;font-size:.76rem;font-weight:800;color:#555;margin-bottom:5px;}
-#scr-r .pw-wrap{position:relative;}
-#scr-r .rp-field input{display:block;width:100%;height:46px;border:1.5px solid #E1E5EF;border-radius:12px;background:#FBFCFF;padding:0 42px 0 13px;font-size:.95rem;color:#111;outline:none;-webkit-appearance:none;}
-#scr-r .rp-field input:focus{border-color:#1A56DB;box-shadow:0 0 0 3px rgba(26,86,219,.10);}
-#scr-r .rp-eye{position:absolute;right:11px;top:50%;margin-top:-11px;background:none;border:none;cursor:pointer;font-size:.95rem;padding:2px;color:#888;line-height:1;}
-#scr-r .rp-strength{font-size:.71rem;font-weight:700;margin-top:4px;min-height:15px;}
-#scr-r .rp-save-btn{display:block;width:100%;height:48px;border:none;border-radius:12px;margin-top:18px;background:#1A56DB;color:#fff;font-weight:900;font-size:.97rem;cursor:pointer;-webkit-appearance:none;transition:opacity .15s;}
-#scr-r .rp-save-btn:disabled{opacity:.65;cursor:default;}
-#scr-r .rp-save-btn.saved{background:#26733c !important;}
-/* congrats card */
-#scr-r .rp-congrats{display:none;text-align:center;padding:8px 0 4px;}
-#scr-r .rp-congrats.on{display:block;}
-#scr-r .rp-congrats-icon{font-size:52px;line-height:1;margin-bottom:12px;animation:cgrpop .5s cubic-bezier(.34,1.56,.64,1) forwards;}
-@keyframes cgrpop{from{transform:scale(0);opacity:0}to{transform:scale(1);opacity:1}}
-#scr-r .rp-congrats-title{font-size:1.1rem;font-weight:900;color:#26733c;margin-bottom:6px;}
-#scr-r .rp-congrats-sub{font-size:.83rem;color:#555;line-height:1.5;margin-bottom:20px;}
-#scr-r .rp-signin-btn{display:block;width:100%;height:48px;border:none;border-radius:12px;background:linear-gradient(135deg,#1A56DB,#1e40af);color:#fff;font-weight:900;font-size:.97rem;cursor:pointer;-webkit-appearance:none;transition:opacity .15s;}
-#scr-r .rp-signin-btn:active{opacity:.82;}
-
 /* ── WALLET CREDIT REALTIME TOAST ── */
 #db-credit-toast{position:fixed;top:0;left:0;right:0;bottom:0;z-index:9998;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;pointer-events:none;opacity:0;-webkit-transition:opacity .3s ease;transition:opacity .3s ease;}
 #db-credit-toast.show{opacity:1;pointer-events:auto;}
@@ -1024,6 +997,29 @@ label:has(#m-sub-autorenew){
 @-webkit-keyframes db-ct-fall{to{-webkit-transform:translateY(110vh) rotate(720deg);opacity:0}}
 @keyframes db-ct-fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
 .db-bal-glow{color:#00e5be!important;text-shadow:0 0 16px rgba(0,229,190,.5);}
+
+/* ── RESET PASSWORD SCREEN ── */
+#scr-r{position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;background:linear-gradient(160deg,#0f2952 0%,#1a3a72 50%,#1A56DB 100%);display:none;-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;padding:24px 16px;overflow-y:auto;}
+.rp-box{background:#fff;border-radius:20px;padding:28px 22px 24px;max-width:390px;width:100%;margin:0 auto;box-shadow:0 18px 44px rgba(0,0,0,.18);}
+.rp-icon{text-align:center;font-size:44px;margin-bottom:10px;}
+.rp-title{font-size:1.1rem;font-weight:900;color:#111;margin-bottom:4px;text-align:center;}
+.rp-sub{font-size:.8rem;color:#888;text-align:center;margin-bottom:18px;line-height:1.45;}
+.rp-field{margin-bottom:13px;}
+.rp-field label{display:block;font-size:.76rem;font-weight:800;color:#555;margin-bottom:5px;}
+.rp-field .pw-wrap{position:relative;}
+.rp-field input{display:block;width:100%;height:46px;border:1.5px solid #E1E5EF;border-radius:12px;background:#FBFCFF;padding:0 42px 0 13px;font-size:.95rem;color:#111;outline:none;-webkit-appearance:none;}
+.rp-field input:focus{border-color:#1A56DB;box-shadow:0 0 0 3px rgba(26,86,219,.10);}
+.rp-eye{position:absolute;right:11px;top:50%;margin-top:-11px;background:none;border:none;cursor:pointer;font-size:.95rem;padding:2px;color:#888;line-height:1;}
+.rp-strength{font-size:.71rem;font-weight:700;margin-top:4px;min-height:15px;}
+.rp-save-btn{display:block;width:100%;height:48px;border:none;border-radius:12px;margin-top:18px;background:#3d9758;color:#fff;font-weight:900;font-size:.97rem;cursor:pointer;-webkit-appearance:none;}
+.rp-save-btn:disabled{opacity:.65;cursor:default;}
+.rp-save-btn.saved{background:#26733c!important;}
+.rp-congrats{display:none;text-align:center;padding:8px 0 4px;}
+.rp-congrats.on{display:block;}
+.rp-congrats-icon{font-size:52px;line-height:1;margin-bottom:12px;}
+.rp-congrats-title{font-size:1.1rem;font-weight:900;color:#26733c;margin-bottom:6px;}
+.rp-congrats-sub{font-size:.83rem;color:#555;line-height:1.5;margin-bottom:20px;}
+.rp-signin-btn{display:block;width:100%;height:48px;border:none;border-radius:12px;background:linear-gradient(135deg,#1A56DB,#1e40af);color:#fff;font-weight:900;font-size:.97rem;cursor:pointer;-webkit-appearance:none;}
 </style>
 </head>
 <body>
@@ -1451,49 +1447,6 @@ label:has(#m-sub-autorenew){
   </div>
 
 </div><!-- /#pg-app -->
-
-<!-- RESET PASSWORD SCREEN (scr-r) — shown when recovery token detected in URL hash -->
-<div id="scr-r" style="position:fixed;top:0;left:0;right:0;bottom:0;z-index:9000;background:linear-gradient(160deg,#0f2952 0%,#1a3a72 50%,#1A56DB 100%);display:none;-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;padding:24px 16px;overflow-y:auto;">
-  <div class="rp-box">
-    <!-- Verifying state -->
-    <div id="rp-verifying" style="text-align:center;padding:28px 0;color:#888;font-size:.88rem;">Verifying reset link&hellip;</div>
-    <!-- Form — hidden until token verified -->
-    <div id="rp-form" style="display:none;">
-      <div class="rp-icon">&#128274;</div>
-      <div class="rp-title">Set New Password</div>
-      <div class="rp-sub">Enter a strong password for your DataBulge account.</div>
-      <div class="rp-field">
-        <label>New password</label>
-        <div class="pw-wrap">
-          <input id="rp-pass" type="password" placeholder="At least 8 characters" autocomplete="new-password">
-          <button type="button" class="rp-eye" onclick="rpToggleEye('rp-pass',this)">&#128065;</button>
-        </div>
-        <div class="rp-strength" id="rp-strength"></div>
-      </div>
-      <div class="rp-field">
-        <label>Confirm password</label>
-        <div class="pw-wrap">
-          <input id="rp-confirm" type="password" placeholder="Repeat your new password" autocomplete="new-password">
-          <button type="button" class="rp-eye" onclick="rpToggleEye('rp-confirm',this)">&#128065;</button>
-        </div>
-      </div>
-      <div id="rp-err" class="err" style="display:none;margin-top:8px;"></div>
-      <button class="rp-save-btn" id="rp-save-btn" type="button" onclick="rpSavePassword()">Save New Password</button>
-    </div>
-    <!-- Fatal error state -->
-    <div id="rp-fatal" style="display:none;text-align:center;padding:12px 0;">
-      <div style="font-size:40px;margin-bottom:10px;">&#128565;</div>
-      <div id="rp-fatal-msg" style="font-size:.88rem;color:#b42318;line-height:1.55;"></div>
-    </div>
-    <!-- Congratulations card -->
-    <div class="rp-congrats" id="rp-congrats">
-      <div class="rp-congrats-icon">&#127881;</div>
-      <div class="rp-congrats-title">Password Changed!</div>
-      <div class="rp-congrats-sub">Your new password has been saved.<br>Sign in to continue using DataBulge.</div>
-      <button class="rp-signin-btn" type="button" onclick="rpGoSignIn()">Sign In &amp; Continue &#8594;</button>
-    </div>
-  </div>
-</div>
 
 <!-- FORGOT PASSWORD MODAL -->
 <div class="modal" id="m-forgot">
@@ -2222,13 +2175,17 @@ function doForgot() {
   errHide('fg-err'); okHide('fg-ok');
   if (!email) { errShow('fg-err', 'Please enter your email.'); return; }
   btnLoad('fg-send-btn', true, 'Sending\u2026');
-  // Use magiclink — gives a real session token on landing, no recovery token complexity
-  xhr('POST', AUTH + '/magiclink',
+  // Edge function sends magic link to index.html — real session JWT in hash,
+  // no recovery token complexity, no OTP expiry issues.
+  xhr('POST', FN + '/resetPassword',
     { 'apikey': ANON_KEY, 'Content-Type': 'application/json' },
-    JSON.stringify({ email: email, redirect_to: 'https://www.databulge.com/index.html' }),
+    JSON.stringify({ action: 'send_magic_link', email: email }),
     function(err, res) {
       btnLoad('fg-send-btn', false, 'Send Reset Link');
-      if (err || !res || !res.ok) { errShow('fg-err', 'Failed to send reset link. Try again.'); return; }
+      if (err || !res || !res.ok || (res.data && res.data.error)) {
+        errShow('fg-err', (res && res.data && res.data.error) || 'Failed to send link. Try again.');
+        return;
+      }
       okShow('fg-ok', '\u2705 Reset link sent to ' + email + '. Tap the link in your email to set a new password.');
     }
   );
@@ -2241,31 +2198,27 @@ function doResetPassword() {
   if (!pass || pass.length < 6) { errShow('r-err', 'Password must be at least 6 characters.'); return; }
   if (pass !== confirm) { errShow('r-err', 'Passwords do not match.'); return; }
   btnLoad('r-btn', true, 'Saving\u2026');
-  // Use the recovery access token to update password via Supabase REST
-  var h = { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + gRecovAT, 'Content-Type': 'application/json' };
-  xhr('PUT', AUTH + '/user', h, JSON.stringify({ password: pass }),
+  // Edge function handles PUT /auth/v1/user with magic link token as Bearer
+  xhr('POST', FN + '/resetPassword',
+    { 'apikey': ANON_KEY, 'Content-Type': 'application/json' },
+    JSON.stringify({ action: 'update_password', access_token: gRecovAT, password: pass }),
     function(err, res) {
       btnLoad('r-btn', false, 'Save New Password');
-      if (err || !res || !res.ok) {
+      if (err || !res || !res.ok || (res.data && res.data.error)) {
         var d = res && res.data;
-        var ec = d && (d.error || d.error_code || '');
-        if (ec === 'otp_expired' || ec === 'invalid_token' || (d && d.message && d.message.indexOf('expired') !== -1)) {
-          $('r-exp').style.display = 'block';
+        var ec = d && (d.error || '');
+        if (ec === 'otp_expired') {
+          if ($('r-exp')) $('r-exp').style.display = 'block';
         } else {
           errShow('r-err', (d && (d.message || d.error)) || 'Update failed. Try again.');
         }
         return;
       }
       okShow('r-ok', '\u2705 Password updated! Signing you in\u2026');
-      // Sign in with new password
-      if (gRecovAT && gRecovRT) {
-        gToken = gRecovAT;
-        gRefresh = gRecovRT;
-        gRecovAT = gRecovRT = '';
-        refreshToken(function(err2) {
-          if (!err2) { showPage('app'); hideSplash(); bootApp(); } else { showScreen('scr-l'); }
-        });
-      } else { setTimeout(function() { showScreen('scr-l'); }, 1600); }
+      gRecovAT = ''; gRecovRT = '';
+      _clearSession();
+      try { localStorage.removeItem('db_sess'); sessionStorage.removeItem('db_sess'); } catch(e) {}
+      setTimeout(function() { window.location.replace('databulge-auth.html'); }, 1400);
     }
   );
 }
@@ -3483,69 +3436,53 @@ function esc(str) {
 function parseHash() {
   var hash = (window.location.hash || '').replace(/^#/, '');
   if (!hash) return false;
-
   var params = {};
   var pairs = hash.split('&');
-
   for (var i = 0; i < pairs.length; i++) {
     var eq = pairs[i].indexOf('=');
     if (eq > -1) {
-      try {
-        params[decodeURIComponent(pairs[i].slice(0, eq))] =
-          decodeURIComponent(pairs[i].slice(eq + 1));
-      } catch(e) {}
+      params[decodeURIComponent(pairs[i].slice(0, eq))] =
+        decodeURIComponent(pairs[i].slice(eq + 1));
     }
   }
-
   if (!params.access_token) return false;
 
-  // PASSWORD_RECOVERY: Supabase already verified the email link and returned
-  // a recovery access_token in the URL hash. Do NOT call /verify again here,
-  // because that consumes the token and makes the link appear expired.
-  if (params.type === 'recovery' || params.type === 'magiclink') {
-    // For magiclink: token is a real session token — store in gToken so
-    // rpSavePassword() uses it directly via PUT /user with Bearer gToken.
-    // For recovery: store in gRecovAT (legacy path kept for compatibility).
-    if (params.type === 'magiclink') {
-      gToken   = params.access_token;
-      gRefresh = params.refresh_token || '';
-      gExpiry  = Date.now() + ((parseInt(params.expires_in, 10) || 3600) * 1000);
-      if (params.user) { try { gUser = JSON.parse(params.user); } catch(e) {} }
-      // Also set gRecovAT so rpSavePassword works without change
-      gRecovAT = params.access_token;
-    } else {
-      gRecovAT = params.access_token;
-      gRecovRT = params.refresh_token || '';
-    }
+  // Magic link or recovery → show reset screen, never boot the app
+  if (params.type === 'magiclink' || params.type === 'recovery') {
+    gRecovAT = params.access_token;
+    gRecovRT = params.refresh_token || '';
+    gToken   = params.access_token;
+    gRefresh = params.refresh_token || '';
+    gExpiry  = Date.now() + ((parseInt(params.expires_in, 10) || 3600) * 1000);
 
     try { window.history.replaceState({}, document.title, window.location.pathname); } catch(e) {}
 
     hideSplash();
 
-    var el = $('scr-r');
-    if (el) { el.style.display = '-webkit-box'; el.style.display = 'flex'; }
+    var scrR = document.getElementById('scr-r');
+    if (scrR) { scrR.style.display = '-webkit-box'; scrR.style.display = 'flex'; }
 
-    var verEl = $('rp-verifying');
+    var verEl = document.getElementById('rp-verifying');
     if (verEl) verEl.style.display = 'none';
 
-    var fatalEl = $('rp-fatal');
+    var fatalEl = document.getElementById('rp-fatal');
     if (fatalEl) fatalEl.style.display = 'none';
 
-    var formEl = $('rp-form');
-    if (formEl) { formEl.style.display = 'block'; }
+    var formEl = document.getElementById('rp-form');
+    if (formEl) formEl.style.display = 'block';
 
-    var inp = $('rp-pass');
+    var inp = document.getElementById('rp-pass');
     if (inp) setTimeout(function() { try { inp.focus(); } catch(e) {} }, 100);
 
     return true;
   }
 
-  // OAuth / SSO callback — set session and boot app normally
+  // OAuth / normal sign-in callback — boot the app
+  try { window.history.replaceState({}, document.title, window.location.pathname); } catch(e) {}
+
   gToken   = params.access_token;
   gRefresh = params.refresh_token || '';
   gExpiry  = Date.now() + ((parseInt(params.expires_in, 10) || 3600) * 1000);
-
-  try { window.history.replaceState({}, document.title, window.location.pathname); } catch(e) {}
 
   xhr('GET', AUTH + '/user',
     { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + gToken, 'Content-Type': 'application/json' },
@@ -3565,114 +3502,7 @@ function parseHash() {
   return true;
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   RESET PASSWORD — inline screen functions
-   The scr-r div is embedded in this page. When the recovery token
-   arrives in the URL hash, parseHash() calls rpShowScreen() and
-   rpVerifyAndReady(). The token never leaves this page.
-═══════════════════════════════════════════════════════════════ */
-function rpShowScreen() {
-  hideSplash();
-  // Show the fixed overlay
-  var el = $('scr-r');
-  if (el) { el.style.display = '-webkit-box'; el.style.display = 'flex'; }
-}
-
-/* rpVerifyAndReady removed intentionally. Supabase recovery links already provide a recovery access token; re-verifying it causes instant expiry. */
-
-function rpToggleEye(inputId, btn) {
-  var inp = $(inputId);
-  if (!inp) return;
-  inp.type = (inp.type === 'password') ? 'text' : 'password';
-  if (btn) btn.innerHTML = (inp.type === 'password') ? '&#128065;' : '&#128064;';
-}
-
-function rpCheckStrength(val) {
-  var el = $('rp-strength');
-  if (!el) return;
-  if (!val) { el.textContent = ''; return; }
-  var score = 0;
-  if (val.length >= 8)          score++;
-  if (val.length >= 12)         score++;
-  if (/[A-Z]/.test(val))        score++;
-  if (/[0-9]/.test(val))        score++;
-  if (/[^A-Za-z0-9]/.test(val)) score++;
-  var labels = ['','Weak','Fair','Good','Strong','Very strong'];
-  var colors = ['','#dc2626','#d97706','#2563eb','#16a34a','#065f46'];
-  el.textContent = labels[score] || '';
-  el.style.color = colors[score] || '';
-}
-
-function rpSavePassword() {
-  var btn     = $('rp-save-btn');
-  var errEl   = $('rp-err');
-  var pass    = ($('rp-pass')    ? $('rp-pass').value    : '').replace(/^\s+|\s+$/g, '');
-  var confirm = ($('rp-confirm') ? $('rp-confirm').value : '').replace(/^\s+|\s+$/g, '');
-
-  if (errEl) errEl.style.display = 'none';
-  if (pass.length < 8)   { if (errEl) { errEl.textContent = 'Password must be at least 8 characters.'; errEl.style.display = 'block'; } return; }
-  if (pass !== confirm)  { if (errEl) { errEl.textContent = 'Passwords do not match.'; errEl.style.display = 'block'; } return; }
-  if (!gRecovAT)         { if (errEl) { errEl.textContent = 'Session expired. Please request a new link.'; errEl.style.display = 'block'; } return; }
-
-  btn.disabled    = true;
-  btn.textContent = 'Saving…';
-
-  xhr('PUT', AUTH + '/user',
-    { 'apikey': ANON_KEY, 'Authorization': 'Bearer ' + gRecovAT, 'Content-Type': 'application/json' },
-    JSON.stringify({ password: pass }),
-    function(err, res) {
-      if (err || !res || !res.ok) {
-        btn.disabled    = false;
-        btn.textContent = 'Save New Password';
-        var d   = res && res.data;
-        var msg = (d && (d.message || d.error)) || 'Failed to update password. Please try again.';
-        if (errEl) { errEl.textContent = msg; errEl.style.display = 'block'; }
-        return;
-      }
-      // ── Success ──
-      if ($('rp-pass'))    $('rp-pass').value    = '';
-      if ($('rp-confirm')) $('rp-confirm').value = '';
-      btn.classList.add('saved');
-      btn.textContent = 'Password Saved ✓';
-      // Clear tokens
-      gRecovAT = ''; gRecovRT = '';
-      _clearSession();
-      try {
-        localStorage.removeItem('db_sess');       sessionStorage.removeItem('db_sess');
-        localStorage.removeItem('__db_session_at__'); localStorage.removeItem('__db_session_rt__');
-        localStorage.removeItem('__db_session_exp__');
-      } catch(e) {}
-      // Show congrats card after brief pause
-      setTimeout(function() {
-        var formEl = $('rp-form');
-        if (formEl) formEl.style.display = 'none';
-        var cg = $('rp-congrats');
-        if (cg) cg.className = 'rp-congrats on';
-      }, 400);
-    }
-  );
-}
-
-function rpGoSignIn() {
-  window.location.replace('databulge-auth.html');
-}
-
-// Wire up strength check and enter key on reset form
-(function() {
-  function wireRp() {
-    var pp = $('rp-pass'), pc = $('rp-confirm');
-    if (pp) {
-      pp.addEventListener('input', function() { rpCheckStrength(this.value); });
-      pp.addEventListener('keydown', function(e) { if (e.key === 'Enter' || e.keyCode === 13) { var c = $('rp-confirm'); if(c) c.focus(); } });
-    }
-    if (pc) {
-      pc.addEventListener('keydown', function(e) { if (e.key === 'Enter' || e.keyCode === 13) rpSavePassword(); });
-    }
-  }
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wireRp);
-  else wireRp();
-})();
-
+/* ── INIT ───────────────────────────────────────────────────── */
 function init() {
   // Handle OAuth / recovery redirect from Supabase first.
   if (parseHash()) { hideSplash(); return; }
@@ -5961,5 +5791,141 @@ window.detectAndSaveLocation = detectAndSaveLocation;
     <button class="ct-btn" onclick="dbCloseCreditToast()">Awesome, thanks! &#128640;</button>
   </div>
 </div>
+
+<!-- RESET PASSWORD SCREEN — shown when magic link/recovery token in URL hash -->
+<div id="scr-r">
+  <div class="rp-box">
+    <div id="rp-verifying" style="text-align:center;padding:28px 0;color:#888;font-size:.88rem;">Verifying link&hellip;</div>
+    <div id="rp-form" style="display:none;">
+      <div class="rp-icon">&#128274;</div>
+      <div class="rp-title">Set New Password</div>
+      <div class="rp-sub">Enter a strong password for your DataBulge account.</div>
+      <div class="rp-field">
+        <label>New password</label>
+        <div class="pw-wrap">
+          <input id="rp-pass" type="password" placeholder="At least 8 characters" autocomplete="new-password">
+          <button type="button" class="rp-eye" onclick="rpToggleEye('rp-pass',this)">&#128065;</button>
+        </div>
+        <div class="rp-strength" id="rp-strength"></div>
+      </div>
+      <div class="rp-field">
+        <label>Confirm password</label>
+        <div class="pw-wrap">
+          <input id="rp-confirm" type="password" placeholder="Repeat your new password" autocomplete="new-password">
+          <button type="button" class="rp-eye" onclick="rpToggleEye('rp-confirm',this)">&#128065;</button>
+        </div>
+      </div>
+      <div id="rp-err" class="err" style="display:none;margin-top:8px;"></div>
+      <button class="rp-save-btn" id="rp-save-btn" type="button" onclick="rpSavePassword()">Save New Password</button>
+    </div>
+    <div id="rp-fatal" style="display:none;text-align:center;padding:12px 0;">
+      <div style="font-size:40px;margin-bottom:10px;">&#128565;</div>
+      <div id="rp-fatal-msg" style="font-size:.88rem;color:#b42318;line-height:1.55;"></div>
+    </div>
+    <div class="rp-congrats" id="rp-congrats">
+      <div class="rp-congrats-icon">&#127881;</div>
+      <div class="rp-congrats-title">Password Changed!</div>
+      <div class="rp-congrats-sub">Your new password has been saved.<br>Sign in to continue using DataBulge.</div>
+      <button class="rp-signin-btn" type="button" onclick="rpGoSignIn()">Sign In &amp; Continue &#8594;</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ── RESET PASSWORD SCREEN FUNCTIONS ── */
+function rpToggleEye(inputId, btn) {
+  var inp = document.getElementById(inputId);
+  if (!inp) return;
+  inp.type = (inp.type === 'password') ? 'text' : 'password';
+  if (btn) btn.innerHTML = (inp.type === 'password') ? '&#128065;' : '&#128064;';
+}
+
+function rpCheckStrength(val) {
+  var el = document.getElementById('rp-strength');
+  if (!el) return;
+  if (!val) { el.textContent = ''; return; }
+  var score = 0;
+  if (val.length >= 8)          score++;
+  if (val.length >= 12)         score++;
+  if (/[A-Z]/.test(val))        score++;
+  if (/[0-9]/.test(val))        score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
+  var labels = ['','Weak','Fair','Good','Strong','Very strong'];
+  var colors = ['','#dc2626','#d97706','#2563eb','#16a34a','#065f46'];
+  el.textContent = labels[score] || '';
+  el.style.color = colors[score] || '';
+}
+
+function rpSavePassword() {
+  var btn     = document.getElementById('rp-save-btn');
+  var errEl   = document.getElementById('rp-err');
+  var pass    = (document.getElementById('rp-pass')    ? document.getElementById('rp-pass').value    : '').replace(/^\s+|\s+$/g, '');
+  var confirm = (document.getElementById('rp-confirm') ? document.getElementById('rp-confirm').value : '').replace(/^\s+|\s+$/g, '');
+
+  if (errEl) errEl.style.display = 'none';
+  if (pass.length < 8)  { if (errEl) { errEl.textContent = 'Password must be at least 8 characters.'; errEl.style.display = 'block'; } return; }
+  if (pass !== confirm) { if (errEl) { errEl.textContent = 'Passwords do not match.'; errEl.style.display = 'block'; } return; }
+  if (!gRecovAT)        { if (errEl) { errEl.textContent = 'Session expired. Please request a new link.'; errEl.style.display = 'block'; } return; }
+
+  btn.disabled    = true;
+  btn.textContent = 'Saving…';
+
+  xhr('POST', FN + '/resetPassword',
+    { 'apikey': ANON_KEY, 'Content-Type': 'application/json' },
+    JSON.stringify({ action: 'update_password', access_token: gRecovAT, password: pass }),
+    function(err, res) {
+      if (err || !res || !res.ok || (res.data && res.data.error)) {
+        btn.disabled    = false;
+        btn.textContent = 'Save New Password';
+        var d   = res && res.data;
+        var msg = (d && (d.message || d.error)) || 'Failed to update password. Please try again.';
+        if (errEl) { errEl.textContent = msg; errEl.style.display = 'block'; }
+        return;
+      }
+      // Success
+      if (document.getElementById('rp-pass'))    document.getElementById('rp-pass').value    = '';
+      if (document.getElementById('rp-confirm')) document.getElementById('rp-confirm').value = '';
+      btn.classList.add('saved');
+      btn.textContent = 'Password Saved ✓';
+      gRecovAT = ''; gRecovRT = '';
+      _clearSession();
+      try { localStorage.removeItem('db_sess'); sessionStorage.removeItem('db_sess'); } catch(e) {}
+      setTimeout(function() {
+        var formEl = document.getElementById('rp-form');
+        if (formEl) formEl.style.display = 'none';
+        var cg = document.getElementById('rp-congrats');
+        if (cg) cg.className = 'rp-congrats on';
+      }, 400);
+    }
+  );
+}
+
+function rpGoSignIn() {
+  window.location.replace('databulge-auth.html');
+}
+
+(function() {
+  function wireRp() {
+    var pp = document.getElementById('rp-pass');
+    var pc = document.getElementById('rp-confirm');
+    if (pp) {
+      pp.addEventListener('input', function() { rpCheckStrength(this.value); });
+      pp.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.keyCode === 13) {
+          var c = document.getElementById('rp-confirm'); if (c) c.focus();
+        }
+      });
+    }
+    if (pc) {
+      pc.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.keyCode === 13) rpSavePassword();
+      });
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wireRp);
+  else wireRp();
+})();
+</script>
+
 </body>
 </html>
