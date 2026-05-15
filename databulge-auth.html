@@ -508,27 +508,18 @@ button,.btn,.plan-btn,.tab,.logout-btn,.plan-chip,.avatar,.avatar-menu button{
 
   <div class="auth-card">
 
-    <!-- WELCOME — magic link as primary login -->
+    <!-- WELCOME -->
     <div id="scr-w">
-      <div class="auth-title">Sign in to DataBulge</div>
-      <div class="auth-sub">Enter your email — we'll send you a one-tap sign-in link. No password needed.</div>
-      <div id="ml-err" class="err"></div>
-      <div id="ml-ok" class="ok" style="display:none;"></div>
-      <div class="field">
-        <label>Email address</label>
-        <input id="ml-email" type="email" autocomplete="email" placeholder="you@example.com">
-      </div>
-      <button class="btn btn-blue" id="ml-btn">Send Sign-in Link</button>
+      <div class="auth-title">Welcome back</div>
+      <div class="auth-sub">Buy mobile data and pay in daily installments.</div>
+      <button class="btn btn-blue" id="w-login-btn">SIGN IN</button>
       <div class="divdr" id="w-google-divdr"><span>OR</span></div>
       <button class="btn btn-google" id="w-google-btn">
         <svg width="18" height="18" viewBox="0 0 18 18" style="vertical-align:middle;margin-right:8px;" xmlns="http://www.w3.org/2000/svg"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/><path d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 6.293C4.672 4.166 6.656 3.58 9 3.58z" fill="#EA4335"/></svg>
         Continue with Google
       </button>
-      <div class="divdr"><span>OPTIONS</span></div>
+      <div class="divdr"><span>NEW HERE</span></div>
       <button class="btn btn-lite" id="w-signup-btn">Create New Account</button>
-      <div style="text-align:center;margin-top:10px;">
-        <button class="txt-link" id="w-login-btn" style="font-size:.80rem;color:#888;">Sign in with password instead</button>
-      </div>
     </div>
 
     <!-- Inline success message shown after forgot-password email is sent -->
@@ -548,11 +539,18 @@ button,.btn,.plan-btn,.tab,.logout-btn,.plan-chip,.avatar,.avatar-menu button{
         <input type="checkbox" id="remember-me" style="width:18px;height:18px;margin-right:10px;accent-color:#1A56DB;">
         <label for="remember-me" style="font-size:14px;color:#555;cursor:pointer;">Remember me</label>
       </div>
+      <button class="forgot-btn" id="l-forgot-btn">Forgot password? Get a sign-in link</button>
+      <div id="ml-inline" style="display:none;margin-bottom:12px;">
+        <div id="ml-inline-err" class="err"></div>
+        <div id="ml-inline-ok" class="ok" style="display:none;"></div>
+        <div class="field" style="margin-bottom:8px;">
+          <label>Email address</label>
+          <input id="ml-inline-email" type="email" autocomplete="email" placeholder="you@example.com">
+        </div>
+        <button class="btn btn-blue" id="ml-inline-btn" style="margin-bottom:0;">Send Sign-in Link</button>
+      </div>
       <button class="btn btn-blue" id="l-btn">SIGN IN</button>
       <div class="link-row">No account? <button class="txt-link" id="l-to-s">Create one</button></div>
-      <div style="text-align:center;margin-top:10px;">
-        <button class="txt-link" id="l-back-to-magic" style="font-size:.80rem;color:#888;">&#8592; Sign in with email link instead</button>
-      </div>
     </div>
 
     <!-- SIGNUP -->
@@ -1332,26 +1330,34 @@ function doSignup() {
   );
 }
 
-function doSendMagicLink() {
-  var email = ($('ml-email').value || '').replace(/^\s+|\s+$/g, '');
-  var errEl = $('ml-err');
-  var okEl  = $('ml-ok');
+function doSendMagicLink(email, errId, okId, btnId) {
+  // Shared magic link sender used from both the inline scr-l form
+  // and the legacy m-forgot modal (errId/okId/btnId default to modal IDs)
+  errId = errId || 'fg-err';
+  okId  = okId  || 'fg-ok';
+  btnId = btnId || 'fg-send-btn';
+
+  var errEl = $(errId);
+  var okEl  = $(okId);
+
   if (errEl) { errEl.className = 'err'; errEl.textContent = ''; }
-  if (okEl)  { okEl.style.display = 'none'; okEl.textContent = ''; }
+  if (okEl)  { if (okEl.style) okEl.style.display = 'none'; okEl.textContent = ''; }
 
   if (!email) {
     if (errEl) { errEl.textContent = 'Please enter your email address.'; errEl.className = 'err on'; }
     return;
   }
-  btnLoad('ml-btn', true, 'Sending\u2026');
 
-  // Edge function sends magic link to index.html — real session JWT in hash,
-  // parseHash() in index.html intercepts type=magiclink → boots the app directly
+  btnLoad(btnId, true, 'Sending\u2026');
+
+  // Edge function sends magic link to index.html
+  // User taps it → lands on index.html → parseHash() sets session → boots app
   xhr('POST', FN + '/resetPassword',
     { 'apikey': ANON_KEY, 'Content-Type': 'application/json' },
     JSON.stringify({ action: 'send_magic_link', email: email }),
     function(err, res) {
-      btnLoad('ml-btn', false, 'Send Sign-in Link');
+      var btnLabel = (btnId === 'ml-inline-btn') ? 'Send Sign-in Link' : 'Send Reset Link';
+      btnLoad(btnId, false, btnLabel);
       if (err || !res || !res.ok || (res.data && res.data.error)) {
         if (errEl) {
           errEl.textContent = (res && res.data && res.data.error) || 'Failed to send link. Try again.';
@@ -1359,17 +1365,34 @@ function doSendMagicLink() {
         }
         return;
       }
-      if (errEl) { errEl.className = 'err'; }
-      if (okEl)  { okEl.textContent = '\u2705 Sign-in link sent to ' + email + '. Tap the link in your email to enter the app.'; okEl.style.display = 'block'; }
-      // Disable button to prevent spam
-      var btn = $('ml-btn');
+      if (errEl) errEl.className = 'err';
+      if (okEl) {
+        okEl.textContent = '\u2705 Sign-in link sent to ' + email + '. Tap the link in your email to enter the app.';
+        if (okEl.style) okEl.style.display = 'block';
+        okEl.className = 'ok on';
+      }
+      var btn = $(btnId);
       if (btn) { btn.disabled = true; btn.textContent = 'Link sent \u2713'; }
     }
   );
 }
 
-// Legacy alias — kept so any existing onclick="doForgot()" wiring still works
-function doForgot() { doSendMagicLink(); }
+// Legacy alias — modal still calls doForgot()
+function doForgot() {
+  var email = ($('fg-email') ? $('fg-email').value : '').replace(/^\s+|\s+$/g, '');
+  doSendMagicLink(email, 'fg-err', 'fg-ok', 'fg-send-btn');
+}
+
+function doMagicLinkInline() {
+  // Pre-fill from the password field's email if user already typed it
+  var fromLogin = ($('l-email') ? ($('l-email').value || '').replace(/^\s+|\s+$/g, '') : '');
+  var inlineField = $('ml-inline-email');
+  if (inlineField && fromLogin && !inlineField.value) {
+    inlineField.value = fromLogin;
+  }
+  var email = inlineField ? inlineField.value.replace(/^\s+|\s+$/g, '') : '';
+  doSendMagicLink(email, 'ml-inline-err', 'ml-inline-ok', 'ml-inline-btn');
+}
 
 function doResetPassword() {
   var pass    = ($('r-pass')    ? $('r-pass').value    : '') || '';
@@ -1704,13 +1727,6 @@ function loadDashCashflow() {
 function wire() {
   // Auth navigation
   $('w-login-btn').onclick  = function() { showScreen('scr-l'); };
-  // Magic link button on welcome screen
-  if ($('ml-btn')) $('ml-btn').onclick = doSendMagicLink;
-  if ($('ml-email')) $('ml-email').addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' || e.keyCode === 13) doSendMagicLink();
-  });
-  // Back to magic link from password screen
-  if ($('l-back-to-magic')) $('l-back-to-magic').onclick = function() { showScreen('scr-w'); };
   $('w-signup-btn').onclick = function() { showScreen('scr-s'); };
   $('l-back-btn').onclick   = function() { showScreen('scr-w'); };
   $('s-back-btn').onclick   = function() { showScreen('scr-w'); };
@@ -1728,8 +1744,24 @@ function wire() {
   $('s-btn').onclick      = doSignup;
   $('r-btn').onclick      = doResetPassword;
   $('l-forgot-btn').onclick = function() {
-    openModal('m-forgot');
+    var panel = $('ml-inline');
+    if (!panel) return;
+    var isVisible = panel.style.display !== 'none';
+    panel.style.display = isVisible ? 'none' : 'block';
+    if (!isVisible) {
+      // Pre-fill email from what user already typed in the login field
+      var fromLogin = ($('l-email') ? ($('l-email').value || '').replace(/^\s+|\s+$/g, '') : '');
+      var inlineField = $('ml-inline-email');
+      if (inlineField && fromLogin) inlineField.value = fromLogin;
+      if (inlineField) setTimeout(function() { try { inlineField.focus(); } catch(e) {} }, 80);
+    }
   };
+  if ($('ml-inline-btn')) {
+    $('ml-inline-btn').onclick = doMagicLinkInline;
+    $('ml-inline-email').onkeydown = function(e) {
+      if ((e||window.event).keyCode === 13) doMagicLinkInline();
+    };
+  }
   $('r-req-btn').onclick  = function() { closeModal('m-forgot'); openModal('m-forgot'); };
 
   // Eye toggles
