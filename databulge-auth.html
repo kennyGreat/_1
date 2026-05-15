@@ -1745,11 +1745,16 @@ function wire() {
   $('r-btn').onclick      = doResetPassword;
   $('l-forgot-btn').onclick = function() {
     var panel = $('ml-inline');
+    var signBtn = $('l-btn');
     if (!panel) return;
     var isVisible = panel.style.display !== 'none';
     panel.style.display = isVisible ? 'none' : 'block';
+
+    // When user is requesting the email link, hide password SIGN IN to avoid confusion.
+    if (signBtn) signBtn.style.display = isVisible ? 'block' : 'none';
+    this.textContent = isVisible ? 'Forgot password? Get a sign-in link' : 'Use password instead';
+
     if (!isVisible) {
-      // Pre-fill email from what user already typed in the login field
       var fromLogin = ($('l-email') ? ($('l-email').value || '').replace(/^\s+|\s+$/g, '') : '');
       var inlineField = $('ml-inline-email');
       if (inlineField && fromLogin) inlineField.value = fromLogin;
