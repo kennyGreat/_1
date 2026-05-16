@@ -3165,6 +3165,31 @@ function confirmSub() {
         return;
       }
       _savePhone(phone);      // remember this number for next time
+
+      // Immediately seed the subs cache so the plan card shows progress mode
+      // on the very next tap — without waiting for loadSubs() to complete.
+      if (r.data && r.data.id) {
+        var calc = calcPlanDaily(gSelPlan, days);
+        var newSub = {
+          id: r.data.id,
+          status: 'pending',
+          total_price: calc.total,
+          amount_paid: 0,
+          daily_price: calc.daily,
+          phone_number: phone,
+          payment_days: days,
+          created_at: new Date().toISOString(),
+          data_plans: {
+            data_size: gSelPlan.data_size,
+            network: gSelPlan.network,
+            daily_price: calc.daily,
+            selling_price: gSelPlan.selling_price,
+            category: gSelPlan.category || ''
+          }
+        };
+        _gSubsCache.unshift(newSub);
+      }
+
       closeModal('m-sub');
       toast('\u2705 Subscribed to ' + gSelPlan.data_size + '! Delivering once fully paid.');
       if (r.data && r.data.delivery_queued) { setTimeout(function(){try{confettiBurst(window.innerWidth/2,window.innerHeight/3);}catch(e){}},400); }
