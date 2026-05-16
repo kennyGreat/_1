@@ -2273,6 +2273,13 @@ function bootApp() {
     if (_walletPollTick % 4 === 0) loadInbox(); // inbox every 60s (4 × 15s)
   }, 15000);
 
+  // Refresh the daily nugget strip every 10 minutes so the user sees
+  // a different tip each time without needing to reload the app.
+  if (window._nuggetTimer) clearInterval(window._nuggetTimer);
+  window._nuggetTimer = setInterval(function() {
+    try { renderDynamicStrip(); } catch(e) {}
+  }, 600000);
+
   // Start Supabase Realtime listener — balance updates reflect instantly
   // (< 5s) without waiting for the poll cycle.
   dbStartWalletRealtime();
@@ -2328,6 +2335,7 @@ function closeAvatarMenu() {
 
 function doLogout() {
   if (_pollTimer) { clearInterval(_pollTimer); _pollTimer = null; }
+  if (window._nuggetTimer) { clearInterval(window._nuggetTimer); window._nuggetTimer = null; }
   dbStopWalletRealtime();
   // Sign out server-side (best effort), clear local session, then leave the protected app.
   if (gToken) {
@@ -3110,12 +3118,24 @@ function confirmSub() {
     btnLoad('m-sub-btn', true, 'Paying\u2026');
     ensureToken(function(err) {
       if (err) { btnLoad('m-sub-btn', false, 'Pay Now'); errShow('m-sub-err', 'Session error. Please sign out and back in.'); return; }
-      rpc('pay_installment', JSON.stringify({ p_user_id: gUser.id, p_subscription_id: gSelSub.id, p_amount: progAmt, p_reference: null }),
+      rpc('pay_installment', { p_user_id: gUser.id, p_subscription_id: gSelSub.id, p_amount: progAmt, p_reference: null },
         function(e, r) {
           btnLoad('m-sub-btn', false, 'Pay Now');
           if (e || !r || !r.ok || (r.data && !r.data.success)) {
-            var msg = (r && r.data && (r.data.error || r.data.message)) || 'Payment failed. Please try again.';
-            errShow('m-sub-err', msg);
+            var rawMsg = String((r && r.data && (r.data.error || r.data.message)) || e || '').toLowerCase();
+            var friendlyMsg;
+            if (!r || e === 'Network error' || e === 'Timeout' || (r && (r.status === 0 || r.status >= 500))) {
+              friendlyMsg = 'Connection error. Please check your internet and try again.';
+            } else if (rawMsg.indexOf('insufficient') !== -1 || rawMsg.indexOf('balance') !== -1) {
+              friendlyMsg = 'Insufficient wallet balance. Please fund your account first.';
+            } else if (rawMsg.indexOf('already') !== -1 || rawMsg.indexOf('completed') !== -1) {
+              friendlyMsg = 'This plan is already fully paid.';
+            } else if (rawMsg.indexOf('not found') !== -1) {
+              friendlyMsg = 'Subscription not found. Please refresh and try again.';
+            } else {
+              friendlyMsg = 'Payment failed. Please try again.';
+            }
+            errShow('m-sub-err', friendlyMsg);
             return;
           }
           var d = r.data || {};
@@ -3263,7 +3283,7 @@ function confirmPay() {
   btnLoad('m-pay-btn', true, 'Paying\u2026');
   ensureToken(function(err) {
     if (err) { btnLoad('m-pay-btn', false, 'Pay from Wallet'); errShow('m-pay-err', 'Session error.'); return; }
-    rpc('pay_installment', JSON.stringify({ p_user_id: gUser.id, p_subscription_id: gSelSub.id, p_amount: amt, p_reference: null }),
+    rpc('pay_installment', { p_user_id: gUser.id, p_subscription_id: gSelSub.id, p_amount: amt, p_reference: null },
       function(e, r) {
         btnLoad('m-pay-btn', false, 'Pay from Wallet');
         if (e || !r || !r.ok || (r.data && !r.data.success)) {
