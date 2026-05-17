@@ -666,8 +666,10 @@ button,.btn,.plan-btn,.tab,.logout-btn,.plan-chip,.avatar,.avatar-menu button{
 .plan-chip.act{background:#3d9758!important;color:#fff!important;border-color:#3d9758!important;font-weight:900!important;}
 .plan-chip:not(.act){background:#fff!important;color:#6B7280!important;border-color:#E0E5EF!important;}
 .avatar-signout,#logout-btn{background:#F8FAFC!important;color:#667085!important;border:1px solid #E5E7EB!important;box-shadow:none!important;}
-button.tab,button.plan-chip,.modal-x,.eye,.txt-link,.forgot-btn{box-shadow:none!important;background:revert!important;color:revert!important;border:revert!important;}
-.txt-link,.forgot-btn{background:none!important;color:#1A56DB!important;border:none!important;}
+.modal-x{background:none!important;border:none!important;box-shadow:none!important;color:#888!important;padding:0!important;line-height:1!important;-webkit-appearance:none!important;appearance:none!important;}
+.eye{background:none!important;border:none!important;box-shadow:none!important;color:#888!important;-webkit-appearance:none!important;appearance:none!important;}
+button.tab,button.plan-chip{box-shadow:none!important;}
+.txt-link,.forgot-btn{background:none!important;color:#1A56DB!important;border:none!important;box-shadow:none!important;-webkit-appearance:none!important;appearance:none!important;}
 
 .tabs{
   justify-content:flex-start !important;
@@ -852,7 +854,7 @@ button.tab,button.plan-chip,.modal-x,.eye,.txt-link,.forgot-btn{box-shadow:none!
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10H12V2z"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
       <span style="font-size:.62rem;font-weight:700;font-family:inherit;">Buy Data</span>
     </button>
-    <button class="bnav-btn" id="tab-subs" data-t="subs" onclick="showTab(\'subs\')" style="flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;">
+    <button class="bnav-btn" id="tab-subs" data-t="subs" onclick="showTab('subs')" style="flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
       <span style="font-size:.62rem;font-weight:700;font-family:inherit;">My Plan</span>
     </button>
@@ -1708,6 +1710,7 @@ function refreshToken(cb) {
     function(err, res) {
       if (err || !res || !res.data || !res.data.access_token) { cb(err || 'Refresh failed'); return; }
       _setSession(res.data);
+      // _setSession already syncs window.gToken
       cb(null);
     }
   );
@@ -1726,6 +1729,9 @@ function _setSession(d) {
   gExpiry  = d.expires_at ? d.expires_at * 1000 : (Date.now() + (d.expires_in || 3600) * 1000);
   if (d.user) gUser = d.user;
   _store.set('db_sess', JSON.stringify({ at: gToken, rt: gRefresh, ex: gExpiry, user: gUser }));
+  // Keep window references in sync so cross-script-block code (notif system, push IIFE) sees the session
+  window.gUser  = gUser;
+  window.gToken = gToken;
   // Pick up any FCM token that arrived before the session was established
   if (window.__pendingFcmToken) {
     var _pt = window.__pendingFcmToken;
@@ -1751,6 +1757,8 @@ function _loadSession() {
 function _clearSession() {
   gToken = gRefresh = gUser = gProfile = null;
   gExpiry = gBal = 0;
+  window.gUser  = null;
+  window.gToken = null;
   _store.del('db_sess');
   if (_pollTimer) { clearInterval(_pollTimer); _pollTimer = null; }
 }
@@ -2051,6 +2059,15 @@ function bootApp() {
   // Start Supabase Realtime listener — balance updates reflect instantly
   // (< 5s) without waiting for the poll cycle.
   dbStartWalletRealtime();
+
+  // Expose session state on window so cross-script-block code (push IIFE, notif system) can read it
+  window.gUser  = gUser;
+  window.gToken = gToken;
+
+  // Request Capacitor push token — runs on native Android/iOS only, no-op on web
+  setTimeout(function() {
+    try { requestCapacitorPushToken(); } catch(e) {}
+  }, 2500);
 }
 
 
@@ -2127,6 +2144,7 @@ function loadWalletBalance(cb) {
       if (r && r.ok && r.data && r.data[0]) {
         var w = r.data[0];
         gBal = parseFloat(w.balance) || 0;
+        window.gBal = gBal; // keep window ref in sync for cross-block code
         if (!gProfile) gProfile = {};
         // Prefer Paystack DVA, fall back to Lenco VA
         var acctNum  = w.paystack_dva_account_number || w.virtual_account_number || '';
@@ -3696,6 +3714,33 @@ function hideSplash() {
 }
 // Keep old name as alias so any other callers still work
 function hideSplashSoon() { hideSplash(); }
+
+/* ── WINDOW EXPORTS ─────────────────────────────────────────────
+   Expose core API helpers and constants on window so all later
+   <script> blocks (notification system, push, retention, companion)
+   can call them without getting "undefined" errors.
+────────────────────────────────────────────────────────────────── */
+window.SUPA_URL    = SUPA_URL;
+window.ANON_KEY    = ANON_KEY;
+window.REST        = REST;
+window.FN          = FN;
+window.AUTH        = AUTH;
+window.xhr         = xhr;
+window.rpc         = rpc;
+window.edgeFn      = edgeFn;
+window.restGet     = restGet;
+window.restPost    = restPost;
+window.authHdr     = authHdr;
+window.ensureToken = ensureToken;
+window.fmtN        = fmtN;
+window.esc         = esc;
+window.toast       = toast;
+window.openModal   = openModal;
+window.closeModal  = closeModal;
+window.showTab     = showTab;
+window.showPage    = showPage;
+window.gBal        = gBal;
+// gUser and gToken are synced to window by _setSession and bootApp
 
 // Start
 // hideSplash is called from within init() once auth state is resolved.
