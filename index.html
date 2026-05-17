@@ -20,7 +20,7 @@
 <title>DataBulge — Buy Data, Get Connected, Pay Small Small</title>
 <meta name="description" content="DataBulge is a global mobile data platform — buy data bundles and pay in small daily installments. MTN, Airtel, Glo, 9mobile. Rooted in Nigeria, built for Africa and the world.">
 <meta name="keywords" content="buy data installment Nigeria, pay small small data, mobile data plan Nigeria, DataBulge, data subscription, MTN data, Airtel data, Glo data, 9mobile data, affordable data Nigeria, diaspora data Nigeria, Africa data plan">
-<meta name="robots" content="index, follow">
+<meta name="robots" content="noindex, nofollow">
 <meta name="author" content="Vortexedge Limited">
 <link rel="canonical" href="https://www.databulge.com/">
 <!-- Open Graph -->
@@ -648,294 +648,27 @@ button,.btn,.plan-btn,.tab,.logout-btn,.plan-chip,.avatar,.avatar-menu button{
 
 
 
-/* ── BALANCED DATABULGE THEME: BLUE BRAND + WHATSAPP GREEN ACTIONS ── */
-:root{
-  --db-blue:#1A56DB !important;
-  --db-blue-dark:#173A73 !important;
-  --db-whatsapp:#3d9758 !important;
-  --db-whatsapp-dark:#3d9758 !important;
-  --db-whatsapp-deep:#3d9758 !important;
-}
-
-/* Keep brand areas blue */
-#db-splash{
-  background:linear-gradient(160deg,#0f2952 0%,#1a3a72 48%,#1A56DB 100%) !important;
-}
-#pg-auth{
-  background:linear-gradient(165deg,#123363 0%,#173A73 48%,#1A56DB 100%) !important;
-}
-.top-bar svg rect[fill="#1A56DB"],
-.auth-wordmark circle[fill="#1A56DB"],
-.splash-svg circle[fill="#1A56DB"],
-.top-bar svg circle[fill="#1A56DB"]{
-  fill:#1A56DB !important;
-}
-
-/* Brand text, links, inputs and navigation stay blue */
-.txt-link,
-.forgot-btn,
-.plan-price,
-.va-bank,
-.upgrade-bar a,
-.tab.act{
-  color:#1A56DB !important;
-}
-.field input:focus,
-.textarea:focus,
-select:focus{
-  border-color:#1A56DB !important;
-  box-shadow:0 0 0 3px rgba(26,86,219,.10) !important;
-}
-.tab.act,
-.plan-chip.act{
-  background:#EEF2FF !important;
-  color:#1A56DB !important;
-  border-color:#1A56DB !important;
-}
-.tab.act::after{
-  background:#1A56DB !important;
-}
-.prog-fill{
-  background:#1A56DB !important;
-}
-
-/* Main conversion/action buttons use WhatsApp green with white text */
-.btn-blue,
-.plan-btn,
-.pay-btn,
-#m-pay-btn,
-#m-sub-btn,
-#plans-fund-btn,
-#d-fund-btn,
-#fg-send-btn,
-#m-terms-agree,
-#compose-btn-open,
-#l-btn,
-#s-btn,
-#r-btn,
-#w-login-btn{
-  background:#3d9758 !important;
-  color:#ffffff !important;
-  border:none !important;
-  box-shadow:none !important;
-}
-
-/* Secondary buttons stay soft blue, except direct action-like secondary choices remain clean */
-.btn-lite{
-  background:#E9EEFF !important;
-  color:#1A56DB !important;
-  border:1px solid #D6DFFF !important;
-}
-
-/* Payment duration active button should be green; inactive should be soft blue */
-#pay-days-7.btn-blue,
-#pay-days-28.btn-blue,
-#m-sub-days-7.btn-blue,
-#m-sub-days-28.btn-blue{
-  background:#3d9758 !important;
-  color:#fff !important;
-  border:none !important;
-}
-#pay-days-7.btn-lite,
-#pay-days-28.btn-lite,
-#m-sub-days-7.btn-lite,
-#m-sub-days-28.btn-lite{
-  background:#E9EEFF !important;
-  color:#1A56DB !important;
-}
-
-/* Green action button press state */
-.btn-blue:active,
-.plan-btn:active,
-.pay-btn:active,
-#m-pay-btn:active,
-#m-sub-btn:active,
-#plans-fund-btn:active,
-#d-fund-btn:active,
-#fg-send-btn:active,
-#m-terms-agree:active,
-#compose-btn-open:active,
-#l-btn:active,
-#s-btn:active,
-#r-btn:active,
-#w-login-btn:active{
-  background:#3d9758 !important;
-}
-
-/* Keep sign out calm, not loud */
-.avatar-signout,
-#logout-btn{
-  background:#F8FAFC !important;
-  color:#667085 !important;
-  border:1px solid #E5E7EB !important;
-  box-shadow:none !important;
-}
-
-/* Success and wallet positive states use green */
-.tx-amt.credit,
-.tx-amt.refund,
-.status-active,
-.wallet-status.active{
-  color:#2d7a44 !important;
-}
-
-/* Premium green emphasis for payment-specific blocks */
-.pay-btn,
-#m-pay-btn{
-  background:#3d9758 !important;
-  color:#fff !important;
-}
-
-/* Avoid accidentally turning every generic button green */
-button.tab,
-button.plan-chip,
-.modal-x,
-.eye,
-.txt-link,
-.forgot-btn{
-  box-shadow:none !important;
-}
+/* Button and tab colors are defined in the authoritative theme block below */
 
 
-/* ── FINAL REQUESTED PATCH: FULL ACTIVE MENU + REAL TOGGLES ──
-   Frontend-only. Backend script/function flow untouched.
-*/
-:root{
-  --db-action-green:#3d9758 !important;
-  --db-action-green-dark:#3d9758 !important;
-  --db-brand-blue:#1A56DB !important;
-}
+/* ── AUTHORITATIVE THEME: green actions, blue brand, one source of truth ── */
+/* All previous !important blocks for .tab.act and .btn-blue are superseded here */
+.tabs .tab.act{background:#3d9758!important;color:#fff!important;border-color:#3d9758!important;font-weight:900!important;box-shadow:none!important;}
+.tabs .tab.act::after{display:none!important;}
+.tabs .tab:not(.act){background:#F5F7FB!important;color:#727B8C!important;border-color:#E3E7EF!important;box-shadow:none!important;}
+.bnav-btn.act{color:#3d9758!important;}
+.bnav-btn.act svg{stroke:#3d9758!important;}
+.bnav-btn{color:#6b7280!important;}
+#d-fund-btn,.plan-btn,.pay-btn,#m-sub-btn,#m-pay-btn,#plans-fund-btn,#fg-send-btn,#compose-btn-open,#l-btn,#s-btn,#r-btn,#w-login-btn,#air-buy-btn,#m-terms-agree,.btn-blue{background:#3d9758!important;color:#fff!important;border:none!important;box-shadow:none!important;}
+.btn-lite{background:#E9EEFF!important;color:#1A56DB!important;border:1px solid #D6DFFF!important;}
+#pay-days-7.btn-blue,#pay-days-28.btn-blue,#m-sub-days-7.btn-blue,#m-sub-days-28.btn-blue{background:#3d9758!important;color:#fff!important;border:none!important;}
+#pay-days-7.btn-lite,#pay-days-28.btn-lite,#m-sub-days-7.btn-lite,#m-sub-days-28.btn-lite{background:#E9EEFF!important;color:#1A56DB!important;border:1px solid #D6DFFF!important;}
+.plan-chip.act{background:#3d9758!important;color:#fff!important;border-color:#3d9758!important;font-weight:900!important;}
+.plan-chip:not(.act){background:#fff!important;color:#6B7280!important;border-color:#E0E5EF!important;}
+.avatar-signout,#logout-btn{background:#F8FAFC!important;color:#667085!important;border:1px solid #E5E7EB!important;box-shadow:none!important;}
+button.tab,button.plan-chip,.modal-x,.eye,.txt-link,.forgot-btn{box-shadow:none!important;background:revert!important;color:revert!important;border:revert!important;}
+.txt-link,.forgot-btn{background:none!important;color:#1A56DB!important;border:none!important;}
 
-/* Main action buttons: Fund Account, Subscribe, Subscribe Now, Start Auto-Fund */
-#d-fund-btn,
-#plans-fund-btn,
-.plan-btn,
-#m-sub-btn,
-#af-fund-btn,
-#w-login-btn,
-#l-btn,
-#s-btn,
-#r-btn,
-#fg-send-btn,
-#m-pay-btn,
-.pay-btn,
-#compose-btn-open,
-#m-terms-agree{
-  background:#3d9758 !important;
-  color:#ffffff !important;
-  border:0 !important;
-  border-radius:12px !important;
-  font-weight:900 !important;
-  box-shadow:none !important;
-}
-
-/* Stronger active main menu: bold, full, same confidence as Fund Account */
-.tabs .tab.act{
-  background:#3d9758 !important;
-  color:#ffffff !important;
-  border-color:#3d9758 !important;
-  font-weight:900 !important;
-  box-shadow:none !important;
-}
-.tabs .tab.act::after{
-  display:none !important;
-}
-
-/* Inactive menu remains soft blue/grey from your design */
-.tabs .tab:not(.act){
-  background:#F5F7FB !important;
-  color:#727B8C !important;
-  border-color:#E3E7EF !important;
-  box-shadow:none !important;
-}
-
-/* Payment options: active 7 days / 28 days should look full like Fund Account */
-#pay-days-7.btn-blue,
-#pay-days-28.btn-blue,
-#m-sub-days-7.btn-blue,
-#m-sub-days-28.btn-blue{
-  background:#3d9758 !important;
-  color:#ffffff !important;
-  border:0 !important;
-  border-radius:12px !important;
-  font-weight:900 !important;
-  box-shadow:none !important;
-}
-#pay-days-7.btn-lite,
-#pay-days-28.btn-lite,
-#m-sub-days-7.btn-lite,
-#m-sub-days-28.btn-lite{
-  background:#E9EEFF !important;
-  color:#1A56DB !important;
-  border:1px solid #D6DFFF !important;
-  border-radius:12px !important;
-  font-weight:900 !important;
-  box-shadow:none !important;
-}
-
-/* Plan filter chips: All / Daily / Weekly / Monthly / network type active is fuller */
-.plan-chip.act{
-  background:#3d9758 !important;
-  color:#ffffff !important;
-  border-color:#3d9758 !important;
-  font-weight:900 !important;
-  box-shadow:none !important;
-}
-.plan-chip:not(.act){
-  background:#ffffff !important;
-  color:#6B7280 !important;
-  border-color:#E0E5EF !important;
-  box-shadow:none !important;
-}
-
-/* Real toggle switch track */
-#m-sub-autofund-sl,
-#m-sub-autorenew-sl{
-  width:44px !important;
-  height:24px !important;
-  display:block !important;
-  background:#CBD5E1 !important;
-  border-radius:999px !important;
-  transition:.25s !important;
-  -webkit-transition:.25s !important;
-  box-shadow:inset 0 1px 3px rgba(15,23,42,.16) !important;
-}
-
-/* Real toggle knob inserted by frontend patch script */
-#m-sub-autofund-sl .db-toggle-knob,
-#m-sub-autorenew-sl .db-toggle-knob{
-  position:absolute !important;
-  height:18px !important;
-  width:18px !important;
-  left:3px !important;
-  bottom:3px !important;
-  background:#fff !important;
-  border-radius:50% !important;
-  transition:.25s !important;
-  -webkit-transition:.25s !important;
-  box-shadow:0 2px 6px rgba(15,23,42,.25) !important;
-}
-
-/* Active toggle appearance */
-#m-sub-autofund:checked + #m-sub-autofund-sl,
-#m-sub-autorenew:checked + #m-sub-autorenew-sl{
-  background:#3d9758 !important;
-}
-
-/* Labels around toggle should feel clickable */
-label:has(#m-sub-autofund),
-label:has(#m-sub-autorenew){
-  cursor:pointer !important;
-}
-
-
-
-/* ── REQUEST PATCH: ACCOUNT STATS + MENU LAYOUT ONLY ──
-   Frontend-only styling. Backend/API logic untouched. */
-#tab-dash,
-#tc-dash{
-  display:none !important;
-}
 .tabs{
   justify-content:flex-start !important;
   gap:10px !important;
@@ -996,14 +729,6 @@ label:has(#m-sub-autorenew){
 @-webkit-keyframes db-ct-fall{to{-webkit-transform:translateY(110vh) rotate(720deg);opacity:0}}
 @keyframes db-ct-fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
 .db-bal-glow{color:#00e5be!important;text-shadow:0 0 16px rgba(0,229,190,.5);}
-
-
-/* ── PRODUCTION HARDENING: hidden referral + visible nugget mirror ── */
-#referral-card,.referral-card{
-  display:none!important;visibility:hidden!important;position:absolute!important;pointer-events:none!important;height:0!important;min-height:0!important;max-height:0!important;overflow:hidden!important;opacity:0!important;clip:rect(0 0 0 0)!important;clip-path:inset(50%)!important;width:1px!important;margin:0!important;padding:0!important;border:0!important;
-}
-#dynamic-strip-live{margin-bottom:14px!important;}
-
 </style>
 </head>
 <body>
@@ -1431,6 +1156,43 @@ label:has(#m-sub-autorenew){
   </div>
 
 </div><!-- /#pg-app -->
+
+<!-- REPORT ISSUE / REFUND REQUEST MODAL -->
+<div class="modal" id="m-refund">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <div class="modal-title" id="m-refund-title">&#9888;&#65039; Report Delivery Issue</div>
+      <button class="modal-x" id="m-refund-x">&#215;</button>
+    </div>
+    <div class="modal-body">
+      <div id="m-refund-err" class="err"></div>
+      <div id="m-refund-ok" class="ok" style="display:none;"></div>
+      <div id="m-refund-plan-info" style="background:#f8fafc;border:1px solid #e5e7eb;border-radius:10px;padding:11px 13px;margin-bottom:14px;font-size:.82rem;color:#374151;line-height:1.6;"></div>
+      <div class="field">
+        <label style="font-weight:700;color:#333;">What happened?</label>
+        <select id="m-refund-reason" style="display:block;width:100%;height:46px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;-webkit-appearance:none;margin-top:4px;">
+          <option value="">— Select a reason —</option>
+          <option value="not_delivered">Data was never delivered to my number</option>
+          <option value="wrong_number">Data was delivered to the wrong number</option>
+          <option value="partial_delivery">Only part of my data arrived</option>
+          <option value="expired_before_use">Plan expired before I could use it</option>
+          <option value="other">Other issue</option>
+        </select>
+      </div>
+      <div class="field">
+        <label style="font-weight:700;color:#333;">Additional details <span style="font-weight:400;color:#9ca3af;">(optional)</span></label>
+        <textarea id="m-refund-notes" class="textarea" placeholder="Describe the issue in more detail…" style="min-height:80px;margin-top:4px;"></textarea>
+      </div>
+      <div style="background:#FEF2F2;border:1px solid #FECACA;border-radius:10px;padding:10px 13px;font-size:.78rem;color:#7F1D1D;line-height:1.55;margin-top:4px;">
+        <strong>&#128274; Refund Policy:</strong> If delivery genuinely failed, your wallet is refunded automatically within 4 minutes. This report flags the issue for admin review so we can investigate and resolve it manually if the automatic refund did not trigger.
+      </div>
+    </div>
+    <div class="modal-foot" style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;-webkit-box-pack:end;justify-content:flex-end;">
+      <button class="btn btn-lite" id="m-refund-cancel" style="width:auto;padding:10px 16px;margin:0;">Cancel</button>
+      <button class="btn btn-blue" id="m-refund-submit" style="width:auto;padding:10px 22px;margin:0;">Submit Report</button>
+    </div>
+  </div>
+</div>
 
 <!-- FORGOT PASSWORD MODAL -->
 <div class="modal" id="m-forgot">
@@ -2032,7 +1794,7 @@ var _dashLastLoad  = 0;
 var STALE_MS = 30000; // 30s before re-fetching on tab revisit
 
 function showTab(t) {
-  var tabs = ['dash','plans','subs','wallet','inbox'];
+  var tabs = ['dash','plans','subs','wallet','inbox','earn'];
   var i;
   for (i = 0; i < tabs.length; i++) {
     var btn = $('tab-' + tabs[i]);
@@ -2206,69 +1968,6 @@ function doResetPassword() {
   );
 }
 
-
-/* ── STRONG NUGGET TIMER ENGINE ─────────────────────────────
-   Keeps nuggets visible even though Dashboard is hidden, prevents duplicate
-   timers, renders immediately, and logs failures instead of hiding them. */
-function dbEnsureNuggetHome() {
-  try {
-    var live = $('dynamic-strip-live');
-    if (live) return live;
-    var host = $('tc-plans') || $('tc-wallet') || $('pg-app');
-    if (!host) return null;
-    live = document.createElement('div');
-    live.id = 'dynamic-strip-live';
-    live.className = 'dynamic-strip db-dynamic-strip-instance';
-    live.style.display = 'none';
-    live.onclick = function(){ dynamicStripAction(); };
-    live.innerHTML = '<div class="dynamic-strip-icon db-dynamic-strip-icon">&#128161;</div><div class="dynamic-strip-text db-dynamic-strip-text"></div>';
-    if (host.firstChild) host.insertBefore(live, host.firstChild); else host.appendChild(live);
-    return live;
-  } catch(e) { if (window.console && console.warn) console.warn('[DataBulge Nugget] home failed', e); return null; }
-}
-function dbMirrorDynamicStrip(cls, ico, msg) {
-  var live = dbEnsureNuggetHome();
-  if (!live) return;
-  live.className = cls + ' db-dynamic-strip-instance';
-  var icon = live.querySelector ? live.querySelector('.db-dynamic-strip-icon') : null;
-  var text = live.querySelector ? live.querySelector('.db-dynamic-strip-text') : null;
-  if (icon) icon.innerHTML = ico || '&#128161;';
-  if (text) text.textContent = msg || '';
-  live.style.display = msg ? '' : 'none';
-}
-function dbStopNuggetTimer() {
-  try {
-    if (window._nuggetTimer) { clearInterval(window._nuggetTimer); window._nuggetTimer = null; }
-  } catch(e) {}
-}
-function dbRenderNuggetNow(reason) {
-  try {
-    dbEnsureNuggetHome();
-    if (typeof renderDynamicStrip !== 'function') {
-      if (window.console && console.warn) console.warn('[DataBulge Nugget] renderDynamicStrip not found:', reason);
-      return false;
-    }
-    if (!gUser) {
-      if (window.console && console.warn) console.warn('[DataBulge Nugget] skipped; user not loaded:', reason);
-      return false;
-    }
-    renderDynamicStrip();
-    if (window.console && console.log) console.log('[DataBulge Nugget] rendered:', reason, new Date().toLocaleTimeString());
-    return true;
-  } catch(e) {
-    if (window.console && console.error) console.error('[DataBulge Nugget] render failed:', reason, e);
-    return false;
-  }
-}
-function dbStartNuggetTimer() {
-  dbStopNuggetTimer();
-  dbEnsureNuggetHome();
-  setTimeout(function(){ dbRenderNuggetNow('first immediate render'); }, 1200);
-  setTimeout(function(){ dbRenderNuggetNow('after data warmup'); }, 4000);
-  window._nuggetTimer = setInterval(function(){ dbRenderNuggetNow('10-minute rotation'); }, 600000);
-  if (window.console && console.log) console.log('[DataBulge Nugget] timer started');
-}
-
 /* ── BOOT APP ───────────────────────────────────────────────── */
 function bootPublicApp() {
   showPage('app');
@@ -2297,10 +1996,8 @@ function bootApp() {
   updateGreeting(name);
   updateWalletLabel();
 
-  showTab('plans');
+  showTab('dash');
   updatePayDaysUI();
-
-  // Reset stale guards — first boot always loads everything fresh
   var _now = Date.now();
   _subsLastLoad  = _now;
   _inboxLastLoad = _now;
@@ -2344,9 +2041,12 @@ function bootApp() {
     if (_walletPollTick % 4 === 0) loadInbox(); // inbox every 60s (4 × 15s)
   }, 15000);
 
-  // Strong nugget engine: renders immediately, mirrors to visible Buy Data tab,
-  // rotates every 10 minutes, and prevents duplicate timers.
-  dbStartNuggetTimer();
+  // Refresh the daily nugget strip every 10 minutes so the user sees
+  // a different tip each time without needing to reload the app.
+  if (window._nuggetTimer) clearInterval(window._nuggetTimer);
+  window._nuggetTimer = setInterval(function() {
+    try { renderDynamicStrip(); } catch(e) {}
+  }, 600000);
 
   // Start Supabase Realtime listener — balance updates reflect instantly
   // (< 5s) without waiting for the poll cycle.
@@ -2455,7 +2155,7 @@ function loadWalletBalance(cb) {
         }
         if ($('d-va')) $('d-va').textContent = va;
         if ($('d-va-dash')) $('d-va-dash').textContent = va;
-        if (typeof gRetention !== 'undefined' && gRetention) { dbRenderNuggetNow('wallet balance update'); }
+        if (typeof gRetention !== 'undefined' && gRetention) { try { renderDynamicStrip(); } catch(e){} }
         updateWalletLabel();
       }
       if (cb) cb();
@@ -2746,9 +2446,13 @@ function renderSubsList(subs, compact) {
     if (isCompleted) {
       html += '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:7px;margin-top:4px;">' +
         '<div style="flex:1;padding:8px 10px;background:#e8eaff;color:#2A3FA3;border-radius:6px;font-size:.78rem;font-weight:700;text-align:center;">Delivered &#9989; Done</div>' +
+        '<button style="padding:8px 10px;background:#fff;border:1px solid #e5e7eb;color:#374151;border-radius:6px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="openRefundModal(\'' + esc(s.id) + '\',\'' + esc(displayName + ' ' + displayNetwork) + '\',\'' + esc(s.phone_number || '') + '\')">&#9888; Report Issue</button>' +
       '</div>';
     } else if ((isActive || isPending) && remaining > 0) {
-      html += '<button class="pay-btn" onclick="openPayModal(\'' + esc(s.id) + '\',' + (dailyPrice||0) + ',' + remaining + ')">Pay Now</button>';
+      html += '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:7px;margin-top:4px;">' +
+        '<button class="pay-btn" style="flex:1;" onclick="openPayModal(\'' + esc(s.id) + '\',' + (dailyPrice||0) + ',' + remaining + ')">Pay Now</button>' +
+        '<button style="padding:8px 10px;background:#fff;border:1px solid #e5e7eb;color:#374151;border-radius:6px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="openRefundModal(\'' + esc(s.id) + '\',\'' + esc(displayName + ' ' + displayNetwork) + '\',\'' + esc(s.phone_number || '') + '\')">&#9888; Report Issue</button>' +
+      '</div>';
     }
 
     html += '</div>'; // end sub-row
@@ -2990,9 +2694,8 @@ function openSubModal(planIdx) {
     var cached = _gSubsCache[i];
     var cachePl = cached.data_plans || {};
     if ((cached.status === 'active' || cached.status === 'pending') &&
-        ((cached.plan_id && plan.id && String(cached.plan_id) === String(plan.id)) ||
-         (String(cachePl.data_size) === String(plan.data_size) &&
-          String((cachePl.network || '')).toUpperCase() === String((plan.network || '')).toUpperCase()))) {
+        String(cachePl.data_size) === String(plan.data_size) &&
+        String((cachePl.network || '')).toUpperCase() === String((plan.network || '')).toUpperCase()) {
       existingSub = cached;
       break;
     }
@@ -3033,7 +2736,7 @@ function openSubModal(planIdx) {
     var fillColor = (isLast || isAlmost) ? '#16a34a' : '#1A56DB';
 
     /* Suggested amount — always the single daily installment, never the full plan price */
-    var sugAmt = daily > 0 ? Math.min(daily, remaining) : 0;
+    var sugAmt = daily > 0 ? daily : 0;
 
     $('m-sub-info').innerHTML =
       /* Banner */
@@ -3122,57 +2825,55 @@ function _refreshSubInfo() {
 }
 
 function _friendlySubError(err, res) {
-  /* Production sanitiser: never exposes raw Supabase/PostgREST/Edge Function text */
-  var status = res ? (parseInt(res.status, 10) || 0) : 0;
+  /* Hard filter — strips all raw backend leaks and returns plain user-facing text */
+  var status = res ? res.status : 0;
   var d = res && res.data;
-  var rawText = String((d && (d.error || d.message || d.msg || d.details || d.hint || d.code)) || err || '');
-  var raw = rawText.toLowerCase();
+  var raw = String((d && (d.error || d.message || d.msg)) || err || '').toLowerCase();
 
-  if (!res || err === 'Network error' || err === 'Timeout' || status === 0 || status >= 500 ||
-      raw.indexOf('failed to fetch') !== -1 || raw.indexOf('network') !== -1 || raw.indexOf('timeout') !== -1) {
+  /* Network / timeout / 5xx server error */
+  if (!res || err === 'Network error' || err === 'Timeout' || status === 0 || status >= 500) {
     return 'Connection error. Please check your internet and try again.';
   }
-  if (status === 401 || status === 403 || raw.indexOf('auth') !== -1 || raw.indexOf('session') !== -1 ||
-      raw.indexOf('jwt') !== -1 || raw.indexOf('token') !== -1 || raw.indexOf('permission') !== -1) {
-    return 'Your session has expired. Please sign out and sign back in.';
+  /* Insufficient balance */
+  if (raw.indexOf('insufficient') !== -1 || raw.indexOf('balance') !== -1 ||
+      raw.indexOf('not enough') !== -1) {
+    return 'Your wallet balance is too low to start this plan. Please fund your account first.';
   }
-  if (raw.indexOf('insufficient') !== -1 || raw.indexOf('balance') !== -1 || raw.indexOf('not enough') !== -1 ||
-      raw.indexOf('wallet') !== -1 || raw.indexOf('fund') !== -1) {
-    return 'Your wallet balance is too low. Please fund your account first.';
+  /* Already subscribed / duplicate */
+  if (raw.indexOf('already') !== -1 || raw.indexOf('duplicate') !== -1 ||
+      raw.indexOf('exists') !== -1) {
+    return 'You already have an active subscription to this plan.';
   }
-  if (raw.indexOf('already') !== -1 || raw.indexOf('duplicate') !== -1 || raw.indexOf('exists') !== -1 ||
-      raw.indexOf('unique') !== -1) {
-    return 'You already have an active subscription to this plan. Open My Plan and continue paying.';
-  }
-  if (raw.indexOf('completed') !== -1 || raw.indexOf('fully paid') !== -1) {
-    return 'This plan is already fully paid.';
-  }
-  if (raw.indexOf('not found') !== -1 || raw.indexOf('no rows') !== -1 || raw.indexOf('missing') !== -1) {
-    return 'We could not find this subscription. Please refresh and try again.';
-  }
-  if (raw.indexOf('phone') !== -1 || raw.indexOf('number') !== -1 || raw.indexOf('msisdn') !== -1) {
+  /* Phone number */
+  if (raw.indexOf('phone') !== -1 || raw.indexOf('number') !== -1) {
     return 'Please enter a valid phone number for data delivery.';
   }
-  if (raw.indexOf('plan') !== -1 && (raw.indexOf('invalid') !== -1 || raw.indexOf('unavailable') !== -1)) {
+  /* Auth / session */
+  if (status === 401 || status === 403 || raw.indexOf('auth') !== -1 ||
+      raw.indexOf('session') !== -1 || raw.indexOf('jwt') !== -1) {
+    return 'Your session has expired. Please sign out and sign back in.';
+  }
+  /* Plan not found */
+  if (raw.indexOf('plan') !== -1 && (raw.indexOf('not found') !== -1 || raw.indexOf('invalid') !== -1)) {
     return 'This plan is no longer available. Please refresh and choose another plan.';
   }
-
-  var leaks = ['typeerror','referenceerror','syntaxerror','exception','supabase','postgrest','pgrst','postgres','pgsql','pg_',
-    'rpc','edge function','stack','undefined','null','object object','function','fetch','xhr','json','violates','constraint',
-    'schema','relation','column','line ',' at ','trace','deno','sql','500','502','503','504','400 bad request'];
-  for (var i = 0; i < leaks.length; i++) {
-    if (raw.indexOf(leaks[i]) !== -1) return 'Something went wrong on our end. Please try again in a moment.';
+  /* Catch any raw tech leak: TypeError, stack traces, supabase internals, DB codes */
+  var techLeaks = ['typeerror','error:','exception','supabase','postgrest','pgrst','pg_','rpc',
+                   'stack','undefined','null','object object','function','fetch','xhr','at line',
+                   'syntax','json','422','500','504','connection'];
+  var i;
+  for (i = 0; i < techLeaks.length; i++) {
+    if (raw.indexOf(techLeaks[i]) !== -1) {
+      return 'Something went wrong on our end. Please try again in a moment.';
+    }
   }
-  return 'Subscription failed. Please try again.';
-}
-
-function _friendlyPayError(err, res) {
-  var msg = _friendlySubError(err, res);
-  if (msg.indexOf('already have an active subscription') !== -1) return 'Payment could not be completed. Please refresh My Plan and try again.';
-  if (msg.indexOf('wallet balance is too low') !== -1) return 'Insufficient wallet balance. Please fund your account first.';
-  if (msg.indexOf('could not find this subscription') !== -1) return 'Subscription not found. Please refresh My Plan and try again.';
-  if (msg.indexOf('already fully paid') !== -1) return 'This plan is already fully paid.';
-  return msg === 'Subscription failed. Please try again.' ? 'Payment failed. Please try again.' : msg;
+  /* If the raw message is unusually long (likely a trace), hide it */
+  if (raw.length > 120) {
+    return 'Subscription could not be created. Please try again.';
+  }
+  /* Return a sanitized version of whatever the backend said, capped at 100 chars */
+  var safe = String((d && (d.error || d.message)) || 'Subscription failed. Please try again.');
+  return safe.length > 100 ? 'Subscription failed. Please try again.' : safe;
 }
 
 function confirmSub() {
@@ -3193,7 +2894,20 @@ function confirmSub() {
         function(e, r) {
           btnLoad('m-sub-btn', false, 'Pay Now');
           if (e || !r || !r.ok || (r.data && !r.data.success)) {
-            errShow('m-sub-err', _friendlyPayError(e, r));
+            var rawMsg = String((r && r.data && (r.data.error || r.data.message)) || e || '').toLowerCase();
+            var friendlyMsg;
+            if (!r || e === 'Network error' || e === 'Timeout' || (r && (r.status === 0 || r.status >= 500))) {
+              friendlyMsg = 'Connection error. Please check your internet and try again.';
+            } else if (rawMsg.indexOf('insufficient') !== -1 || rawMsg.indexOf('balance') !== -1) {
+              friendlyMsg = 'Insufficient wallet balance. Please fund your account first.';
+            } else if (rawMsg.indexOf('already') !== -1 || rawMsg.indexOf('completed') !== -1) {
+              friendlyMsg = 'This plan is already fully paid.';
+            } else if (rawMsg.indexOf('not found') !== -1) {
+              friendlyMsg = 'Subscription not found. Please refresh and try again.';
+            } else {
+              friendlyMsg = 'Payment failed. Please try again.';
+            }
+            errShow('m-sub-err', friendlyMsg);
             return;
           }
           var d = r.data || {};
@@ -3252,7 +2966,6 @@ function confirmSub() {
         var calc = calcPlanDaily(gSelPlan, days);
         var newSub = {
           id: r.data.id,
-          plan_id: gSelPlan.id,
           status: 'pending',
           total_price: calc.total,
           amount_paid: 0,
@@ -3275,7 +2988,11 @@ function confirmSub() {
       toast('\u2705 Subscribed to ' + gSelPlan.data_size + '! Fund your wallet and tap Pay Now to continue.');
       showTab('subs');
       loadSubs();
-      /* Auto-pay removed: subscription never spends or starts wallet movement automatically. */
+      if (autoFundOn && autoFundAmt >= 100 && gSelPlan) {
+        var pName = gSelPlan.data_size + ' (' + gSelPlan.network + ')';
+        var newSubId = (r && r.data && r.data.id) ? r.data.id : null;
+        setTimeout(function() { launchAutoFund(autoFundAmt, pName, newSubId); }, 500);
+      }
       setTimeout(function() { loadDashboard(); loadDashCashflow(); }, 1500);
     });
   });
@@ -3342,7 +3059,7 @@ function confirmPay() {
       function(e, r) {
         btnLoad('m-pay-btn', false, 'Pay from Wallet');
         if (e || !r || !r.ok || (r.data && !r.data.success)) {
-          errShow('m-pay-err', _friendlyPayError(e, r));
+          errShow('m-pay-err', _friendlySubError(e, r));
           return;
         }
         var d = r.data || {};
@@ -3954,6 +3671,16 @@ function wire() {
 
   // Logout
   $('logout-btn').onclick = doLogout;
+
+  // Refund / Report Issue modal
+  var mRefundX = $('m-refund-x');
+  if (mRefundX) mRefundX.onclick = closeRefundModal;
+  var mRefundCancel = $('m-refund-cancel');
+  if (mRefundCancel) mRefundCancel.onclick = closeRefundModal;
+  var mRefundSubmit = $('m-refund-submit');
+  if (mRefundSubmit) mRefundSubmit.onclick = confirmRefund;
+  var mRefund = $('m-refund');
+  if (mRefund) mRefund.onclick = function(e) { if (e.target === mRefund) closeRefundModal(); };
 
   // Refresh subs
   $('refresh-subs-btn').onclick = function() { loadSubs(); toast('Refreshing\u2026'); };
@@ -4757,9 +4484,9 @@ body,.card-sub,.plan-sub,.sub-meta,.msg-body,.notif-row,.row-label,.field label,
 .field input,.textarea,select{color:#07111f!important;font-size:16px!important;background:#fff!important;border-color:#cbd5e1!important;}
 .field input::placeholder,.textarea::placeholder{color:#6b7280!important;opacity:1!important;}
 .btn,.plan-btn,.pay-btn,.onboard-btn,.hero-fund-btn{font-size:.95rem!important;letter-spacing:-.01em!important;}
+/* #tab-dash and #tc-dash visibility managed by showTab() via .tab-content / .bnav-btn classes */
 #tab-dash{display:-webkit-box!important;display:-webkit-flex!important;display:flex!important;}
-#tc-dash{display:none!important;}
-#tc-dash.on{display:block!important;}
+/* #tc-dash display is controlled by showTab adding/removing .on class — do NOT force hide here */
 .bnav-btn span{font-size:.68rem!important;font-weight:900!important;color:inherit!important;}
 .bnav-btn{color:#6b7280!important;}
 .bnav-btn.act{color:#3d9758!important;}
@@ -5151,20 +4878,17 @@ function loadRetentionData() {
   if (!gUser) return;
   ensureToken(function(err) {
     if (err) return;
-    rpc('get_retention_data', { p_user_id: gUser.id }, function(e, r) {
+    rpc('get_retention_data', JSON.stringify({ p_user_id: gUser.id }), function(e, r) {
       if (!e && r && r.ok && r.data) {
         gRetention = r.data;
         renderStreakStrip();
-        dbRenderNuggetNow('retention data loaded');
+        renderDynamicStrip();
         renderSavingsCard();
         renderReferralCard();
         checkOnboarding();
-      } else {
-        if (!gRetention) gRetention = {};
-        dbRenderNuggetNow('retention fallback');
       }
     });
-    rpc('record_app_open', { p_user_id: gUser.id }, function() {});
+    rpc('record_app_open', JSON.stringify({ p_user_id: gUser.id }), function() {});
   });
 }
 
@@ -5189,9 +4913,7 @@ function renderStreakStrip() {
 }
 
 function renderDynamicStrip() {
-  dbEnsureNuggetHome();
   var d=gRetention||{},strip=$('dynamic-strip'),icon=$('dynamic-strip-icon'),text=$('dynamic-strip-text');
-  if(!strip){ strip=$('dynamic-strip-live'); icon=strip&&strip.querySelector?strip.querySelector('.db-dynamic-strip-icon'):null; text=strip&&strip.querySelector?strip.querySelector('.db-dynamic-strip-text'):null; }
   if(!strip)return;
   var msgs=[],cur=parseInt(d.streak)||0,saved=parseFloat(d.month_saved)||0,plans=parseInt(d.plans_total)||0,bal=gBal||0,refs=parseInt(d.referrals_done)||0;
 
@@ -5212,18 +4934,17 @@ function renderDynamicStrip() {
   var starterDaily = 50;
   var starterDays  = 7;
   var starterSize  = '1GB';
-  if (typeof _plansCache !== 'undefined' && _plansCache && _plansCache.length) {
-    /* Find the cheapest usable real plan as the starter reference */
-    var cheapest = null;
-    for (i = 0; i < _plansCache.length; i++) {
-      var price = parseFloat(_plansCache[i].selling_price);
-      if (price > 0 && (!cheapest || price < parseFloat(cheapest.selling_price))) cheapest = _plansCache[i];
+  if (_plansCache && _plansCache.length) {
+    /* Find the cheapest active plan as the starter reference */
+    var cheapest = _plansCache[0];
+    for (i = 1; i < _plansCache.length; i++) {
+      if (parseFloat(_plansCache[i].selling_price) < parseFloat(cheapest.selling_price)) {
+        cheapest = _plansCache[i];
+      }
     }
-    if (cheapest) {
-      var cTotal   = Math.round(parseFloat(cheapest.selling_price) * 1.03 * 100) / 100;
-      starterDaily = Math.max(1, Math.round(cTotal / 7 * 100) / 100);
-      starterSize  = cheapest.data_size || '1GB';
-    }
+    var cTotal   = Math.round(parseFloat(cheapest.selling_price) * 1.03 * 100) / 100;
+    starterDaily = Math.round(cTotal / 7 * 100) / 100;
+    starterSize  = cheapest.data_size || '1GB';
   }
 
   /* ── Nugget pool: personalised when user has plans, starter when new ── */
@@ -5309,8 +5030,7 @@ function renderDynamicStrip() {
   if (plans >= 1 && bal < 100) msgs.push({ cls: 'warn', icon: '\uD83D\uDCB8', text: 'Fund \u20A6' + fmtN(Math.max(100, Math.ceil(bal / 50) * 50 + 100)) + ' or more so your next installment goes through without issues.', action: function() { openModal('m-fund'); } });
 
   /* If no urgent message applies, show the rotating personalised nugget */
-  if (!nuggets.length) nuggets.push({ cls:'', icon:'\uD83D\uDCA1', text:'Pick a data plan, pay small small, and watch your progress grow.', action:function(){ showTab('plans'); } });
-  if (!msgs.length) msgs.push(nuggets[_seed % nuggets.length]);
+  if (!msgs.length) msgs.push(nuggets[_seed]);
 
   var idx=Math.floor(Date.now()/600000)%msgs.length,m=msgs[idx];
   strip.className='dynamic-strip'+(m.cls?' '+m.cls:'');
@@ -5318,7 +5038,6 @@ function renderDynamicStrip() {
   if(text)text.textContent=m.text;
   _dynamicStripAction=m.action||null;
   strip.style.display='';
-  dbMirrorDynamicStrip('dynamic-strip'+(m.cls?' '+m.cls:''), m.icon, m.text);
 }
 
 function dynamicStripAction(){if(_dynamicStripAction)_dynamicStripAction();}
@@ -6078,35 +5797,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
 </script>
 
 
-<script>
-/* My Plan tab production repair — frontend only, keeps backend untouched. */
-(function(){
-  function byId(id){return document.getElementById(id);} 
-  function setCls(el, cls){ if(el){ el.className = cls; } }
-  function repairShowTab(){
-    var original = window.showTab;
-    window.showTab = function(t){
-      if(t === 'subs'){
-        var tabs = ['dash','plans','subs','wallet','inbox','earn'];
-        for(var i=0;i<tabs.length;i++){
-          setCls(byId('tab-'+tabs[i]), 'bnav-btn' + (tabs[i] === 'subs' ? ' act' : ''));
-          setCls(byId('tc-'+tabs[i]), 'tab-content' + (tabs[i] === 'subs' ? ' on' : ''));
-        }
-        try{ if(typeof window.loadSubs === 'function'){ window.loadSubs(); } }catch(e){}
-        return false;
-      }
-      if(typeof original === 'function') return original.apply(this, arguments);
-    };
-    var btn = byId('tab-subs');
-    if(btn){
-      btn.onclick = function(e){ if(e && e.preventDefault) e.preventDefault(); window.showTab('subs'); return false; };
-      var sp = btn.querySelector('span'); if(sp) sp.innerHTML = 'My Plan';
-    }
-  }
-  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', repairShowTab, false); else repairShowTab();
-  setTimeout(repairShowTab, 800);
-})();
-</script>
+<!-- My Plan tab monkey-patch removed: showTab() in main script already handles all tabs correctly -->
 
 
 <!-- DataBulge merge note: databulge_my_plan_tab_FIXED used as base; selected UI polish, feature prompts, and grammatical flow aligned from databulge_final (5). Backend logic preserved. -->
@@ -6221,6 +5912,114 @@ function openChangePasswordModal() {
   cpClearStatus();
   openModal('m-chpw');
   setTimeout(function(){ try { if (pp2) pp2.focus(); } catch(e){} }, 120);
+}
+
+/* ── REPORT ISSUE / REFUND REQUEST ─────────────────────────────
+   Lets the user flag a delivery problem on any active/completed
+   subscription. Sends a support message + optionally triggers
+   admin review via the messages table.
+──────────────────────────────────────────────────────────────── */
+var _refundSub = null; // subscription being reported
+
+function openRefundModal(subId, planLabel, phone) {
+  _refundSub = { id: subId, label: planLabel, phone: phone };
+
+  // Populate plan info header
+  var info = document.getElementById('m-refund-plan-info');
+  if (info) {
+    info.innerHTML =
+      '<div style="font-size:.72rem;font-weight:700;color:#9ca3af;text-transform:uppercase;letter-spacing:.05em;margin-bottom:3px;">Plan</div>' +
+      '<div style="font-weight:900;color:#111827;font-size:.95rem;">' + esc(planLabel || 'Your plan') + '</div>' +
+      (phone ? '<div style="color:#6b7280;font-size:.8rem;margin-top:2px;">&#128241; ' + esc(phone) + '</div>' : '');
+  }
+
+  // Reset form
+  var reasonEl = document.getElementById('m-refund-reason');
+  var notesEl  = document.getElementById('m-refund-notes');
+  var errEl    = document.getElementById('m-refund-err');
+  var okEl     = document.getElementById('m-refund-ok');
+  var btn      = document.getElementById('m-refund-submit');
+  if (reasonEl) reasonEl.value = '';
+  if (notesEl)  notesEl.value  = '';
+  if (errEl)    { errEl.textContent = ''; errEl.className = 'err'; }
+  if (okEl)     { okEl.textContent = ''; okEl.style.display = 'none'; okEl.className = 'ok'; }
+  if (btn)      { btn.disabled = false; btn.textContent = 'Submit Report'; }
+
+  openModal('m-refund');
+}
+
+function confirmRefund() {
+  if (!_refundSub || !gUser) { toast('Session error. Please sign out and back in.'); return; }
+
+  var reason  = (document.getElementById('m-refund-reason') ? document.getElementById('m-refund-reason').value : '').replace(/^\s+|\s+$/g, '');
+  var notes   = (document.getElementById('m-refund-notes')  ? document.getElementById('m-refund-notes').value  : '').replace(/^\s+|\s+$/g, '');
+  var errEl   = document.getElementById('m-refund-err');
+  var okEl    = document.getElementById('m-refund-ok');
+  var btn     = document.getElementById('m-refund-submit');
+
+  if (errEl)  { errEl.textContent = ''; errEl.className = 'err'; }
+  if (okEl)   { okEl.style.display = 'none'; okEl.className = 'ok'; }
+
+  if (!reason) {
+    if (errEl) { errEl.textContent = 'Please select a reason for the report.'; errEl.className = 'err on'; }
+    return;
+  }
+
+  if (btn) { btn.disabled = true; btn.innerHTML = '<span class="spin"></span>Submitting\u2026'; }
+
+  var reasonLabels = {
+    'not_delivered': 'Data was never delivered',
+    'wrong_number':  'Delivered to wrong number',
+    'partial_delivery': 'Partial delivery',
+    'expired_before_use': 'Plan expired before use',
+    'other': 'Other issue'
+  };
+  var reasonText = reasonLabels[reason] || reason;
+  var body = '[DELIVERY ISSUE REPORT]\nPlan: ' + (_refundSub.label || 'Unknown') +
+             '\nPhone: ' + (_refundSub.phone || 'N/A') +
+             '\nSubscription ID: ' + _refundSub.id +
+             '\nReason: ' + reasonText +
+             (notes ? '\nDetails: ' + notes : '');
+  var subject = 'Delivery Issue: ' + (_refundSub.label || 'plan');
+
+  ensureToken(function(err) {
+    if (err) {
+      if (btn) { btn.disabled = false; btn.textContent = 'Submit Report'; }
+      if (errEl) { errEl.textContent = 'Session expired. Please sign out and back in.'; errEl.className = 'err on'; }
+      return;
+    }
+
+    // Post to /messages as inbound support message
+    var msgPayload = {
+      user_id:   gUser.id,
+      direction: 'inbound',
+      subject:   subject,
+      body:      body,
+      type:      'refund'
+    };
+    restPost('/messages', msgPayload, function(msgErr, msgRes) {
+      if (btn) { btn.disabled = false; btn.textContent = 'Submit Report'; }
+
+      if (msgErr || !msgRes || !msgRes.ok) {
+        if (errEl) { errEl.textContent = 'Could not submit your report. Please try again or contact support@databulge.com.'; errEl.className = 'err on'; }
+        return;
+      }
+
+      // Success
+      if (okEl) {
+        okEl.textContent = '\u2705 Report submitted! Our team will review and respond within 24 hours. If a refund is due, it processes automatically.';
+        okEl.style.display = 'block';
+        okEl.className = 'ok on';
+      }
+      if (btn) { btn.disabled = true; btn.textContent = 'Submitted \u2713'; }
+      setTimeout(function() { closeModal('m-refund'); _refundSub = null; }, 2800);
+    });
+  });
+}
+
+function closeRefundModal() {
+  closeModal('m-refund');
+  _refundSub = null;
 }
 
 function doChangePassword() {
