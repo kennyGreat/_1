@@ -4372,27 +4372,178 @@ function earnResetAdSlot() {
   flex-shrink: 0;
   margin-top: 5px;
 }
-/* Toast notification popup */
+/* ── FACEBOOK-STYLE WHITE PUSH NOTIFICATION CARDS ──────────
+   Drop from top, white card, avatar icon, tap navigates,
+   stacks up to 3, auto-dismiss with progress bar
+────────────────────────────────────────────────────────── */
+#db-push-stack {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 99999;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  gap: 6px;
+  padding: env(safe-area-inset-top, 0px) 12px 0;
+  pointer-events: none;
+}
+.db-push-card {
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 8px 32px rgba(15,23,42,.18), 0 2px 8px rgba(15,23,42,.10);
+  padding: 0;
+  width: 100%;
+  max-width: 380px;
+  overflow: hidden;
+  pointer-events: auto;
+  cursor: pointer;
+  -webkit-transform: translateY(-110%) scale(.92);
+  transform: translateY(-110%) scale(.92);
+  opacity: 0;
+  -webkit-transition: -webkit-transform .42s cubic-bezier(.34,1.56,.64,1), opacity .28s ease, box-shadow .2s;
+  transition: transform .42s cubic-bezier(.34,1.56,.64,1), opacity .28s ease, box-shadow .2s;
+  -webkit-tap-highlight-color: transparent;
+  border: 1px solid rgba(0,0,0,.06);
+}
+.db-push-card.db-push-in {
+  -webkit-transform: translateY(0) scale(1);
+  transform: translateY(0) scale(1);
+  opacity: 1;
+}
+.db-push-card.db-push-out {
+  -webkit-transform: translateY(-110%) scale(.92);
+  transform: translateY(-110%) scale(.92);
+  opacity: 0;
+  -webkit-transition: -webkit-transform .32s ease-in, opacity .22s ease-in;
+  transition: transform .32s ease-in, opacity .22s ease-in;
+}
+.db-push-card:active { box-shadow: 0 4px 14px rgba(15,23,42,.14); }
+.db-push-inner {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: flex-start;
+  -webkit-align-items: flex-start;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 13px 14px 11px;
+}
+.db-push-app-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #1A56DB, #0f766e);
+  -webkit-flex-shrink: 0;
+  flex-shrink: 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  box-shadow: 0 3px 10px rgba(26,86,219,.25);
+}
+.db-push-body { -webkit-box-flex: 1; -webkit-flex: 1; flex: 1; min-width: 0; }
+.db-push-header {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 2px;
+}
+.db-push-appname {
+  font-size: .68rem;
+  font-weight: 900;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.db-push-dot { width: 3px; height: 3px; border-radius: 50%; background: #d1d5db; -webkit-flex-shrink: 0; flex-shrink: 0; }
+.db-push-time { font-size: .68rem; color: #9ca3af; font-weight: 600; }
+.db-push-title {
+  font-size: .85rem;
+  font-weight: 900;
+  color: #111827;
+  line-height: 1.25;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.db-push-msg {
+  font-size: .78rem;
+  color: #4b5563;
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.db-push-dismiss {
+  -webkit-flex-shrink: 0;
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: #9ca3af;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  margin-top: -2px;
+}
+.db-push-progress {
+  height: 3px;
+  background: #f1f5f9;
+}
+.db-push-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #1A56DB, #3d9758);
+  width: 100%;
+  -webkit-transform-origin: left;
+  transform-origin: left;
+  -webkit-transition: -webkit-transform linear;
+  transition: transform linear;
+}
+
+/* ── Legacy toast — kept for non-push toasts ───────── */
 .notif-toast {
   position: fixed;
-  bottom: 80px;
+  top: 80px;
   left: 50%;
-  -webkit-transform: translateX(-50%) translateY(20px);
-  transform: translateX(-50%) translateY(20px);
-  background: #1A56DB;
-  color: #fff;
+  -webkit-transform: translateX(-50%) translateY(-20px);
+  transform: translateX(-50%) translateY(-20px);
+  background: #fff;
+  color: #111827;
   padding: 10px 18px 10px 12px;
-  border-radius: 12px;
+  border-radius: 14px;
   font-size: .82rem;
   font-weight: 600;
   opacity: 0;
   -webkit-transition: all .3s;
   transition: all .3s;
   pointer-events: none;
-  z-index: 999;
+  z-index: 9998;
   max-width: 320px;
   width: calc(100% - 32px);
-  box-shadow: 0 8px 24px rgba(26,86,219,.3);
+  box-shadow: 0 8px 24px rgba(15,23,42,.16);
+  border: 1px solid #e5e7eb;
   display: -webkit-box;
   display: -webkit-flex;
   display: flex;
@@ -4406,9 +4557,9 @@ function earnResetAdSlot() {
   -webkit-transform: translateX(-50%) translateY(0);
   transform: translateX(-50%) translateY(0);
 }
-.notif-toast.error-toast { background: #dc2626; box-shadow: 0 8px 24px rgba(220,38,38,.3); }
-.notif-toast.warn-toast  { background: #d97706; box-shadow: 0 8px 24px rgba(217,119,6,.3); }
-.notif-toast.success-toast { background: #3d9758; box-shadow: none; }
+.notif-toast.error-toast { background: #dc2626; color: #fff; border-color: #dc2626; box-shadow: 0 8px 24px rgba(220,38,38,.3); }
+.notif-toast.warn-toast  { background: #d97706; color: #fff; border-color: #d97706; box-shadow: 0 8px 24px rgba(217,119,6,.3); }
+.notif-toast.success-toast { background: #3d9758; color: #fff; border-color: #3d9758; }
 
 
 /* ═══════════════════════════════════════════════════════
@@ -4488,7 +4639,7 @@ html,body{background:radial-gradient(circle at top left,#EEF6FF 0,#F6F8FC 34%,#F
 .prog-bar{height:9px!important;border-radius:999px!important;background:#EEF2F6!important;}
 .prog-fill{border-radius:999px!important;background:linear-gradient(90deg,#1A56DB,#3d9758)!important;}
 .msg-row.unread,.notif-row.unread{background:linear-gradient(135deg,#EEF4FF,#FFFFFF)!important;}
-#toast,.notif-toast.show{border-radius:18px!important;background:linear-gradient(135deg,#111827,#1F2937)!important;box-shadow:0 16px 35px rgba(15,23,42,.24)!important;}
+#toast{border-radius:18px!important;}
 .friend-sticky-cta{position:fixed;left:12px;right:12px;bottom:78px;z-index:120;display:none;max-width:940px;margin:0 auto;}
 .friend-sticky-inner{display:-webkit-box;display:-webkit-flex;display:flex;gap:10px;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(226,232,240,.9);border-radius:24px;padding:10px;box-shadow:0 18px 45px rgba(15,23,42,.18);}
 .friend-sticky-inner button{border:0;border-radius:16px;padding:12px 12px;font-size:.82rem;font-weight:950;font-family:Arial,Helvetica,sans-serif;-webkit-box-flex:1;-webkit-flex:1;flex:1;}
@@ -4616,8 +4767,11 @@ body,.card-sub,.plan-sub,.sub-meta,.msg-body,.notif-row,.row-label,.field label,
 @media(prefers-reduced-motion:reduce){.db-confetti{animation:none!important;display:none!important}.plan-card{transition:none!important}}
 </style>
 
-<!-- NOTIFICATION TOAST CONTAINER -->
+<!-- NOTIFICATION TOAST CONTAINER (legacy - for simple toasts) -->
 <div id="notif-toast" class="notif-toast"></div>
+
+<!-- FACEBOOK-STYLE PUSH NOTIFICATION CARD STACK -->
+<div id="db-push-stack" aria-live="polite" aria-label="Notifications"></div>
 
 <script>
 /* ══════════════════════════════════════════════════════════
@@ -4649,22 +4803,152 @@ function notifTimeAgo(iso) {
   return d + 'd ago';
 }
 
-/* ── Toast popup ─────────────────────────────────────── */
+/* ── MESSENGER-STYLE NOTIFICATION SOUND ─────────────────
+   Synthesised via Web Audio API — no external file needed.
+   Two-tone "ding" exactly like the Messenger notification.
+────────────────────────────────────────────────────────── */
+function dbPlayNotifSound() {
+  try {
+    var AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    var ctx = new AudioCtx();
+
+    function tone(freq, startT, dur, vol) {
+      var osc  = ctx.createOscillator();
+      var gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(freq, startT);
+      gain.gain.setValueAtTime(0, startT);
+      gain.gain.linearRampToValueAtTime(vol, startT + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.001, startT + dur);
+      osc.start(startT);
+      osc.stop(startT + dur + 0.01);
+    }
+
+    var now = ctx.currentTime;
+    // Messenger-style: two rising tones (E5 → G5)
+    tone(659.25, now,        0.18, 0.28);  // E5
+    tone(783.99, now + 0.14, 0.24, 0.22);  // G5
+    // Subtle harmonic shimmer on second tone
+    tone(1046.5, now + 0.14, 0.18, 0.06);  // C6 shimmer
+
+    // Auto-close context after sound
+    setTimeout(function() { try { ctx.close(); } catch(e) {} }, 800);
+  } catch(e) {}
+}
+
+/* ── FACEBOOK-STYLE WHITE PUSH NOTIFICATION CARDS ────────
+   - Drops from top like iOS/Facebook native pushes
+   - White card with app icon, app name, title, body
+   - Auto-dismiss after 5s with shrinking progress bar
+   - Tap the card → mark read + open drawer (or navigate)
+   - Stacks up to 3 cards; oldest dismissed automatically
+   - Same notification also appears in the bell drawer list
+────────────────────────────────────────────────────────── */
+var _dbPushCards = [];   // active card elements
+var _DB_PUSH_MAX = 3;    // max simultaneous cards
+var _DB_PUSH_DUR = 5000; // auto-dismiss ms
+
+function dbPushIcon(type) {
+  var icons = {
+    success:  '✅', error: '❌', warning: '⚠️',
+    wallet:   '💰', delivery: '📦', data_usage: '📶',
+    ad:       '🎁', milestone: '🏆', streak: '🔥',
+    info:     '🔔'
+  };
+  return icons[type] || icons.info;
+}
+
+function dbShowPushCard(title, msg, type, notifId) {
+  var stack = document.getElementById('db-push-stack');
+  if (!stack) return;
+
+  // Dismiss oldest if at max
+  while (_dbPushCards.length >= _DB_PUSH_MAX) {
+    dbDismissPushCard(_dbPushCards[0]);
+  }
+
+  // Play Messenger sound
+  dbPlayNotifSound();
+
+  var card = document.createElement('div');
+  card.className = 'db-push-card';
+  var nid  = notifId || '';
+  var icon = dbPushIcon(type);
+  var timeStr = 'Just now';
+
+  card.innerHTML =
+    '<div class="db-push-inner">' +
+      '<div class="db-push-app-icon">' + icon + '</div>' +
+      '<div class="db-push-body">' +
+        '<div class="db-push-header">' +
+          '<span class="db-push-appname">DataBulge</span>' +
+          '<span class="db-push-dot"></span>' +
+          '<span class="db-push-time">' + timeStr + '</span>' +
+        '</div>' +
+        '<div class="db-push-title">' + (title || 'DataBulge') + '</div>' +
+        '<div class="db-push-msg">'  + (msg   || '') + '</div>' +
+      '</div>' +
+      '<button class="db-push-dismiss" onclick="event.stopPropagation();dbDismissPushCard(this.closest(\'.db-push-card\'));" aria-label="Dismiss">&#215;</button>' +
+    '</div>' +
+    '<div class="db-push-progress"><div class="db-push-progress-fill" id="dbpf-' + Date.now() + '"></div></div>';
+
+  // Tap card body → open drawer + mark read
+  card.addEventListener('click', function() {
+    dbDismissPushCard(card);
+    openNotifDrawer();
+    if (nid) { notifTap(nid); }
+  });
+
+  stack.insertBefore(card, stack.firstChild);
+  _dbPushCards.push(card);
+
+  // Trigger enter animation next frame
+  requestAnimationFrame(function() {
+    requestAnimationFrame(function() {
+      card.className = 'db-push-card db-push-in';
+    });
+  });
+
+  // Shrink progress bar over _DB_PUSH_DUR
+  var fill = card.querySelector('.db-push-progress-fill');
+  if (fill) {
+    fill.style.webkitTransitionDuration = _DB_PUSH_DUR + 'ms';
+    fill.style.transitionDuration       = _DB_PUSH_DUR + 'ms';
+    requestAnimationFrame(function() {
+      requestAnimationFrame(function() {
+        fill.style.webkitTransform = 'scaleX(0)';
+        fill.style.transform       = 'scaleX(0)';
+      });
+    });
+  }
+
+  // Auto-dismiss
+  card._dbDismissTimer = setTimeout(function() { dbDismissPushCard(card); }, _DB_PUSH_DUR);
+  card._dbNotifId      = nid;
+}
+
+function dbDismissPushCard(card) {
+  if (!card) return;
+  if (card._dbDismissTimer) { clearTimeout(card._dbDismissTimer); card._dbDismissTimer = null; }
+  card.className = 'db-push-card db-push-out';
+  var idx = _dbPushCards.indexOf(card);
+  if (idx !== -1) _dbPushCards.splice(idx, 1);
+  setTimeout(function() {
+    if (card && card.parentNode) card.parentNode.removeChild(card);
+  }, 380);
+}
+
+// Expose for Capacitor push tap (native layer calls this)
+window.dbShowPushCard  = dbShowPushCard;
+window.dbDismissPushCard = dbDismissPushCard;
+
+/* ── Legacy in-app toast (still used for simple wallet toasts) ── */
 function showNotifToast(title, msg, type) {
-  var el = document.getElementById('notif-toast');
-  if (!el) return;
-  var cls = 'notif-toast show';
-  if (type === 'error')   cls += ' error-toast';
-  else if (type === 'warning') cls += ' warn-toast';
-  else if (type === 'success') cls += ' success-toast';
-  el.className = cls;
-  el.innerHTML = '<span style="font-size:1rem;-webkit-flex-shrink:0;flex-shrink:0;">&#128276;</span>' +
-    '<div><div style="font-weight:900;margin-bottom:1px;">' + (title || '') + '</div>' +
-    '<div style="font-weight:400;font-size:.76rem;opacity:.9;">' + (msg || '') + '</div></div>';
-  if (_notifToastTimer) clearTimeout(_notifToastTimer);
-  _notifToastTimer = setTimeout(function() {
-    el.className = 'notif-toast';
-  }, 4500);
+  // Route all real notifications through the Facebook-style card
+  dbShowPushCard(title, msg, type, null);
 }
 
 /* ── Update bell badge ───────────────────────────────── */
@@ -4829,8 +5113,8 @@ function notifStartRealtime() {
           var unread = _notifAll.filter(function(x) { return !x.is_read; }).length;
           notifUpdateBadge(unread);
           if (_notifDrawerOpen) notifRender();
-          // Show toast for new notification
-          showNotifToast(n.title, n.message, n.type);
+          // Show Facebook-style white push card with sound (same notif in drawer)
+          dbShowPushCard(n.title, n.message, n.type || n.category || 'info', n.id);
           var _nc=n.category||''; if(_nc==='milestone'||_nc==='streak'){try{showMilestoneToast(n.title+' '+n.message,5000);}catch(e){}}
           // If it is a wallet credit or refund, refresh balance immediately
           // so the new amount shows without waiting for the 45s poll
@@ -5467,8 +5751,9 @@ function requestCapacitorPushToken() {
       });
       // Handle foreground push tap — open notification drawer
       Push.addListener('pushNotificationReceived', function(notification) {
-        showNotifToast(notification.title, notification.body, 'info');
-        notifLoad();
+        // Show Facebook-style card + add to drawer list
+        dbShowPushCard(notification.title, notification.body, 'info', null);
+        notifLoad(); // also refresh drawer
       });
       Push.addListener('pushNotificationActionPerformed', function() {
         openNotifDrawer();
