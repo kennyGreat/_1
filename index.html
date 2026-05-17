@@ -840,7 +840,6 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <button class="notif-filter"     data-cat="ad"         onclick="notifFilter(this,'ad')">Earn</button>
     </div>
     <div id="notif-list" style="-webkit-box-flex:1;-webkit-flex:1;flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;">
-      <div style="text-align:center;padding:40px 20px;color:#9ca3af;font-size:.85rem;">Loading&hellip;</div>
     </div>
   </div>
 
@@ -862,7 +861,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
       <span style="font-size:.62rem;font-weight:700;font-family:inherit;">Account</span>
     </button>
-    <button class="bnav-btn" id="tab-inbox" data-t="inbox" onclick="showTab('inbox')" style="flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;position:relative;">
+    <button class="bnav-btn" id="tab-inbox" data-t="inbox" onclick="showTab('inbox')" style="display:none!important;flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;position:relative;">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
       <span id="inbox-badge" style="display:none;position:absolute;top:4px;right:10px;background:#f43f5e;color:#fff;border-radius:10px;font-size:.55rem;font-weight:800;padding:1px 4px;min-width:14px;text-align:center;"></span>
       <span style="font-size:.62rem;font-weight:700;font-family:inherit;">Messages</span>
@@ -1048,6 +1047,12 @@ button.tab,button.plan-chip{box-shadow:none!important;}
     </div>
     </div>
     <div id="wallet-tab-content"><div class="empty">Loading account&hellip;</div></div>
+    <!-- Support section — WhatsApp opens wa.me. Number is not shown in the UI. -->
+    <div style="margin-top:14px;">
+      <div style="font-size:.78rem;font-weight:800;color:#374151;margin-bottom:8px;">Need help?</div>
+      <button class="btn btn-lite" id="acct-whatsapp-btn" onclick="openWhatsAppSupport()" style="margin:0;width:100%;background:#25D366;color:#fff;border-color:#25D366;">&#128241; Chat with us on WhatsApp</button>
+      <div style="font-size:.7rem;color:#888;text-align:center;margin-top:6px;">Tap to chat with our support team on WhatsApp.</div>
+    </div>
   </div>
 
   <!-- Inbox -->
@@ -1815,6 +1820,8 @@ function showTab(t) {
   if (t === 'subs')   { if (now - _subsLastLoad  > STALE_MS) { _subsLastLoad  = now; loadSubs(); } }
   if (t === 'wallet') loadWalletTab();
   if (t === 'inbox')  { if (now - _inboxLastLoad > STALE_MS) { _inboxLastLoad = now; loadInbox(); } updateInboxBadge(0); }
+  /* Ensure the friend-daily nugget is present on the newly-shown tab */
+  try { if (typeof renderFriendDailyEverywhere === 'function') renderFriendDailyEverywhere(); } catch(e) {}
 }
 
 function errShow(id, msg) {
@@ -1823,7 +1830,7 @@ function errShow(id, msg) {
   el.textContent = msg;
   el.className = 'err on';
 }
-function errHide(id) { var el = $(id); if(el) el.className = 'err'; }
+function errHide(id) { var el = $(id); if(el) { el.className = 'err'; el.textContent = ''; } }
 function okShow(id, msg) {
   var el = $(id);
   if (!el) return;
@@ -2049,12 +2056,16 @@ function bootApp() {
     if (_walletPollTick % 4 === 0) loadInbox(); // inbox every 60s (4 × 15s)
   }, 15000);
 
-  // Refresh the daily nugget strip every 10 minutes so the user sees
-  // a different tip each time without needing to reload the app.
+  // Refresh the friend-daily nugget on every tab every 5 minutes so the user
+  // sees a different tip frequently without needing to reload the app.
   if (window._nuggetTimer) clearInterval(window._nuggetTimer);
   window._nuggetTimer = setInterval(function() {
     try { renderDynamicStrip(); } catch(e) {}
-  }, 600000);
+    try { renderFriendDailyEverywhere(); } catch(e) {}
+  }, 300000);
+
+  // First paint of the friend-daily nugget across all tabs, right after login
+  try { renderFriendDailyEverywhere(); } catch(e) {}
 
   // Start Supabase Realtime listener — balance updates reflect instantly
   // (< 5s) without waiting for the poll cycle.
@@ -2464,12 +2475,14 @@ function renderSubsList(subs, compact) {
     if (isCompleted) {
       html += '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:7px;margin-top:4px;">' +
         '<div style="flex:1;padding:8px 10px;background:#e8eaff;color:#2A3FA3;border-radius:6px;font-size:.78rem;font-weight:700;text-align:center;">Delivered &#9989; Done</div>' +
-        '<button style="padding:8px 10px;background:#fff;border:1px solid #e5e7eb;color:#374151;border-radius:6px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="openRefundModal(\'' + esc(s.id) + '\',\'' + esc(displayName + ' ' + displayNetwork) + '\',\'' + esc(s.phone_number || '') + '\')">&#9888; Report Issue</button>' +
+        /* Report Issue button hidden per product decision — keep markup & handler for easy re-enable */
+        '<button style="display:none;padding:8px 10px;background:#fff;border:1px solid #e5e7eb;color:#374151;border-radius:6px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="openRefundModal(\'' + esc(s.id) + '\',\'' + esc(displayName + ' ' + displayNetwork) + '\',\'' + esc(s.phone_number || '') + '\')">&#9888; Report Issue</button>' +
       '</div>';
     } else if ((isActive || isPending) && remaining > 0) {
       html += '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:7px;margin-top:4px;">' +
         '<button class="pay-btn" style="flex:1;" onclick="openPayModal(\'' + esc(s.id) + '\',' + (dailyPrice||0) + ',' + remaining + ')">Pay Now</button>' +
-        '<button style="padding:8px 10px;background:#fff;border:1px solid #e5e7eb;color:#374151;border-radius:6px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="openRefundModal(\'' + esc(s.id) + '\',\'' + esc(displayName + ' ' + displayNetwork) + '\',\'' + esc(s.phone_number || '') + '\')">&#9888; Report Issue</button>' +
+        /* Report Issue button hidden per product decision — keep markup & handler for easy re-enable */
+        '<button style="display:none;padding:8px 10px;background:#fff;border:1px solid #e5e7eb;color:#374151;border-radius:6px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="openRefundModal(\'' + esc(s.id) + '\',\'' + esc(displayName + ' ' + displayNetwork) + '\',\'' + esc(s.phone_number || '') + '\')">&#9888; Report Issue</button>' +
       '</div>';
     }
 
@@ -2680,6 +2693,10 @@ function updateSubInfo() {
 }
 
 function openSubModal(planIdx) {
+  /* Always clear any stale error from a previous attempt — first thing, before any other logic. */
+  var _errEl = $('m-sub-err');
+  if (_errEl) { _errEl.className = 'err'; _errEl.textContent = ''; }
+
   var plansWrap = $('plans-list');
   var plan = null;
   var s = String(planIdx);
@@ -3258,6 +3275,35 @@ function doCancelAutoFund(mandateId, subscriptionId) {
     });
   });
 }
+
+/* ── Chat with us on WhatsApp — opens wa.me link.
+   The number is split into fragments so it does NOT appear as a single
+   greppable string in the source, and is NEVER rendered as visible
+   text in the DOM. It is only assembled at click time and passed to
+   the OS as a URL.                                                       */
+function openWhatsAppSupport() {
+  /* Country code 234 + 7048069238 — split to avoid the number appearing
+     as one string in source or any DOM text node. */
+  var num = '234' + '70' + '4806' + '9238';
+  var userId    = (window.gUser && window.gUser.id)    ? window.gUser.id    : 'guest';
+  var userEmail = (window.gUser && window.gUser.email) ? window.gUser.email : '';
+  var msg = ''
+    + 'Hi DataBulge Support,\n'
+    + 'I need help with: \n\n'
+    + '[Please describe your issue here]\n\n'
+    + '---\n'
+    + 'Account: ' + (userEmail || '(not signed in)') + '\n'
+    + 'User ID: ' + userId;
+  var url = 'https://wa.me/' + num + '?text=' + encodeURIComponent(msg);
+  try {
+    window.open(url, '_blank');
+  } catch (e) {
+    try { window.location.href = url; } catch (e2) {
+      toast('Could not open WhatsApp. Please try again.');
+    }
+  }
+}
+window.openWhatsAppSupport = openWhatsAppSupport;
 
 function loadWalletTab() {
   ensureToken(function(err) {
@@ -4966,20 +5012,95 @@ function notifUpdateBadge(count) {
   }
 }
 
+/* ── Always-on seed notifications ────────────────────────
+   These guarantee the bell drawer always has content — no
+   blank "Loading…" or "No notifications yet" states. Real
+   server notifications are merged on top of these; the seeds
+   are shown when the user has nothing real to read yet, and
+   while the first network fetch is still in flight.            */
+function _notifSeedItems() {
+  var bal = (typeof gBal === 'number') ? gBal : 0;
+  var d   = (typeof gRetention !== 'undefined' && gRetention) ? gRetention : {};
+  var plans = parseInt(d.plans_total) || 0;
+  var nowIso = new Date().toISOString();
+  var seeds = [];
+  seeds.push({
+    id: '_seed_welcome', category: 'info', type: 'info',
+    icon: '\uD83D\uDC4B', title: 'Welcome to DataBulge',
+    message: 'Buy data now, pay small small — daily payments, big data. Tap any tip below to learn more.',
+    created_at: nowIso, is_read: true
+  });
+  if (plans === 0) {
+    seeds.push({
+      id: '_seed_firstplan', category: 'info', type: 'info',
+      icon: '\uD83D\uDCF6', title: 'Pick your first plan',
+      message: 'Choose a data plan in Buy Data, make a small first payment, and pay daily until it is complete. Data is delivered automatically when fully paid.',
+      created_at: nowIso, is_read: true
+    });
+  }
+  if (bal < 100) {
+    seeds.push({
+      id: '_seed_fund', category: 'wallet', type: 'info',
+      icon: '\uD83D\uDCB0', title: 'Keep your wallet funded',
+      message: 'Top up small money regularly so your daily installments go through smoothly. Tap Account to fund.',
+      created_at: nowIso, is_read: true
+    });
+  }
+  seeds.push({
+    id: '_seed_autofund', category: 'wallet', type: 'info',
+    icon: '\uD83D\uDCB3', title: 'Try Auto-Fund',
+    message: 'Set Auto-Fund once and your wallet tops up automatically every day. Minimum is \u20A6100. Cancel anytime.',
+    created_at: nowIso, is_read: true
+  });
+  seeds.push({
+    id: '_seed_payanytime', category: 'delivery', type: 'info',
+    icon: '\u23F0', title: 'Pay at your own pace',
+    message: 'Open the app and tap Pay Now whenever you are ready. You are always in control of when you pay.',
+    created_at: nowIso, is_read: true
+  });
+  return seeds;
+}
+
+function _notifCombined() {
+  /* Real notifications come first; seeds fill in if the list is empty
+     or if we want to keep the drawer visually populated. */
+  var real = (_notifAll && _notifAll.length) ? _notifAll.slice() : [];
+  if (real.length >= 3) return real;
+  var seeds = _notifSeedItems();
+  /* Avoid duplicating seed ids if they somehow got in there */
+  var existing = {};
+  for (var i = 0; i < real.length; i++) existing[real[i].id] = 1;
+  for (var j = 0; j < seeds.length; j++) {
+    if (!existing[seeds[j].id]) real.push(seeds[j]);
+  }
+  return real;
+}
+
 /* ── Render notification list ────────────────────────── */
 function notifRender() {
   var list = document.getElementById('notif-list');
   if (!list) return;
 
-  var items = _notifCat === 'all'
-    ? _notifAll
-    : _notifAll.filter(function(n) { return n.category === _notifCat; });
+  var pool = _notifCombined();
 
+  /* Map each filter tab to the set of DB category values it should surface.
+     'general', 'info', and any unmapped category appear under 'All' only.   */
+  var TAB_CATS = {
+    all:        null, /* null = no filtering, show everything */
+    delivery:   { delivery: 1 },
+    wallet:     { wallet: 1 },
+    data_usage: { data_usage: 1 },
+    ad:         { ad: 1, milestone: 1, streak: 1, referral: 1, earn: 1 }
+  };
+  var allowed = TAB_CATS[_notifCat];
+  var items = (allowed == null)
+    ? pool
+    : pool.filter(function(n) { return allowed[n.category] === 1; });
+
+  /* Fallback safety net — if a filter produces zero items we still show
+     the welcome seed so the drawer is never blank. */
   if (!items || !items.length) {
-    list.innerHTML = '<div style="text-align:center;padding:48px 20px;color:#9ca3af;">' +
-      '<div style="font-size:2rem;margin-bottom:8px;">&#128276;</div>' +
-      '<div style="font-size:.85rem;">No notifications yet</div></div>';
-    return;
+    items = [_notifSeedItems()[0]];
   }
 
   var html = '';
@@ -5012,12 +5133,15 @@ function notifFilter(btn, cat) {
 /* ── Tap a notification — mark read ─────────────────── */
 function notifTap(id) {
   if (!window.gUser || !window.gToken) return;
+  /* Seed (synthetic) notifications — no server record to mark read. */
+  var isSeed = (typeof id === 'string' && id.indexOf('_seed_') === 0);
   for (var i = 0; i < _notifAll.length; i++) {
     if (_notifAll[i].id === id) { _notifAll[i].is_read = true; break; }
   }
   notifRender();
   var unread = _notifAll.filter(function(n) { return !n.is_read; }).length;
   notifUpdateBadge(unread);
+  if (isSeed) return;
   window.rpc('mark_notification_read', JSON.stringify({
     p_user_id:  window.gUser.id,
     p_notif_id: id
@@ -5039,13 +5163,22 @@ function notifMarkAllRead() {
 
 /* ── Fetch notifications from backend ────────────────── */
 function notifLoad() {
-  if (!window.gUser || !window.gToken) return;
+  if (!window.gUser || !window.gToken) {
+    /* No session yet — still show seeds so drawer is never blank */
+    try { notifRender(); } catch(e) {}
+    return;
+  }
   window.rpc('get_notifications', JSON.stringify({
     p_user_id: window.gUser.id,
     p_limit:   50,
     p_offset:  0
   }), function(err, res) {
-    if (err || !res || !res.ok || !res.data) return;
+    if (err || !res || !res.ok || !res.data) {
+      /* Network/RPC failure — keep whatever we already have in cache,
+         and ensure seeds are rendered so the drawer is never blank. */
+      try { notifRender(); } catch(e) {}
+      return;
+    }
     var d = res.data;
     _notifAll = d.notifications || [];
     notifUpdateBadge(d.unread_count || 0);
@@ -5067,6 +5200,10 @@ function openNotifDrawer() {
   drawer.style.webkitTransform = 'translateX(0)';
   drawer.style.transform       = 'translateX(0)';
   _notifDrawerOpen = true;
+  /* Render instantly from cache + seeds so the drawer never sits on
+     "Loading…" — even before any network response. notifLoad below
+     will replace this with the latest real data when it returns. */
+  try { notifRender(); } catch(e) {}
   notifLoad(); // refresh on open
 }
 
@@ -5370,6 +5507,100 @@ function renderDynamicStrip() {
 }
 
 function dynamicStripAction(){if(_dynamicStripAction)_dynamicStripAction();}
+
+/* ─────────────────────────────────────────────────────────────────────
+   Friend Daily nugget — show on EVERY tab, rotate every 5 minutes.
+   Uses the same nugget pool logic as renderDynamicStrip, but renders
+   the friend-daily card at the top of every tab container so users
+   always see today's friendly nudge no matter which tab they're on.
+   ───────────────────────────────────────────────────────────────────── */
+var _friendDailyAction = null;
+function _buildNuggetPool() {
+  var d = gRetention || {};
+  var bal = gBal || 0;
+  var activeSubs = [], i;
+  if (typeof _gSubsCache !== 'undefined' && _gSubsCache && _gSubsCache.length) {
+    for (i = 0; i < _gSubsCache.length; i++) {
+      if (_gSubsCache[i].status === 'pending' || _gSubsCache[i].status === 'active') {
+        activeSubs.push(_gSubsCache[i]);
+      }
+    }
+  }
+  var starterDaily = 50, starterDays = 7, starterSize = '1GB';
+  if (typeof _plansCache !== 'undefined' && _plansCache && _plansCache.length) {
+    var cheapest = _plansCache[0];
+    for (i = 1; i < _plansCache.length; i++) {
+      if (parseFloat(_plansCache[i].selling_price) < parseFloat(cheapest.selling_price)) cheapest = _plansCache[i];
+    }
+    var cTotal = Math.round(parseFloat(cheapest.selling_price) * 1.03 * 100) / 100;
+    starterDaily = Math.round(cTotal / 7 * 100) / 100;
+    starterSize  = cheapest.data_size || '1GB';
+  }
+  var nuggets = [];
+  if (activeSubs.length) {
+    for (i = 0; i < activeSubs.length; i++) {
+      var s = activeSubs[i], pl = s.data_plans || {};
+      var sDays = parseInt(s.payment_days) || 7;
+      var sDaily = parseFloat(s.daily_price) || 0;
+      var sTotal = parseFloat(s.total_price) || 0;
+      var sPaid  = parseFloat(s.amount_paid) || 0;
+      var sLeft  = Math.max(0, sTotal - sPaid);
+      var sSize  = pl.data_size || '';
+      var sNet   = pl.network || s.network || '';
+      var sPayLeft = sDaily > 0 ? Math.ceil(sLeft / sDaily) : 0;
+      nuggets.push({ icon: '\uD83D\uDCF6', text: 'Pay \u20A6' + fmtN(sDaily) + ' for ' + sPayLeft + ' more day' + (sPayLeft !== 1 ? 's' : '') + ' and your ' + sSize + ' ' + sNet + ' data gets delivered. Never run out of data again.', action: function(){ showTab('subs'); } });
+      nuggets.push({ icon: '\uD83D\uDCB3', text: 'Tired of always going to your bank to transfer money to your DataBulge wallet? Set up Auto-Fund once — the minimum is \u20A6100 — and your wallet is credited automatically every day until your plan is complete. Cancel anytime.', action: function(){ openFundModal(); } });
+      nuggets.push({ icon: '\uD83D\uDCB8', text: 'Always keep your DataBulge wallet funded. You never know when you will run out of data and there will be no money in your account. A little payment a day keeps the data on.', action: function(){ openModal('m-fund'); } });
+      nuggets.push({ icon: '\uD83D\uDCC5', text: sSize + ' ' + sNet + ' plan — split over ' + sDays + ' days, that is just \u20A6' + fmtN(sDaily) + ' at a time. Small payments, big data.', action: function(){ showTab('subs'); } });
+      nuggets.push({ icon: '\uD83D\uDCB0', text: 'Tap Pay Now whenever you are ready — you are always in control of when you pay.', action: function(){ showTab('subs'); } });
+    }
+  } else {
+    nuggets.push({ icon: '\uD83D\uDCF6', text: 'Start small. Pay \u20A6' + fmtN(starterDaily) + ' a day for ' + starterDays + ' days and get ' + starterSize + ' of data delivered straight to your phone. No lump sum needed.', action: function(){ showTab('plans'); } });
+    nuggets.push({ icon: '\uD83D\uDCB3', text: 'No need to always go to your bank to transfer money. Set up Auto-Fund once and your wallet tops up automatically every day until your plan is complete. Cancel anytime.', action: function(){ openFundModal(); } });
+    nuggets.push({ icon: '\uD83D\uDCB8', text: 'Always keep your DataBulge wallet funded. You never know when you will run out of data and there will be no money in your account. A little payment a day keeps the data on.', action: function(){ openModal('m-fund'); } });
+    nuggets.push({ icon: '\uD83D\uDCA1', text: 'Pick a plan, make your first payment, then tap Pay Now daily until it is complete. Once fully paid your data is delivered automatically — no extra steps.', action: function(){ showTab('plans'); } });
+    nuggets.push({ icon: '\uD83D\uDCF1', text: 'Think of DataBulge like a savings box for your data. Drop money in daily, watch the progress bar fill up, and collect your data when it hits 100%.', action: function(){ showTab('plans'); } });
+  }
+  return nuggets;
+}
+
+function _pickNugget() {
+  var pool = _buildNuggetPool();
+  if (!pool.length) return null;
+  /* Rotate every 5 minutes (300000ms) so users see a different nudge frequently */
+  var idx = (new Date().getDay() * 100 + Math.floor(Date.now() / 300000)) % pool.length;
+  return pool[idx];
+}
+
+function friendDailyAction() { if (_friendDailyAction) _friendDailyAction(); }
+
+function renderFriendDailyEverywhere() {
+  var msg = _pickNugget();
+  if (!msg) return;
+  _friendDailyAction = msg.action || null;
+  /* Inject (or update) a friend-daily card at the top of every tab container */
+  var tabs = ['dash','plans','subs','wallet','inbox','earn'];
+  var safeText = (typeof safeEsc === 'function') ? safeEsc(msg.text) : String(msg.text || '');
+  for (var i = 0; i < tabs.length; i++) {
+    var tc = document.getElementById('tc-' + tabs[i]);
+    if (!tc) continue;
+    var card = tc.querySelector('.friend-daily-global');
+    if (!card) {
+      card = document.createElement('div');
+      card.className = 'friend-daily friend-daily-global';
+      card.setAttribute('role','button');
+      card.style.cursor = 'pointer';
+      card.onclick = friendDailyAction;
+      tc.insertBefore(card, tc.firstChild);
+    }
+    card.innerHTML =
+      '<div class="friend-daily-icon">' + msg.icon + '</div>' +
+      '<div><div class="friend-daily-title">Today\u2019s friendly nudge</div>' +
+      '<div class="friend-daily-sub">' + safeText + '</div></div>';
+  }
+}
+window.renderFriendDailyEverywhere = renderFriendDailyEverywhere;
+window.friendDailyAction = friendDailyAction;
 
 function renderSavingsCard() {
   var d=gRetention||{},saved=parseFloat(d.month_saved)||0,plans=parseInt(d.month_plans)||0,card=$('savings-card');
@@ -5863,7 +6094,6 @@ window.detectAndSaveLocation = detectAndSaveLocation;
         '<div class="friend-balance"><div><div class="friend-bal-label">Available balance</div><div class="friend-bal-val" id="friend-bal-val">'+bal+'</div></div><div style="font-size:.76rem;opacity:.82;font-weight:800;text-align:right;">Ready when you are</div></div>'+ 
         '<div class="friend-cta-row"><button class="friend-cta primary" onclick="openFundModal()">Add small money</button><button class="friend-cta secondary" onclick="document.getElementById(\'plans-list\').scrollIntoView({behavior:\'smooth\',block:\'start\'});">Find a plan</button></div>'+ 
       '</div>'+ 
-      '<div class="friend-daily" id="friend-daily"><div class="friend-daily-icon">'+msg[0]+'</div><div><div class="friend-daily-title">Today’s friendly nudge</div><div class="friend-daily-sub">'+safeEsc(msg[1])+'</div></div></div>'+ 
       '<div class="friend-quick-grid" id="friend-quick-grid"><button class="friend-action-card fund" onclick="openFundModal()"><span class="emoji">💚</span><strong>Fund with ease</strong><span>Your wallet updates automatically after transfer.</span></button><button class="friend-action-card plan" onclick="document.getElementById(\'plans-list\').scrollIntoView({behavior:\'smooth\',block:\'start\'});"><span class="emoji">🎯</span><strong>Choose your vibe</strong><span>MTN, Airtel, Glo or 9mobile — paid your way.</span></button></div>';
     if(old){
       var bv=byId('friend-bal-val'); if(bv) bv.innerHTML=bal;
