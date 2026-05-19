@@ -2164,10 +2164,19 @@ function loadWalletBalance(cb) {
         var _hb = $('d-bal-dash');
         if (_hb) {
           var _prev = parseFloat((_hb.textContent||'0').replace(/[^0-9.]/g,''))||0;
-          if (Math.abs(gBal-_prev)>0.5) {
-            animateBalance(_hb,_prev,gBal,400);
-            _hb.className='hero-bal-amount bal-pop';
-            setTimeout(function(){_hb.className='hero-bal-amount';},400);
+          // Use the prettier 900ms cubic-eased count-up when the value
+          // changes by anything meaningful — including the first boot
+          // when DOM starts at ₦0.00 and gBal arrives from the server.
+          if (Math.abs(gBal-_prev)>0.005) {
+            if (typeof dbCountUpBalance === 'function') {
+              _hb.className='hero-bal-amount bal-pop';
+              dbCountUpBalance(_hb, gBal, 900);
+              setTimeout(function(){_hb.className='hero-bal-amount';},1100);
+            } else {
+              animateBalance(_hb,_prev,gBal,400);
+              _hb.className='hero-bal-amount bal-pop';
+              setTimeout(function(){_hb.className='hero-bal-amount';},400);
+            }
           } else { _hb.textContent=balStr; }
         }
         var va = '';
