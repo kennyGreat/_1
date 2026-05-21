@@ -5367,6 +5367,14 @@ function registerPushToken(fcmToken) {
   );
 }
 window.registerPushToken = registerPushToken;
+
+/* Native app bridges — MainActivity.java in the Android wrapper calls these
+   when a deep-link magic-link arrives, or when a push lands while the app
+   is in the foreground. Exposing them on window keeps the calls working. */
+window.parseHash       = parseHash;
+window.notifLoad       = notifLoad;
+window.showNotifToast  = showNotifToast;
+
 /* ═══ RETENTION SYSTEM ════════════════════════════════════════
    ES5 — Android 4.4+ compatible. No arrow functions, no const.
    ═══════════════════════════════════════════════════════════ */
