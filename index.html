@@ -1634,45 +1634,14 @@ function dbStopWalletRealtime() {
 }
 
 /* ── SAFE STORAGE ──────────────────────────────────────────── */
-/* Session is saved to sessionStorage by default (cleared when browser closes).
-   Only saved to localStorage when user ticked "Remember me" on the auth page
-   (databulge-auth.html sets window.dbRememberMe = true before calling _setSession). */
 var _store = (function() {
-  var mem  = {};
-  var lsOk = false;
-  var ssOk = false;
-  try { localStorage.setItem('__t','1');   lsOk = localStorage.getItem('__t')   === '1'; localStorage.removeItem('__t');   } catch(e) {}
-  try { sessionStorage.setItem('__t','1'); ssOk = sessionStorage.getItem('__t') === '1'; sessionStorage.removeItem('__t'); } catch(e) {}
-  // Bootstrap the remember-me preference from localStorage on every load
-  // (auth page always saves 'db_remember_me' directly to localStorage)
-  try {
-    if (lsOk && localStorage.getItem('db_remember_me') === '1') window.dbRememberMe = true;
-  } catch(e) {}
-  function _useLS() { return lsOk && (window.dbRememberMe === true); }
+  var mem = {};
+  var ok = false;
+  try { localStorage.setItem('__t','1'); ok = localStorage.getItem('__t') === '1'; localStorage.removeItem('__t'); } catch(e) {}
   return {
-    get: function(k) {
-      try {
-        if (lsOk) { var lv = localStorage.getItem(k);   if (lv !== null) return lv; }
-        if (ssOk) { var sv = sessionStorage.getItem(k); if (sv !== null) return sv; }
-        return mem[k] || null;
-      } catch(e) { return mem[k] || null; }
-    },
-    set: function(k, v) {
-      try {
-        if (_useLS()) {
-          if (lsOk) localStorage.setItem(k, v);
-          try { if (ssOk) sessionStorage.removeItem(k); } catch(e2) {}
-        } else {
-          if (ssOk) sessionStorage.setItem(k, v);
-          try { if (lsOk) localStorage.removeItem(k); } catch(e2) {}
-        }
-      } catch(e) { mem[k] = v; }
-    },
-    del: function(k) {
-      try { if (lsOk) localStorage.removeItem(k); }   catch(e) {}
-      try { if (ssOk) sessionStorage.removeItem(k); } catch(e) {}
-      delete mem[k];
-    }
+    get: function(k)  { try { return ok ? localStorage.getItem(k)     : (mem[k]||null); } catch(e) { return mem[k]||null; } },
+    set: function(k,v){ try { if(ok) localStorage.setItem(k,v); else mem[k]=v; } catch(e) { mem[k]=v; } },
+    del: function(k)  { try { if(ok) localStorage.removeItem(k); else delete mem[k]; } catch(e) { delete mem[k]; } }
   };
 })();
 
@@ -1976,7 +1945,7 @@ function doResetPassword() {
   var pass    = $('r-pass').value    || '';
   var confirm = $('r-confirm').value || '';
   errHide('r-err'); okHide('r-ok'); $('r-exp').style.display = 'none';
-  if (!pass || pass.length < 8) { errShow('r-err', 'Password must be at least 8 characters.'); return; }
+  if (!pass || pass.length < 6) { errShow('r-err', 'Password must be at least 6 characters.'); return; }
   if (pass !== confirm) { errShow('r-err', 'Passwords do not match.'); return; }
   btnLoad('r-btn', true, 'Saving\u2026');
   // Use the recovery access token to update password via Supabase REST
@@ -2417,7 +2386,7 @@ function renderSubsList(subs, compact) {
     var isAirtime = (pl.category === 'airtime' || pl.data_size === 'Airtime' || s.network === s.network && !pl.data_size);
     // For airtime, the display name comes from network + total_price
     var displayName = isAirtime
-      ? (fmtN(total / (1 + (parseInt(s.payment_days) === 28 ? 0.05 : 0.03))) + ' ' + esc(s.network || '') + ' Airtime')
+      ? ('₦' + fmtN(total / (1 + (parseInt(s.payment_days) === 28 ? 0.05 : 0.03))) + ' ' + esc(s.network || '') + ' Airtime')
       : esc(pl.data_size || 'Data Plan');
     var displayNetwork = isAirtime ? esc(s.network || '') : esc(pl.network || '');
 
@@ -3499,7 +3468,7 @@ function checkUndeliveredData() {
       var pl = s.data_plans || {};
       var isAir = (pl.category === 'airtime' || pl.data_size === 'Airtime');
       var planLabel = isAir
-        ? esc(fmtN(parseFloat(s.total_price) / (1 + (parseInt(s.payment_days) === 28 ? 0.05 : 0.03))) + ' ' + (s.network || '') + ' Airtime')
+        ? esc('\u20a6' + fmtN(parseFloat(s.total_price) / (1 + (parseInt(s.payment_days) === 28 ? 0.05 : 0.03))) + ' ' + (s.network || '') + ' Airtime')
         : esc((pl.data_size || 'data') + ' ' + (pl.network || ''));
       var phone = esc(s.phone_number || 'your number');
       var el = document.createElement('div');
@@ -3635,7 +3604,7 @@ function launchAutoFund(amt, planLabel, subscriptionId) {
                 _loadSubMandate(subscriptionId); // show cancel in sub modal
               }
             } else {
-              toast('\u26A0\uFE0F Auto-Fund setup failed. Please try again.');
+              toast('Payment received. Auto-Fund will activate shortly.');
             }
             setTimeout(function() { loadDashboard(); loadDashCashflow(); }, 1500);
           });
@@ -3722,7 +3691,7 @@ function loadDashCashflow() {
           var pct  = Math.min(100, (paid / total) * 100);
           html += '<div style="border:1px solid #e5e7eb;border-radius:8px;padding:12px;margin-bottom:10px;background:#fff;">' +
             '<div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;margin-bottom:6px;">' +
-              (function() { var isAir = pl.category === 'airtime' || pl.data_size === 'Airtime'; var dname = isAir ? (fmtN(parseFloat(s.total_price)/(1+(parseInt(s.payment_days)===28?0.05:0.03))) + ' ' + esc(s.network||'') + ' Airtime') : esc(pl.data_size||''); var dnet = isAir ? esc(s.network||'') : esc(pl.network||''); return '<span style="font-size:.93rem;font-weight:800;color:#111;">' + dname + ' <span class="plan-net ' + netCls(isAir?s.network:pl.network) + '">' + dnet + '</span></span>'; }()) +
+              (function() { var isAir = pl.category === 'airtime' || pl.data_size === 'Airtime'; var dname = isAir ? ('₦' + fmtN(parseFloat(s.total_price)/(1+(parseInt(s.payment_days)===28?0.05:0.03))) + ' ' + esc(s.network||'') + ' Airtime') : esc(pl.data_size||''); var dnet = isAir ? esc(s.network||'') : esc(pl.network||''); return '<span style="font-size:.93rem;font-weight:800;color:#111;">' + dname + ' <span class="plan-net ' + netCls(isAir?s.network:pl.network) + '">' + dnet + '</span></span>'; }()) +
               '<span style="font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:10px;background:#fef3c7;color:#92400e;">' + esc(s.status) + '</span>' +
             '</div>' +
             '<div style="background:#e5e7eb;border-radius:4px;height:6px;overflow:hidden;margin-bottom:4px;"><div style="background:#1A56DB;height:100%;border-radius:4px;width:' + pct.toFixed(1) + '%;"></div></div>' +
@@ -5392,37 +5361,12 @@ function registerPushToken(fcmToken) {
     (typeof window.DataBulgeNative !== 'undefined' && window.DataBulgeNative.isNativeApp && window.DataBulgeNative.isNativeApp()));
   var hint = isNative ? 'android' : 'web';
   var h = { 'Authorization': 'Bearer ' + window.gToken, 'Content-Type': 'application/json', 'apikey': window.ANON_KEY, 'Prefer': 'resolution=merge-duplicates' };
-
-  // 1. Save to push_subscriptions (legacy)
   window.xhr('POST', window.REST + '/push_subscriptions', h,
     JSON.stringify({ user_id: window.gUser.id, endpoint: fcmToken, device_hint: hint, p256dh: '', auth: '' }),
-    function(e) { if (!e) console.log('[Push] FCM token saved to push_subscriptions'); }
+    function(e) { if (!e) console.log('[Push] FCM token registered for', hint); }
   );
-
-  // 2. Save to profiles.fcm_token via RPC (used by sendPushNotification edge function)
-  var sb = window._sb || window.supabase;
-  if (sb) {
-    sb.rpc('register_fcm_token', { p_token: fcmToken })
-      .then(function(res) {
-        if (res.error) console.warn('[Push] register_fcm_token RPC failed:', res.error.message);
-        else console.log('[Push] FCM token saved to profiles.fcm_token');
-      })
-      .catch(function(e) { console.warn('[Push] register_fcm_token error:', e); });
-  }
-
-  // 3. Also call new bridge if available
-  if (typeof window.onAndroidFCMToken === 'function') {
-    window.onAndroidFCMToken(fcmToken);
-  }
 }
 window.registerPushToken = registerPushToken;
-
-// Also expose onAndroidFCMToken so MainActivity can call it directly
-window.onAndroidFCMToken = function(token) {
-  if (!token) return;
-  try { localStorage.setItem('fcm_token', token); } catch(e) {}
-  registerPushToken(token);
-};
 
 /* Native app bridges — MainActivity.java in the Android wrapper calls these
    when a deep-link magic-link arrives, or when a push lands while the app
@@ -5529,7 +5473,7 @@ function renderDynamicStrip() {
 
       nuggets.push({
         cls: 'green', icon: '\uD83D\uDCF6',
-        text: 'Pay ' + fmtN(sDaily) + ' for ' + sPayLeft + ' more day' + (sPayLeft !== 1 ? 's' : '') + ' and your ' + sSize + ' ' + sNet + ' data gets delivered. Never run out of data again.',
+        text: 'Pay \u20A6' + fmtN(sDaily) + ' for ' + sPayLeft + ' more day' + (sPayLeft !== 1 ? 's' : '') + ' and your ' + sSize + ' ' + sNet + ' data gets delivered. Never run out of data again.',
         action: function() { showTab('subs'); }
       });
       nuggets.push({
@@ -5544,7 +5488,7 @@ function renderDynamicStrip() {
       });
       nuggets.push({
         cls: 'green', icon: '\uD83D\uDCC5',
-        text: sSize + ' ' + sNet + ' plan — split over ' + sDays + ' days, that is just ' + fmtN(sDaily) + ' at a time. Small payments, big data.',
+        text: sSize + ' ' + sNet + ' plan — split over ' + sDays + ' days, that is just \u20A6' + fmtN(sDaily) + ' at a time. Small payments, big data.',
         action: function() { showTab('subs'); }
       });
       nuggets.push({
@@ -5557,7 +5501,7 @@ function renderDynamicStrip() {
     /* NEW USER — starter tips using cheapest real plan numbers */
     nuggets.push({
       cls: 'green', icon: '\uD83D\uDCF6',
-      text: 'Start small. Pay ' + fmtN(starterDaily) + ' a day for ' + starterDays + ' days and get ' + starterSize + ' of data delivered straight to your phone. No lump sum needed.',
+      text: 'Start small. Pay \u20A6' + fmtN(starterDaily) + ' a day for ' + starterDays + ' days and get ' + starterSize + ' of data delivered straight to your phone. No lump sum needed.',
       action: function() { showTab('plans'); }
     });
     nuggets.push({
@@ -5586,11 +5530,11 @@ function renderDynamicStrip() {
   var _seed = (new Date().getDay() * 100 + Math.floor(Date.now() / 600000)) % nuggets.length;
 
   /* ── Urgent operational messages always shown first when they apply ── */
-  if (bal > 0 && bal < 200) msgs.push({ cls: 'warn', icon: '\u26A0\uFE0F', text: 'Your wallet has ' + fmtN(bal) + ' — top up now to avoid missing your next installment.', action: function() { openModal('m-fund'); } });
-  if (saved > 0 && plans > 0) msgs.push({ cls: 'green', icon: '\uD83D\uDCB0', text: 'You managed installments for ' + plans + ' plan' + (plans !== 1 ? 's' : '') + ' this month — ' + fmtN(saved) + ' paid in small steps.', action: function() { showTab('wallet'); } });
+  if (bal > 0 && bal < 200) msgs.push({ cls: 'warn', icon: '\u26A0\uFE0F', text: 'Your wallet has \u20A6' + fmtN(bal) + ' — top up now to avoid missing your next installment.', action: function() { openModal('m-fund'); } });
+  if (saved > 0 && plans > 0) msgs.push({ cls: 'green', icon: '\uD83D\uDCB0', text: 'You managed installments for ' + plans + ' plan' + (plans !== 1 ? 's' : '') + ' this month — \u20A6' + fmtN(saved) + ' paid in small steps.', action: function() { showTab('wallet'); } });
   if (cur >= 3 && cur < 7) msgs.push({ cls: 'warn', icon: '\uD83D\uDD25', text: cur + '-day streak! Open the app every day to protect it. Miss a day and it resets to zero.', action: null });
   if (cur >= 7) msgs.push({ cls: 'warn', icon: '\uD83C\uDFC6', text: cur + '-day streak! You have been consistent for ' + cur + ' days straight. Keep it going.', action: null });
-  if (plans >= 1 && bal < 100) msgs.push({ cls: 'warn', icon: '\uD83D\uDCB8', text: 'Fund ' + fmtN(Math.max(100, Math.ceil(bal / 50) * 50 + 100)) + ' or more so your next installment goes through without issues.', action: function() { openModal('m-fund'); } });
+  if (plans >= 1 && bal < 100) msgs.push({ cls: 'warn', icon: '\uD83D\uDCB8', text: 'Fund \u20A6' + fmtN(Math.max(100, Math.ceil(bal / 50) * 50 + 100)) + ' or more so your next installment goes through without issues.', action: function() { openModal('m-fund'); } });
 
   /* If no urgent message applies, show the rotating personalised nugget */
   if (!msgs.length) msgs.push(nuggets[_seed]);
@@ -5645,14 +5589,14 @@ function _buildNuggetPool() {
       var sSize  = pl.data_size || '';
       var sNet   = pl.network || s.network || '';
       var sPayLeft = sDaily > 0 ? Math.ceil(sLeft / sDaily) : 0;
-      nuggets.push({ icon: '\uD83D\uDCF6', text: 'Pay ' + fmtN(sDaily) + ' for ' + sPayLeft + ' more day' + (sPayLeft !== 1 ? 's' : '') + ' and your ' + sSize + ' ' + sNet + ' data gets delivered. Never run out of data again.', action: function(){ showTab('subs'); } });
+      nuggets.push({ icon: '\uD83D\uDCF6', text: 'Pay \u20A6' + fmtN(sDaily) + ' for ' + sPayLeft + ' more day' + (sPayLeft !== 1 ? 's' : '') + ' and your ' + sSize + ' ' + sNet + ' data gets delivered. Never run out of data again.', action: function(){ showTab('subs'); } });
       nuggets.push({ icon: '\uD83D\uDCB3', text: 'Tired of always going to your bank to transfer money to your DataBulge wallet? Set up Auto-Fund once — the minimum is \u20A6100 — and your wallet is credited automatically every day until your plan is complete. Cancel anytime.', action: function(){ openFundModal(); } });
       nuggets.push({ icon: '\uD83D\uDCB8', text: 'Always keep your DataBulge wallet funded. You never know when you will run out of data and there will be no money in your account. A little payment a day keeps the data on.', action: function(){ openModal('m-fund'); } });
-      nuggets.push({ icon: '\uD83D\uDCC5', text: sSize + ' ' + sNet + ' plan — split over ' + sDays + ' days, that is just ' + fmtN(sDaily) + ' at a time. Small payments, big data.', action: function(){ showTab('subs'); } });
+      nuggets.push({ icon: '\uD83D\uDCC5', text: sSize + ' ' + sNet + ' plan — split over ' + sDays + ' days, that is just \u20A6' + fmtN(sDaily) + ' at a time. Small payments, big data.', action: function(){ showTab('subs'); } });
       nuggets.push({ icon: '\uD83D\uDCB0', text: 'Tap Pay Now whenever you are ready — you are always in control of when you pay.', action: function(){ showTab('subs'); } });
     }
   } else {
-    nuggets.push({ icon: '\uD83D\uDCF6', text: 'Start small. Pay ' + fmtN(starterDaily) + ' a day for ' + starterDays + ' days and get ' + starterSize + ' of data delivered straight to your phone. No lump sum needed.', action: function(){ showTab('plans'); } });
+    nuggets.push({ icon: '\uD83D\uDCF6', text: 'Start small. Pay \u20A6' + fmtN(starterDaily) + ' a day for ' + starterDays + ' days and get ' + starterSize + ' of data delivered straight to your phone. No lump sum needed.', action: function(){ showTab('plans'); } });
     nuggets.push({ icon: '\uD83D\uDCB3', text: 'No need to always go to your bank to transfer money. Set up Auto-Fund once and your wallet tops up automatically every day until your plan is complete. Cancel anytime.', action: function(){ openFundModal(); } });
     nuggets.push({ icon: '\uD83D\uDCB8', text: 'Always keep your DataBulge wallet funded. You never know when you will run out of data and there will be no money in your account. A little payment a day keeps the data on.', action: function(){ openModal('m-fund'); } });
     nuggets.push({ icon: '\uD83D\uDCA1', text: 'Pick a plan, make your first payment, then tap Pay Now daily until it is complete. Once fully paid your data is delivered automatically — no extra steps.', action: function(){ showTab('plans'); } });
@@ -5703,7 +5647,7 @@ function renderSavingsCard() {
   var d=gRetention||{},saved=parseFloat(d.month_saved)||0,plans=parseInt(d.month_plans)||0,card=$('savings-card');
   if(!card)return;
   if(saved<50||plans<1){card.style.display='none';return;}
-  if($('savings-amount'))$('savings-amount').textContent=fmtN(saved);
+  if($('savings-amount'))$('savings-amount').textContent='₦'+fmtN(saved);
   if($('savings-sub'))$('savings-sub').textContent='across '+plans+' plan'+(plans!==1?'s':'')+' this month — paying in installments instead of upfront.';
   card.style.display='';
 }
@@ -5721,7 +5665,7 @@ function renderReferralCard() {
   var rc=(gUser.id||'').replace(/-/g,'').slice(0,8).toUpperCase();
   if(code)code.textContent=rc;
   var d=gRetention||{},refs=parseInt(d.referrals_done)||0;
-  if(label)label.textContent=refs>0?refs+' friend'+(refs!==1?'s':'')+' referred — '+fmtN(refs*200)+' earned':'No referrals yet — be the first to share!';
+  if(label)label.textContent=refs>0?refs+' friend'+(refs!==1?'s':'')+' referred — ₦'+fmtN(refs*200)+' earned':'No referrals yet — be the first to share!';
   /* card stays hidden from user — do not call card.style.display here */
 }
 
@@ -5759,7 +5703,7 @@ function renderDashActivePlans(subs) {
     var s=subs[i],pl=s.data_plans||{};
     var isAir=pl.category==='airtime'||pl.data_size==='Airtime';
     var net=(isAir?s.network:(pl.network||'')).toUpperCase();
-    var name=isAir?(fmtN(parseFloat(s.total_price)/(1+(parseInt(s.payment_days)===28?0.05:0.03)))+' '+esc(s.network||'')+' Airtime'):esc(pl.data_size||'Data Plan');
+    var name=isAir?('₦'+fmtN(parseFloat(s.total_price)/(1+(parseInt(s.payment_days)===28?0.05:0.03)))+' '+esc(s.network||'')+' Airtime'):esc(pl.data_size||'Data Plan');
     var paid=parseFloat(s.amount_paid)||0,total=parseFloat(s.total_price)||1,pct=Math.min(100,Math.round((paid/total)*100));
     var daily=parseFloat(s.daily_price)||parseFloat(pl.daily_price)||0,left=total-paid,daysL=daily>0?Math.ceil(left/daily):0;
     var netCard=net==='MTN'?'net-mtn-card':net==='AIRTEL'?'net-airtel-card':net==='GLO'?'net-glo-card':net==='9MOBILE'?'net-9mobile-card':'net-other-card';
@@ -5775,8 +5719,8 @@ function renderDashActivePlans(subs) {
       '<div class="apc-name">'+name+'</div>'+
       '<div class="apc-ring-wrap">'+ring+
         '<div class="apc-stats-col">'+
-          '<div class="apc-stat-label">Paid</div><div class="apc-stat-val">'+fmtN(paid)+'</div>'+
-          '<div class="apc-stat-label">Remaining</div><div class="apc-stat-val">'+fmtN(left)+'</div>'+
+          '<div class="apc-stat-label">Paid</div><div class="apc-stat-val">₦'+fmtN(paid)+'</div>'+
+          '<div class="apc-stat-label">Remaining</div><div class="apc-stat-val">₦'+fmtN(left)+'</div>'+
           (daysL>0?'<div style="font-size:.7rem;color:#555;margin-top:2px;">'+daysL+' day'+(daysL!==1?'s':'')+' to complete</div>':'')+
         '</div>'+
       '</div>'+
@@ -6723,46 +6667,6 @@ function doChangePassword() {
   });
 }
 
-</script>
-
-<script>
-/* ── DataBulge FCM Token Bridge ── */
-(function() {
-  'use strict';
-
-  function hookAuthStateChange() {
-    var sb = window._sb || window.supabase;
-    if (!sb) { setTimeout(hookAuthStateChange, 500); return; }
-
-    sb.auth.onAuthStateChange(function(event, session) {
-      if (event === 'SIGNED_IN' && session) {
-        var storedToken = null;
-        try { storedToken = localStorage.getItem('fcm_token'); } catch(e) {}
-        if (storedToken && typeof window.registerPushToken === 'function') {
-          window.registerPushToken(storedToken);
-        }
-      }
-      if (event === 'SIGNED_OUT') {
-        var sb2 = window._sb || window.supabase;
-        if (sb2) sb2.rpc('clear_fcm_token').catch(function(){});
-        if (window.AndroidBridge && window.AndroidBridge.clearToken) {
-          window.AndroidBridge.clearToken();
-        }
-        if (window.DataBulgeNative && window.DataBulgeNative.clearToken) {
-          window.DataBulgeNative.clearToken();
-        }
-        try { localStorage.removeItem('fcm_token'); } catch(e) {}
-      }
-    });
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', hookAuthStateChange);
-  } else {
-    hookAuthStateChange();
-  }
-
-})();
 </script>
 </body>
 </html>
