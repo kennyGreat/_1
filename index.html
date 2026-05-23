@@ -875,7 +875,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
   <!-- DASHBOARD TAB - RETENTION REDESIGN -->
   <div id="tc-dash" class="tab-content">
     <div class="hero-bal-card" id="hero-bal-card">
-      <button class="hero-fund-btn" id="d-fund-btn">+ Fund</button>
+      <button class="hero-fund-btn" id="d-fund-btn">+ Add small money</button>
       <div class="hero-bal-label">Wallet Balance</div>
       <div class="hero-bal-amount" id="d-bal-dash">&#8358;0.00</div>
       <div class="hero-bal-va" id="d-va-dash">Loading&#8230;</div>
@@ -6145,7 +6145,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
         '<div class="friend-hero-top"><div><div class="friend-kicker">Welcome Back,</div>'+ 
         '<div class="friend-title">Let’s keep you connected today.</div>'+ 
         '<div class="friend-sub">Buy data now, pay small small, and stay online without pressure.</div></div>'+ 
-        '<div class="friend-pill">📶 Your data friend</div></div>'+ 
+        '<div class="friend-pill">📶 I am your data friend</div></div>'+ 
         '<div class="friend-balance"><div><div class="friend-bal-label">Available balance</div><div class="friend-bal-val" id="friend-bal-val">'+bal+'</div></div><div style="font-size:.76rem;opacity:.82;font-weight:800;text-align:right;">Ready when you are</div></div>'+ 
         '<div class="friend-cta-row"><button class="friend-cta primary" onclick="openFundModal()">Add small money</button><button class="friend-cta secondary" onclick="dbGoSoftPay();">Find a plan</button></div>'+ 
       '</div>'+ 
@@ -6269,10 +6269,10 @@ window.detectAndSaveLocation = detectAndSaveLocation;
   }
   function injectHome(){
     var dash=$('tc-dash'); if(!dash || $('db-companion-welcome')) return;
-    var welcome=make('div','companion-welcome','<div class="companion-top"><div class="companion-pill">📶 Your data friend</div></div><div class="companion-title">Welcome, Let’s keep you online without pressure.</div><div class="companion-copy">Start small, stay connected, and watch your progress grow every day.</div><div class="companion-actions"><button type="button" class="companion-primary" id="db-start-plan">Buy Data</button><button type="button" class="companion-secondary" id="db-view-plans">Explore plans</button></div>');
+    var welcome=make('div','companion-welcome','<div class="companion-top"><div class="companion-pill">📶 I am your data friend</div></div><div class="companion-title">Welcome, Let’s keep you online without pressure.</div><div class="companion-copy">Start small, stay connected, and watch your progress grow every day.</div><div class="companion-actions"><button type="button" class="companion-primary" id="db-start-plan">Start with any amount</button><button type="button" class="companion-secondary" id="db-view-plans">Explore plans</button></div>');
     welcome.id='db-companion-welcome';
     dash.insertBefore(welcome,dash.firstChild);
-    on($('db-start-plan'),'click',function(){ if(typeof window.dbGoSoftPay==='function') window.dbGoSoftPay(); else safeShowTab('plans'); });
+    on($('db-start-plan'),'click',function(){ safeShowTab('plans'); setTimeout(function(){ safeOpenModal('m-fund'); },160); });
     on($('db-view-plans'),'click',function(){ if(typeof window.dbGoSoftPay==='function') window.dbGoSoftPay(); else safeShowTab('plans'); });
 
     var grid=make('div','momentum-grid','<div class="momentum-card" id="db-mc-save" onclick="safeShowTab(\'wallet\')" style="cursor:pointer;"><div class="momentum-label">Saved This Month</div><div class="momentum-value" id="db-m-save">—</div><div class="momentum-sub" id="db-m-save-sub">loading…</div></div><div class="momentum-card" id="db-mc-streak" onclick="safeShowTab(\'dash\')" style="cursor:pointer;"><div class="momentum-label">Daily Streak</div><div class="momentum-value" id="db-m-streak">—</div><div class="momentum-sub" id="db-m-streak-sub">loading…</div></div><div class="momentum-card" id="db-mc-plans" onclick="safeShowTab(\'subs\')" style="cursor:pointer;"><div class="momentum-label">Plans Completed</div><div class="momentum-value" id="db-m-next">—</div><div class="momentum-sub" id="db-m-next-sub">tap to view</div></div><div class="momentum-card" id="db-mc-wallet" onclick="safeOpenModal(\'m-fund\')" style="cursor:pointer;"><div class="momentum-label">Wallet Balance</div><div class="momentum-value" id="db-m-progress">—</div><div class="momentum-sub" id="db-m-progress-sub">tap to fund</div></div>');
@@ -6679,5 +6679,52 @@ function doChangePassword() {
 }
 
 </script>
+
+<script>
+/* Requested micro patch: all tabs except Buy Data open at the beginning of their tab. */
+(function(){
+  if (window.__dbTabTopPatch) return;
+  window.__dbTabTopPatch = true;
+  function scrollTabTop(t){
+    if (t === 'plans') return;
+    setTimeout(function(){
+      try{
+        var tc = document.getElementById('tc-' + t);
+        if (tc && tc.scrollIntoView) {
+          tc.scrollIntoView({behavior:'smooth', block:'start'});
+          return;
+        }
+        window.scrollTo(0,0);
+      }catch(e){ try{ window.scrollTo(0,0); }catch(x){} }
+    }, 90);
+  }
+  var previous = window.showTab;
+  if (typeof previous === 'function') {
+    window.showTab = function(t){
+      var result = previous.apply(this, arguments);
+      scrollTabTop(t);
+      return result;
+    };
+  }
+  function wireTabTop(){
+    var ids = ['dash','subs','wallet','inbox','earn'];
+    for (var i=0;i<ids.length;i++){
+      (function(t){
+        var b = document.getElementById('tab-' + t);
+        if (!b) return;
+        var oldClick = b.onclick;
+        b.onclick = function(ev){
+          if (typeof oldClick === 'function') oldClick.call(this, ev);
+          else if (typeof window.showTab === 'function') window.showTab(t);
+          scrollTabTop(t);
+        };
+      })(ids[i]);
+    }
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wireTabTop);
+  else wireTabTop();
+})();
+</script>
+
 </body>
 </html>
