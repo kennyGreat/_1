@@ -1814,6 +1814,19 @@ function showTab(t) {
   if (t === 'subs')   { if (now - _subsLastLoad  > STALE_MS) { _subsLastLoad  = now; loadSubs(); } }
   if (t === 'wallet') loadWalletTab();
   if (t === 'inbox')  { if (now - _inboxLastLoad > STALE_MS) { _inboxLastLoad = now; loadInbox(); } updateInboxBadge(0); }
+
+  // When the Buy Data tab is opened, always start at the top so the user
+  // sees the "Choose how softly you want to pay" section first.
+  if (t === 'plans') {
+    try {
+      window.scrollTo(0, 0);
+      if (document.body) document.body.scrollTop = 0;
+      if (document.documentElement) document.documentElement.scrollTop = 0;
+      var tcPlans = $('tc-plans');
+      if (tcPlans && tcPlans.scrollTop) tcPlans.scrollTop = 0;
+    } catch(e) {}
+  }
+
   /* Ensure the friend-daily nugget is present on the newly-shown tab */
   try { if (typeof renderFriendDailyEverywhere === 'function') renderFriendDailyEverywhere(); } catch(e) {}
 }
@@ -6133,9 +6146,9 @@ window.detectAndSaveLocation = detectAndSaveLocation;
         '<div class="friend-sub">Buy data now, pay small small, and stay online without pressure.</div></div>'+ 
         '<div class="friend-pill">📶 Your data friend</div></div>'+ 
         '<div class="friend-balance"><div><div class="friend-bal-label">Available balance</div><div class="friend-bal-val" id="friend-bal-val">'+bal+'</div></div><div style="font-size:.76rem;opacity:.82;font-weight:800;text-align:right;">Ready when you are</div></div>'+ 
-        '<div class="friend-cta-row"><button class="friend-cta primary" onclick="openFundModal()">Add small money</button><button class="friend-cta secondary" onclick="document.getElementById(\'plans-list\').scrollIntoView({behavior:\'smooth\',block:\'start\'});">Find a plan</button></div>'+ 
+        '<div class="friend-cta-row"><button class="friend-cta primary" onclick="openFundModal()">Add small money</button><button class="friend-cta secondary" onclick="showTab(\'plans\');">Find a plan</button></div>'+ 
       '</div>'+ 
-      '<div class="friend-quick-grid" id="friend-quick-grid"><button class="friend-action-card fund" onclick="openFundModal()"><span class="emoji">💚</span><strong>Fund with ease</strong><span>Your wallet updates automatically after transfer.</span></button><button class="friend-action-card plan" onclick="document.getElementById(\'plans-list\').scrollIntoView({behavior:\'smooth\',block:\'start\'});"><span class="emoji">🎯</span><strong>Choose your vibe</strong><span>MTN, Airtel, Glo or 9mobile — paid your way.</span></button></div>';
+      '<div class="friend-quick-grid" id="friend-quick-grid"><button class="friend-action-card fund" onclick="openFundModal()"><span class="emoji">💚</span><strong>Fund with ease</strong><span>Your wallet updates automatically after transfer.</span></button><button class="friend-action-card plan" onclick="showTab(\'plans\');"><span class="emoji">🎯</span><strong>Choose your vibe</strong><span>MTN, Airtel, Glo or 9mobile — paid your way.</span></button></div>';
     if(old){
       var bv=byId('friend-bal-val'); if(bv) bv.innerHTML=bal;
       return;
@@ -6148,7 +6161,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
     if(byId('friend-sticky-cta')) return;
     var d=document.createElement('div');
     d.className='friend-sticky-cta'; d.id='friend-sticky-cta';
-    d.innerHTML='<div class="friend-sticky-inner"><button class="fund" onclick="openFundModal()">💚 Fund account</button><button class="plans" onclick="showTab(\'plans\');setTimeout(function(){var p=document.getElementById(\'plans-list\');if(p)p.scrollIntoView({behavior:\'smooth\',block:\'start\'});},80);">📶 Pick plan</button></div>';
+    d.innerHTML='<div class="friend-sticky-inner"><button class="fund" onclick="openFundModal()">💚 Fund account</button><button class="plans" onclick="showTab(\'plans\');">📶 Pick plan</button></div>';
     document.body.appendChild(d);
     document.body.className += ' friend-show-sticky';
   }
