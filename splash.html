@@ -35,10 +35,15 @@ body{
   </svg>
 <script>
   /*
-    Session check — reads localStorage keys Supabase writes automatically.
-    Valid session (logged in or Remember Me ticked) → main app.
-    No session or expired → auth page.
-    Duration: random 5–7 seconds either way.
+    Splash screen — served from www.databulge.com (kennygreat/_1).
+    After 5–7 seconds, checks localStorage for a valid Supabase session
+    then redirects to the correct LOCAL APK asset file:
+      Session found  → file:///android_asset/databulge.html       (main app)
+      No session     → file:///android_asset/databulge-auth.html  (auth page)
+
+    NOTE: This splash is only ever loaded by the Android WebView APK.
+    The web version at www.databulge.com has its own separate auth flow.
+    Deep link for password reset: databulge://reset-password
   */
   function getDestination() {
     try {
@@ -54,19 +59,20 @@ body{
               var expiresAt = session.expires_at;
               var nowSecs = Math.floor(Date.now() / 1000);
               if (!expiresAt || expiresAt > nowSecs) {
-                // Valid session — go to main app
-                return 'https://www.databulge.com/databulge.html';
+                // Valid session — go straight to main app
+                return 'file:///android_asset/databulge.html';
               }
             }
           }
         }
       }
     } catch(e) {}
-    // No valid session — go to auth
-    return 'https://www.databulge.com/databulge-auth.html';
+    // No valid session — go to auth page
+    return 'file:///android_asset/databulge-auth.html';
   }
 
-  var duration = Math.floor(Math.random() * 2000) + 5000; // 5–7 seconds
+  // Random 5–7 seconds
+  var duration = Math.floor(Math.random() * 2000) + 5000;
   setTimeout(function(){
     window.location.replace(getDestination());
   }, duration);
