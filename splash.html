@@ -35,12 +35,13 @@ body{
   </svg>
 <script>
   /*
-    Splash screen for DataBulge.
-    Checks localStorage for a valid Supabase session, then redirects.
-    try/catch wraps EACH key individually so one corrupt entry
-    cannot abort the whole check (that caused the infinite loop).
+    DataBulge splash. Animates 5-7 seconds, checks localStorage for a
+    valid Supabase session, then hands the destination to the native
+    layer via AndroidBridge.goToApp(loggedIn). The native side loads
+    the local bundled page (a JS redirect from https:// to file:// is
+    blocked by the WebView). Falls back to web pages in a plain browser.
   */
-  function getDestination() {
+  function hasValidSession() {
     var keys = Object.keys(localStorage);
     for (var i = 0; i < keys.length; i++) {
       if (keys[i].indexOf('supabase.auth.token') !== -1 ||
@@ -51,24 +52,35 @@ body{
             var data = JSON.parse(raw);
             var session = data.session || data;
             if (session && session.access_token) {
-              var expiresAt = session.expires_at;
-              var nowSecs = Math.floor(Date.now() / 1000);
-              if (!expiresAt || expiresAt > nowSecs) {
-                return 'https://www.databulge.com/databulge.html';
-              }
+              var exp = session.expires_at;
+              var now = Math.floor(Date.now() / 1000);
+              if (!exp || exp > now) return true;
             }
           }
-        } catch(e) { /* skip bad key, keep checking */ }
+        } catch (e) { /* skip bad key, keep checking */ }
       }
     }
-    return 'https://www.databulge.com/databulge-auth.html';
+    return false;
   }
 
-  var duration = Math.floor(Math.random() * 2000) + 5000; // 5–7 seconds
-  setTimeout(function(){
-    var dest = getDestination();
-    if (!dest) dest = 'https://www.databulge.com/databulge-auth.html';
-    window.location.replace(dest);
+  var duration = Math.floor(Math.random() * 2000) + 5000; // 5-7 seconds
+  setTimeout(function () {
+    var loggedIn = hasValidSession();
+
+    // Inside the native APK -> let Android load the local file
+    if (window.AndroidBridge && typeof window.AndroidBridge.goToApp === 'function') {
+      window.AndroidBridge.goToApp(loggedIn);
+      return;
+    }
+    if (window.DataBulgeNative && typeof window.DataBulgeNative.goToApp === 'function') {
+      window.DataBulgeNative.goToApp(loggedIn);
+      return;
+    }
+
+    // Fallback: plain web browser -> use web pages
+    window.location.replace(loggedIn
+      ? 'https://www.databulge.com/databulge.html'
+      : 'https://www.databulge.com/databulge-auth.html');
   }, duration);
 </script>
 </body>
