@@ -35,22 +35,17 @@ body{
   </svg>
 <script>
   /*
-    Splash screen — served from www.databulge.com (kennygreat/_1).
-    After 5–7 seconds, checks localStorage for a valid Supabase session
-    then redirects to the correct LOCAL APK asset file:
-      Session found  → file:///android_asset/databulge.html       (main app)
-      No session     → file:///android_asset/databulge-auth.html  (auth page)
-
-    NOTE: This splash is only ever loaded by the Android WebView APK.
-    The web version at www.databulge.com has its own separate auth flow.
-    Deep link for password reset: databulge://reset-password
+    Splash screen for DataBulge.
+    Checks localStorage for a valid Supabase session, then redirects.
+    try/catch wraps EACH key individually so one corrupt entry
+    cannot abort the whole check (that caused the infinite loop).
   */
   function getDestination() {
-    try {
-      var keys = Object.keys(localStorage);
-      for (var i = 0; i < keys.length; i++) {
-        if (keys[i].indexOf('supabase.auth.token') !== -1 ||
-            keys[i].indexOf('sb-') !== -1) {
+    var keys = Object.keys(localStorage);
+    for (var i = 0; i < keys.length; i++) {
+      if (keys[i].indexOf('supabase.auth.token') !== -1 ||
+          keys[i].indexOf('sb-') !== -1) {
+        try {
           var raw = localStorage.getItem(keys[i]);
           if (raw) {
             var data = JSON.parse(raw);
@@ -59,22 +54,21 @@ body{
               var expiresAt = session.expires_at;
               var nowSecs = Math.floor(Date.now() / 1000);
               if (!expiresAt || expiresAt > nowSecs) {
-                // Valid session — go straight to main app
-                return 'file:///android_asset/databulge.html';
+                return 'https://www.databulge.com/databulge.html';
               }
             }
           }
-        }
+        } catch(e) { /* skip bad key, keep checking */ }
       }
-    } catch(e) {}
-    // No valid session — go to auth page
-    return 'file:///android_asset/databulge-auth.html';
+    }
+    return 'https://www.databulge.com/databulge-auth.html';
   }
 
-  // Random 5–7 seconds
-  var duration = Math.floor(Math.random() * 2000) + 5000;
+  var duration = Math.floor(Math.random() * 2000) + 5000; // 5–7 seconds
   setTimeout(function(){
-    window.location.replace(getDestination());
+    var dest = getDestination();
+    if (!dest) dest = 'https://www.databulge.com/databulge-auth.html';
+    window.location.replace(dest);
   }, duration);
 </script>
 </body>
