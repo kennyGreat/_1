@@ -1,87 +1,157 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DataBulge</title>
+<meta charset="UTF-8" />
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+/>
+<title>DataBulge Splash</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-html,body{width:100%;height:100%;font-family:Arial,Helvetica,sans-serif;overflow:hidden;}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+html,body{
+  width:100%;
+  height:100%;
+  overflow:hidden;
+  font-family:Arial, Helvetica, sans-serif;
+}
 body{
-  background:linear-gradient(160deg,#0f2952 0%,#1a3a72 48%,#1A56DB 100%);
-  display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(
+    160deg,
+    #0f2952 0%,
+    #1a3a72 48%,
+    #1A56DB 100%
+  );
+  display:flex;
+  align-items:center;
+  justify-content:center;
   height:100vh;
 }
-@keyframes sbreathe{0%,100%{opacity:1;}50%{opacity:.55;}}
-.sb1{animation:sbreathe 1.8s ease-in-out 0s infinite;}
-.sb2{animation:sbreathe 1.8s ease-in-out .2s infinite;}
-.sb3{animation:sbreathe 1.8s ease-in-out .4s infinite;}
-.sb4{animation:sbreathe 1.8s ease-in-out .6s infinite;}
+/* Signal bar breathing animation */
+@keyframes sbreathe{
+  0%,100%{
+    opacity:1;
+  }
+  50%{
+    opacity:.55;
+  }
+}
+.sb1{
+  animation:sbreathe 1.8s ease-in-out 0s infinite;
+}
+.sb2{
+  animation:sbreathe 1.8s ease-in-out .2s infinite;
+}
+.sb3{
+  animation:sbreathe 1.8s ease-in-out .4s infinite;
+}
+.sb4{
+  animation:sbreathe 1.8s ease-in-out .6s infinite;
+}
 </style>
 </head>
 <body>
-  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 230" width="320" style="max-width:85vw;" role="img" aria-label="DataBulge">
-    <circle cx="180" cy="58" r="50" fill="#FFFFFF" opacity=".15"/>
-    <circle cx="180" cy="58" r="40" fill="#FFFFFF"/>
-    <circle cx="180" cy="58" r="27" fill="#1A56DB"/>
-    <rect x="161" y="63" width="8" height="15" rx="3" fill="#FFFFFF" class="sb1"/>
-    <rect x="173" y="55" width="8" height="23" rx="3" fill="#FFFFFF" class="sb2"/>
-    <rect x="185" y="45" width="8" height="33" rx="3" fill="#FFFFFF" class="sb3"/>
-    <rect x="197" y="36" width="8" height="42" rx="3" fill="#FFFFFF" class="sb4"/>
-    <circle cx="144" cy="82" r="5" fill="#FFFFFF"/>
-    <text x="180" y="140" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="38" font-weight="300" fill="#FFFFFF" opacity=".94">data</text>
-    <text x="180" y="182" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="42" font-weight="900" fill="#FFFFFF">bulge</text>
-    <text x="180" y="212" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="700" fill="#FFFFFF" opacity=".55" letter-spacing="1.8">DATA ON YOUR OWN TERMS</text>
-  </svg>
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 360 230"
+  width="320"
+  style="max-width:85vw;"
+  role="img"
+  aria-label="DataBulge"
+>
+  <!-- Glow -->
+  <circle cx="180" cy="58" r="50" fill="#FFFFFF" opacity=".15"/>
+  <circle cx="180" cy="58" r="40" fill="#FFFFFF"/>
+  <!-- Logo -->
+  <circle cx="180" cy="58" r="27" fill="#1A56DB"/>
+  <!-- Signal Bars -->
+  <rect x="161" y="63" width="8" height="15" rx="3" fill="#FFFFFF" class="sb1"/>
+  <rect x="173" y="55" width="8" height="23" rx="3" fill="#FFFFFF" class="sb2"/>
+  <rect x="185" y="45" width="8" height="33" rx="3" fill="#FFFFFF" class="sb3"/>
+  <rect x="197" y="36" width="8" height="42" rx="3" fill="#FFFFFF" class="sb4"/>
+  <!-- Dot -->
+  <circle cx="144" cy="82" r="5" fill="#FFFFFF"/>
+  <!-- Text -->
+  <text
+    x="180"
+    y="140"
+    text-anchor="middle"
+    font-family="Arial,Helvetica,sans-serif"
+    font-size="38"
+    font-weight="300"
+    fill="#FFFFFF"
+    opacity=".94"
+  >
+    data
+  </text>
+  <text
+    x="180"
+    y="182"
+    text-anchor="middle"
+    font-family="Arial,Helvetica,sans-serif"
+    font-size="42"
+    font-weight="900"
+    fill="#FFFFFF"
+  >
+    bulge
+  </text>
+  <!-- Updated slogan -->
+  <text
+    x="180"
+    y="212"
+    text-anchor="middle"
+    font-family="Arial,Helvetica,sans-serif"
+    font-size="9"
+    font-weight="700"
+    fill="#FFFFFF"
+    opacity=".70"
+    letter-spacing="1.2"
+  >
+    START SMALL. STAY CONNECTED
+  </text>
+</svg>
 <script>
-  /*
-    DataBulge splash. Animates 5-7 seconds, checks localStorage for a
-    valid Supabase session, then hands the destination to the native
-    layer via AndroidBridge.goToApp(loggedIn). The native side loads
-    the local bundled page (a JS redirect from https:// to file:// is
-    blocked by the WebView). Falls back to web pages in a plain browser.
-  */
+/* ──────────────────────────────────────────────────────────────
+   DataBulge splash — session router
+   The whole app uses ONE session key: "db_sess" (written by
+   _setSession() in databulge-auth.html and index.html). The splash
+   reads that exact key and routes:
+       valid session  -> index.html        (main app)
+       no session      -> databulge-auth.html
+   ES5 only — must work on Android 4.4 WebView.
+─────────────────────────────────────────────────────────────── */
+(function () {
+  var MAIN_APP = 'index.html';
+  var AUTH     = 'databulge-auth.html';
+
   function hasValidSession() {
-    var keys = Object.keys(localStorage);
-    for (var i = 0; i < keys.length; i++) {
-      if (keys[i].indexOf('supabase.auth.token') !== -1 ||
-          keys[i].indexOf('sb-') !== -1) {
-        try {
-          var raw = localStorage.getItem(keys[i]);
-          if (raw) {
-            var data = JSON.parse(raw);
-            var session = data.session || data;
-            if (session && session.access_token) {
-              var exp = session.expires_at;
-              var now = Math.floor(Date.now() / 1000);
-              if (!exp || exp > now) return true;
-            }
-          }
-        } catch (e) { /* skip bad key, keep checking */ }
-      }
+    try {
+      var raw = localStorage.getItem('db_sess');
+      if (!raw) return false;
+      var s = JSON.parse(raw);
+      if (!s || !s.at) return false;
+      /* If an expiry is stored, honour it (allow small clock skew).
+         If no expiry is stored, treat the presence of a token as valid
+         and let the main app validate/refresh it. */
+      if (s.ex && s.ex < (Date.now() - 5000)) return false;
+      return true;
+    } catch (e) {
+      return false;
     }
-    return false;
   }
 
-  var duration = Math.floor(Math.random() * 2000) + 5000; // 5-7 seconds
   setTimeout(function () {
-    var loggedIn = hasValidSession();
-
-    // Inside the native APK -> let Android load the local file
-    if (window.AndroidBridge && typeof window.AndroidBridge.goToApp === 'function') {
-      window.AndroidBridge.goToApp(loggedIn);
-      return;
+    if (hasValidSession()) {
+      window.location.replace(MAIN_APP);
+    } else {
+      window.location.replace(AUTH);
     }
-    if (window.DataBulgeNative && typeof window.DataBulgeNative.goToApp === 'function') {
-      window.DataBulgeNative.goToApp(loggedIn);
-      return;
-    }
-
-    // Fallback: plain web browser -> use web pages
-    window.location.replace(loggedIn
-      ? 'https://www.databulge.com/databulge.html'
-      : 'https://www.databulge.com/databulge-auth.html');
-  }, duration);
+  }, 3000);
+})();
 </script>
 </body>
 </html>
