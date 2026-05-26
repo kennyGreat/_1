@@ -943,8 +943,8 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <div class="card" style="margin-bottom:12px;">
         <div class="sec-title">Payment Option</div>
         <div id="pay-toggle-wrap" style="display:flex;gap:8px;">
-          <button class="btn btn-blue" id="pay-days-7" style="margin:0;flex:1;">7 Days</button>
-          <button class="btn btn-lite" id="pay-days-28" style="margin:0;flex:1;">28 Days</button>
+          <button class="btn btn-blue" id="pay-days-7" style="margin:0;flex:1;">for 7 days</button>
+          <button class="btn btn-lite" id="pay-days-28" style="margin:0;flex:1;">for 28 days</button>
         </div>
         <div class="card-sub" style="margin-top:10px;">Daily payment updates automatically based on the payment option you choose.</div>
       </div>
@@ -985,8 +985,8 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         <div class="field" style="margin-bottom:10px;">
           <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Payment Option</label>
           <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">
-            <button class="btn btn-blue" id="air-days-7"  onclick="airSetDays(7)"  style="margin:0;flex:1;font-size:.82rem;">7 Days</button>
-            <button class="btn btn-lite" id="air-days-28" onclick="airSetDays(28)" style="margin:0;flex:1;font-size:.82rem;">28 Days</button>
+            <button class="btn btn-blue" id="air-days-7"  onclick="airSetDays(7)"  style="margin:0;flex:1;font-size:.82rem;">for 7 days</button>
+            <button class="btn btn-lite" id="air-days-28" onclick="airSetDays(28)" style="margin:0;flex:1;font-size:.82rem;">for 28 days</button>
           </div>
         </div>
         <!-- Auto-renew toggle -->
@@ -1228,8 +1228,8 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <div class="field" id="m-sub-dur-field">
         <label style="font-weight:700;color:#333;margin-bottom:7px;display:block;">Payment Duration</label>
         <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">
-          <button class="btn btn-blue" id="m-sub-days-7" type="button" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;">7 Days</button>
-          <button class="btn btn-lite" id="m-sub-days-28" type="button" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;">28 Days</button>
+          <button class="btn btn-blue" id="m-sub-days-7" type="button" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;">for 7 days</button>
+          <button class="btn btn-lite" id="m-sub-days-28" type="button" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;">for 28 days</button>
         </div>
       </div>
 
@@ -5451,7 +5451,7 @@ function renderDynamicStrip() {
   }
 
   /* For new users with no plans, derive a starter example from plans list */
-  /* Use a modest starter: 1GB at roughly ₦300 total → ₦43/day over 7 days */
+  /* Use a modest starter: 1GB at roughly ₦300 total → ₦43/day overfor 7 days */
   var starterDaily = 50;
   var starterDays  = 7;
   var starterSize  = '1GB';
@@ -6728,3 +6728,7 @@ function doChangePassword() {
 
 </body>
 </html>
+
+<style>
+.plan-sub{font-size:.95rem!important;font-weight:900!important;color:#1A56DB!important;}
+</style>
