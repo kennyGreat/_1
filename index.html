@@ -772,7 +772,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
   <div class="top-bar">
     <div class="top-bar-title" style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:10px;line-height:1;-webkit-box-flex:1;-webkit-flex:1;flex:1;min-width:0;">
       <!-- Icon only: blue circle with white floating signal mark -->
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="60" height="60" style="display:block;-webkit-flex-shrink:0;flex-shrink:0;" role="img" aria-label="DataBulge">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="60" height="60" style="display:block;-webkit-flex-shrink:0;flex-shrink:0;min-width:60px;min-height:60px;" role="img" aria-label="DataBulge">
         <style>
           @-webkit-keyframes tbreathe{0%,100%{opacity:1}50%{opacity:.5}}
           @keyframes tbreathe{0%,100%{opacity:1}50%{opacity:.5}}
@@ -1342,35 +1342,45 @@ button.tab,button.plan-chip{box-shadow:none!important;}
     <div class="modal-hdr"><div class="modal-title">Fund Account</div><button class="modal-x" id="m-fund-x">&#215;</button></div>
     <div class="modal-body">
       <div id="m-fund-err" class="err"></div>
-      <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:0;margin-bottom:14px;position:relative;-webkit-transform:translateZ(0);transform:translateZ(0);">
-        <div style="position:absolute;left:0;right:0;bottom:0;height:2px;background:#eee;"></div>
-        <button id="fund-tab-va" onclick="switchFundTab('va')" style="padding:8px 14px;background:none;border:none;position:relative;color:#1A56DB;font-weight:700;cursor:pointer;font-family:inherit;font-size:.82rem;z-index:1;-webkit-tap-highlight-color:transparent;"><span style="position:absolute;left:0;right:0;bottom:0;height:2px;background:#1A56DB;-webkit-transform:translateZ(0);transform:translateZ(0);"></span>Bank Transfer</button>
-        <button id="fund-tab-af" onclick="switchFundTab('af')" style="padding:8px 14px;background:none;border:none;position:relative;color:#888;font-weight:700;cursor:pointer;font-family:inherit;font-size:.82rem;z-index:1;-webkit-tap-highlight-color:transparent;"><span id="fund-tab-af-ind" style="position:absolute;left:0;right:0;bottom:0;height:2px;background:transparent;-webkit-transform:translateZ(0);transform:translateZ(0);"></span>Auto-Fund (Card) &#128179;</button>
-      </div>
-      <div id="fund-panel-va">
-        <div id="m-fund-va" class="va-box" style="display:none;"></div>
-        <div class="card-sub" style="margin-top:10px;line-height:1.6;">Transfer to the account above. Balance updates in under 5 minutes after a successful transfer.</div>
-      </div>
-      <div id="fund-panel-af" style="display:none;">
-        <!-- Active mandate — shown when recurring auto-fund is already running -->
-        <div id="af-active-banner" style="display:none;background:#eaf5ee;border:1px solid #b2dfdb;border-radius:8px;padding:12px;margin-bottom:10px;">
-          <div style="font-size:.85rem;font-weight:800;color:#3d9758;margin-bottom:4px;">&#9989; Auto-Fund Active</div>
-          <div id="af-active-detail" style="font-size:.77rem;color:#444;margin-bottom:10px;">Your card is being charged daily automatically.</div>
-          <button class="btn" id="af-cancel-btn" style="background:#fff2f2;color:#c0392b;border:1.5px solid #f5c6cb;width:100%;margin:0;padding:10px;font-family:inherit;">&#9209; Cancel Auto-Fund</button>
+
+      <!-- Bank Transfer accordion -->
+      <div style="margin-bottom:14px;border:1.5px solid #e0e4ea;border-radius:10px;overflow:hidden;">
+        <button id="fund-acc-va-hdr" onclick="toggleFundAccordion('va')" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:#f8f9fb;border:none;cursor:pointer;font-family:inherit;font-size:.88rem;font-weight:800;color:#1A56DB;-webkit-tap-highlight-color:transparent;">
+          <span>&#127974; Bank Transfer</span>
+          <span id="fund-acc-va-arrow" style="font-size:.7rem;transition:transform .2s;">&#9660;</span>
+        </button>
+        <div id="fund-acc-va-body" style="padding:12px 14px;">
+          <div id="m-fund-va" class="va-box"></div>
+          <div class="card-sub" style="margin-top:10px;line-height:1.6;">Transfer to the account above. Balance updates in under 5 minutes after a successful transfer.</div>
         </div>
-        <!-- Setup form — shown when no active mandate -->
-        <div id="af-setup-form">
-          <div style="background:#f5f6ff;border:1px solid #d0d8ff;border-radius:8px;padding:12px;margin-bottom:10px;">
-            <div style="font-size:.85rem;font-weight:800;color:#1A56DB;margin-bottom:6px;">&#128179; Auto-Fund via Card</div>
-            <p style="font-size:.77rem;color:#555;line-height:1.55;margin-bottom:12px;">Enter an amount and pay once. We&#8217;ll charge your card this amount every day automatically and credit your wallet instantly. Cancel anytime.</p>
-            <label style="font-size:.78rem;font-weight:700;color:#333;display:block;margin-bottom:4px;">Amount to charge daily (&#8358;)</label>
-            <input type="number" id="af-fund-amt" placeholder="e.g. 1000" style="display:block;width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:6px;font-size:.93rem;color:#111;background:#fff;outline:none;-webkit-appearance:none;margin-bottom:10px;">
-            <div id="af-fund-err" class="err"></div>
-            <button class="btn btn-blue" id="af-fund-btn" style="width:100%;margin:0;">Start Auto-Fund</button>
+      </div>
+
+      <!-- Auto-Fund (Card) accordion -->
+      <div style="margin-bottom:6px;border:1.5px solid #e0e4ea;border-radius:10px;overflow:hidden;">
+        <button id="fund-acc-af-hdr" onclick="toggleFundAccordion('af')" style="width:100%;display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:#f8f9fb;border:none;cursor:pointer;font-family:inherit;font-size:.88rem;font-weight:800;color:#1A56DB;-webkit-tap-highlight-color:transparent;">
+          <span>&#128179; Auto-Fund (Card)</span>
+          <span id="fund-acc-af-arrow" style="font-size:.7rem;transition:transform .2s;">&#9660;</span>
+        </button>
+        <div id="fund-acc-af-body" style="padding:12px 14px;">
+          <div id="af-active-banner" style="display:none;background:#eaf5ee;border:1px solid #b2dfdb;border-radius:8px;padding:12px;margin-bottom:10px;">
+            <div style="font-size:.85rem;font-weight:800;color:#3d9758;margin-bottom:4px;">&#9989; Auto-Fund Active</div>
+            <div id="af-active-detail" style="font-size:.77rem;color:#444;margin-bottom:10px;">Your card is being charged daily automatically.</div>
+            <button class="btn" id="af-cancel-btn" style="background:#fff2f2;color:#c0392b;border:1.5px solid #f5c6cb;width:100%;margin:0;padding:10px;font-family:inherit;">&#9209; Cancel Auto-Fund</button>
           </div>
-          <div class="card-sub" style="text-align:center;line-height:1.5;">Your card is charged daily. Cancel anytime.</div>
+          <div id="af-setup-form">
+            <div style="background:#f5f6ff;border:1px solid #d0d8ff;border-radius:8px;padding:12px;margin-bottom:10px;">
+              <div style="font-size:.85rem;font-weight:800;color:#1A56DB;margin-bottom:6px;">&#128179; Auto-Fund via Card</div>
+              <p style="font-size:.77rem;color:#555;line-height:1.55;margin-bottom:12px;">Enter an amount and pay once. We&#8217;ll charge your card this amount every day automatically and credit your wallet instantly. Cancel anytime.</p>
+              <label style="font-size:.78rem;font-weight:700;color:#333;display:block;margin-bottom:4px;">Amount to charge daily (&#8358;)</label>
+              <input type="number" id="af-fund-amt" placeholder="e.g. 1000" style="display:block;width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:6px;font-size:.93rem;color:#111;background:#fff;outline:none;-webkit-appearance:none;margin-bottom:10px;">
+              <div id="af-fund-err" class="err"></div>
+              <button class="btn btn-blue" id="af-fund-btn" style="width:100%;margin:0;">Start Auto-Fund</button>
+            </div>
+            <div class="card-sub" style="text-align:center;line-height:1.5;">Your card is charged daily. Cancel anytime.</div>
+          </div>
         </div>
       </div>
+
     </div>
     <div class="modal-foot"></div>
   </div>
@@ -3216,10 +3226,12 @@ function openFundModal() {
   _loadWalletMandate();
   var vaHtml = getVAHtml(true);
   $('m-fund-va').innerHTML = vaHtml || '<div class="empty">No account details found yet. Please wait a moment for account generation or contact support.</div>';
-  var va = $('fund-panel-va'), af = $('fund-panel-af');
-  if (va && af && va.style.display === 'none' && af.style.display === 'none') {
-    switchFundTab('va');
-  }
+  var vaBody = $('fund-acc-va-body'), afBody = $('fund-acc-af-body');
+  var vaArrow = $('fund-acc-va-arrow'), afArrow = $('fund-acc-af-arrow');
+  if (vaBody) vaBody.style.display = 'block';
+  if (afBody) afBody.style.display = 'block';
+  if (vaArrow) vaArrow.style.transform = 'rotate(0deg)';
+  if (afArrow) afArrow.style.transform = 'rotate(0deg)';
   openModal('m-fund');
   if (vaHtml) return;
   ensureToken(function(err) {
@@ -3684,27 +3696,21 @@ function launchAutoFund(amt, planLabel, subscriptionId) {
   });
 }
 
-function switchFundTab(tab) {
-  var va = $('fund-panel-va'), af = $('fund-panel-af');
-  var tVA = $('fund-tab-va'), tAF = $('fund-tab-af');
-  var indVA = tVA ? tVA.querySelector('span') : null;
-  var indAF = $('fund-tab-af-ind');
-  if (tab === 'va') {
-    if (va) va.style.display = 'block';
-    if (af) af.style.display = 'none';
-    if (tVA) tVA.style.color = '#1A56DB';
-    if (tAF) tAF.style.color = '#888';
-    if (indVA) indVA.style.background = '#1A56DB';
-    if (indAF) indAF.style.background = 'transparent';
+function toggleFundAccordion(section) {
+  var body = $('fund-acc-' + section + '-body');
+  var arrow = $('fund-acc-' + section + '-arrow');
+  if (!body) return;
+  if (body.style.display === 'none') {
+    body.style.display = 'block';
+    if (arrow) arrow.style.transform = 'rotate(0deg)';
   } else {
-    if (va) va.style.display = 'none';
-    if (af) af.style.display = 'block';
-    if (tAF) tAF.style.color = '#1A56DB';
-    if (tVA) tVA.style.color = '#888';
-    if (indAF) indAF.style.background = '#1A56DB';
-    if (indVA) indVA.style.background = 'transparent';
+    body.style.display = 'none';
+    if (arrow) arrow.style.transform = 'rotate(-90deg)';
   }
 }
+
+/* Keep switchFundTab as a no-op so any old callers don't throw */
+function switchFundTab() {}
 
 /* ── DASHBOARD CASHFLOW ─────────────────────────────────────── */
 function loadDashCashflow() {
@@ -4845,10 +4851,10 @@ body,.card-sub,.plan-sub,.sub-meta,.msg-body,.notif-row,.row-label,.field label,
 .companion-kicker{display:none!important;}
 .companion-title{font-size:1.34rem;font-weight:900;letter-spacing:-.04em;line-height:1.15;margin-bottom:7px;color:#fff!important;}
 .companion-copy{font-size:.88rem;line-height:1.55;color:rgba(255,255,255,.87)!important;max-width:92%;}
-.companion-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;}
-.companion-actions button{border:0;border-radius:14px;padding:11px 13px;font-weight:900;font-size:.86rem;font-family:Arial,Helvetica,sans-serif;cursor:pointer;}
+.companion-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:nowrap;}
+.companion-actions button{border:0;border-radius:14px;padding:14px 10px;font-weight:900;font-size:.92rem;font-family:Arial,Helvetica,sans-serif;cursor:pointer;flex:1;min-width:0;text-align:center;}
 .companion-primary{background:#3d9758;color:#fff;box-shadow:0 10px 24px rgba(61,151,88,.35);}
-.companion-secondary{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.22)!important;font-size:1.05rem!important;padding:14px 28px!important;}
+.companion-secondary{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.22)!important;}
 
 .hero-bal-card{border-radius:26px!important;background:linear-gradient(135deg,#1A56DB 0%,#173A73 65%,#0f766e 130%)!important;box-shadow:0 16px 34px rgba(26,86,219,.23)!important;}
 .hero-bal-label{color:rgba(255,255,255,.76)!important;}
