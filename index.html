@@ -875,7 +875,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
   <!-- DASHBOARD TAB - RETENTION REDESIGN -->
   <div id="tc-dash" class="tab-content">
     <div class="hero-bal-card" id="hero-bal-card">
-      <button class="hero-fund-btn" id="d-fund-btn">+ Add small money</button>
+      <button class="hero-fund-btn" id="d-fund-btn" style="background:#fff!important;color:#1A56DB!important;border:none!important;font-weight:800!important;">Add small money</button>
       <div class="hero-bal-label">Wallet Balance</div>
       <div class="hero-bal-amount" id="d-bal-dash">&#8358;0.00</div>
       <div class="hero-bal-va" id="d-va-dash">Loading&#8230;</div>
@@ -943,8 +943,8 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <div class="card" style="margin-bottom:12px;">
         <div class="sec-title">Payment Option</div>
         <div id="pay-toggle-wrap" style="display:flex;gap:8px;">
-          <button class="btn btn-blue" id="pay-days-7" style="margin:0;flex:1;">for 7 days</button>
-          <button class="btn btn-lite" id="pay-days-28" style="margin:0;flex:1;">for 28 days</button>
+          <button class="btn btn-blue" id="pay-days-7" style="margin:0;flex:1;">7 Days</button>
+          <button class="btn btn-lite" id="pay-days-28" style="margin:0;flex:1;">28 Days</button>
         </div>
         <div class="card-sub" style="margin-top:10px;">Daily payment updates automatically based on the payment option you choose.</div>
       </div>
@@ -985,8 +985,8 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         <div class="field" style="margin-bottom:10px;">
           <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Payment Option</label>
           <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">
-            <button class="btn btn-blue" id="air-days-7"  onclick="airSetDays(7)"  style="margin:0;flex:1;font-size:.82rem;">for 7 days</button>
-            <button class="btn btn-lite" id="air-days-28" onclick="airSetDays(28)" style="margin:0;flex:1;font-size:.82rem;">for 28 days</button>
+            <button class="btn btn-blue" id="air-days-7"  onclick="airSetDays(7)"  style="margin:0;flex:1;font-size:.82rem;">7 Days</button>
+            <button class="btn btn-lite" id="air-days-28" onclick="airSetDays(28)" style="margin:0;flex:1;font-size:.82rem;">28 Days</button>
           </div>
         </div>
         <!-- Auto-renew toggle -->
@@ -1228,8 +1228,8 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <div class="field" id="m-sub-dur-field">
         <label style="font-weight:700;color:#333;margin-bottom:7px;display:block;">Payment Duration</label>
         <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">
-          <button class="btn btn-blue" id="m-sub-days-7" type="button" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;">for 7 days</button>
-          <button class="btn btn-lite" id="m-sub-days-28" type="button" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;">for 28 days</button>
+          <button class="btn btn-blue" id="m-sub-days-7" type="button" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;">7 Days</button>
+          <button class="btn btn-lite" id="m-sub-days-28" type="button" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;">28 Days</button>
         </div>
       </div>
 
@@ -1728,15 +1728,9 @@ function _setSession(d) {
   gExpiry  = d.expires_at ? d.expires_at * 1000 : (Date.now() + (d.expires_in || 3600) * 1000);
   if (d.user) gUser = d.user;
   _store.set('db_sess', JSON.stringify({ at: gToken, rt: gRefresh, ex: gExpiry, user: gUser }));
-  // Keep window references in sync so cross-script-block code (notif system, push IIFE) sees the session
+  // Keep window references in sync so cross-script-block code (notif system) sees the session
   window.gUser  = gUser;
   window.gToken = gToken;
-  // Pick up any FCM token that arrived before the session was established
-  if (window.__pendingFcmToken) {
-    var _pt = window.__pendingFcmToken;
-    delete window.__pendingFcmToken;
-    setTimeout(function() { registerPushToken(_pt); }, 500);
-  }
 }
 
 function _loadSession() {
@@ -2342,7 +2336,7 @@ function _renderPlans(allPlans) {
             '<div class="plan-size">' + esc2(nn) + '<br>' + esc2(p.data_size) + '</div>' +
             '<div class="plan-sub" style="margin-top:5px;text-transform:none;letter-spacing:0;">' + (p.validity_days || 30) + '-Day Plan</div>' +
             '<div class="plan-price">' + fmtN(p.selling_price) + '</div>' +
-            '<div class="plan-sub">Daily: <strong>' + fmtN(pc.daily) + '</strong> &bull; ' + gPayDays + ' days</div>' +
+            '<div class="plan-sub">Daily: <strong>' + fmtN(pc.daily) + '</strong> &bull; <span style="font-size:1rem;font-weight:900;color:#1A56DB;">' + gPayDays + ' days</span></div>' +
           '</div>' +
           '<button class="plan-btn" onclick="openSubModal(\'id_' + String(p.id) + '\')">Subscribe</button>' +
         '</div>';
@@ -2374,9 +2368,38 @@ function loadSubs() {
         }
         _gSubsCache = r.data;
         wrap.innerHTML = renderSubsList(r.data, false);
+        // Sync server-side numbers into saved-phones store so the app
+        // "remembers" numbers across reinstalls and devices (not just localStorage).
+        _mergeServerPhones(r.data);
       }
     );
   });
+}
+
+/* Merge phone numbers from the user's server subscriptions into the saved-phones
+   list. Server is the source of truth; this keeps numbers after an APK reinstall
+   or login on a new device. Most-recently-used order is preserved. */
+function _mergeServerPhones(subs) {
+  if (!subs || !subs.length) return;
+  var key = _phonesKey();
+  if (!key) return;
+  var existing = _getSavedPhones();
+  // subs already arrive ordered by created_at desc (newest first)
+  for (var i = 0; i < subs.length; i++) {
+    var ph = subs[i] && subs[i].phone_number;
+    if (!ph) continue;
+    ph = ('' + ph).replace(/^\s+|\s+$/g, '');
+    if (ph.length < 10) continue;
+    // skip if already present
+    var found = false;
+    for (var j = 0; j < existing.length; j++) {
+      if (existing[j] === ph) { found = true; break; }
+    }
+    if (!found) existing.push(ph);
+  }
+  if (existing.length > 5) existing = existing.slice(0, 5);
+  try { _store.set(key, JSON.stringify(existing)); } catch(e) {}
+  if (typeof _renderSavedPhones === 'function') _renderSavedPhones();
 }
 
 function renderSubsList(subs, compact) {
@@ -2578,15 +2601,20 @@ function loadAcct(name) {
   // Load phone from profile
   ensureToken(function(err) {
     if (err) return;
-    restGet('/profiles', 'user_id=eq.' + gUser.id + '&select=phone,full_name,virtual_account_number,virtual_bank_name,paystack_dva_account_number,paystack_dva_bank_name,paystack_dva_account_name', function(e, r) {
+    restGet('/profiles', 'user_id=eq.' + gUser.id + '&select=phone,full_name', function(e, r) {
       if (r && r.ok && r.data && r.data[0]) {
-        var p = r.data[0]; gProfile = p;
+        var p = r.data[0];
+        // Merge profile fields into gProfile WITHOUT clobbering the virtual-account
+        // data already fetched from the wallets query (loadWallet runs earlier).
+        gProfile = gProfile || {};
+        gProfile.phone = p.phone;
+        gProfile.full_name = p.full_name;
         if (p.full_name) updateGreeting(p.full_name);
         var extra = '';
         if (p.phone) extra += '<div class="row-line"><span class="row-label">Phone</span><span class="row-val">' + esc(p.phone) + '</span></div>';
-        if (p.virtual_account_number || p.paystack_dva_account_number) {
-          var pAcct = p.paystack_dva_account_number || p.virtual_account_number || '';
-          var pBank = p.paystack_dva_bank_name || p.virtual_bank_name || '';
+        if (gProfile.virtual_account_number || gProfile.paystack_dva_account_number) {
+          var pAcct = gProfile.paystack_dva_account_number || gProfile.virtual_account_number || '';
+          var pBank = gProfile.paystack_dva_bank_name || gProfile.virtual_bank_name || '';
           extra += '<div class="row-line"><span class="row-label">Account Number</span><span class="row-val">' + esc(pAcct) + '</span></div>';
           if (pBank) extra += '<div class="row-line"><span class="row-label">Bank</span><span class="row-val">' + esc(pBank) + '</span></div>';
         }
@@ -5359,35 +5387,9 @@ function checkDataUsage(subscriptionId, mbUsed, mbTotal) {
 }
 window.checkDataUsage = checkDataUsage;
 
-/* ── FCM Push Token Registration ────────────────────────
-   Saves device FCM token to push_subscriptions table so
-   sendPushNotification edge function can reach this device.
-──────────────────────────────────────────────────────── */
-function registerPushToken(fcmToken) {
-  if (!fcmToken) return;
-  // If user session isn't ready yet, store and retry after bootApp
-  if (!window.gUser || !window.gToken) {
-    window.__pendingFcmToken = fcmToken;
-    return;
-  }
-  // Detect native APK via the AndroidBridge or the injected flag
-  var isNative = !!(window.__DATABULGE_NATIVE_APP__ ||
-    (typeof window.DataBulgeNative !== 'undefined' && window.DataBulgeNative.isNativeApp && window.DataBulgeNative.isNativeApp()));
-  var hint = isNative ? 'android' : 'web';
-  var h = { 'Authorization': 'Bearer ' + window.gToken, 'Content-Type': 'application/json', 'apikey': window.ANON_KEY, 'Prefer': 'resolution=merge-duplicates' };
-  window.xhr('POST', window.REST + '/push_subscriptions', h,
-    JSON.stringify({ user_id: window.gUser.id, endpoint: fcmToken, device_hint: hint, p256dh: '', auth: '' }),
-    function(e) { if (!e) console.log('[Push] FCM token registered for', hint); }
-  );
-}
+/* ── Push tokens disabled in web version ──────────────── */
+function registerPushToken() { /* no-op: web version */ }
 window.registerPushToken = registerPushToken;
-
-/* Native app bridges — MainActivity.java in the Android wrapper calls these
-   when a deep-link magic-link arrives, or when a push lands while the app
-   is in the foreground. Exposing them on window keeps the calls working. */
-window.parseHash       = parseHash;
-window.notifLoad       = notifLoad;
-window.showNotifToast  = showNotifToast;
 
 /* ═══ RETENTION SYSTEM ════════════════════════════════════════
    ES5 — Android 4.4+ compatible. No arrow functions, no const.
@@ -5451,7 +5453,7 @@ function renderDynamicStrip() {
   }
 
   /* For new users with no plans, derive a starter example from plans list */
-  /* Use a modest starter: 1GB at roughly ₦300 total → ₦43/day overfor 7 days */
+  /* Use a modest starter: 1GB at roughly ₦300 total → ₦43/day over 7 days */
   var starterDaily = 50;
   var starterDays  = 7;
   var starterSize  = '1GB';
@@ -6014,39 +6016,8 @@ window.confirmAirtime = confirmAirtime;
 
 
 
-/* ── Request push token from Capacitor native plugins ───
-   Requires @capacitor/push-notifications installed:
-   npm install @capacitor/push-notifications
-   npx cap sync android
-──────────────────────────────────────────────────────── */
-function requestCapacitorPushToken() {
-  var isNative = (typeof window.Capacitor !== 'undefined' && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
-  if (!isNative) return;
-
-  var Push = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.PushNotifications;
-  if (!Push) return;
-
-  Push.requestPermissions().then(function(result) {
-    if (result.receive === 'granted') {
-      Push.register();
-      Push.addListener('registration', function(token) {
-        registerPushToken(token.value);
-      });
-      Push.addListener('registrationError', function(err) {
-        console.warn('[Push] Registration error:', err);
-      });
-      // Handle foreground push tap — open notification drawer
-      Push.addListener('pushNotificationReceived', function(notification) {
-        // Show Facebook-style card + add to drawer list
-        dbShowPushCard(notification.title, notification.body, 'info', null);
-        notifLoad(); // also refresh drawer
-      });
-      Push.addListener('pushNotificationActionPerformed', function() {
-        openNotifDrawer();
-      });
-    }
-  }).catch(function(e) { console.warn('[Push] Permission error:', e); });
-}
+/* ── Push tokens disabled in web version ──────────────── */
+function requestCapacitorPushToken() { /* no-op: web version */ }
 window.requestCapacitorPushToken = requestCapacitorPushToken;
 
 /* ── Responsive bottom nav positioning ──────────────── */
@@ -6141,7 +6112,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
     var msg=todayMessage();
     var bal=money(window.gBal||0);
     var html=''+
-      '<div class="friend-hero" id="friend-hero">'+
+      '<div class="friend-hero" id="friend-hero" style="display:none!important;">'+
         '<div class="friend-hero-top"><div><div class="friend-kicker">Welcome Back,</div>'+ 
         '<div class="friend-title">Let’s keep you connected today.</div>'+ 
         '<div class="friend-sub">Buy data now, pay small small, and stay online without pressure.</div></div>'+ 
@@ -6149,7 +6120,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
         '<div class="friend-balance"><div><div class="friend-bal-label">Available balance</div><div class="friend-bal-val" id="friend-bal-val">'+bal+'</div></div><div style="font-size:.76rem;opacity:.82;font-weight:800;text-align:right;">Ready when you are</div></div>'+ 
         '<div class="friend-cta-row"><button class="friend-cta primary" onclick="openFundModal()">Add small money</button><button class="friend-cta secondary" onclick="dbGoSoftPay();">Find a plan</button></div>'+ 
       '</div>'+ 
-      '<div class="friend-quick-grid" id="friend-quick-grid"><button class="friend-action-card fund" onclick="openFundModal()"><span class="emoji">💚</span><strong>Fund with ease</strong><span>Your wallet updates automatically after transfer.</span></button><button class="friend-action-card plan" onclick="dbGoSoftPay();"><span class="emoji">🎯</span><strong>Choose your vibe</strong><span>MTN, Airtel, Glo or 9mobile — paid your way.</span></button></div>';
+      '<div class="friend-quick-grid" id="friend-quick-grid" style="display:none!important;"><button class="friend-action-card fund" onclick="openFundModal()"><span class="emoji">💚</span><strong>Fund with ease</strong><span>Your wallet updates automatically after transfer.</span></button><button class="friend-action-card plan" onclick="dbGoSoftPay();"><span class="emoji">🎯</span><strong>Choose your vibe</strong><span>MTN, Airtel, Glo or 9mobile — paid your way.</span></button></div>';
     if(old){
       var bv=byId('friend-bal-val'); if(bv) bv.innerHTML=bal;
       return;
@@ -6726,9 +6697,10 @@ function doChangePassword() {
 })();
 </script>
 
+<script>
+/* ── Web version: native bridge removed ── */
+window.isDataBulgeNativeApp = function() { return false; };
+</script>
+
 </body>
 </html>
-
-<style>
-.plan-sub{font-size:.95rem!important;font-weight:900!important;color:#1A56DB!important;}
-</style>
