@@ -375,13 +375,7 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 }
 
 
-/* ── SPLASH SCREEN ── */
-#db-splash{position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;background:linear-gradient(160deg,#0f2952 0%,#1a3a72 48%,#1A56DB 100%);display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;text-align:center;padding:24px;}
-#db-splash.hide{display:none;}
-.splash-inner{width:100%;max-width:360px;margin:0 auto;}
-.splash-svg{display:block;width:100%;max-width:320px;margin:0 auto 20px;}
-.splash-line{font-size:.82rem;color:rgba(255,255,255,.62);letter-spacing:.08em;text-transform:uppercase;font-weight:700;}
-.splash-foot{margin-top:48px;font-size:1rem;font-weight:800;color:rgba(255,255,255,.55);letter-spacing:.04em;}
+
 
 
 /* ── LOCKED DESIGN: REQUESTED MICRO PATCH ONLY ──
@@ -425,7 +419,6 @@ button,.btn,.plan-btn,.tab,.logout-btn,.plan-chip,.avatar,.avatar-menu button{
   .auth-card{margin-left:10px!important;margin-right:10px!important;}
   .auth-hero{padding-left:14px!important;padding-right:14px!important;}
   .auth-wordmark{max-width:260px!important;}
-  .splash-svg{max-width:280px!important;}
 }
 @media(max-width:320px){
   .top-bar svg{max-width:104px!important;height:30px!important;}
@@ -433,11 +426,19 @@ button,.btn,.plan-btn,.tab,.logout-btn,.plan-chip,.avatar,.avatar-menu button{
   .tab{padding:7px 9px!important;font-size:.70rem!important;}
 }
 
+/* ── SPLASH SCREEN ── */
+#db-splash{position:fixed;top:0;left:0;right:0;bottom:0;z-index:99999;background:linear-gradient(160deg,#0f2952 0%,#1a3a72 48%,#1A56DB 100%);display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;text-align:center;padding:24px;}
+#db-splash.hide{display:none;}
+.splash-inner{width:100%;max-width:360px;margin:0 auto;}
+.splash-svg{display:block;width:100%;max-width:320px;margin:0 auto;}
+@media(max-width:380px){.splash-svg{max-width:280px!important;}}
+
 </style>
 </head>
 <body>
-<!-- DataBulge first-view splash: frontend-only, disappears before auth/app loads fully -->
-<div id="db-splash" aria-label="DataBulge loading screen">
+
+<!-- DataBulge splash — shown for 4 seconds before auth UI appears -->
+<div id="db-splash">
   <div class="splash-inner">
     <svg class="splash-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 230" role="img" aria-label="DataBulge">
       <style>
@@ -459,14 +460,10 @@ button,.btn,.plan-btn,.tab,.logout-btn,.plan-chip,.avatar,.avatar-menu button{
       <circle cx="144" cy="82" r="5" fill="#FFFFFF"/>
       <text x="180" y="140" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="38" font-weight="300" fill="#FFFFFF" opacity=".94">data</text>
       <text x="180" y="182" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="42" font-weight="900" fill="#FFFFFF">bulge</text>
-      <text x="180" y="212" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="700" fill="#FFFFFF" opacity=".55" letter-spacing="1.8">DATA ON YOUR OWN TERMS</text>
+      <text x="180" y="212" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="700" fill="#FFFFFF" opacity=".55" letter-spacing="1.8">THE DESIRE TO STAY CONNECTED</text>
     </svg>
-    <div class="splash-line">Installment data plans — pay small small</div>
-    <div class="splash-foot">Start small. Stay connected.</div>
   </div>
 </div>
-
-
 <!-- ═══ AUTH PAGE ═══════════════════════════════════════════════ -->
 <div id="pg-auth" class="pg on">
 <div class="auth-wrap">
@@ -513,13 +510,30 @@ button,.btn,.plan-btn,.tab,.logout-btn,.plan-chip,.avatar,.avatar-menu button{
       <div class="auth-title">Welcome back</div>
       <div class="auth-sub">Buy mobile data and pay in daily installments.</div>
       <button class="btn btn-blue" id="w-login-btn">SIGN IN</button>
-      <div class="divdr" id="w-google-divdr"><span>OR</span></div>
-      <button class="btn btn-google" id="w-google-btn">
-        <svg width="18" height="18" viewBox="0 0 18 18" style="vertical-align:middle;margin-right:8px;" xmlns="http://www.w3.org/2000/svg"><path d="M17.64 9.2c0-.637-.057-1.251-.164-1.84H9v3.481h4.844c-.209 1.125-.843 2.078-1.796 2.717v2.258h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/><path d="M9 18c2.43 0 4.467-.806 5.956-2.184l-2.908-2.258c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 0 0 9 18z" fill="#34A853"/><path d="M3.964 10.707A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.282-1.707V4.961H.957A8.996 8.996 0 0 0 0 9c0 1.452.348 2.827.957 4.039l3.007-2.332z" fill="#FBBC05"/><path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 0 0 .957 4.961L3.964 6.293C4.672 4.166 6.656 3.58 9 3.58z" fill="#EA4335"/></svg>
-        Continue with Google
-      </button>
+
       <div class="divdr"><span>NEW HERE</span></div>
       <button class="btn btn-lite" id="w-signup-btn">Create New Account</button>
+
+      <!-- Forgot password — inline, below Create New Account -->
+      <div id="w-forgot-section" style="margin:6px 0 0;">
+        <button class="btn btn-lite" id="w-forgot-toggle" style="width:100%;font-weight:900;letter-spacing:.01em;">Forgot Password?</button>
+        <div id="w-forgot-panel" style="display:none;background:#f5f6ff;border:1.5px solid #d0d8ff;border-radius:14px;padding:16px;margin-top:8px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+            <div style="font-size:.82rem;font-weight:900;color:#1A56DB;">&#128274; Reset Password</div>
+            <button id="w-forgot-close" style="background:none;border:none;cursor:pointer;font-size:.72rem;font-weight:900;color:#888;font-family:inherit;padding:0 0 0 10px;letter-spacing:.04em;">HIDE</button>
+          </div>
+          <div style="font-size:.76rem;color:#666;margin-bottom:12px;line-height:1.5;">Enter your email and we'll send you a reset link right away.</div>
+          <div id="w-forgot-err" class="err"></div>
+          <div id="w-forgot-ok" class="ok" style="display:none;">&#10003; Reset link sent! Check your inbox and spam folder.</div>
+          <div id="w-forgot-form">
+            <div class="field" style="margin-bottom:10px;">
+              <label>Email address</label>
+              <input id="w-forgot-email" type="email" autocomplete="email" placeholder="you@example.com">
+            </div>
+            <button class="btn btn-blue" id="w-forgot-send-btn" style="margin-bottom:0;">Send Reset Link</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Inline success message shown after forgot-password email is sent -->
@@ -966,8 +980,14 @@ var ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJ
 var REST     = SUPA_URL + '/rest/v1';
 var FN       = SUPA_URL + '/functions/v1';
 var AUTH     = SUPA_URL + '/auth/v1';
-var MAIN_APP_URL = 'index.html';
-function goMainApp() { window.location.replace(MAIN_APP_URL); }
+var MAIN_APP_URL = 'databulge.html';
+function goMainApp() {
+  // All-local setup: this page is loaded from file:///android_asset/.
+  // A bare relative filename resolves against that same directory, so
+  // it lands on the local bundled main app — push/FCM and the native
+  // bridge work. (Also resolves correctly if served from the web.)
+  window.location.replace(MAIN_APP_URL);
+}
 
 /* ── STATE ──────────────────────────────────────────────────── */
 var gUser       = null;   // {id, email, user_metadata}
@@ -1397,8 +1417,8 @@ function doSendMagicLink(email, errId, okId, btnId) {
 
   btnLoad(btnId, true, 'Sending\u2026');
 
-  // Edge function sends magic link to index.html
-  // User taps it → lands on index.html → parseHash() sets session → boots app
+  // Edge function sends magic link to databulge.html
+  // User taps it → lands on databulge.html → parseHash() sets session → boots app
   xhr('POST', FN + '/resetPassword',
     { 'apikey': ANON_KEY, 'Content-Type': 'application/json' },
     JSON.stringify({ action: 'send_magic_link', email: email }),
@@ -1546,7 +1566,7 @@ function parseHash() {
     return true;
   }
 
-  // Supabase OAuth / SSO callback: save the returned session, fetch the user, then enter index.html.
+  // Supabase OAuth / SSO callback: save the returned session, fetch the user, then enter databulge.html.
   if (params.access_token) {
     gToken = params.access_token;
     gRefresh = params.refresh_token || '';
@@ -1773,7 +1793,6 @@ function loadDashCashflow() {
 
 function wire() {
   // Auth navigation
-  $('w-login-btn').onclick  = function() { showScreen('scr-l'); };
   $('w-signup-btn').onclick = function() { showScreen('scr-s'); };
   $('l-back-btn').onclick   = function() { showScreen('scr-w'); };
   $('s-back-btn').onclick   = function() { showScreen('scr-w'); };
@@ -1782,13 +1801,59 @@ function wire() {
   $('r-back-btn').onclick   = function() { showScreen('scr-l'); };
 
   // Auth actions
-  $('l-btn').onclick      = doLogin;
-  if ($('w-google-btn')) $('w-google-btn').onclick = function() {
-    var base = window.location.href.split('#')[0].split('?')[0];
-    var redirectTo = base.replace(/\/[^\/]*$/, '/') + MAIN_APP_URL;
-    window.location.href = AUTH + '/authorize?provider=google&redirect_to=' + encodeURIComponent(redirectTo);
+  // Welcome screen — SIGN IN hides forgot panel first
+  $('w-login-btn').onclick = function() {
+    var panel = $('w-forgot-panel');
+    if (panel) panel.style.display = 'none';
+    showScreen('scr-l');
   };
-  $('s-btn').onclick      = doSignup;
+
+  // Welcome screen — forgot password toggle
+  if ($('w-forgot-toggle')) {
+    $('w-forgot-toggle').onclick = function() {
+      var panel = $('w-forgot-panel');
+      panel.style.display = 'block';
+      setTimeout(function() { try { $('w-forgot-email').focus(); } catch(e) {} }, 80);
+    };
+  }
+  // HIDE button inside panel
+  if ($('w-forgot-close')) {
+    $('w-forgot-close').onclick = function() {
+      $('w-forgot-panel').style.display = 'none';
+    };
+  }
+  if ($('w-forgot-send-btn')) {
+    $('w-forgot-send-btn').onclick = function() {
+      var email = ($('w-forgot-email').value || '').replace(/^\s+|\s+$/g, '');
+      var errEl = $('w-forgot-err');
+      var okEl  = $('w-forgot-ok');
+      errEl.className = 'err'; okEl.style.display = 'none';
+      if (!email || email.indexOf('@') < 0) {
+        errEl.textContent = 'Please enter a valid email address.';
+        errEl.className = 'err on'; return;
+      }
+      $('w-forgot-send-btn').disabled = true;
+      $('w-forgot-send-btn').innerHTML = '<span class="spin"></span>Sending\u2026';
+      xhr('POST', AUTH + '/recover', {'Content-Type':'application/json','apikey':ANON_KEY},
+        { email: email, redirect_to: 'https://www.databulge.com/databulge-auth.html' },
+        function(err) {
+          $('w-forgot-send-btn').disabled = false;
+          $('w-forgot-send-btn').textContent = 'Send Reset Link';
+          if (err) {
+            errEl.textContent = 'Could not send reset link. Please try again.';
+            errEl.className = 'err on';
+          } else {
+            // Lock the form — hide input and button, show success only
+            $('w-forgot-form').style.display = 'none';
+            okEl.style.display = 'block';
+          }
+        }
+      );
+    };
+    $('w-forgot-email').onkeydown = function(e) {
+      if ((e || window.event).keyCode === 13) $('w-forgot-send-btn').click();
+    };
+  }
   $('r-btn').onclick      = doResetPassword;
   $('l-forgot-btn').onclick = function() {
     var panel = $('ml-inline');
@@ -1918,7 +1983,7 @@ function wire() {
 function hideSplashSoon() {
   var sp = document.getElementById('db-splash');
   if (!sp) return;
-  setTimeout(function(){ sp.className = 'hide'; }, 3500);
+  setTimeout(function(){ sp.className = 'hide'; }, 4000);
 }
 
 // Start
