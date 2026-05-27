@@ -875,7 +875,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
   <!-- DASHBOARD TAB - RETENTION REDESIGN -->
   <div id="tc-dash" class="tab-content">
     <div class="hero-bal-card" id="hero-bal-card">
-      <button class="hero-fund-btn" id="d-fund-btn" style="background:#fff!important;color:#1A56DB!important;border:none!important;font-weight:800!important;">Add small money</button>
+      <button class="hero-fund-btn" id="d-fund-btn" style="background:#22c55e!important;color:#fff!important;border:none!important;font-weight:800!important;">+ Add small money</button>
       <div class="hero-bal-label">Wallet Balance</div>
       <div class="hero-bal-amount" id="d-bal-dash">&#8358;0.00</div>
       <div class="hero-bal-va" id="d-va-dash">Loading&#8230;</div>
@@ -921,7 +921,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
 
   <!-- Buy Data / Airtime -->
   <div id="tc-plans" class="tab-content on">
-    <div class="card" style="margin-bottom:12px;">
+    <div class="card" style="display:none!important;margin-bottom:12px;">
       <div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:10px;">
         <div>
           <div class="card-title">Account Balance</div>
@@ -2336,7 +2336,7 @@ function _renderPlans(allPlans) {
             '<div class="plan-size">' + esc2(nn) + '<br>' + esc2(p.data_size) + '</div>' +
             '<div class="plan-sub" style="margin-top:5px;text-transform:none;letter-spacing:0;">' + (p.validity_days || 30) + '-Day Plan</div>' +
             '<div class="plan-price">' + fmtN(p.selling_price) + '</div>' +
-            '<div class="plan-sub">Daily: <strong>' + fmtN(pc.daily) + '</strong> &bull; <span style="font-size:1rem;font-weight:900;color:#1A56DB;">' + gPayDays + ' days</span></div>' +
+            '<div class="plan-sub">Daily: <strong>' + fmtN(pc.daily) + '</strong> to be paid for in <span style="font-size:1rem;font-weight:900;color:#1A56DB;">' + gPayDays + ' days</span></div>' +
           '</div>' +
           '<button class="plan-btn" onclick="openSubModal(\'id_' + String(p.id) + '\')">Subscribe</button>' +
         '</div>';
