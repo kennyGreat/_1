@@ -808,7 +808,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <div style="position:relative;-webkit-flex-shrink:0;flex-shrink:0;">
         <button id="notif-bell" onclick="toggleNotifDrawer()" aria-label="Notifications" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:10px;width:36px;height:36px;display:-webkit-box!important;display:-webkit-flex!important;display:flex!important;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;cursor:pointer;position:relative;padding:0;-webkit-flex-shrink:0;flex-shrink:0;visibility:visible!important;opacity:1!important;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-          <span id="notif-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:#f43f5e;color:#fff;border-radius:10px;font-size:.6rem;font-weight:900;padding:1px 5px;min-width:16px;text-align:center;border:1.5px solid #fff;"></span>
+          <span id="notif-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:#3d9758;color:#fff;border-radius:10px;font-size:.6rem;font-weight:900;padding:1px 5px;min-width:16px;text-align:center;border:1.5px solid #fff;"></span>
         </button>
       </div>
       <div class="avatar-wrap">
@@ -863,7 +863,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
     </button>
     <button class="bnav-btn" id="tab-inbox" data-t="inbox" onclick="showTab('inbox')" style="display:none!important;flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;position:relative;">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      <span id="inbox-badge" style="display:none;position:absolute;top:4px;right:10px;background:#f43f5e;color:#fff;border-radius:10px;font-size:.55rem;font-weight:800;padding:1px 4px;min-width:14px;text-align:center;"></span>
+      <span id="inbox-badge" style="display:none;position:absolute;top:4px;right:10px;background:#3d9758;color:#fff;border-radius:10px;font-size:.55rem;font-weight:800;padding:1px 4px;min-width:14px;text-align:center;"></span>
       <span style="font-size:.62rem;font-weight:700;font-family:inherit;">Messages</span>
     </button>
     <button class="bnav-btn" id="tab-earn" data-t="earn" onclick="showTab('earn')" style="display:none!important;" style="flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;">
@@ -943,8 +943,8 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <div class="card" style="margin-bottom:12px;">
         <div class="sec-title">Payment Option</div>
         <div id="pay-toggle-wrap" style="display:flex;gap:8px;">
-          <button class="btn btn-blue" id="pay-days-7" style="margin:0;flex:1;">7 Days</button>
-          <button class="btn btn-lite" id="pay-days-28" style="margin:0;flex:1;">28 Days</button>
+          <button class="btn btn-lite" id="pay-days-7" style="margin:0;flex:1;">7 Days</button>
+          <button class="btn btn-blue" id="pay-days-28" style="margin:0;flex:1;">28 Days</button>
         </div>
         <div class="card-sub" style="margin-top:10px;">Daily payment updates automatically based on the payment option you choose.</div>
       </div>
@@ -1807,12 +1807,6 @@ var STALE_MS = 30000; // 30s before re-fetching on tab revisit
 function dbGoSoftPay(){
   try {
     showTab('plans');
-    setTimeout(function(){
-      var target = $('pay-toggle-wrap');
-      if (target && target.parentNode) target = target.parentNode;
-      if (!target) target = $('plans-list');
-      if (target && target.scrollIntoView) target.scrollIntoView({behavior:'smooth', block:'start'});
-    }, 140);
   } catch(e) {}
 }
 
@@ -1824,6 +1818,21 @@ function showTab(t) {
     var tc  = $('tc-' + tabs[i]);
     if (btn) btn.className = 'bnav-btn' + (tabs[i] === t ? ' act' : '');
     if (tc)  tc.className  = 'tab-content' + (tabs[i] === t ? ' on' : '');
+  }
+  if (t === 'dash') {
+    setTimeout(function() {
+      var card = document.querySelector('.companion-welcome') || document.querySelector('.friend-hero');
+      if (card) card.scrollIntoView({behavior:'instant', block:'start'});
+      else window.scrollTo(0, 0);
+    }, 30);
+  } else if (t === 'plans') {
+    setTimeout(function() {
+      var card = document.querySelector('#tc-plans .card') || $('pay-toggle-wrap');
+      if (card) card.scrollIntoView({behavior:'instant', block:'start'});
+      else window.scrollTo(0, 0);
+    }, 30);
+  } else {
+    window.scrollTo(0, 0);
   }
   var now = Date.now();
   if (t === 'dash')   { if (now - _dashLastLoad  > STALE_MS) { _dashLastLoad  = now; loadDashCashflow(); } }
@@ -2431,7 +2440,7 @@ function renderSubsList(subs, compact) {
     var isAirtime = (pl.category === 'airtime' || pl.data_size === 'Airtime' || s.network === s.network && !pl.data_size);
     // For airtime, the display name comes from network + total_price
     var displayName = isAirtime
-      ? ('₦' + fmtN(total / (1 + (parseInt(s.payment_days) === 28 ? 0.05 : 0.03))) + ' ' + esc(s.network || '') + ' Airtime')
+      ? (fmtN(total / (1 + (parseInt(s.payment_days) === 28 ? 0.05 : 0.03))) + ' ' + esc(s.network || '') + ' Airtime')
       : esc(pl.data_size || 'Data Plan');
     var displayNetwork = isAirtime ? esc(s.network || '') : esc(pl.network || '');
 
@@ -3207,7 +3216,7 @@ function confirmPay() {
 /* ── WALLET / MESSAGES / EXTRA FEATURES ───────────────────── */
 var gCurrentMsgId = null;
 var _autoPayBusy = false;
-var gPayDays = 7;
+var gPayDays = 28;
 var gModalPayDays = 7;
 var gWalletMandateId = null;  // active wallet auto-fund mandate id
 var gSubMandateId    = null;  // active sub auto-fund mandate id
@@ -3765,7 +3774,7 @@ function loadDashCashflow() {
           var pct  = Math.min(100, (paid / total) * 100);
           html += '<div style="border:1px solid #e5e7eb;border-radius:8px;padding:12px;margin-bottom:10px;background:#fff;">' +
             '<div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;margin-bottom:6px;">' +
-              (function() { var isAir = pl.category === 'airtime' || pl.data_size === 'Airtime'; var dname = isAir ? ('₦' + fmtN(parseFloat(s.total_price)/(1+(parseInt(s.payment_days)===28?0.05:0.03))) + ' ' + esc(s.network||'') + ' Airtime') : esc(pl.data_size||''); var dnet = isAir ? esc(s.network||'') : esc(pl.network||''); return '<span style="font-size:.93rem;font-weight:800;color:#111;">' + dname + ' <span class="plan-net ' + netCls(isAir?s.network:pl.network) + '">' + dnet + '</span></span>'; }()) +
+              (function() { var isAir = pl.category === 'airtime' || pl.data_size === 'Airtime'; var dname = isAir ? (fmtN(parseFloat(s.total_price)/(1+(parseInt(s.payment_days)===28?0.05:0.03))) + ' ' + esc(s.network||'') + ' Airtime') : esc(pl.data_size||''); var dnet = isAir ? esc(s.network||'') : esc(pl.network||''); return '<span style="font-size:.93rem;font-weight:800;color:#111;">' + dname + ' <span class="plan-net ' + netCls(isAir?s.network:pl.network) + '">' + dnet + '</span></span>'; }()) +
               '<span style="font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:10px;background:#fef3c7;color:#92400e;">' + esc(s.status) + '</span>' +
             '</div>' +
             '<div style="background:#e5e7eb;border-radius:4px;height:6px;overflow:hidden;margin-bottom:4px;"><div style="background:#1A56DB;height:100%;border-radius:4px;width:' + pct.toFixed(1) + '%;"></div></div>' +
@@ -5697,7 +5706,7 @@ function renderSavingsCard() {
   var d=gRetention||{},saved=parseFloat(d.month_saved)||0,plans=parseInt(d.month_plans)||0,card=$('savings-card');
   if(!card)return;
   if(saved<50||plans<1){card.style.display='none';return;}
-  if($('savings-amount'))$('savings-amount').textContent='₦'+fmtN(saved);
+  if($('savings-amount'))$('savings-amount').textContent=fmtN(saved);
   if($('savings-sub'))$('savings-sub').textContent='across '+plans+' plan'+(plans!==1?'s':'')+' this month — paying in installments instead of upfront.';
   card.style.display='';
 }
@@ -5753,7 +5762,7 @@ function renderDashActivePlans(subs) {
     var s=subs[i],pl=s.data_plans||{};
     var isAir=pl.category==='airtime'||pl.data_size==='Airtime';
     var net=(isAir?s.network:(pl.network||'')).toUpperCase();
-    var name=isAir?('₦'+fmtN(parseFloat(s.total_price)/(1+(parseInt(s.payment_days)===28?0.05:0.03)))+' '+esc(s.network||'')+' Airtime'):esc(pl.data_size||'Data Plan');
+    var name=isAir?(fmtN(parseFloat(s.total_price)/(1+(parseInt(s.payment_days)===28?0.05:0.03)))+' '+esc(s.network||'')+' Airtime'):esc(pl.data_size||'Data Plan');
     var paid=parseFloat(s.amount_paid)||0,total=parseFloat(s.total_price)||1,pct=Math.min(100,Math.round((paid/total)*100));
     var daily=parseFloat(s.daily_price)||parseFloat(pl.daily_price)||0,left=total-paid,daysL=daily>0?Math.ceil(left/daily):0;
     var netCard=net==='MTN'?'net-mtn-card':net==='AIRTEL'?'net-airtel-card':net==='GLO'?'net-glo-card':net==='9MOBILE'?'net-9mobile-card':'net-other-card';
@@ -6103,7 +6112,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
       notifLoad();
       setTimeout(notifStartRealtime, 1000);
       setTimeout(requestCapacitorPushToken, 2000);
-      setInterval(notifLoad, 20000);  // poll every 20s so the bell badge reflects new delivery/refund events promptly
+      setInterval(notifLoad, 10000);  // poll every 20s so the bell badge reflects new delivery/refund events promptly
     }
   }, 800);
 })();
