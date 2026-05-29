@@ -104,7 +104,7 @@ html,body{width:100%;min-height:100%;background:#fff;font-family:Arial,Helvetica
 
 /* ── MAIN APP ── */
 #pg-app{padding:0;}
-.top-bar{background:#1A56DB;color:#fff;padding:12px 14px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;position:sticky;top:0;z-index:100;}
+.top-bar{background:#1A56DB;color:#fff;padding:9px 14px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;position:sticky;top:0;z-index:100;}
 .top-bar-title{font-size:1.05rem;font-weight:900;}
 .top-bar-right{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:10px;}
 .avatar{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.25);color:#fff;font-size:.85rem;font-weight:900;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;}
@@ -355,12 +355,13 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 /* ═══ RETENTION CSS ═══════════════════════════════════════════
    ES5/Android 4.4 safe. -webkit- prefixes throughout.
    ═══════════════════════════════════════════════════════════ */
-.hero-bal-card{background:#1A56DB;background:-webkit-linear-gradient(135deg,#1A56DB,#1e40af);background:linear-gradient(135deg,#1A56DB,#1e40af);border-radius:18px;border:none;padding:22px 18px 18px;margin-bottom:14px;color:#fff;position:relative;overflow:hidden;}
-.hero-bal-card::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.07);}
+.hero-bal-card{background:#1A56DB;background:-webkit-linear-gradient(135deg,#1A56DB,#1e40af);background:linear-gradient(135deg,#1A56DB,#1e40af);border-radius:18px;border:none;padding:22px 18px 18px;margin-bottom:14px;color:#fff;position:relative;overflow:visible;}
+.hero-bal-card::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.07);pointer-events:none;overflow:hidden;}
 .hero-bal-label{font-size:.72rem;font-weight:700;opacity:.75;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
 .hero-bal-amount{font-size:2.2rem;font-weight:900;letter-spacing:-.04em;line-height:1.1;}
 .hero-bal-va{font-size:.72rem;opacity:.7;margin-top:6px;line-height:1.4;}
-.hero-fund-btn{position:absolute;top:18px;right:16px;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.3);color:#fff;border-radius:10px;padding:7px 13px;font-size:.78rem;font-weight:900;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;}
+.hero-fund-btn{display:block;width:100%;margin-top:16px;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.35);color:#fff;border-radius:12px;padding:13px 16px;font-size:.95rem;font-weight:900;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:rgba(255,255,255,.15);text-align:center;-webkit-appearance:none;min-height:48px;touch-action:manipulation;position:relative;z-index:2;}
+.hero-fund-btn:active{opacity:.82;-webkit-transform:scale(.98);transform:scale(.98);}
 @-webkit-keyframes balPop{0%{-webkit-transform:scale(1.08);opacity:.6}100%{-webkit-transform:scale(1);opacity:1}}
 @keyframes balPop{0%{transform:scale(1.08);opacity:.6}100%{transform:scale(1);opacity:1}}
 .bal-pop{-webkit-animation:balPop .35s ease-out;animation:balPop .35s ease-out;}
@@ -651,6 +652,11 @@ button,.btn,.plan-btn,.tab,.logout-btn,.plan-chip,.avatar,.avatar-menu button{
 /* Button and tab colors are defined in the authoritative theme block below */
 
 
+/* ── NUGGET HIGHLIGHT — green ring that pulses then fades ── */
+@-webkit-keyframes nuggetPulse{0%{box-shadow:0 0 0 0 rgba(61,151,88,.55);}60%{box-shadow:0 0 0 8px rgba(61,151,88,.0);}100%{box-shadow:0 0 0 0 rgba(61,151,88,0);}}
+@keyframes nuggetPulse{0%{box-shadow:0 0 0 0 rgba(61,151,88,.55);}60%{box-shadow:0 0 0 8px rgba(61,151,88,.0);}100%{box-shadow:0 0 0 0 rgba(61,151,88,0);}}
+.nugget-highlight{outline:3px solid #3d9758!important;outline-offset:3px!important;border-radius:10px!important;-webkit-animation:nuggetPulse 1s ease-out 3;animation:nuggetPulse 1s ease-out 3;-webkit-transition:outline .2s;transition:outline .2s;}
+
 /* ── AUTHORITATIVE THEME: green actions, blue brand, one source of truth ── */
 /* All previous !important blocks for .tab.act and .btn-blue are superseded here */
 .tabs .tab.act{background:#3d9758!important;color:#fff!important;border-color:#3d9758!important;font-weight:900!important;box-shadow:none!important;}
@@ -772,7 +778,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
   <div class="top-bar">
     <div class="top-bar-title" style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:10px;line-height:1;-webkit-box-flex:1;-webkit-flex:1;flex:1;min-width:0;">
       <!-- Icon only: blue circle with white floating signal mark -->
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="48" height="48" style="display:block;-webkit-flex-shrink:0;flex-shrink:0;" role="img" aria-label="DataBulge">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="54" height="54" style="display:block;-webkit-flex-shrink:0;flex-shrink:0;min-width:54px;min-height:54px;" role="img" aria-label="DataBulge">
         <style>
           @-webkit-keyframes tbreathe{0%,100%{opacity:1}50%{opacity:.5}}
           @keyframes tbreathe{0%,100%{opacity:1}50%{opacity:.5}}
@@ -808,7 +814,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <div style="position:relative;-webkit-flex-shrink:0;flex-shrink:0;">
         <button id="notif-bell" onclick="toggleNotifDrawer()" aria-label="Notifications" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:10px;width:36px;height:36px;display:-webkit-box!important;display:-webkit-flex!important;display:flex!important;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;cursor:pointer;position:relative;padding:0;-webkit-flex-shrink:0;flex-shrink:0;visibility:visible!important;opacity:1!important;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-          <span id="notif-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:#f43f5e;color:#fff;border-radius:10px;font-size:.6rem;font-weight:900;padding:1px 5px;min-width:16px;text-align:center;border:1.5px solid #fff;"></span>
+          <span id="notif-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:#3d9758;color:#fff;border-radius:10px;font-size:.6rem;font-weight:900;padding:1px 5px;min-width:16px;text-align:center;border:1.5px solid #fff;"></span>
         </button>
       </div>
       <div class="avatar-wrap">
@@ -863,7 +869,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
     </button>
     <button class="bnav-btn" id="tab-inbox" data-t="inbox" onclick="showTab('inbox')" style="display:none!important;flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;position:relative;">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      <span id="inbox-badge" style="display:none;position:absolute;top:4px;right:10px;background:#f43f5e;color:#fff;border-radius:10px;font-size:.55rem;font-weight:800;padding:1px 4px;min-width:14px;text-align:center;"></span>
+      <span id="inbox-badge" style="display:none;position:absolute;top:4px;right:10px;background:#3d9758;color:#fff;border-radius:10px;font-size:.55rem;font-weight:800;padding:1px 4px;min-width:14px;text-align:center;"></span>
       <span style="font-size:.62rem;font-weight:700;font-family:inherit;">Messages</span>
     </button>
     <button class="bnav-btn" id="tab-earn" data-t="earn" onclick="showTab('earn')" style="display:none!important;" style="flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;">
@@ -875,10 +881,10 @@ button.tab,button.plan-chip{box-shadow:none!important;}
   <!-- DASHBOARD TAB - RETENTION REDESIGN -->
   <div id="tc-dash" class="tab-content">
     <div class="hero-bal-card" id="hero-bal-card">
-      <button class="hero-fund-btn" id="d-fund-btn">+ Add small money</button>
       <div class="hero-bal-label">Wallet Balance</div>
       <div class="hero-bal-amount" id="d-bal-dash">&#8358;0.00</div>
       <div class="hero-bal-va" id="d-va-dash">Loading&#8230;</div>
+      <button class="hero-fund-btn" id="d-fund-btn" onclick="openFundModal()" ontouchstart="">+ Add small money</button>
     </div>
     <div class="streak-strip" id="streak-strip" style="display:none;">
       <div class="streak-fire" id="streak-fire">&#128293;</div>
@@ -937,10 +943,10 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <div class="card" style="margin-bottom:12px;">
         <div class="sec-title">Payment Option</div>
         <div id="pay-toggle-wrap" style="display:flex;gap:8px;">
-          <button class="btn btn-blue" id="pay-days-7" style="margin:0;flex:1;">7 Days</button>
-          <button class="btn btn-lite" id="pay-days-28" style="margin:0;flex:1;">28 Days</button>
+          <button class="btn btn-lite" id="pay-days-7" style="margin:0;flex:1;">7 Days</button>
+          <button class="btn btn-blue" id="pay-days-28" style="margin:0;flex:1;">28 Days</button>
         </div>
-        <div class="card-sub" style="margin-top:10px;">Daily payment updates automatically based on the payment option you choose.</div>
+
       </div>
       <div id="plans-list"><div class="empty">Loading plans&hellip;</div></div>
     </div>
@@ -1725,12 +1731,6 @@ function _setSession(d) {
   // Keep window references in sync so cross-script-block code (notif system, push IIFE) sees the session
   window.gUser  = gUser;
   window.gToken = gToken;
-  // Pick up any FCM token that arrived before the session was established
-  if (window.__pendingFcmToken) {
-    var _pt = window.__pendingFcmToken;
-    delete window.__pendingFcmToken;
-    setTimeout(function() { registerPushToken(_pt); }, 500);
-  }
 }
 
 function _loadSession() {
@@ -2071,14 +2071,9 @@ function bootApp() {
   // (< 5s) without waiting for the poll cycle.
   dbStartWalletRealtime();
 
-  // Expose session state on window so cross-script-block code (push IIFE, notif system) can read it
+  // Expose session state on window so cross-script-block code (notif system) can read it
   window.gUser  = gUser;
   window.gToken = gToken;
-
-  // Request Capacitor push token — runs on native Android/iOS only, no-op on web
-  setTimeout(function() {
-    try { requestCapacitorPushToken(); } catch(e) {}
-  }, 2500);
 }
 
 
@@ -2098,9 +2093,7 @@ function firstNameFromUser(fallbackName) {
 function updateGreeting(name) {
   var el = $('user-greeting');
   if (!el) return;
-  var h = new Date().getHours();
-  var salutation = h < 12 ? 'Good Morning' : h < 17 ? 'Good Afternoon' : 'Good Evening';
-  el.textContent = salutation + ', ' + firstNameFromUser(name);
+  el.textContent = 'Hi, ' + firstNameFromUser(name);
 }
 
 function updateWalletLabel() {
@@ -2338,7 +2331,7 @@ function _renderPlans(allPlans) {
             '<div class="plan-size">' + esc2(nn) + '<br>' + esc2(p.data_size) + '</div>' +
             '<div class="plan-sub" style="margin-top:5px;text-transform:none;letter-spacing:0;">' + (p.validity_days || 30) + '-Day Plan</div>' +
             '<div class="plan-price">' + fmtN(p.selling_price) + '</div>' +
-            '<div class="plan-sub">Daily: <strong>' + fmtN(pc.daily) + '</strong> &bull; ' + gPayDays + ' days</div>' +
+            '<div style="margin-top:8px;font-size:1rem;font-weight:900;color:#3d9758;">Pay in ' + gPayDays + ' days</div>' +
           '</div>' +
           '<button class="plan-btn" onclick="openSubModal(\'id_' + String(p.id) + '\')">Subscribe</button>' +
         '</div>';
@@ -2394,7 +2387,7 @@ function renderSubsList(subs, compact) {
     var isAirtime = (pl.category === 'airtime' || pl.data_size === 'Airtime' || s.network === s.network && !pl.data_size);
     // For airtime, the display name comes from network + total_price
     var displayName = isAirtime
-      ? ('₦' + fmtN(total / (1 + (parseInt(s.payment_days) === 28 ? 0.05 : 0.03))) + ' ' + esc(s.network || '') + ' Airtime')
+      ? (fmtN(total / (1 + (parseInt(s.payment_days) === 28 ? 0.05 : 0.03))) + ' ' + esc(s.network || '') + ' Airtime')
       : esc(pl.data_size || 'Data Plan');
     var displayNetwork = isAirtime ? esc(s.network || '') : esc(pl.network || '');
 
@@ -2421,7 +2414,7 @@ function renderSubsList(subs, compact) {
     // Network badge class — for airtime use subscription's network field
     var nbCls = netCls(isAirtime ? s.network : pl.network);
 
-    html += '<div class="sub-row">';
+    html += '<div class="sub-row" id="sub-row-' + esc(s.id) + '">';
     // Header: plan name + status badge
     html += '<div class="sub-top">' +
       '<span class="sub-name">' + displayName + ' <span class="plan-net ' + nbCls + '" style="font-size:.7rem;">' + displayNetwork + '</span></span>' +
@@ -3165,7 +3158,7 @@ function confirmPay() {
 /* ── WALLET / MESSAGES / EXTRA FEATURES ───────────────────── */
 var gCurrentMsgId = null;
 var _autoPayBusy = false;
-var gPayDays = 7;
+var gPayDays = 28;
 var gModalPayDays = 7;
 var gWalletMandateId = null;  // active wallet auto-fund mandate id
 var gSubMandateId    = null;  // active sub auto-fund mandate id
@@ -3597,24 +3590,24 @@ function launchAutoFund(amt, planLabel, subscriptionId) {
       currency: 'NGN',
       metadata: { custom_fields: [{ display_name: 'Purpose', variable_name: 'purpose', value: desc }] },
       callback: function(response) {
-        toast('Setting up Auto-Fund\u2026');
+        toast('\uD83D\uDCB3 Payment received! Setting up Auto-Fund\u2026');
         ensureToken(function(err) {
           if (err) return;
           var h    = { 'Authorization': 'Bearer ' + gToken, 'Content-Type': 'application/json', 'apikey': ANON_KEY };
           var body = { reference: response.reference, user_id: gUser.id, amount: amt };
           if (subscriptionId) body.subscription_id = subscriptionId;
-          xhr('POST', FN + '/verifyPaystackPayment', h, body, function(e, r) {
+          /* Non-blocking — fire and forget; don't wait for verify round-trip */
+          xhr('POST', FN + '/saveAutoFundMandate', h, body, function(e, r) {
             if (r && r.ok) {
               toast('\u2705 Auto-Fund active! Your card will be charged daily.');
-              if (isWallet) {
-                _loadWalletMandate(); // show cancel button in fund modal
-              } else {
-                _loadSubMandate(subscriptionId); // show cancel in sub modal
-              }
+              if (isWallet) { _loadWalletMandate(); } else { _loadSubMandate(subscriptionId); }
             } else {
-              toast('Payment received. Auto-Fund will activate shortly.');
+              toast('\u2705 Payment received! Auto-Fund will activate shortly.');
             }
-            setTimeout(function() { loadDashboard(); loadDashCashflow(); }, 1500);
+          });
+          /* Immediate feedback — update balance at 0.8s / 2s / 4s */
+          [800, 2000, 4000].forEach(function(delay) {
+            setTimeout(function() { loadDashboard(); loadDashCashflow(); }, delay);
           });
         });
       },
@@ -3699,7 +3692,7 @@ function loadDashCashflow() {
           var pct  = Math.min(100, (paid / total) * 100);
           html += '<div style="border:1px solid #e5e7eb;border-radius:8px;padding:12px;margin-bottom:10px;background:#fff;">' +
             '<div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;margin-bottom:6px;">' +
-              (function() { var isAir = pl.category === 'airtime' || pl.data_size === 'Airtime'; var dname = isAir ? ('₦' + fmtN(parseFloat(s.total_price)/(1+(parseInt(s.payment_days)===28?0.05:0.03))) + ' ' + esc(s.network||'') + ' Airtime') : esc(pl.data_size||''); var dnet = isAir ? esc(s.network||'') : esc(pl.network||''); return '<span style="font-size:.93rem;font-weight:800;color:#111;">' + dname + ' <span class="plan-net ' + netCls(isAir?s.network:pl.network) + '">' + dnet + '</span></span>'; }()) +
+              (function() { var isAir = pl.category === 'airtime' || pl.data_size === 'Airtime'; var dname = isAir ? (fmtN(parseFloat(s.total_price)/(1+(parseInt(s.payment_days)===28?0.05:0.03))) + ' ' + esc(s.network||'') + ' Airtime') : esc(pl.data_size||''); var dnet = isAir ? esc(s.network||'') : esc(pl.network||''); return '<span style="font-size:.93rem;font-weight:800;color:#111;">' + dname + ' <span class="plan-net ' + netCls(isAir?s.network:pl.network) + '">' + dnet + '</span></span>'; }()) +
               '<span style="font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:10px;background:#fef3c7;color:#92400e;">' + esc(s.status) + '</span>' +
             '</div>' +
             '<div style="background:#e5e7eb;border-radius:4px;height:6px;overflow:hidden;margin-bottom:4px;"><div style="background:#1A56DB;height:100%;border-radius:4px;width:' + pct.toFixed(1) + '%;"></div></div>' +
@@ -4221,13 +4214,7 @@ function earnStartAd() {
   if (!btn || btn.disabled || _earnAdInProgress) return;
   if (!window.gUser || !window.gToken) { window.toast && window.toast('Please log in first.'); return; }
   _earnAdInProgress = true;
-
-  var isNative = (typeof window.Capacitor !== 'undefined' && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
-  if (isNative) {
-    earnShowNativeAd();
-  } else {
-    earnShowWebTimer();
-  }
+  earnShowWebTimer();
 }
 
 function earnShowWebTimer() {
@@ -4271,40 +4258,14 @@ function earnShowWebTimer() {
   }, 1000);
 }
 
-function earnShowNativeAd() {
-  var AdMob = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.AdMob;
-  if (!AdMob) { earnShowWebTimer(); return; }
 
-  var btn = document.getElementById('earn-watch-btn');
-  if (btn) { btn.disabled = true; btn.textContent = 'Loading ad\u2026'; }
 
-  _earnAdStartedAt = new Date().toISOString();
-
-  AdMob.prepareRewardVideoAd({ adId: 'ca-app-pub-9059847852972551/7330185515', isTesting: false })
-    .then(function() { return AdMob.showRewardVideoAd(); })
-    .then(function() { earnOnComplete(); })
-    .catch(function() {
-      _earnAdInProgress = false;
-      earnResetAdSlot();
-      if (btn) { btn.disabled = false; btn.textContent = 'Watch Ad & Earn'; btn.style.background = ''; btn.style.color = ''; }
-      window.toast && window.toast('No ad available right now. Try again soon.');
-    });
-
-  if (AdMob.addListener) {
-    AdMob.addListener('onRewardedVideoAdRewarded', function() { earnOnComplete(); });
-    AdMob.addListener('onRewardedVideoAdFailedToLoad', function() {
-      _earnAdInProgress = false; earnResetAdSlot();
-      if (btn) { btn.disabled = false; btn.textContent = 'Watch Ad & Earn'; btn.style.background = ''; btn.style.color = ''; }
-      window.toast && window.toast('No ad available right now. Try again soon.');
-    });
-  }
-}
 
 function earnOnComplete() {
   var btn = document.getElementById('earn-watch-btn');
   if (btn) { btn.textContent = 'Claiming reward\u2026'; }
 
-  var platform = (typeof window.Capacitor !== 'undefined' && window.Capacitor.getPlatform) ? window.Capacitor.getPlatform() : 'web';
+  var platform = 'web';
 
   // Pass started_at so backend can verify ≥28 seconds elapsed
   window.rpc('grant_ad_reward', JSON.stringify({
@@ -4680,8 +4641,8 @@ html,body{background:radial-gradient(circle at top left,#EEF6FF 0,#F6F8FC 34%,#F
 .card-val{font-size:2rem!important;letter-spacing:-.06em!important;}
 .card-sub{font-size:.78rem!important;color:#667085!important;line-height:1.55!important;}
 .friend-hero{position:relative;overflow:hidden;border:0!important;border-radius:30px!important;padding:22px 18px!important;margin-bottom:16px!important;color:#fff!important;background:radial-gradient(circle at 86% 3%,rgba(255,255,255,.28),transparent 25%),linear-gradient(135deg,#132B63 0%,#1A56DB 48%,#3d9758 100%)!important;box-shadow:0 24px 50px rgba(26,86,219,.25)!important;}
-.friend-hero:before{content:'';position:absolute;right:-42px;bottom:-54px;width:190px;height:190px;border-radius:50%;background:rgba(255,255,255,.10);}
-.friend-hero:after{content:'';position:absolute;left:-45px;top:-45px;width:120px;height:120px;border-radius:38px;background:rgba(255,255,255,.08);-webkit-transform:rotate(18deg);transform:rotate(18deg);}
+.friend-hero:before{content:'';position:absolute;right:-42px;bottom:-54px;width:190px;height:190px;border-radius:50%;background:rgba(255,255,255,.10);pointer-events:none;}
+.friend-hero:after{content:'';position:absolute;left:-45px;top:-45px;width:120px;height:120px;border-radius:38px;background:rgba(255,255,255,.08);-webkit-transform:rotate(18deg);transform:rotate(18deg);pointer-events:none;}
 .friend-hero-top{position:relative;z-index:1;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;gap:12px;-webkit-box-align:start;-webkit-align-items:flex-start;align-items:flex-start;}
 .friend-kicker{font-size:.72rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;opacity:.78;margin-bottom:8px;}
 .friend-title{font-size:1.35rem;line-height:1.1;font-weight:950;letter-spacing:-.05em;margin-bottom:7px;}
@@ -4690,7 +4651,8 @@ html,body{background:radial-gradient(circle at top left,#EEF6FF 0,#F6F8FC 34%,#F
 .friend-bal-label{font-size:.70rem;opacity:.72;font-weight:900;text-transform:uppercase;letter-spacing:.10em;}
 .friend-bal-val{font-size:2.15rem;font-weight:950;letter-spacing:-.07em;line-height:1;}
 .friend-cta-row{position:relative;z-index:1;display:-webkit-box;display:-webkit-flex;display:flex;gap:10px;margin-top:18px;}
-.friend-cta{border:0;border-radius:16px;padding:12px 13px;font-size:.84rem;font-weight:950;cursor:pointer;font-family:Arial,Helvetica,sans-serif;-webkit-tap-highlight-color:transparent;}
+.friend-cta{border:0;border-radius:16px;padding:13px 13px;font-size:.84rem;font-weight:950;cursor:pointer;font-family:Arial,Helvetica,sans-serif;-webkit-tap-highlight-color:transparent;touch-action:manipulation;min-height:48px;position:relative;z-index:2;-webkit-appearance:none;appearance:none;}
+.friend-cta:active{opacity:.82;-webkit-transform:scale(.97);transform:scale(.97);}
 .friend-cta.primary{background:#fff!important;color:#1550D4!important;box-shadow:0 12px 25px rgba(15,23,42,.12)!important;-webkit-box-flex:1;-webkit-flex:1;flex:1;}
 .friend-cta.secondary{background:rgba(255,255,255,.16)!important;color:#fff!important;border:1px solid rgba(255,255,255,.30)!important;-webkit-box-flex:1;-webkit-flex:1;flex:1;}
 .friend-pill{position:relative;z-index:1;display:inline-block;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:7px 10px;font-size:.72rem;font-weight:900;white-space:nowrap;}
@@ -4699,7 +4661,8 @@ html,body{background:radial-gradient(circle at top left,#EEF6FF 0,#F6F8FC 34%,#F
 .friend-daily-title{font-size:.86rem;font-weight:950;letter-spacing:-.02em;color:#7C4A03;margin-bottom:2px;}
 .friend-daily-sub{font-size:.74rem;line-height:1.45;color:#8A5A0A;}
 .friend-quick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:15px;}
-.friend-action-card{border:0;border-radius:24px;padding:15px 14px;text-align:left;min-height:112px;box-shadow:0 14px 34px rgba(15,23,42,.09);font-family:Arial,Helvetica,sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.friend-action-card{border:0;border-radius:24px;padding:15px 14px;text-align:left;min-height:112px;box-shadow:0 14px 34px rgba(15,23,42,.09);font-family:Arial,Helvetica,sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-appearance:none;appearance:none;}
+.friend-action-card:active{opacity:.85;-webkit-transform:scale(.97);transform:scale(.97);}
 .friend-action-card strong{display:block;font-size:1rem;letter-spacing:-.04em;margin-bottom:5px;color:#111827;}
 .friend-action-card span{display:block;font-size:.74rem;line-height:1.45;color:#667085;font-weight:700;}
 .friend-action-card .emoji{font-size:1.45rem;margin-bottom:10px;display:block;}
@@ -5030,7 +4993,6 @@ function dbDismissPushCard(card) {
   }, 380);
 }
 
-// Expose for Capacitor push tap (native layer calls this)
 window.dbShowPushCard  = dbShowPushCard;
 window.dbDismissPushCard = dbDismissPushCard;
 
@@ -5355,40 +5317,10 @@ function checkDataUsage(subscriptionId, mbUsed, mbTotal) {
 }
 window.checkDataUsage = checkDataUsage;
 
-/* ── FCM Push Token Registration ────────────────────────
-   Saves device FCM token to push_subscriptions table so
-   sendPushNotification edge function can reach this device.
-──────────────────────────────────────────────────────── */
-function registerPushToken(fcmToken) {
-  if (!fcmToken) return;
-  // If user session isn't ready yet, store and retry after bootApp
-  if (!window.gUser || !window.gToken) {
-    window.__pendingFcmToken = fcmToken;
-    return;
-  }
-  // Detect native APK via the AndroidBridge or the injected flag
-  var isNative = !!(window.__DATABULGE_NATIVE_APP__ ||
-    (typeof window.DataBulgeNative !== 'undefined' && window.DataBulgeNative.isNativeApp && window.DataBulgeNative.isNativeApp()));
-  var hint = isNative ? 'android' : 'web';
-  var h = { 'Authorization': 'Bearer ' + window.gToken, 'Content-Type': 'application/json', 'apikey': window.ANON_KEY, 'Prefer': 'resolution=merge-duplicates' };
-  window.xhr('POST', window.REST + '/push_subscriptions', h,
-    JSON.stringify({ user_id: window.gUser.id, endpoint: fcmToken, device_hint: hint, p256dh: '', auth: '' }),
-    function(e) { if (!e) console.log('[Push] FCM token registered for', hint); }
-  );
 
-  // Also save to profiles.fcm_token via RPC — this is what the
-  // sendPushNotification edge function reads when sending pushes.
-  window.xhr('POST', window.REST + '/rpc/register_fcm_token',
-    { 'Authorization': 'Bearer ' + window.gToken, 'Content-Type': 'application/json', 'apikey': window.ANON_KEY },
-    JSON.stringify({ p_token: fcmToken }),
-    function(e) { if (!e) console.log('[Push] FCM token saved to profiles.fcm_token'); }
-  );
-}
-window.registerPushToken = registerPushToken;
 
-/* Native app bridges — MainActivity.java in the Android wrapper calls these
-   when a deep-link magic-link arrives, or when a push lands while the app
-   is in the foreground. Exposing them on window keeps the calls working. */
+
+/* Web bridge — expose functions needed by the notification system */
 window.parseHash       = parseHash;
 window.notifLoad       = notifLoad;
 window.showNotifToast  = showNotifToast;
@@ -5467,7 +5399,7 @@ function renderDynamicStrip() {
         cheapest = _plansCache[i];
       }
     }
-    var cTotal   = Math.round(parseFloat(cheapest.selling_price) * 1.03 * 100) / 100;
+    var cTotal   = Math.round(parseFloat(cheapest.selling_price) * 1.05 * 100) / 100;
     starterDaily = Math.round(cTotal / 7 * 100) / 100;
     starterSize  = cheapest.data_size || '1GB';
   }
@@ -5491,8 +5423,8 @@ function renderDynamicStrip() {
 
       nuggets.push({
         cls: 'green', icon: '\uD83D\uDCF6',
-        text: 'Pay \u20A6' + fmtN(sDaily) + ' for ' + sPayLeft + ' more day' + (sPayLeft !== 1 ? 's' : '') + ' and your ' + sSize + ' ' + sNet + ' data gets delivered. Never run out of data again.',
-        action: function() { showTab('subs'); }
+        text: 'Pay ' + fmtN(sDaily) + ' for ' + sPayLeft + ' more day' + (sPayLeft !== 1 ? 's' : '') + ' and your ' + sSize + ' ' + sNet + ' data gets delivered. Never run out of data again.',
+        action: (function(sid){ return function() { highlightTarget('subs', 'sub-row-' + sid); }; })(s.id)
       });
       nuggets.push({
         cls: '', icon: '\uD83D\uDCB3',
@@ -5506,21 +5438,21 @@ function renderDynamicStrip() {
       });
       nuggets.push({
         cls: 'green', icon: '\uD83D\uDCC5',
-        text: sSize + ' ' + sNet + ' plan — split over ' + sDays + ' days, that is just \u20A6' + fmtN(sDaily) + ' at a time. Small payments, big data.',
-        action: function() { showTab('subs'); }
+        text: sSize + ' ' + sNet + ' plan — split over ' + sDays + ' days, that is just ' + fmtN(sDaily) + ' at a time. Small payments, big data.',
+        action: (function(sid){ return function() { highlightTarget('subs', 'sub-row-' + sid); }; })(s.id)
       });
       nuggets.push({
         cls: '', icon: '\uD83D\uDCB0',
         text: 'Tap Pay Now whenever you are ready — you are always in control of when you pay.',
-        action: function() { showTab('subs'); }
+        action: (function(sid){ return function() { highlightTarget('subs', 'sub-row-' + sid); }; })(s.id)
       });
     }
   } else {
     /* NEW USER — starter tips using cheapest real plan numbers */
     nuggets.push({
       cls: 'green', icon: '\uD83D\uDCF6',
-      text: 'Start small. Pay \u20A6' + fmtN(starterDaily) + ' a day for ' + starterDays + ' days and get ' + starterSize + ' of data delivered straight to your phone. No lump sum needed.',
-      action: function() { showTab('plans'); }
+      text: 'Start small. Pay ' + fmtN(starterDaily) + ' a day for ' + starterDays + ' days and get ' + starterSize + ' of data delivered straight to your phone. No lump sum needed.',
+      action: function() { highlightTarget('plans', 'pay-toggle-wrap'); }
     });
     nuggets.push({
       cls: '', icon: '\uD83D\uDCB3',
@@ -5535,12 +5467,12 @@ function renderDynamicStrip() {
     nuggets.push({
       cls: 'green', icon: '\uD83D\uDCA1',
       text: 'Pick a plan, make your first payment, then tap Pay Now daily until it is complete. Once fully paid your data is delivered automatically — no extra steps.',
-      action: function() { showTab('plans'); }
+      action: function() { highlightTarget('plans', 'plans-list'); }
     });
     nuggets.push({
       cls: '', icon: '\uD83D\uDCF1',
       text: 'Think of DataBulge like a savings box for your data. Drop money in daily, watch the progress bar fill up, and collect your data when it hits 100%.',
-      action: function() { showTab('plans'); }
+      action: function() { highlightTarget('plans', 'plans-list'); }
     });
   }
 
@@ -5548,11 +5480,11 @@ function renderDynamicStrip() {
   var _seed = (new Date().getDay() * 100 + Math.floor(Date.now() / 600000)) % nuggets.length;
 
   /* ── Urgent operational messages always shown first when they apply ── */
-  if (bal > 0 && bal < 200) msgs.push({ cls: 'warn', icon: '\u26A0\uFE0F', text: 'Your wallet has \u20A6' + fmtN(bal) + ' — top up now to avoid missing your next installment.', action: function() { openModal('m-fund'); } });
-  if (saved > 0 && plans > 0) msgs.push({ cls: 'green', icon: '\uD83D\uDCB0', text: 'You managed installments for ' + plans + ' plan' + (plans !== 1 ? 's' : '') + ' this month — \u20A6' + fmtN(saved) + ' paid in small steps.', action: function() { showTab('wallet'); } });
+  if (bal > 0 && bal < 200) msgs.push({ cls: 'warn', icon: '\u26A0\uFE0F', text: 'Your wallet has ' + fmtN(bal) + ' — top up now to avoid missing your next installment.', action: function() { openModal('m-fund'); } });
+  if (saved > 0 && plans > 0) msgs.push({ cls: 'green', icon: '\uD83D\uDCB0', text: 'You managed installments for ' + plans + ' plan' + (plans !== 1 ? 's' : '') + ' this month — ' + fmtN(saved) + ' paid in small steps.', action: function() { showTab('wallet'); } });
   if (cur >= 3 && cur < 7) msgs.push({ cls: 'warn', icon: '\uD83D\uDD25', text: cur + '-day streak! Open the app every day to protect it. Miss a day and it resets to zero.', action: null });
   if (cur >= 7) msgs.push({ cls: 'warn', icon: '\uD83C\uDFC6', text: cur + '-day streak! You have been consistent for ' + cur + ' days straight. Keep it going.', action: null });
-  if (plans >= 1 && bal < 100) msgs.push({ cls: 'warn', icon: '\uD83D\uDCB8', text: 'Fund \u20A6' + fmtN(Math.max(100, Math.ceil(bal / 50) * 50 + 100)) + ' or more so your next installment goes through without issues.', action: function() { openModal('m-fund'); } });
+  if (plans >= 1 && bal < 100) msgs.push({ cls: 'warn', icon: '\uD83D\uDCB8', text: 'Fund ' + fmtN(Math.max(100, Math.ceil(bal / 50) * 50 + 100)) + ' or more so your next installment goes through without issues.', action: function() { openModal('m-fund'); } });
 
   /* If no urgent message applies, show the rotating personalised nugget */
   if (!msgs.length) msgs.push(nuggets[_seed]);
@@ -5566,6 +5498,33 @@ function renderDynamicStrip() {
 }
 
 function dynamicStripAction(){if(_dynamicStripAction)_dynamicStripAction();}
+
+/* ── highlightTarget: navigate to tab, scroll to element, flash green ring ── */
+function highlightTarget(tabName, elementId) {
+  showTab(tabName);
+  /* Wait for tab content to be visible, then scroll + highlight */
+  setTimeout(function() {
+    var el = elementId ? document.getElementById(elementId) : null;
+    if (!el) {
+      /* No specific element — just scroll to top of tab */
+      try { window.scrollTo(0, 0); document.documentElement.scrollTop = 0; document.body.scrollTop = 0; } catch(e) {}
+      return;
+    }
+    /* Scroll element into view */
+    try {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } catch(e) {
+      try { el.scrollIntoView(true); } catch(x) {}
+    }
+    /* Add highlight ring */
+    el.classList.add('nugget-highlight');
+    /* Remove highlight after 3.5s (3 pulse cycles × ~1s each + buffer) */
+    setTimeout(function() {
+      el.classList.remove('nugget-highlight');
+    }, 3500);
+  }, 160);
+}
+window.highlightTarget = highlightTarget;
 
 /* ─────────────────────────────────────────────────────────────────────
    Friend Daily nugget — show on EVERY tab, rotate every 5 minutes.
@@ -5591,7 +5550,7 @@ function _buildNuggetPool() {
     for (i = 1; i < _plansCache.length; i++) {
       if (parseFloat(_plansCache[i].selling_price) < parseFloat(cheapest.selling_price)) cheapest = _plansCache[i];
     }
-    var cTotal = Math.round(parseFloat(cheapest.selling_price) * 1.03 * 100) / 100;
+    var cTotal = Math.round(parseFloat(cheapest.selling_price) * 1.05 * 100) / 100;
     starterDaily = Math.round(cTotal / 7 * 100) / 100;
     starterSize  = cheapest.data_size || '1GB';
   }
@@ -5607,18 +5566,18 @@ function _buildNuggetPool() {
       var sSize  = pl.data_size || '';
       var sNet   = pl.network || s.network || '';
       var sPayLeft = sDaily > 0 ? Math.ceil(sLeft / sDaily) : 0;
-      nuggets.push({ icon: '\uD83D\uDCF6', text: 'Pay \u20A6' + fmtN(sDaily) + ' for ' + sPayLeft + ' more day' + (sPayLeft !== 1 ? 's' : '') + ' and your ' + sSize + ' ' + sNet + ' data gets delivered. Never run out of data again.', action: function(){ showTab('subs'); } });
+      nuggets.push({ icon: '\uD83D\uDCF6', text: 'Pay ' + fmtN(sDaily) + ' for ' + sPayLeft + ' more day' + (sPayLeft !== 1 ? 's' : '') + ' and your ' + sSize + ' ' + sNet + ' data gets delivered. Never run out of data again.', action: (function(sid){ return function(){ highlightTarget('subs', 'sub-row-' + sid); }; })(s.id) });
       nuggets.push({ icon: '\uD83D\uDCB3', text: 'Tired of always going to your bank to transfer money to your DataBulge wallet? Set up Auto-Fund once — the minimum is \u20A6100 — and your wallet is credited automatically every day until your plan is complete. Cancel anytime.', action: function(){ openFundModal(); } });
       nuggets.push({ icon: '\uD83D\uDCB8', text: 'Always keep your DataBulge wallet funded. You never know when you will run out of data and there will be no money in your account. A little payment a day keeps the data on.', action: function(){ openModal('m-fund'); } });
-      nuggets.push({ icon: '\uD83D\uDCC5', text: sSize + ' ' + sNet + ' plan — split over ' + sDays + ' days, that is just \u20A6' + fmtN(sDaily) + ' at a time. Small payments, big data.', action: function(){ showTab('subs'); } });
-      nuggets.push({ icon: '\uD83D\uDCB0', text: 'Tap Pay Now whenever you are ready — you are always in control of when you pay.', action: function(){ showTab('subs'); } });
+      nuggets.push({ icon: '\uD83D\uDCC5', text: sSize + ' ' + sNet + ' plan — split over ' + sDays + ' days, that is just ' + fmtN(sDaily) + ' at a time. Small payments, big data.', action: (function(sid){ return function(){ highlightTarget('subs', 'sub-row-' + sid); }; })(s.id) });
+      nuggets.push({ icon: '\uD83D\uDCB0', text: 'Tap Pay Now whenever you are ready — you are always in control of when you pay.', action: (function(sid){ return function(){ highlightTarget('subs', 'sub-row-' + sid); }; })(s.id) });
     }
   } else {
-    nuggets.push({ icon: '\uD83D\uDCF6', text: 'Start small. Pay \u20A6' + fmtN(starterDaily) + ' a day for ' + starterDays + ' days and get ' + starterSize + ' of data delivered straight to your phone. No lump sum needed.', action: function(){ showTab('plans'); } });
+    nuggets.push({ icon: '\uD83D\uDCF6', text: 'Start small. Pay ' + fmtN(starterDaily) + ' a day for ' + starterDays + ' days and get ' + starterSize + ' of data delivered straight to your phone. No lump sum needed.', action: function(){ highlightTarget('plans', 'pay-toggle-wrap'); } });
     nuggets.push({ icon: '\uD83D\uDCB3', text: 'No need to always go to your bank to transfer money. Set up Auto-Fund once and your wallet tops up automatically every day until your plan is complete. Cancel anytime.', action: function(){ openFundModal(); } });
     nuggets.push({ icon: '\uD83D\uDCB8', text: 'Always keep your DataBulge wallet funded. You never know when you will run out of data and there will be no money in your account. A little payment a day keeps the data on.', action: function(){ openModal('m-fund'); } });
-    nuggets.push({ icon: '\uD83D\uDCA1', text: 'Pick a plan, make your first payment, then tap Pay Now daily until it is complete. Once fully paid your data is delivered automatically — no extra steps.', action: function(){ showTab('plans'); } });
-    nuggets.push({ icon: '\uD83D\uDCF1', text: 'Think of DataBulge like a savings box for your data. Drop money in daily, watch the progress bar fill up, and collect your data when it hits 100%.', action: function(){ showTab('plans'); } });
+    nuggets.push({ icon: '\uD83D\uDCA1', text: 'Pick a plan, make your first payment, then tap Pay Now daily until it is complete. Once fully paid your data is delivered automatically — no extra steps.', action: function(){ highlightTarget('plans', 'plans-list'); } });
+    nuggets.push({ icon: '\uD83D\uDCF1', text: 'Think of DataBulge like a savings box for your data. Drop money in daily, watch the progress bar fill up, and collect your data when it hits 100%.', action: function(){ highlightTarget('plans', 'plans-list'); } });
   }
   return nuggets;
 }
@@ -5665,7 +5624,7 @@ function renderSavingsCard() {
   var d=gRetention||{},saved=parseFloat(d.month_saved)||0,plans=parseInt(d.month_plans)||0,card=$('savings-card');
   if(!card)return;
   if(saved<50||plans<1){card.style.display='none';return;}
-  if($('savings-amount'))$('savings-amount').textContent='₦'+fmtN(saved);
+  if($('savings-amount'))$('savings-amount').textContent=fmtN(saved);
   if($('savings-sub'))$('savings-sub').textContent='across '+plans+' plan'+(plans!==1?'s':'')+' this month — paying in installments instead of upfront.';
   card.style.display='';
 }
@@ -5683,7 +5642,7 @@ function renderReferralCard() {
   var rc=(gUser.id||'').replace(/-/g,'').slice(0,8).toUpperCase();
   if(code)code.textContent=rc;
   var d=gRetention||{},refs=parseInt(d.referrals_done)||0;
-  if(label)label.textContent=refs>0?refs+' friend'+(refs!==1?'s':'')+' referred — ₦'+fmtN(refs*200)+' earned':'No referrals yet — be the first to share!';
+  if(label)label.textContent=refs>0?refs+' friend'+(refs!==1?'s':'')+' referred — '+fmtN(refs*200)+' earned':'No referrals yet — be the first to share!';
   /* card stays hidden from user — do not call card.style.display here */
 }
 
@@ -5721,7 +5680,7 @@ function renderDashActivePlans(subs) {
     var s=subs[i],pl=s.data_plans||{};
     var isAir=pl.category==='airtime'||pl.data_size==='Airtime';
     var net=(isAir?s.network:(pl.network||'')).toUpperCase();
-    var name=isAir?('₦'+fmtN(parseFloat(s.total_price)/(1+(parseInt(s.payment_days)===28?0.05:0.03)))+' '+esc(s.network||'')+' Airtime'):esc(pl.data_size||'Data Plan');
+    var name=isAir?(fmtN(parseFloat(s.total_price)/(1+(parseInt(s.payment_days)===28?0.05:0.03)))+' '+esc(s.network||'')+' Airtime'):esc(pl.data_size||'Data Plan');
     var paid=parseFloat(s.amount_paid)||0,total=parseFloat(s.total_price)||1,pct=Math.min(100,Math.round((paid/total)*100));
     var daily=parseFloat(s.daily_price)||parseFloat(pl.daily_price)||0,left=total-paid,daysL=daily>0?Math.ceil(left/daily):0;
     var netCard=net==='MTN'?'net-mtn-card':net==='AIRTEL'?'net-airtel-card':net==='GLO'?'net-glo-card':net==='9MOBILE'?'net-9mobile-card':'net-other-card';
@@ -5737,8 +5696,8 @@ function renderDashActivePlans(subs) {
       '<div class="apc-name">'+name+'</div>'+
       '<div class="apc-ring-wrap">'+ring+
         '<div class="apc-stats-col">'+
-          '<div class="apc-stat-label">Paid</div><div class="apc-stat-val">₦'+fmtN(paid)+'</div>'+
-          '<div class="apc-stat-label">Remaining</div><div class="apc-stat-val">₦'+fmtN(left)+'</div>'+
+          '<div class="apc-stat-label">Paid</div><div class="apc-stat-val">'+fmtN(paid)+'</div>'+
+          '<div class="apc-stat-label">Remaining</div><div class="apc-stat-val">'+fmtN(left)+'</div>'+
           (daysL>0?'<div style="font-size:.7rem;color:#555;margin-top:2px;">'+daysL+' day'+(daysL!==1?'s':'')+' to complete</div>':'')+
         '</div>'+
       '</div>'+
@@ -5786,10 +5745,7 @@ function showMilestoneToast(msg,duration) {
   document.body.appendChild(el);setTimeout(function(){if(el.parentNode)el.parentNode.removeChild(el);},duration||4000);
 }
 
-(function(){
-  function wd(){var btn=$('d-fund-btn');if(btn)btn.onclick=function(){openModal('m-fund');};}
-  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',wd);}else{wd();}
-})();
+
 
 window.loadRetentionData=loadRetentionData;
 window.renderDashActivePlans=renderDashActivePlans;
@@ -6018,40 +5974,8 @@ window.confirmAirtime = confirmAirtime;
 
 
 
-/* ── Request push token from Capacitor native plugins ───
-   Requires @capacitor/push-notifications installed:
-   npm install @capacitor/push-notifications
-   npx cap sync android
-──────────────────────────────────────────────────────── */
-function requestCapacitorPushToken() {
-  var isNative = (typeof window.Capacitor !== 'undefined' && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
-  if (!isNative) return;
 
-  var Push = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.PushNotifications;
-  if (!Push) return;
 
-  Push.requestPermissions().then(function(result) {
-    if (result.receive === 'granted') {
-      Push.register();
-      Push.addListener('registration', function(token) {
-        registerPushToken(token.value);
-      });
-      Push.addListener('registrationError', function(err) {
-        console.warn('[Push] Registration error:', err);
-      });
-      // Handle foreground push tap — open notification drawer
-      Push.addListener('pushNotificationReceived', function(notification) {
-        // Show Facebook-style card + add to drawer list
-        dbShowPushCard(notification.title, notification.body, 'info', null);
-        notifLoad(); // also refresh drawer
-      });
-      Push.addListener('pushNotificationActionPerformed', function() {
-        openNotifDrawer();
-      });
-    }
-  }).catch(function(e) { console.warn('[Push] Permission error:', e); });
-}
-window.requestCapacitorPushToken = requestCapacitorPushToken;
 
 /* ── Responsive bottom nav positioning ──────────────── */
 function fixBottomNav() {
@@ -6101,8 +6025,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
       clearInterval(_bootCheck);
       notifLoad();
       setTimeout(notifStartRealtime, 1000);
-      setTimeout(requestCapacitorPushToken, 2000);
-      setInterval(notifLoad, 20000);  // poll every 20s so the bell badge reflects new delivery/refund events promptly
+      setInterval(notifLoad, 10000);  // poll every 10s so the bell badge reflects new delivery/refund events promptly
     }
   }, 800);
 })();
@@ -6151,9 +6074,9 @@ window.detectAndSaveLocation = detectAndSaveLocation;
         '<div class="friend-sub">Buy data now, pay small small, and stay online without pressure.</div></div>'+ 
         '<div class="friend-pill">📶 I am your data friend</div></div>'+ 
         '<div class="friend-balance"><div><div class="friend-bal-label">Available balance</div><div class="friend-bal-val" id="friend-bal-val">'+bal+'</div></div><div style="font-size:.76rem;opacity:.82;font-weight:800;text-align:right;">Ready when you are</div></div>'+ 
-        '<div class="friend-cta-row"><button class="friend-cta primary" onclick="openFundModal()">Add small money</button><button class="friend-cta secondary" onclick="dbGoSoftPay();">Find a plan</button></div>'+ 
+        '<div class="friend-cta-row"><button class="friend-cta primary" onclick="openFundModal()" ontouchstart="">Add small money</button><button class="friend-cta secondary" onclick="dbGoSoftPay();" ontouchstart="">Find a plan</button></div>'+ 
       '</div>'+ 
-      '<div class="friend-quick-grid" id="friend-quick-grid"><button class="friend-action-card fund" onclick="openFundModal()"><span class="emoji">💚</span><strong>Fund with ease</strong><span>Your wallet updates automatically after transfer.</span></button><button class="friend-action-card plan" onclick="dbGoSoftPay();"><span class="emoji">🎯</span><strong>Choose your vibe</strong><span>MTN, Airtel, Glo or 9mobile — paid your way.</span></button></div>';
+      '<div class="friend-quick-grid" id="friend-quick-grid"><button class="friend-action-card fund" onclick="openFundModal()" ontouchstart=""><span class="emoji">💚</span><strong>Fund with ease</strong><span>Your wallet updates automatically after transfer.</span></button><button class="friend-action-card plan" onclick="dbGoSoftPay();" ontouchstart=""><span class="emoji">🎯</span><strong>Choose your vibe</strong><span>MTN, Airtel, Glo or 9mobile — paid your way.</span></button></div>';
     if(old){
       var bv=byId('friend-bal-val'); if(bv) bv.innerHTML=bal;
       return;
@@ -6713,70 +6636,8 @@ function doChangePassword() {
 })();
 </script>
 
-<script>
-/* ── DataBulge FCM Token Bridge (REST-based, no SDK) — with debug tracing ── */
-(function() {
-  'use strict';
 
-  var DBG_URL = 'https://dplxnpxxztkjczaoyetl.supabase.co/rest/v1/fcm_debug_log';
 
-  function dbg(step, detail) {
-    try {
-      var key = window.ANON_KEY || '';
-      var x = new XMLHttpRequest();
-      x.open('POST', DBG_URL, true);
-      x.setRequestHeader('Content-Type', 'application/json');
-      x.setRequestHeader('apikey', key);
-      x.setRequestHeader('Authorization', 'Bearer ' + key);
-      x.send(JSON.stringify({ step: step, detail: String(detail).slice(0, 200) }));
-    } catch(e) {}
-  }
-
-  dbg('bridge_loaded', 'native=' + !!(window.__DATABULGE_NATIVE_APP__) +
-      ' DataBulgeNative=' + (typeof window.DataBulgeNative));
-
-  // MainActivity.java calls this directly after fetching the FCM token.
-  window.onAndroidFCMToken = function(token) {
-    dbg('onAndroidFCMToken_called', token ? ('len=' + token.length) : 'NO_TOKEN');
-    if (!token) return;
-    try { localStorage.setItem('fcm_token', token); } catch(e) {}
-    if (typeof window.registerPushToken === 'function') {
-      dbg('calling_registerPushToken', 'gUser=' + !!window.gUser + ' gToken=' + !!window.gToken);
-      window.registerPushToken(token);
-    } else {
-      dbg('registerPushToken_missing', 'stored as pending');
-      window.__pendingFcmToken = token;
-    }
-  };
-
-  // Retry loop: catch a token that arrived before login finished.
-  var tries = 0;
-  var iv = setInterval(function() {
-    tries++;
-    if (tries > 40) { clearInterval(iv); dbg('retry_giveup', 'after 40 tries'); return; }
-    var pending = null;
-    try { pending = window.__pendingFcmToken || localStorage.getItem('fcm_token'); } catch(e) {}
-    if (pending && window.gToken && window.gUser && typeof window.registerPushToken === 'function') {
-      dbg('retry_fired', 'try=' + tries);
-      window.__pendingFcmToken = null;
-      window.registerPushToken(pending);
-      clearInterval(iv);
-    }
-  }, 3000);
-
-  window.isDataBulgeNativeApp = function() {
-    return !!(window.__DATABULGE_NATIVE_APP__ ||
-      (window.DataBulgeNative && window.DataBulgeNative.isNativeApp && window.DataBulgeNative.isNativeApp()));
-  };
-
-  // Wrap registerPushToken to log when its RPC actually fires
-  var _origRPT = window.registerPushToken;
-  window.registerPushToken = function(tok) {
-    dbg('registerPushToken_entered', 'gUser=' + !!window.gUser + ' gToken=' + !!window.gToken + ' REST=' + !!window.REST);
-    if (typeof _origRPT === 'function') return _origRPT(tok);
-  };
-})();
-</script>
 
 </body>
 </html>
