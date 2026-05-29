@@ -380,6 +380,8 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 #db-splash.hide{display:none;}
 .splash-inner{width:100%;max-width:360px;margin:0 auto;}
 .splash-svg{display:block;width:100%;max-width:320px;margin:0 auto;}
+.splash-motto{margin-top:22px;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:clamp(.75rem,3.4vw,1rem);font-weight:900;color:#FFFFFF;letter-spacing:.18em;text-transform:uppercase;white-space:nowrap;text-shadow:0 1px 10px rgba(0,0,0,.28);animation:motto-fade-in 1s ease-out .5s both;}
+@keyframes motto-fade-in{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 
 
 /* ── LOCKED DESIGN: REQUESTED MICRO PATCH ONLY ──
@@ -457,8 +459,8 @@ button,.btn,.plan-btn,.tab,.logout-btn,.plan-chip,.avatar,.avatar-menu button{
       <circle cx="144" cy="82" r="5" fill="#FFFFFF"/>
       <text x="180" y="140" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="38" font-weight="300" fill="#FFFFFF" opacity=".94">data</text>
       <text x="180" y="182" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="42" font-weight="900" fill="#FFFFFF">bulge</text>
-      <text x="180" y="212" text-anchor="middle" font-family="Arial,Helvetica,sans-serif" font-size="9" font-weight="700" fill="#FFFFFF" opacity=".55" letter-spacing="1.8">THE DESIRE TO STAY CONNECTED</text>
     </svg>
+    <div class="splash-motto">The Desire to Stay Connected</div>
   </div>
 </div>
 
@@ -1900,7 +1902,7 @@ function wire() {
 function hideSplashSoon() {
   var sp = document.getElementById('db-splash');
   if (!sp) return;
-  setTimeout(function(){ sp.className = 'hide'; }, 3500);
+  setTimeout(function(){ sp.className = 'hide'; }, 7500);
 }
 
 // Start
