@@ -103,8 +103,8 @@ html,body{width:100%;min-height:100%;background:#fff;font-family:Arial,Helvetica
 .terms-scroll ul{padding-left:15px;margin-bottom:7px;}
 
 /* ── MAIN APP ── */
-#pg-app{padding:0;}
-.top-bar{background:#1A56DB;color:#fff;padding:12px 14px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;position:sticky;top:0;z-index:100;}
+#pg-app{padding:0;padding-bottom:70px;}
+.top-bar{background:#1A56DB;color:#fff;padding:12px 14px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;position:-webkit-sticky;position:sticky;top:0;z-index:100;}
 .top-bar-title{font-size:1.05rem;font-weight:900;}
 .top-bar-right{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:10px;}
 .avatar{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.25);color:#fff;font-size:.85rem;font-weight:900;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;}
@@ -850,7 +850,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
   </div>
 
   <!-- Bottom Navigation Bar (WhatsApp style) -->
-  <nav id="bottom-nav" style="position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e7eb;display:-webkit-box;display:-webkit-flex;display:flex;z-index:600;height:62px;padding-bottom:env(safe-area-inset-bottom,0px);box-shadow:0 -2px 12px rgba(0,0,0,.08);">
+  <nav id="bottom-nav" style="position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e7eb;display:-webkit-box;display:-webkit-flex;display:flex;z-index:9000;height:62px;padding-bottom:env(safe-area-inset-bottom,0px);box-shadow:0 -2px 12px rgba(0,0,0,.08);-webkit-transform:translateZ(0);transform:translateZ(0);will-change:transform;-webkit-backface-visibility:hidden;backface-visibility:hidden;">
     <button class="bnav-btn act" id="tab-dash" data-t="dash" onclick="showTab('dash')" style="flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
       <span style="font-size:.62rem;font-weight:700;font-family:inherit;">Dashboard</span>
@@ -1797,12 +1797,16 @@ var STALE_MS = 30000; // 30s before re-fetching on tab revisit
 function dbGoSoftPay(){
   try {
     showTab('plans');
-    setTimeout(function(){
-      var target = $('pay-toggle-wrap');
-      if (target && target.parentNode) target = target.parentNode;
-      if (!target) target = $('plans-list');
-      if (target && target.scrollIntoView) target.scrollIntoView({behavior:'smooth', block:'start'});
-    }, 140);
+    function _toTop() {
+      try { window.scrollTo(0, 0); } catch(e) {}
+      try { document.documentElement.scrollTop = 0; } catch(e) {}
+      try { document.body.scrollTop = 0; } catch(e) {}
+      try { var _a = document.getElementById('pg-app'); if (_a) _a.scrollTop = 0; } catch(e) {}
+    }
+    _toTop();
+    setTimeout(_toTop, 0);
+    setTimeout(_toTop, 80);
+    setTimeout(_toTop, 200);
   } catch(e) {}
 }
 
@@ -4780,6 +4784,8 @@ body,.card-sub,.plan-sub,.sub-meta,.msg-body,.notif-row,.row-label,.field label,
 /* Easier plan discovery */
 #tc-plans > .card:first-child{border-radius:26px!important;background:linear-gradient(135deg,#ffffff,#f8fafc)!important;border-color:#dbe3ef!important;}
 #tc-plans .card-title{font-size:.78rem!important;color:#374151!important;}
+html{scroll-padding-top:70px;}
+#tc-plans{scroll-margin-top:70px;}
 #d-bal{font-size:2rem!important;color:#07111f!important;}
 #d-va{font-size:.86rem!important;color:#374151!important;font-weight:700!important;}
 #plans-list{gap:15px!important;}
@@ -5596,8 +5602,8 @@ function renderFriendDailyEverywhere() {
   var msg = _pickNugget();
   if (!msg) return;
   _friendDailyAction = msg.action || null;
-  /* Inject (or update) a friend-daily card at the top of every tab container */
-  var tabs = ['dash','plans','subs','wallet','inbox','earn'];
+  /* Inject (or update) a friend-daily card at the top of every tab container except Buy Data */
+  var tabs = ['dash','subs','wallet','inbox','earn'];
   var safeText = (typeof safeEsc === 'function') ? safeEsc(msg.text) : String(msg.text || '');
   for (var i = 0; i < tabs.length; i++) {
     var tc = document.getElementById('tc-' + tabs[i]);
@@ -5981,23 +5987,27 @@ window.confirmAirtime = confirmAirtime;
 function fixBottomNav() {
   var nav = document.getElementById('bottom-nav');
   var app = document.getElementById('pg-app');
-  if (!nav || !app) return;
-  var rect = app.getBoundingClientRect();
-  if (window.innerWidth >= 768) {
-    nav.style.left   = rect.left + 'px';
-    nav.style.width  = rect.width + 'px';
-    nav.style.transform = 'none';
-    nav.style.webkitTransform = 'none';
+  if (!nav) return;
+  nav.style.position = 'fixed';
+  nav.style.bottom   = '0';
+  nav.style.zIndex   = '9000';
+  nav.style.webkitTransform = 'translateZ(0)';
+  nav.style.transform       = 'translateZ(0)';
+  if (app && window.innerWidth >= 768) {
+    var rect = app.getBoundingClientRect();
+    nav.style.left  = rect.left + 'px';
+    nav.style.width = rect.width + 'px';
   } else {
-    nav.style.left   = '0';
-    nav.style.width  = '100%';
-    nav.style.transform = '';
-    nav.style.webkitTransform = '';
+    nav.style.left  = '0';
+    nav.style.width = '100%';
   }
 }
 window.addEventListener('resize', fixBottomNav);
 window.addEventListener('load', fixBottomNav);
+window.addEventListener('scroll', fixBottomNav, { passive: true });
+setTimeout(fixBottomNav, 0);
 setTimeout(fixBottomNav, 100);
+setTimeout(fixBottomNav, 500);
 
 /* ── IP Location Detection ──────────────────────────── */
 function detectAndSaveLocation() {
@@ -6062,7 +6072,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
     var d=new Date(); return arr[d.getDay()%arr.length];
   }
   function ensureCompanionHero(){
-    var tc=byId('tc-plans'); if(!tc) return;
+    var tc=byId('tc-dash'); if(!tc) return;
     var old=byId('friend-hero');
     var name=firstName();
     var msg=todayMessage();
