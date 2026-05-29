@@ -613,7 +613,7 @@ button,.btn,.plan-btn,.tab,.logout-btn,.plan-chip,.avatar,.avatar-menu button{
 .top-bar{min-width:0!important;}
 .top-bar-title{min-width:0!important;-webkit-flex:0 1 auto!important;flex:0 1 auto!important;}
 .top-bar-right{min-width:0!important;-webkit-flex:0 0 auto!important;flex:0 0 auto!important;position:relative!important;}
-.user-greeting{font-size:1.35rem!important;font-weight:900!important;color:#1A56DB!important;text-transform:uppercase!important;max-width:160px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;letter-spacing:-.01em!important;}
+.user-greeting{font-size:1.05rem!important;font-weight:900!important;color:#1A56DB!important;max-width:160px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;letter-spacing:-.01em!important;}
 .avatar-wrap{position:relative!important;display:inline-block!important;-webkit-flex-shrink:0!important;flex-shrink:0!important;}
 .avatar{border:0!important;cursor:pointer!important;padding:0!important;line-height:1!important;}
 .logout-btn{display:none!important;}
@@ -629,7 +629,7 @@ button,.btn,.plan-btn,.tab,.logout-btn,.plan-chip,.avatar,.avatar-menu button{
   .top-bar{padding:10px 10px!important;gap:8px!important;}
   .top-bar svg{max-width:118px!important;height:32px!important;}
   .top-bar-right{gap:6px!important;}
-  .user-greeting{max-width:130px!important;font-size:1.15rem!important;}
+  .user-greeting{max-width:120px!important;font-size:.92rem!important;}
   .avatar{width:30px!important;height:30px!important;font-size:.72rem!important;}
   .avatar-menu{top:38px!important;right:-2px!important;min-width:146px!important;}
   .tabs{padding:8px 8px!important;gap:6px!important;}
@@ -642,7 +642,7 @@ button,.btn,.plan-btn,.tab,.logout-btn,.plan-chip,.avatar,.avatar-menu button{
 }
 @media(max-width:320px){
   .top-bar svg{max-width:104px!important;height:30px!important;}
-  .user-greeting{max-width:110px!important;font-size:1.05rem!important;}
+  .user-greeting{max-width:100px!important;font-size:.88rem!important;}
   .tab{padding:7px 9px!important;font-size:.70rem!important;}
 }
 
@@ -800,7 +800,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       </svg>
       <!-- Greeting immediately after icon -->
       <div style="-webkit-box-flex:1;-webkit-flex:1;flex:1;min-width:0;">
-        <div class="user-greeting" id="user-greeting" style="font-size:1.35rem;font-weight:900;color:#111827;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Hi,</div>
+        <div class="user-greeting" id="user-greeting" style="font-size:1.1rem;font-weight:900;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Hi,</div>
       </div>
     </div>
     <div class="top-bar-right">
@@ -808,7 +808,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <div style="position:relative;-webkit-flex-shrink:0;flex-shrink:0;">
         <button id="notif-bell" onclick="toggleNotifDrawer()" aria-label="Notifications" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:10px;width:36px;height:36px;display:-webkit-box!important;display:-webkit-flex!important;display:flex!important;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;cursor:pointer;position:relative;padding:0;-webkit-flex-shrink:0;flex-shrink:0;visibility:visible!important;opacity:1!important;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-          <span id="notif-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:#3d9758;color:#fff;border-radius:10px;font-size:.6rem;font-weight:900;padding:1px 5px;min-width:16px;text-align:center;border:1.5px solid #fff;"></span>
+          <span id="notif-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:#f43f5e;color:#fff;border-radius:10px;font-size:.6rem;font-weight:900;padding:1px 5px;min-width:16px;text-align:center;border:1.5px solid #fff;"></span>
         </button>
       </div>
       <div class="avatar-wrap">
@@ -863,7 +863,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
     </button>
     <button class="bnav-btn" id="tab-inbox" data-t="inbox" onclick="showTab('inbox')" style="display:none!important;flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;position:relative;">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      <span id="inbox-badge" style="display:none;position:absolute;top:4px;right:10px;background:#3d9758;color:#fff;border-radius:10px;font-size:.55rem;font-weight:800;padding:1px 4px;min-width:14px;text-align:center;"></span>
+      <span id="inbox-badge" style="display:none;position:absolute;top:4px;right:10px;background:#f43f5e;color:#fff;border-radius:10px;font-size:.55rem;font-weight:800;padding:1px 4px;min-width:14px;text-align:center;"></span>
       <span style="font-size:.62rem;font-weight:700;font-family:inherit;">Messages</span>
     </button>
     <button class="bnav-btn" id="tab-earn" data-t="earn" onclick="showTab('earn')" style="display:none!important;" style="flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;">
@@ -875,7 +875,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
   <!-- DASHBOARD TAB - RETENTION REDESIGN -->
   <div id="tc-dash" class="tab-content">
     <div class="hero-bal-card" id="hero-bal-card">
-      <button class="hero-fund-btn" id="d-fund-btn" style="background:#fff!important;color:#1A56DB!important;border:none!important;font-weight:800!important;">Add small money</button>
+      <button class="hero-fund-btn" id="d-fund-btn">+ Add small money</button>
       <div class="hero-bal-label">Wallet Balance</div>
       <div class="hero-bal-amount" id="d-bal-dash">&#8358;0.00</div>
       <div class="hero-bal-va" id="d-va-dash">Loading&#8230;</div>
@@ -943,8 +943,8 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <div class="card" style="margin-bottom:12px;">
         <div class="sec-title">Payment Option</div>
         <div id="pay-toggle-wrap" style="display:flex;gap:8px;">
-          <button class="btn btn-lite" id="pay-days-7" style="margin:0;flex:1;">7 Days</button>
-          <button class="btn btn-blue" id="pay-days-28" style="margin:0;flex:1;">28 Days</button>
+          <button class="btn btn-blue" id="pay-days-7" style="margin:0;flex:1;">7 Days</button>
+          <button class="btn btn-lite" id="pay-days-28" style="margin:0;flex:1;">28 Days</button>
         </div>
         <div class="card-sub" style="margin-top:10px;">Daily payment updates automatically based on the payment option you choose.</div>
       </div>
@@ -1228,8 +1228,8 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <div class="field" id="m-sub-dur-field">
         <label style="font-weight:700;color:#333;margin-bottom:7px;display:block;">Payment Duration</label>
         <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">
-          <button class="btn btn-lite" id="m-sub-days-7" type="button" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;">7 Days</button>
-          <button class="btn btn-blue" id="m-sub-days-28" type="button" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;">28 Days</button>
+          <button class="btn btn-blue" id="m-sub-days-7" type="button" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;">7 Days</button>
+          <button class="btn btn-lite" id="m-sub-days-28" type="button" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;">28 Days</button>
         </div>
       </div>
 
@@ -1342,42 +1342,33 @@ button.tab,button.plan-chip{box-shadow:none!important;}
     <div class="modal-hdr"><div class="modal-title">Fund Account</div><button class="modal-x" id="m-fund-x">&#215;</button></div>
     <div class="modal-body">
       <div id="m-fund-err" class="err"></div>
-      <!-- ACCORDION: Bank Transfer -->
-      <div style="border:1px solid #e5e7eb;border-radius:10px;margin-bottom:10px;overflow:hidden;">
-        <button type="button" id="fund-acc-va-hdr" onclick="toggleFundSection('va')" style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;width:100%;padding:12px 14px;background:#f8f9ff;border:none;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;">
-          <span style="font-size:.88rem;font-weight:800;color:#1A56DB;">&#127974; Bank Transfer</span>
-          <span id="fund-acc-va-caret" style="font-size:.8rem;color:#1A56DB;font-weight:800;-webkit-transition:.2s;transition:.2s;">&#9660;</span>
-        </button>
-        <div id="fund-panel-va" style="padding:12px 14px;">
-          <div id="m-fund-va" class="va-box" style="display:none;"></div>
-          <div class="card-sub" style="margin-top:10px;line-height:1.6;">Transfer to the account above. Balance updates in under 5 minutes after a successful transfer.</div>
-        </div>
+      <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:0;margin-bottom:14px;position:relative;-webkit-transform:translateZ(0);transform:translateZ(0);">
+        <div style="position:absolute;left:0;right:0;bottom:0;height:2px;background:#eee;"></div>
+        <button id="fund-tab-va" onclick="switchFundTab('va')" style="padding:8px 14px;background:none;border:none;position:relative;color:#1A56DB;font-weight:700;cursor:pointer;font-family:inherit;font-size:.82rem;z-index:1;-webkit-tap-highlight-color:transparent;"><span style="position:absolute;left:0;right:0;bottom:0;height:2px;background:#1A56DB;-webkit-transform:translateZ(0);transform:translateZ(0);"></span>Bank Transfer</button>
+        <button id="fund-tab-af" onclick="switchFundTab('af')" style="padding:8px 14px;background:none;border:none;position:relative;color:#888;font-weight:700;cursor:pointer;font-family:inherit;font-size:.82rem;z-index:1;-webkit-tap-highlight-color:transparent;"><span id="fund-tab-af-ind" style="position:absolute;left:0;right:0;bottom:0;height:2px;background:transparent;-webkit-transform:translateZ(0);transform:translateZ(0);"></span>Auto-Fund (Card) &#128179;</button>
       </div>
-      <!-- ACCORDION: Auto-Fund -->
-      <div style="border:1px solid #e5e7eb;border-radius:10px;margin-bottom:4px;overflow:hidden;">
-        <button type="button" id="fund-acc-af-hdr" onclick="toggleFundSection('af')" style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-justify-content:space-between;justify-content:space-between;width:100%;padding:12px 14px;background:#f8f9ff;border:none;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;">
-          <span style="font-size:.88rem;font-weight:800;color:#1A56DB;">&#128179; Auto-Fund (Card)</span>
-          <span id="fund-acc-af-caret" style="font-size:.8rem;color:#1A56DB;font-weight:800;-webkit-transition:.2s;transition:.2s;">&#9654;</span>
-        </button>
-        <div id="fund-panel-af" style="padding:12px 14px;display:none;">
-          <!-- Active mandate — shown when recurring auto-fund is already running -->
-          <div id="af-active-banner" style="display:none;background:#eaf5ee;border:1px solid #b2dfdb;border-radius:8px;padding:12px;margin-bottom:10px;">
-            <div style="font-size:.85rem;font-weight:800;color:#3d9758;margin-bottom:4px;">&#9989; Auto-Fund Active</div>
-            <div id="af-active-detail" style="font-size:.77rem;color:#444;margin-bottom:10px;">Your card is being charged daily automatically.</div>
-            <button class="btn" id="af-cancel-btn" style="background:#fff2f2;color:#c0392b;border:1.5px solid #f5c6cb;width:100%;margin:0;padding:10px;font-family:inherit;">&#9209; Cancel Auto-Fund</button>
+      <div id="fund-panel-va">
+        <div id="m-fund-va" class="va-box" style="display:none;"></div>
+        <div class="card-sub" style="margin-top:10px;line-height:1.6;">Transfer to the account above. Balance updates in under 5 minutes after a successful transfer.</div>
+      </div>
+      <div id="fund-panel-af" style="display:none;">
+        <!-- Active mandate — shown when recurring auto-fund is already running -->
+        <div id="af-active-banner" style="display:none;background:#eaf5ee;border:1px solid #b2dfdb;border-radius:8px;padding:12px;margin-bottom:10px;">
+          <div style="font-size:.85rem;font-weight:800;color:#3d9758;margin-bottom:4px;">&#9989; Auto-Fund Active</div>
+          <div id="af-active-detail" style="font-size:.77rem;color:#444;margin-bottom:10px;">Your card is being charged daily automatically.</div>
+          <button class="btn" id="af-cancel-btn" style="background:#fff2f2;color:#c0392b;border:1.5px solid #f5c6cb;width:100%;margin:0;padding:10px;font-family:inherit;">&#9209; Cancel Auto-Fund</button>
+        </div>
+        <!-- Setup form — shown when no active mandate -->
+        <div id="af-setup-form">
+          <div style="background:#f5f6ff;border:1px solid #d0d8ff;border-radius:8px;padding:12px;margin-bottom:10px;">
+            <div style="font-size:.85rem;font-weight:800;color:#1A56DB;margin-bottom:6px;">&#128179; Auto-Fund via Card</div>
+            <p style="font-size:.77rem;color:#555;line-height:1.55;margin-bottom:12px;">Enter an amount and pay once. We&#8217;ll charge your card this amount every day automatically and credit your wallet instantly. Cancel anytime.</p>
+            <label style="font-size:.78rem;font-weight:700;color:#333;display:block;margin-bottom:4px;">Amount to charge daily (&#8358;)</label>
+            <input type="number" id="af-fund-amt" placeholder="e.g. 1000" style="display:block;width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:6px;font-size:.93rem;color:#111;background:#fff;outline:none;-webkit-appearance:none;margin-bottom:10px;">
+            <div id="af-fund-err" class="err"></div>
+            <button class="btn btn-blue" id="af-fund-btn" style="width:100%;margin:0;">Start Auto-Fund</button>
           </div>
-          <!-- Setup form — shown when no active mandate -->
-          <div id="af-setup-form">
-            <div style="background:#f5f6ff;border:1px solid #d0d8ff;border-radius:8px;padding:12px;margin-bottom:10px;">
-              <div style="font-size:.85rem;font-weight:800;color:#1A56DB;margin-bottom:6px;">&#128179; Auto-Fund via Card</div>
-              <p style="font-size:.77rem;color:#555;line-height:1.55;margin-bottom:12px;">Enter an amount and pay once. We&#8217;ll charge your card this amount every day automatically and credit your wallet instantly. Cancel anytime.</p>
-              <label style="font-size:.78rem;font-weight:700;color:#333;display:block;margin-bottom:4px;">Amount to charge daily (&#8358;)</label>
-              <input type="number" id="af-fund-amt" placeholder="e.g. 1000" style="display:block;width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:6px;font-size:.93rem;color:#111;background:#fff;outline:none;-webkit-appearance:none;margin-bottom:10px;">
-              <div id="af-fund-err" class="err"></div>
-              <button class="btn btn-blue" id="af-fund-btn" style="width:100%;margin:0;">Start Auto-Fund</button>
-            </div>
-            <div class="card-sub" style="text-align:center;line-height:1.5;">Your card is charged daily. Cancel anytime.</div>
-          </div>
+          <div class="card-sub" style="text-align:center;line-height:1.5;">Your card is charged daily. Cancel anytime.</div>
         </div>
       </div>
     </div>
@@ -1737,9 +1728,15 @@ function _setSession(d) {
   gExpiry  = d.expires_at ? d.expires_at * 1000 : (Date.now() + (d.expires_in || 3600) * 1000);
   if (d.user) gUser = d.user;
   _store.set('db_sess', JSON.stringify({ at: gToken, rt: gRefresh, ex: gExpiry, user: gUser }));
-  // Keep window references in sync so cross-script-block code (notif system) sees the session
+  // Keep window references in sync so cross-script-block code (notif system, push IIFE) sees the session
   window.gUser  = gUser;
   window.gToken = gToken;
+  // Pick up any FCM token that arrived before the session was established
+  if (window.__pendingFcmToken) {
+    var _pt = window.__pendingFcmToken;
+    delete window.__pendingFcmToken;
+    setTimeout(function() { registerPushToken(_pt); }, 500);
+  }
 }
 
 function _loadSession() {
@@ -2080,9 +2077,14 @@ function bootApp() {
   // (< 5s) without waiting for the poll cycle.
   dbStartWalletRealtime();
 
-  // Expose session state on window so cross-script-block code (notif system) can read it
+  // Expose session state on window so cross-script-block code (push IIFE, notif system) can read it
   window.gUser  = gUser;
   window.gToken = gToken;
+
+  // Request Capacitor push token — runs on native Android/iOS only, no-op on web
+  setTimeout(function() {
+    try { requestCapacitorPushToken(); } catch(e) {}
+  }, 2500);
 }
 
 
@@ -2102,7 +2104,7 @@ function firstNameFromUser(fallbackName) {
 function updateGreeting(name) {
   var el = $('user-greeting');
   if (!el) return;
-  el.textContent = ('Hi, ' + firstNameFromUser(name)).toUpperCase();
+  el.textContent = 'Hi, ' + firstNameFromUser(name);
 }
 
 function updateWalletLabel() {
@@ -2331,7 +2333,7 @@ function _renderPlans(allPlans) {
         var nn = normNet(p.network);
         var pillC = netCls(nn);
         var _acl=(_acl||'');_acl=(p.network||'').toUpperCase();var _accentC=_acl==='MTN'?'net-mtn-accent':_acl==='AIRTEL'?'net-airtel-accent':_acl==='GLO'?'net-glo-accent':_acl==='9MOBILE'?'net-9mobile-accent':'';
-        html += '<div class="plan-card plan-card-animate ' + _accentC + '" data-plan-id="' + esc2(p.id) + '">' +
+        html += '<div class="plan-card plan-card-animate ' + _accentC + '">' +
           '<div>' +
             '<div class="plan-top">' +
               '<span class="plan-net ' + pillC + '">' + esc2(nn) + '</span>' +
@@ -2340,7 +2342,7 @@ function _renderPlans(allPlans) {
             '<div class="plan-size">' + esc2(nn) + '<br>' + esc2(p.data_size) + '</div>' +
             '<div class="plan-sub" style="margin-top:5px;text-transform:none;letter-spacing:0;">' + (p.validity_days || 30) + '-Day Plan</div>' +
             '<div class="plan-price">' + fmtN(p.selling_price) + '</div>' +
-            '<div class="plan-sub">Daily: <strong>' + fmtN(pc.daily) + '</strong> to be paid for in <span style="font-size:1rem;font-weight:900;color:#1A56DB;">' + gPayDays + ' days</span></div>' +
+            '<div class="plan-sub">Daily: <strong>' + fmtN(pc.daily) + '</strong> &bull; ' + gPayDays + ' days</div>' +
           '</div>' +
           '<button class="plan-btn" onclick="openSubModal(\'id_' + String(p.id) + '\')">Subscribe</button>' +
         '</div>';
@@ -2354,67 +2356,6 @@ function setPlanFilter(kind, value) {
   if (kind === 'net') wrap._netFilter = value || 'ALL';
   if (kind === 'type') wrap._typeFilter = value || 'ALL';
   loadPlans();
-}
-
-function scrollToPlanAndHighlight(planId) {
-  if (planId == null) return;
-  var pid = String(planId);
-  showTab('plans');
-
-  function findCard() {
-    var cards = document.querySelectorAll('.plan-card[data-plan-id]');
-    for (var i = 0; i < cards.length; i++) {
-      if (cards[i].getAttribute('data-plan-id') === pid) return cards[i];
-    }
-    return null;
-  }
-
-  function reveal(card) {
-    try {
-      if (card.scrollIntoView) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      else card.scrollIntoView();
-    } catch (e) { try { card.scrollIntoView(); } catch (e2) {} }
-
-    var prevOutline = card.style.outline;
-    var prevOffset  = card.style.outlineOffset;
-    card.style.outline = '3px solid #7c3aed';
-    card.style.outlineOffset = '2px';
-    setTimeout(function () {
-      card.style.outline = prevOutline;
-      card.style.outlineOffset = prevOffset;
-    }, 6000);
-  }
-
-  // Phase 1: try to find the card under the user's CURRENT filter (respect their choice)
-  loadPlans();
-  var triesA = 0;
-  function tickRespect() {
-    triesA++;
-    var card = findCard();
-    if (card) { reveal(card); return; }            // visible already — filter preserved
-    if (triesA < 20) { setTimeout(tickRespect, 100); return; }
-    clearFiltersAndFind();                           // hidden by filter — fall back
-  }
-
-  // Phase 2: card not visible under current filter — clear filters and try again
-  function clearFiltersAndFind() {
-    var wrap = $('plans-list');
-    var hadFilter = wrap && (wrap._netFilter !== 'ALL' && wrap._netFilter != null ||
-                             wrap._typeFilter !== 'ALL' && wrap._typeFilter != null);
-    if (wrap) { wrap._netFilter = 'ALL'; wrap._typeFilter = 'ALL'; }
-    if (hadFilter) { try { toast('Showing all plans to find this one'); } catch (e) {} }
-    loadPlans();
-    var triesB = 0;
-    function tickClear() {
-      triesB++;
-      var card = findCard();
-      if (card) { reveal(card); return; }
-      if (triesB < 40) { setTimeout(tickClear, 100); }
-    }
-    setTimeout(tickClear, 60);
-  }
-
-  setTimeout(tickRespect, 60);
 }
 
 var _gSubsCache = [];   // most recent loadSubs result — used by openSubModal for progress context
@@ -2433,38 +2374,9 @@ function loadSubs() {
         }
         _gSubsCache = r.data;
         wrap.innerHTML = renderSubsList(r.data, false);
-        // Sync server-side numbers into saved-phones store so the app
-        // "remembers" numbers across reinstalls and devices (not just localStorage).
-        _mergeServerPhones(r.data);
       }
     );
   });
-}
-
-/* Merge phone numbers from the user's server subscriptions into the saved-phones
-   list. Server is the source of truth; this keeps numbers after an APK reinstall
-   or login on a new device. Most-recently-used order is preserved. */
-function _mergeServerPhones(subs) {
-  if (!subs || !subs.length) return;
-  var key = _phonesKey();
-  if (!key) return;
-  var existing = _getSavedPhones();
-  // subs already arrive ordered by created_at desc (newest first)
-  for (var i = 0; i < subs.length; i++) {
-    var ph = subs[i] && subs[i].phone_number;
-    if (!ph) continue;
-    ph = ('' + ph).replace(/^\s+|\s+$/g, '');
-    if (ph.length < 10) continue;
-    // skip if already present
-    var found = false;
-    for (var j = 0; j < existing.length; j++) {
-      if (existing[j] === ph) { found = true; break; }
-    }
-    if (!found) existing.push(ph);
-  }
-  if (existing.length > 5) existing = existing.slice(0, 5);
-  try { _store.set(key, JSON.stringify(existing)); } catch(e) {}
-  if (typeof _renderSavedPhones === 'function') _renderSavedPhones();
 }
 
 function renderSubsList(subs, compact) {
@@ -2666,20 +2578,15 @@ function loadAcct(name) {
   // Load phone from profile
   ensureToken(function(err) {
     if (err) return;
-    restGet('/profiles', 'user_id=eq.' + gUser.id + '&select=phone,full_name', function(e, r) {
+    restGet('/profiles', 'user_id=eq.' + gUser.id + '&select=phone,full_name,virtual_account_number,virtual_bank_name,paystack_dva_account_number,paystack_dva_bank_name,paystack_dva_account_name', function(e, r) {
       if (r && r.ok && r.data && r.data[0]) {
-        var p = r.data[0];
-        // Merge profile fields into gProfile WITHOUT clobbering the virtual-account
-        // data already fetched from the wallets query (loadWallet runs earlier).
-        gProfile = gProfile || {};
-        gProfile.phone = p.phone;
-        gProfile.full_name = p.full_name;
+        var p = r.data[0]; gProfile = p;
         if (p.full_name) updateGreeting(p.full_name);
         var extra = '';
         if (p.phone) extra += '<div class="row-line"><span class="row-label">Phone</span><span class="row-val">' + esc(p.phone) + '</span></div>';
-        if (gProfile.virtual_account_number || gProfile.paystack_dva_account_number) {
-          var pAcct = gProfile.paystack_dva_account_number || gProfile.virtual_account_number || '';
-          var pBank = gProfile.paystack_dva_bank_name || gProfile.virtual_bank_name || '';
+        if (p.virtual_account_number || p.paystack_dva_account_number) {
+          var pAcct = p.paystack_dva_account_number || p.virtual_account_number || '';
+          var pBank = p.paystack_dva_bank_name || p.virtual_bank_name || '';
           extra += '<div class="row-line"><span class="row-label">Account Number</span><span class="row-val">' + esc(pAcct) + '</span></div>';
           if (pBank) extra += '<div class="row-line"><span class="row-label">Bank</span><span class="row-val">' + esc(pBank) + '</span></div>';
         }
@@ -3262,7 +3169,7 @@ function confirmPay() {
 /* ── WALLET / MESSAGES / EXTRA FEATURES ───────────────────── */
 var gCurrentMsgId = null;
 var _autoPayBusy = false;
-var gPayDays = 28;
+var gPayDays = 7;
 var gModalPayDays = 7;
 var gWalletMandateId = null;  // active wallet auto-fund mandate id
 var gSubMandateId    = null;  // active sub auto-fund mandate id
@@ -3721,17 +3628,25 @@ function launchAutoFund(amt, planLabel, subscriptionId) {
   });
 }
 
-function toggleFundSection(which) {
-  var panel = $('fund-panel-' + which);
-  var caret = $('fund-acc-' + which + '-caret');
-  if (!panel) return;
-  var isOpen = panel.style.display !== 'none';
-  if (isOpen) {
-    panel.style.display = 'none';
-    if (caret) { caret.innerHTML = '&#9654;'; }   // ▶ collapsed
+function switchFundTab(tab) {
+  var va = $('fund-panel-va'), af = $('fund-panel-af');
+  var tVA = $('fund-tab-va'), tAF = $('fund-tab-af');
+  var indVA = tVA ? tVA.querySelector('span') : null;
+  var indAF = $('fund-tab-af-ind');
+  if (tab === 'va') {
+    if (va) va.style.display = 'block';
+    if (af) af.style.display = 'none';
+    if (tVA) tVA.style.color = '#1A56DB';
+    if (tAF) tAF.style.color = '#888';
+    if (indVA) indVA.style.background = '#1A56DB';
+    if (indAF) indAF.style.background = 'transparent';
   } else {
-    panel.style.display = 'block';
-    if (caret) { caret.innerHTML = '&#9660;'; }   // ▼ expanded
+    if (va) va.style.display = 'none';
+    if (af) af.style.display = 'block';
+    if (tAF) tAF.style.color = '#1A56DB';
+    if (tVA) tVA.style.color = '#888';
+    if (indAF) indAF.style.background = '#1A56DB';
+    if (indVA) indVA.style.background = 'transparent';
   }
 }
 
@@ -5119,7 +5034,7 @@ function dbDismissPushCard(card) {
   }, 380);
 }
 
-// Expose for the in-app realtime push card (shown on new notification INSERT)
+// Expose for Capacitor push tap (native layer calls this)
 window.dbShowPushCard  = dbShowPushCard;
 window.dbDismissPushCard = dbDismissPushCard;
 
@@ -5418,10 +5333,10 @@ function notifStartRealtime() {
     ws.onerror = function() { ws.close(); };
 
   } catch(e) {
-    // WebSocket not available — fall back to polling every 10s
+    // WebSocket not available — fall back to polling every 30s
     _notifChannel = setInterval(function() {
       if (window.gUser) notifLoad();
-    }, 10000);
+    }, 30000);
   }
 }
 
@@ -5444,13 +5359,40 @@ function checkDataUsage(subscriptionId, mbUsed, mbTotal) {
 }
 window.checkDataUsage = checkDataUsage;
 
-/* ── FCM Push Token Registration removed for web build ──────
-   The web version has no native FCM/Capacitor layer, so there
-   is no device token to register. In-app notifications are
-   delivered via Supabase Realtime + the 10s poll fallback.
+/* ── FCM Push Token Registration ────────────────────────
+   Saves device FCM token to push_subscriptions table so
+   sendPushNotification edge function can reach this device.
 ──────────────────────────────────────────────────────── */
+function registerPushToken(fcmToken) {
+  if (!fcmToken) return;
+  // If user session isn't ready yet, store and retry after bootApp
+  if (!window.gUser || !window.gToken) {
+    window.__pendingFcmToken = fcmToken;
+    return;
+  }
+  // Detect native APK via the AndroidBridge or the injected flag
+  var isNative = !!(window.__DATABULGE_NATIVE_APP__ ||
+    (typeof window.DataBulgeNative !== 'undefined' && window.DataBulgeNative.isNativeApp && window.DataBulgeNative.isNativeApp()));
+  var hint = isNative ? 'android' : 'web';
+  var h = { 'Authorization': 'Bearer ' + window.gToken, 'Content-Type': 'application/json', 'apikey': window.ANON_KEY, 'Prefer': 'resolution=merge-duplicates' };
+  window.xhr('POST', window.REST + '/push_subscriptions', h,
+    JSON.stringify({ user_id: window.gUser.id, endpoint: fcmToken, device_hint: hint, p256dh: '', auth: '' }),
+    function(e) { if (!e) console.log('[Push] FCM token registered for', hint); }
+  );
 
-/* Window refs used by the in-app notification system. */
+  // Also save to profiles.fcm_token via RPC — this is what the
+  // sendPushNotification edge function reads when sending pushes.
+  window.xhr('POST', window.REST + '/rpc/register_fcm_token',
+    { 'Authorization': 'Bearer ' + window.gToken, 'Content-Type': 'application/json', 'apikey': window.ANON_KEY },
+    JSON.stringify({ p_token: fcmToken }),
+    function(e) { if (!e) console.log('[Push] FCM token saved to profiles.fcm_token'); }
+  );
+}
+window.registerPushToken = registerPushToken;
+
+/* Native app bridges — MainActivity.java in the Android wrapper calls these
+   when a deep-link magic-link arrives, or when a push lands while the app
+   is in the foreground. Exposing them on window keeps the calls working. */
 window.parseHash       = parseHash;
 window.notifLoad       = notifLoad;
 window.showNotifToast  = showNotifToast;
@@ -6080,7 +6022,40 @@ window.confirmAirtime = confirmAirtime;
 
 
 
-/* Capacitor push token request removed for web build — no native layer. */
+/* ── Request push token from Capacitor native plugins ───
+   Requires @capacitor/push-notifications installed:
+   npm install @capacitor/push-notifications
+   npx cap sync android
+──────────────────────────────────────────────────────── */
+function requestCapacitorPushToken() {
+  var isNative = (typeof window.Capacitor !== 'undefined' && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+  if (!isNative) return;
+
+  var Push = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.PushNotifications;
+  if (!Push) return;
+
+  Push.requestPermissions().then(function(result) {
+    if (result.receive === 'granted') {
+      Push.register();
+      Push.addListener('registration', function(token) {
+        registerPushToken(token.value);
+      });
+      Push.addListener('registrationError', function(err) {
+        console.warn('[Push] Registration error:', err);
+      });
+      // Handle foreground push tap — open notification drawer
+      Push.addListener('pushNotificationReceived', function(notification) {
+        // Show Facebook-style card + add to drawer list
+        dbShowPushCard(notification.title, notification.body, 'info', null);
+        notifLoad(); // also refresh drawer
+      });
+      Push.addListener('pushNotificationActionPerformed', function() {
+        openNotifDrawer();
+      });
+    }
+  }).catch(function(e) { console.warn('[Push] Permission error:', e); });
+}
+window.requestCapacitorPushToken = requestCapacitorPushToken;
 
 /* ── Responsive bottom nav positioning ──────────────── */
 function fixBottomNav() {
@@ -6130,7 +6105,8 @@ window.detectAndSaveLocation = detectAndSaveLocation;
       clearInterval(_bootCheck);
       notifLoad();
       setTimeout(notifStartRealtime, 1000);
-      setInterval(notifLoad, 10000);  // poll every 10s so the bell badge reflects new delivery/refund events promptly
+      setTimeout(requestCapacitorPushToken, 2000);
+      setInterval(notifLoad, 20000);  // poll every 20s so the bell badge reflects new delivery/refund events promptly
     }
   }, 800);
 })();
@@ -6173,7 +6149,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
     var msg=todayMessage();
     var bal=money(window.gBal||0);
     var html=''+
-      '<div class="friend-hero" id="friend-hero" style="display:none!important;">'+
+      '<div class="friend-hero" id="friend-hero">'+
         '<div class="friend-hero-top"><div><div class="friend-kicker">Welcome Back,</div>'+ 
         '<div class="friend-title">Let’s keep you connected today.</div>'+ 
         '<div class="friend-sub">Buy data now, pay small small, and stay online without pressure.</div></div>'+ 
@@ -6181,7 +6157,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
         '<div class="friend-balance"><div><div class="friend-bal-label">Available balance</div><div class="friend-bal-val" id="friend-bal-val">'+bal+'</div></div><div style="font-size:.76rem;opacity:.82;font-weight:800;text-align:right;">Ready when you are</div></div>'+ 
         '<div class="friend-cta-row"><button class="friend-cta primary" onclick="openFundModal()">Add small money</button><button class="friend-cta secondary" onclick="dbGoSoftPay();">Find a plan</button></div>'+ 
       '</div>'+ 
-      '<div class="friend-quick-grid" id="friend-quick-grid" style="display:none!important;"><button class="friend-action-card fund" onclick="openFundModal()"><span class="emoji">💚</span><strong>Fund with ease</strong><span>Your wallet updates automatically after transfer.</span></button><button class="friend-action-card plan" onclick="dbGoSoftPay();"><span class="emoji">🎯</span><strong>Choose your vibe</strong><span>MTN, Airtel, Glo or 9mobile — paid your way.</span></button></div>';
+      '<div class="friend-quick-grid" id="friend-quick-grid"><button class="friend-action-card fund" onclick="openFundModal()"><span class="emoji">💚</span><strong>Fund with ease</strong><span>Your wallet updates automatically after transfer.</span></button><button class="friend-action-card plan" onclick="dbGoSoftPay();"><span class="emoji">🎯</span><strong>Choose your vibe</strong><span>MTN, Airtel, Glo or 9mobile — paid your way.</span></button></div>';
     if(old){
       var bv=byId('friend-bal-val'); if(bv) bv.innerHTML=bal;
       return;
@@ -6755,6 +6731,71 @@ function doChangePassword() {
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wireTabTop);
   else wireTabTop();
+})();
+</script>
+
+<script>
+/* ── DataBulge FCM Token Bridge (REST-based, no SDK) — with debug tracing ── */
+(function() {
+  'use strict';
+
+  var DBG_URL = 'https://dplxnpxxztkjczaoyetl.supabase.co/rest/v1/fcm_debug_log';
+
+  function dbg(step, detail) {
+    try {
+      var key = window.ANON_KEY || '';
+      var x = new XMLHttpRequest();
+      x.open('POST', DBG_URL, true);
+      x.setRequestHeader('Content-Type', 'application/json');
+      x.setRequestHeader('apikey', key);
+      x.setRequestHeader('Authorization', 'Bearer ' + key);
+      x.send(JSON.stringify({ step: step, detail: String(detail).slice(0, 200) }));
+    } catch(e) {}
+  }
+
+  dbg('bridge_loaded', 'native=' + !!(window.__DATABULGE_NATIVE_APP__) +
+      ' DataBulgeNative=' + (typeof window.DataBulgeNative));
+
+  // MainActivity.java calls this directly after fetching the FCM token.
+  window.onAndroidFCMToken = function(token) {
+    dbg('onAndroidFCMToken_called', token ? ('len=' + token.length) : 'NO_TOKEN');
+    if (!token) return;
+    try { localStorage.setItem('fcm_token', token); } catch(e) {}
+    if (typeof window.registerPushToken === 'function') {
+      dbg('calling_registerPushToken', 'gUser=' + !!window.gUser + ' gToken=' + !!window.gToken);
+      window.registerPushToken(token);
+    } else {
+      dbg('registerPushToken_missing', 'stored as pending');
+      window.__pendingFcmToken = token;
+    }
+  };
+
+  // Retry loop: catch a token that arrived before login finished.
+  var tries = 0;
+  var iv = setInterval(function() {
+    tries++;
+    if (tries > 40) { clearInterval(iv); dbg('retry_giveup', 'after 40 tries'); return; }
+    var pending = null;
+    try { pending = window.__pendingFcmToken || localStorage.getItem('fcm_token'); } catch(e) {}
+    if (pending && window.gToken && window.gUser && typeof window.registerPushToken === 'function') {
+      dbg('retry_fired', 'try=' + tries);
+      window.__pendingFcmToken = null;
+      window.registerPushToken(pending);
+      clearInterval(iv);
+    }
+  }, 3000);
+
+  window.isDataBulgeNativeApp = function() {
+    return !!(window.__DATABULGE_NATIVE_APP__ ||
+      (window.DataBulgeNative && window.DataBulgeNative.isNativeApp && window.DataBulgeNative.isNativeApp()));
+  };
+
+  // Wrap registerPushToken to log when its RPC actually fires
+  var _origRPT = window.registerPushToken;
+  window.registerPushToken = function(tok) {
+    dbg('registerPushToken_entered', 'gUser=' + !!window.gUser + ' gToken=' + !!window.gToken + ' REST=' + !!window.REST);
+    if (typeof _origRPT === 'function') return _origRPT(tok);
+  };
 })();
 </script>
 
