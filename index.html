@@ -15,7 +15,7 @@
 })();
 </script>
 
-<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=contain">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <title>DataBulge — Buy Data, Get Connected, Pay Small Small</title>
 <meta name="description" content="DataBulge is a global mobile data platform — buy data bundles and pay in small daily installments. MTN, Airtel, Glo, 9mobile. Rooted in Nigeria, built for Africa and the world.">
@@ -355,7 +355,7 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 /* ═══ RETENTION CSS ═══════════════════════════════════════════
    ES5/Android 4.4 safe. -webkit- prefixes throughout.
    ═══════════════════════════════════════════════════════════ */
-.hero-bal-card{background:#1A56DB;background:-webkit-linear-gradient(135deg,#1A56DB,#1e40af);background:linear-gradient(135deg,#1A56DB,#1e40af);border-radius:18px;border:none;padding:22px 18px 18px;margin-bottom:14px;color:#fff;position:relative;overflow:visible;}
+.hero-bal-card{background:#1A56DB;background:-webkit-radial-gradient(circle at 86% 3%,rgba(255,255,255,.28),transparent 25%),-webkit-linear-gradient(135deg,#132B63 0%,#1A56DB 48%,#3d9758 100%);background:radial-gradient(circle at 86% 3%,rgba(255,255,255,.28),transparent 25%),linear-gradient(135deg,#132B63 0%,#1A56DB 48%,#3d9758 100%);border-radius:18px;border:none;padding:22px 18px 18px;margin-bottom:14px;color:#fff;position:relative;overflow:visible;}
 .hero-bal-card::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.07);pointer-events:none;overflow:hidden;}
 .hero-bal-label{font-size:.72rem;font-weight:700;opacity:.75;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;}
 .hero-bal-amount{font-size:2.2rem;font-weight:900;letter-spacing:-.04em;line-height:1.1;}
@@ -850,7 +850,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
   </div>
 
   <!-- Bottom Navigation Bar (WhatsApp style) -->
-  <nav id="bottom-nav" style="position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e7eb;display:-webkit-box;display:-webkit-flex;display:flex;z-index:9000;height:62px;padding-bottom:env(safe-area-inset-bottom,0px);box-shadow:0 -2px 12px rgba(0,0,0,.08);-webkit-transform:translateZ(0);transform:translateZ(0);will-change:transform;-webkit-backface-visibility:hidden;backface-visibility:hidden;">
+  <nav id="bottom-nav" style="position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid #e5e7eb;display:-webkit-box;display:-webkit-flex;display:flex;z-index:9000;height:62px;box-shadow:0 -2px 12px rgba(0,0,0,.08);-webkit-transform:translateZ(0);transform:translateZ(0);will-change:transform;-webkit-backface-visibility:hidden;backface-visibility:hidden;">
     <button class="bnav-btn act" id="tab-dash" data-t="dash" onclick="showTab('dash')" style="flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
       <span style="font-size:.62rem;font-weight:700;font-family:inherit;">Dashboard</span>
@@ -4444,7 +4444,7 @@ function earnResetAdSlot() {
   -webkit-align-items: center;
   align-items: center;
   gap: 6px;
-  padding: env(safe-area-inset-top, 0px) 12px 0;
+  padding: 0 12px 0;
   pointer-events: none;
 }
 .db-push-card {
@@ -4644,35 +4644,6 @@ html,body{background:radial-gradient(circle at top left,#EEF6FF 0,#F6F8FC 34%,#F
 .card-title,.sec-title{font-size:.72rem!important;letter-spacing:.10em!important;color:#667085!important;}
 .card-val{font-size:2rem!important;letter-spacing:-.06em!important;}
 .card-sub{font-size:.78rem!important;color:#667085!important;line-height:1.55!important;}
-.friend-hero{position:relative;overflow:hidden;border:0!important;border-radius:30px!important;padding:22px 18px!important;margin-bottom:16px!important;color:#fff!important;background:radial-gradient(circle at 86% 3%,rgba(255,255,255,.28),transparent 25%),linear-gradient(135deg,#132B63 0%,#1A56DB 48%,#3d9758 100%)!important;box-shadow:0 24px 50px rgba(26,86,219,.25)!important;}
-.friend-hero:before{content:'';position:absolute;right:-42px;bottom:-54px;width:190px;height:190px;border-radius:50%;background:rgba(255,255,255,.10);pointer-events:none;}
-.friend-hero:after{content:'';position:absolute;left:-45px;top:-45px;width:120px;height:120px;border-radius:38px;background:rgba(255,255,255,.08);-webkit-transform:rotate(18deg);transform:rotate(18deg);pointer-events:none;}
-.friend-hero-top{position:relative;z-index:1;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;gap:12px;-webkit-box-align:start;-webkit-align-items:flex-start;align-items:flex-start;}
-.friend-kicker{font-size:.72rem;font-weight:900;letter-spacing:.12em;text-transform:uppercase;opacity:.78;margin-bottom:8px;}
-.friend-title{font-size:1.35rem;line-height:1.1;font-weight:950;letter-spacing:-.05em;margin-bottom:7px;}
-.friend-sub{font-size:.82rem;line-height:1.5;opacity:.88;max-width:260px;}
-.friend-balance{position:relative;z-index:1;margin-top:18px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;-webkit-box-align:end;-webkit-align-items:flex-end;align-items:flex-end;gap:12px;}
-.friend-bal-label{font-size:.70rem;opacity:.72;font-weight:900;text-transform:uppercase;letter-spacing:.10em;}
-.friend-bal-val{font-size:2.15rem;font-weight:950;letter-spacing:-.07em;line-height:1;}
-.friend-cta-row{position:relative;z-index:1;display:-webkit-box;display:-webkit-flex;display:flex;gap:10px;margin-top:18px;}
-.friend-cta{border:0;border-radius:16px;padding:13px 13px;font-size:.84rem;font-weight:950;cursor:pointer;font-family:Arial,Helvetica,sans-serif;-webkit-tap-highlight-color:transparent;touch-action:manipulation;min-height:48px;position:relative;z-index:2;-webkit-appearance:none;appearance:none;}
-.friend-cta:active{opacity:.82;-webkit-transform:scale(.97);transform:scale(.97);}
-.friend-cta.primary{background:#fff!important;color:#1550D4!important;box-shadow:0 12px 25px rgba(15,23,42,.12)!important;-webkit-box-flex:1;-webkit-flex:1;flex:1;}
-.friend-cta.secondary{background:rgba(255,255,255,.16)!important;color:#fff!important;border:1px solid rgba(255,255,255,.30)!important;-webkit-box-flex:1;-webkit-flex:1;flex:1;}
-.friend-pill{position:relative;z-index:1;display:inline-block;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:7px 10px;font-size:.72rem;font-weight:900;white-space:nowrap;}
-.friend-daily{display:-webkit-box;display:-webkit-flex;display:flex;gap:10px;-webkit-box-align:center;-webkit-align-items:center;align-items:center;background:linear-gradient(135deg,#FFF7D6,#FFFFFF)!important;border:1px solid #FFE8A3!important;border-radius:22px!important;padding:13px 14px!important;margin-bottom:14px!important;box-shadow:0 12px 30px rgba(245,158,11,.12)!important;}
-.friend-daily-icon{width:42px;height:42px;border-radius:16px;background:#fff;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;font-size:1.25rem;box-shadow:0 8px 18px rgba(245,158,11,.14);-webkit-flex-shrink:0;flex-shrink:0;}
-.friend-daily-title{font-size:.86rem;font-weight:950;letter-spacing:-.02em;color:#7C4A03;margin-bottom:2px;}
-.friend-daily-sub{font-size:.74rem;line-height:1.45;color:#8A5A0A;}
-.friend-quick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:15px;}
-.friend-action-card{border:0;border-radius:24px;padding:15px 14px;text-align:left;min-height:112px;box-shadow:0 14px 34px rgba(15,23,42,.09);font-family:Arial,Helvetica,sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-appearance:none;appearance:none;}
-.friend-action-card:active{opacity:.85;-webkit-transform:scale(.97);transform:scale(.97);}
-.friend-action-card strong{display:block;font-size:1rem;letter-spacing:-.04em;margin-bottom:5px;color:#111827;}
-.friend-action-card span{display:block;font-size:.74rem;line-height:1.45;color:#667085;font-weight:700;}
-.friend-action-card .emoji{font-size:1.45rem;margin-bottom:10px;display:block;}
-.friend-action-card.fund{background:linear-gradient(135deg,#EFFFF6,#FFFFFF)!important;}
-.friend-action-card.plan{background:linear-gradient(135deg,#EEF4FF,#FFFFFF)!important;}
-.friend-action-card:hover,.plan-card:hover{-webkit-transform:translateY(-2px);transform:translateY(-2px);}
 .plan-filter-card{padding:16px!important;background:linear-gradient(135deg,#FFFFFF,#F8FBFF)!important;}
 .plan-chip{border-radius:16px!important;padding:10px 14px!important;background:#F7F9FC!important;border:0!important;box-shadow:inset 0 0 0 1px #E6EAF1!important;}
 .plan-chip.act{background:linear-gradient(135deg,#1A56DB,#3d9758)!important;color:#fff!important;box-shadow:0 10px 22px rgba(26,86,219,.18)!important;}
@@ -4694,6 +4665,15 @@ html,body{background:radial-gradient(circle at top left,#EEF6FF 0,#F6F8FC 34%,#F
 .prog-fill{border-radius:999px!important;background:linear-gradient(90deg,#1A56DB,#3d9758)!important;}
 .msg-row.unread,.notif-row.unread{background:linear-gradient(135deg,#EEF4FF,#FFFFFF)!important;}
 #toast{border-radius:18px!important;}
+.friend-quick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:15px;}
+.friend-action-card{border:0;border-radius:24px;padding:15px 14px;text-align:left;min-height:112px;box-shadow:0 14px 34px rgba(15,23,42,.09);font-family:Arial,Helvetica,sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-appearance:none;appearance:none;}
+.friend-action-card:active{opacity:.85;-webkit-transform:scale(.97);transform:scale(.97);}
+.friend-action-card strong{display:block;font-size:1rem;letter-spacing:-.04em;margin-bottom:5px;color:#111827;}
+.friend-action-card span{display:block;font-size:.74rem;line-height:1.45;color:#667085;font-weight:700;}
+.friend-action-card .emoji{font-size:1.45rem;margin-bottom:10px;display:block;}
+.friend-action-card.fund{background:linear-gradient(135deg,#EFFFF6,#FFFFFF)!important;}
+.friend-action-card.plan{background:linear-gradient(135deg,#EEF4FF,#FFFFFF)!important;}
+.friend-action-card:hover,.plan-card:hover{-webkit-transform:translateY(-2px);transform:translateY(-2px);}
 .friend-sticky-cta{position:fixed;left:12px;right:12px;bottom:78px;z-index:120;display:none;max-width:940px;margin:0 auto;}
 .friend-sticky-inner{display:-webkit-box;display:-webkit-flex;display:flex;gap:10px;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(226,232,240,.9);border-radius:24px;padding:10px;box-shadow:0 18px 45px rgba(15,23,42,.18);}
 .friend-sticky-inner button{border:0;border-radius:16px;padding:12px 12px;font-size:.82rem;font-weight:950;font-family:Arial,Helvetica,sans-serif;-webkit-box-flex:1;-webkit-flex:1;flex:1;}
@@ -4702,9 +4682,10 @@ html,body{background:radial-gradient(circle at top left,#EEF6FF 0,#F6F8FC 34%,#F
 body.friend-show-sticky .friend-sticky-cta{display:block;}
 @-webkit-keyframes friendFloat{0%,100%{-webkit-transform:translateY(0)}50%{-webkit-transform:translateY(-4px)}}
 @keyframes friendFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-.friend-pill,.friend-daily-icon{-webkit-animation:friendFloat 3.5s ease-in-out infinite;animation:friendFloat 3.5s ease-in-out infinite;}
-@media(max-width:360px){.friend-title{font-size:1.18rem}.friend-bal-val{font-size:1.82rem}.friend-quick-grid{grid-template-columns:1fr}.friend-cta-row{flex-direction:column}.friend-sticky-cta{bottom:68px;left:8px;right:8px}.friend-sticky-inner{border-radius:20px;padding:8px}}
-@media(min-width:768px){.friend-sticky-cta{left:50%!important;right:auto!important;width:720px!important;-webkit-transform:translateX(-50%);transform:translateX(-50%);}.friend-hero{padding:26px 24px!important}.friend-title{font-size:1.7rem}.friend-quick-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+.friend-pill,.companion-pill{-webkit-animation:friendFloat 3.5s ease-in-out infinite;animation:friendFloat 3.5s ease-in-out infinite;}
+.companion-pill{display:inline-block;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:7px 10px;font-size:.72rem;font-weight:900;white-space:nowrap;color:#fff!important;}
+@media(max-width:360px){.friend-quick-grid{grid-template-columns:1fr}.friend-sticky-cta{bottom:68px;left:8px;right:8px}.friend-sticky-inner{border-radius:20px;padding:8px}}
+@media(min-width:768px){.friend-sticky-cta{left:50%!important;right:auto!important;width:720px!important;-webkit-transform:translateX(-50%);transform:translateX(-50%);}.friend-quick-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
 @media(min-width:1024px){.friend-sticky-cta{width:860px!important;bottom:96px}.friend-quick-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
 @media(prefers-reduced-motion:reduce){.friend-pill,.companion-pill,.friend-daily-icon,.plan-card:hover,.friend-action-card:hover{-webkit-animation:none!important;animation:none!important;-webkit-transform:none!important;transform:none!important;}}
 
@@ -4748,7 +4729,6 @@ body,.card-sub,.plan-sub,.sub-meta,.msg-body,.notif-row,.row-label,.field label,
 .companion-welcome{background:linear-gradient(135deg,#07111f 0%,#173A73 54%,#3d9758 140%)!important;color:#fff!important;border-radius:26px!important;padding:20px 18px!important;margin-bottom:14px!important;box-shadow:0 18px 38px rgba(15,23,42,.18)!important;position:relative!important;overflow:hidden!important;}
 .companion-welcome:before{content:'';position:absolute;right:-40px;top:-50px;width:170px;height:170px;border-radius:999px;background:rgba(255,255,255,.09);}
 .companion-top{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:start;-webkit-align-items:flex-start;align-items:flex-start;-webkit-box-pack:end;-webkit-justify-content:flex-end;justify-content:flex-end;margin-bottom:8px;position:relative;z-index:1;}
-.companion-pill{display:inline-block;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:7px 10px;font-size:.72rem;font-weight:900;white-space:nowrap;color:#fff!important;-webkit-animation:friendFloat 3.5s ease-in-out infinite;animation:friendFloat 3.5s ease-in-out infinite;}
 .companion-kicker{display:none!important;}
 .companion-title{font-size:1.34rem;font-weight:900;letter-spacing:-.04em;line-height:1.15;margin-bottom:7px;color:#fff!important;}
 .companion-copy{font-size:.88rem;line-height:1.55;color:rgba(255,255,255,.87)!important;max-width:92%;}
@@ -5426,59 +5406,61 @@ function renderDynamicStrip() {
       var sSize  = pl.data_size || '';
       var sNet   = pl.network   || s.network || '';
       var sPayLeft = sDaily > 0 ? Math.ceil(sLeft / sDaily) : 0;
+      var sPlanId  = pl.id || s.plan_id || null;
 
       nuggets.push({
         cls: 'green', icon: '\uD83D\uDCF6',
         text: 'Pay ' + fmtN(sDaily) + ' for ' + sPayLeft + ' more day' + (sPayLeft !== 1 ? 's' : '') + ' and your ' + sSize + ' ' + sNet + ' data gets delivered. Never run out of data again.',
-        action: (function(sid){ return function() { highlightTarget('subs', 'sub-row-' + sid); }; })(s.id)
+        action: (function(sid){ return function() { nuggetLaunchFeature('plan_sub', sid); }; })(s.id)
       });
       nuggets.push({
         cls: '', icon: '\uD83D\uDCB3',
         text: 'Tired of always going to your bank to transfer money to your DataBulge wallet? Set up Auto-Fund once — the minimum is \u20A6100 — and your wallet is credited automatically every day until your plan is complete. Cancel anytime.',
-        action: function() { openFundModal(); }
+        action: function() { nuggetLaunchFeature('fund'); }
       });
       nuggets.push({
         cls: 'warn', icon: '\uD83D\uDCB8',
         text: 'Always keep your DataBulge wallet funded. You never know when you will run out of data and there will be no money in your account. A little payment a day keeps the data on.',
-        action: function() { openModal('m-fund'); }
+        action: function() { nuggetLaunchFeature('fund'); }
       });
       nuggets.push({
         cls: 'green', icon: '\uD83D\uDCC5',
         text: sSize + ' ' + sNet + ' plan — split over ' + sDays + ' days, that is just ' + fmtN(sDaily) + ' at a time. Small payments, big data.',
-        action: (function(sid){ return function() { highlightTarget('subs', 'sub-row-' + sid); }; })(s.id)
+        action: (function(pid){ return function() { nuggetLaunchFeature('plan', pid); }; })(sPlanId)
       });
       nuggets.push({
         cls: '', icon: '\uD83D\uDCB0',
         text: 'Tap Pay Now whenever you are ready — you are always in control of when you pay.',
-        action: (function(sid){ return function() { highlightTarget('subs', 'sub-row-' + sid); }; })(s.id)
+        action: (function(pid){ return function() { nuggetLaunchFeature('plan', pid); }; })(sPlanId)
       });
     }
   } else {
     /* NEW USER — starter tips using cheapest real plan numbers */
+    var _cId = (_plansCache && _plansCache.length) ? _plansCache.reduce(function(a,b){ return (parseFloat(a.selling_price)||0)<=(parseFloat(b.selling_price)||0)?a:b; }).id : null;
     nuggets.push({
       cls: 'green', icon: '\uD83D\uDCF6',
       text: 'Start small. Pay ' + fmtN(starterDaily) + ' a day for ' + starterDays + ' days and get ' + starterSize + ' of data delivered straight to your phone. No lump sum needed.',
-      action: function() { highlightTarget('plans', 'pay-toggle-wrap'); }
+      action: (function(pid){ return function() { nuggetLaunchFeature('plan', pid); }; })(_cId)
     });
     nuggets.push({
       cls: '', icon: '\uD83D\uDCB3',
       text: 'No need to always go to your bank to transfer money. Set up Auto-Fund once and your wallet tops up automatically every day until your plan is complete. Cancel anytime.',
-      action: function() { openFundModal(); }
+      action: function() { nuggetLaunchFeature('autofund'); }
     });
     nuggets.push({
       cls: 'warn', icon: '\uD83D\uDCB8',
       text: 'Always keep your DataBulge wallet funded. You never know when you will run out of data and there will be no money in your account. A little payment a day keeps the data on.',
-      action: function() { openModal('m-fund'); }
+      action: function() { nuggetLaunchFeature('fund'); }
     });
     nuggets.push({
       cls: 'green', icon: '\uD83D\uDCA1',
       text: 'Pick a plan, make your first payment, then tap Pay Now daily until it is complete. Once fully paid your data is delivered automatically — no extra steps.',
-      action: function() { highlightTarget('plans', 'plans-list'); }
+      action: (function(pid){ return function() { nuggetLaunchFeature('plan', pid); }; })(_cId)
     });
     nuggets.push({
       cls: '', icon: '\uD83D\uDCF1',
       text: 'Think of DataBulge like a savings box for your data. Drop money in daily, watch the progress bar fill up, and collect your data when it hits 100%.',
-      action: function() { highlightTarget('plans', 'plans-list'); }
+      action: (function(pid){ return function() { nuggetLaunchFeature('plan', pid); }; })(_cId)
     });
   }
 
@@ -5486,11 +5468,11 @@ function renderDynamicStrip() {
   var _seed = (new Date().getDay() * 100 + Math.floor(Date.now() / 600000)) % nuggets.length;
 
   /* ── Urgent operational messages always shown first when they apply ── */
-  if (bal > 0 && bal < 200) msgs.push({ cls: 'warn', icon: '\u26A0\uFE0F', text: 'Your wallet has ' + fmtN(bal) + ' — top up now to avoid missing your next installment.', action: function() { openModal('m-fund'); } });
+  if (bal > 0 && bal < 200) msgs.push({ cls: 'warn', icon: '\u26A0\uFE0F', text: 'Your wallet has ' + fmtN(bal) + ' — top up now to avoid missing your next installment.', action: function() { nuggetLaunchFeature('fund'); } });
   if (saved > 0 && plans > 0) msgs.push({ cls: 'green', icon: '\uD83D\uDCB0', text: 'You managed installments for ' + plans + ' plan' + (plans !== 1 ? 's' : '') + ' this month — ' + fmtN(saved) + ' paid in small steps.', action: function() { showTab('wallet'); } });
   if (cur >= 3 && cur < 7) msgs.push({ cls: 'warn', icon: '\uD83D\uDD25', text: cur + '-day streak! Open the app every day to protect it. Miss a day and it resets to zero.', action: null });
   if (cur >= 7) msgs.push({ cls: 'warn', icon: '\uD83C\uDFC6', text: cur + '-day streak! You have been consistent for ' + cur + ' days straight. Keep it going.', action: null });
-  if (plans >= 1 && bal < 100) msgs.push({ cls: 'warn', icon: '\uD83D\uDCB8', text: 'Fund ' + fmtN(Math.max(100, Math.ceil(bal / 50) * 50 + 100)) + ' or more so your next installment goes through without issues.', action: function() { openModal('m-fund'); } });
+  if (plans >= 1 && bal < 100) msgs.push({ cls: 'warn', icon: '\uD83D\uDCB8', text: 'Fund ' + fmtN(Math.max(100, Math.ceil(bal / 50) * 50 + 100)) + ' or more so your next installment goes through without issues.', action: function() { nuggetLaunchFeature('fund'); } });
 
   /* If no urgent message applies, show the rotating personalised nugget */
   if (!msgs.length) msgs.push(nuggets[_seed]);
@@ -5532,6 +5514,74 @@ function highlightTarget(tabName, elementId) {
 }
 window.highlightTarget = highlightTarget;
 
+function nuggetLaunchFeature(type, planOrSubId) {
+  if (type === 'autofund') {
+    openFundModal();
+    setTimeout(function() {
+      var af = document.getElementById('af-fund-amt');
+      if (af) {
+        try { af.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch(e) {}
+        af.classList.add('nugget-highlight');
+        setTimeout(function() { af.classList.remove('nugget-highlight'); }, 3500);
+        try { af.focus(); } catch(e) {}
+      }
+    }, 320);
+    return;
+  }
+  if (type === 'fund') { openFundModal(); return; }
+  if (type === 'plan_sub') { highlightTarget('subs', planOrSubId ? ('sub-row-' + planOrSubId) : null); return; }
+  if (type === 'plan') {
+    showTab('plans');
+    setTimeout(function() { try { window.scrollTo(0,0); document.documentElement.scrollTop=0; document.body.scrollTop=0; } catch(e){} }, 0);
+    function _openPlanById(planId) {
+      var wrap = document.getElementById('plans-list');
+      var planKey = planId ? ('id_' + String(planId)) : null;
+      if (!planKey || !wrap || !wrap._planById || !wrap._planById[String(planId)]) {
+        var firstBtn = wrap && wrap.querySelector('.plan-btn');
+        if (firstBtn) { var onc = firstBtn.getAttribute('onclick')||''; var mm = onc.match(/openSubModal\('([^']+)'\)/); if (mm) planKey = mm[1]; }
+      }
+      if (!planKey) return false;
+      var cards = wrap ? wrap.querySelectorAll('.plan-card') : [];
+      for (var c = 0; c < cards.length; c++) {
+        var btn = cards[c].querySelector('.plan-btn');
+        if (btn && (btn.getAttribute('onclick')||'').indexOf(planKey) > -1) {
+          cards[c].classList.add('nugget-highlight');
+          try { cards[c].scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch(e) {}
+          setTimeout(function(card){ card.classList.remove('nugget-highlight'); }, 3500, cards[c]);
+          break;
+        }
+      }
+      if (typeof openSubModal === 'function') {
+        openSubModal(planKey);
+        setTimeout(function() {
+          var ph = document.getElementById('m-sub-phone');
+          if (ph) {
+            try { ph.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch(e) {}
+            ph.classList.add('nugget-highlight');
+            setTimeout(function(){ ph.classList.remove('nugget-highlight'); }, 3500);
+            try { ph.focus(); } catch(e) {}
+          }
+        }, 350);
+      }
+      return true;
+    }
+    var wrap = document.getElementById('plans-list');
+    if (wrap && wrap._planById && Object.keys(wrap._planById).length) {
+      setTimeout(function(){ _openPlanById(planOrSubId); }, 120);
+      return;
+    }
+    var _tries = 0;
+    var _iv = setInterval(function() {
+      _tries++; if (_tries > 25) { clearInterval(_iv); return; }
+      var w = document.getElementById('plans-list');
+      if (!w || !w._planById || !Object.keys(w._planById).length) return;
+      clearInterval(_iv);
+      setTimeout(function(){ _openPlanById(planOrSubId); }, 80);
+    }, 200);
+  }
+}
+window.nuggetLaunchFeature = nuggetLaunchFeature;
+
 /* ─────────────────────────────────────────────────────────────────────
    Friend Daily nugget — show on EVERY tab, rotate every 5 minutes.
    Uses the same nugget pool logic as renderDynamicStrip, but renders
@@ -5572,18 +5622,20 @@ function _buildNuggetPool() {
       var sSize  = pl.data_size || '';
       var sNet   = pl.network || s.network || '';
       var sPayLeft = sDaily > 0 ? Math.ceil(sLeft / sDaily) : 0;
-      nuggets.push({ icon: '\uD83D\uDCF6', text: 'Pay ' + fmtN(sDaily) + ' for ' + sPayLeft + ' more day' + (sPayLeft !== 1 ? 's' : '') + ' and your ' + sSize + ' ' + sNet + ' data gets delivered. Never run out of data again.', action: (function(sid){ return function(){ highlightTarget('subs', 'sub-row-' + sid); }; })(s.id) });
-      nuggets.push({ icon: '\uD83D\uDCB3', text: 'Tired of always going to your bank to transfer money to your DataBulge wallet? Set up Auto-Fund once — the minimum is \u20A6100 — and your wallet is credited automatically every day until your plan is complete. Cancel anytime.', action: function(){ openFundModal(); } });
-      nuggets.push({ icon: '\uD83D\uDCB8', text: 'Always keep your DataBulge wallet funded. You never know when you will run out of data and there will be no money in your account. A little payment a day keeps the data on.', action: function(){ openModal('m-fund'); } });
-      nuggets.push({ icon: '\uD83D\uDCC5', text: sSize + ' ' + sNet + ' plan — split over ' + sDays + ' days, that is just ' + fmtN(sDaily) + ' at a time. Small payments, big data.', action: (function(sid){ return function(){ highlightTarget('subs', 'sub-row-' + sid); }; })(s.id) });
-      nuggets.push({ icon: '\uD83D\uDCB0', text: 'Tap Pay Now whenever you are ready — you are always in control of when you pay.', action: (function(sid){ return function(){ highlightTarget('subs', 'sub-row-' + sid); }; })(s.id) });
+      var sPlanId  = pl.id || s.plan_id || null;
+      nuggets.push({ icon: '\uD83D\uDCF6', text: 'Pay ' + fmtN(sDaily) + ' for ' + sPayLeft + ' more day' + (sPayLeft !== 1 ? 's' : '') + ' and your ' + sSize + ' ' + sNet + ' data gets delivered. Never run out of data again.', action: (function(sid){ return function(){ nuggetLaunchFeature('plan_sub', sid); }; })(s.id) });
+      nuggets.push({ icon: '\uD83D\uDCB3', text: 'Tired of always going to your bank to transfer money to your DataBulge wallet? Set up Auto-Fund once — the minimum is \u20A6100 — and your wallet is credited automatically every day until your plan is complete. Cancel anytime.', action: function(){ nuggetLaunchFeature('autofund'); } });
+      nuggets.push({ icon: '\uD83D\uDCB8', text: 'Always keep your DataBulge wallet funded. You never know when you will run out of data and there will be no money in your account. A little payment a day keeps the data on.', action: function(){ nuggetLaunchFeature('fund'); } });
+      nuggets.push({ icon: '\uD83D\uDCC5', text: sSize + ' ' + sNet + ' plan — split over ' + sDays + ' days, that is just ' + fmtN(sDaily) + ' at a time. Small payments, big data.', action: (function(sid){ return function(){ nuggetLaunchFeature('plan_sub', sid); }; })(s.id) });
+      nuggets.push({ icon: '\uD83D\uDCB0', text: 'Tap Pay Now whenever you are ready — you are always in control of when you pay.', action: (function(pid){ return function(){ nuggetLaunchFeature('plan', pid); }; })(sPlanId) });
     }
   } else {
-    nuggets.push({ icon: '\uD83D\uDCF6', text: 'Start small. Pay ' + fmtN(starterDaily) + ' a day for ' + starterDays + ' days and get ' + starterSize + ' of data delivered straight to your phone. No lump sum needed.', action: function(){ highlightTarget('plans', 'pay-toggle-wrap'); } });
-    nuggets.push({ icon: '\uD83D\uDCB3', text: 'No need to always go to your bank to transfer money. Set up Auto-Fund once and your wallet tops up automatically every day until your plan is complete. Cancel anytime.', action: function(){ openFundModal(); } });
-    nuggets.push({ icon: '\uD83D\uDCB8', text: 'Always keep your DataBulge wallet funded. You never know when you will run out of data and there will be no money in your account. A little payment a day keeps the data on.', action: function(){ openModal('m-fund'); } });
-    nuggets.push({ icon: '\uD83D\uDCA1', text: 'Pick a plan, make your first payment, then tap Pay Now daily until it is complete. Once fully paid your data is delivered automatically — no extra steps.', action: function(){ highlightTarget('plans', 'plans-list'); } });
-    nuggets.push({ icon: '\uD83D\uDCF1', text: 'Think of DataBulge like a savings box for your data. Drop money in daily, watch the progress bar fill up, and collect your data when it hits 100%.', action: function(){ highlightTarget('plans', 'plans-list'); } });
+    var _cPlanId = (typeof _plansCache !== 'undefined' && _plansCache && _plansCache.length) ? _plansCache.reduce(function(a,b){ return (parseFloat(a.selling_price)||0)<=(parseFloat(b.selling_price)||0)?a:b; }).id : null;
+    nuggets.push({ icon: '\uD83D\uDCF6', text: 'Start small. Pay ' + fmtN(starterDaily) + ' a day for ' + starterDays + ' days and get ' + starterSize + ' of data delivered straight to your phone. No lump sum needed.', action: (function(pid){ return function(){ nuggetLaunchFeature('plan', pid); }; })(_cPlanId) });
+    nuggets.push({ icon: '\uD83D\uDCB3', text: 'No need to always go to your bank to transfer money. Set up Auto-Fund once and your wallet tops up automatically every day until your plan is complete. Cancel anytime.', action: function(){ nuggetLaunchFeature('autofund'); } });
+    nuggets.push({ icon: '\uD83D\uDCB8', text: 'Always keep your DataBulge wallet funded. You never know when you will run out of data and there will be no money in your account. A little payment a day keeps the data on.', action: function(){ nuggetLaunchFeature('fund'); } });
+    nuggets.push({ icon: '\uD83D\uDCA1', text: 'Pick a plan, make your first payment, then tap Pay Now daily until it is complete. Once fully paid your data is delivered automatically — no extra steps.', action: (function(pid){ return function(){ nuggetLaunchFeature('plan', pid); }; })(_cPlanId) });
+    nuggets.push({ icon: '\uD83D\uDCF1', text: 'Think of DataBulge like a savings box for your data. Drop money in daily, watch the progress bar fill up, and collect your data when it hits 100%.', action: (function(pid){ return function(){ nuggetLaunchFeature('plan', pid); }; })(_cPlanId) });
   }
   return nuggets;
 }
@@ -6063,48 +6115,31 @@ window.detectAndSaveLocation = detectAndSaveLocation;
   function safeEsc(s){try{return (typeof esc==='function')?esc(s):(String(s||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}));}catch(e){return String(s||'');}}
   function todayMessage(){
     var arr=[
-      ['🌤️','Small money can still keep you connected. Pick a plan and move at your pace.'],
-      ['💚','No pressure today. Fund what you can, when you can.'],
-      ['🚀','Your data life should feel simple. Start small and stay online.'],
-      ['✨','You are one tiny step away from staying connected today.'],
-      ['📶','DataBulge is here to help you breathe easier, not stress you.']
+      ["\uD83C\uDF24\uFE0F","Small money can still keep you connected. Pick a plan and move at your pace."],
+      ["\uD83D\uDC9A","No pressure today. Fund what you can, when you can."],
+      ["\uD83D\uDE80","Your data life should feel simple. Start small and stay online."],
+      ["\u2728","You are one tiny step away from staying connected today."],
+      ["\uD83D\uDCF6","DataBulge is here to help you breathe easier, not stress you."]
     ];
     var d=new Date(); return arr[d.getDay()%arr.length];
   }
   function ensureCompanionHero(){
-    var tc=byId('tc-dash'); if(!tc) return;
-    var old=byId('friend-hero');
-    var name=firstName();
-    var msg=todayMessage();
-    var bal=money(window.gBal||0);
-    var html=''+
-      '<div class="friend-hero" id="friend-hero">'+
-        '<div class="friend-hero-top"><div><div class="friend-kicker">Welcome Back,</div>'+ 
-        '<div class="friend-title">Let’s keep you connected today.</div>'+ 
-        '<div class="friend-sub">Buy data now, pay small small, and stay online without pressure.</div></div>'+ 
-        '<div class="friend-pill">📶 I am your data friend</div></div>'+ 
-        '<div class="friend-balance"><div><div class="friend-bal-label">Available balance</div><div class="friend-bal-val" id="friend-bal-val">'+bal+'</div></div><div style="font-size:.76rem;opacity:.82;font-weight:800;text-align:right;">Ready when you are</div></div>'+ 
-        '<div class="friend-cta-row"><button class="friend-cta primary" onclick="openFundModal()" ontouchstart="">Add small money</button><button class="friend-cta secondary" onclick="dbGoSoftPay();" ontouchstart="">Find a plan</button></div>'+ 
-      '</div>'+ 
-      '<div class="friend-quick-grid" id="friend-quick-grid"><button class="friend-action-card fund" onclick="openFundModal()" ontouchstart=""><span class="emoji">💚</span><strong>Fund with ease</strong><span>Your wallet updates automatically after transfer.</span></button><button class="friend-action-card plan" onclick="dbGoSoftPay();" ontouchstart=""><span class="emoji">🎯</span><strong>Choose your vibe</strong><span>MTN, Airtel, Glo or 9mobile — paid your way.</span></button></div>';
-    if(old){
-      var bv=byId('friend-bal-val'); if(bv) bv.innerHTML=bal;
-      return;
-    }
+    var tc=byId("tc-dash"); if(!tc) return;
+    if(byId("friend-quick-grid")) return;
+    var html="<div class=\"friend-quick-grid\" id=\"friend-quick-grid\"><button class=\"friend-action-card fund\" onclick=\"openFundModal()\" ontouchstart=\"\"><span class=\"emoji\">\uD83D\uDC9A</span><strong>Fund with ease</strong><span>Your wallet updates automatically after transfer.</span></button><button class=\"friend-action-card plan\" onclick=\"dbGoSoftPay();\" ontouchstart=\"\"><span class=\"emoji\">\uD83C\uDFAF</span><strong>Choose your vibe</strong><span>MTN, Airtel, Glo or 9mobile \u2014 paid your way.</span></button></div>";
     var first=tc.firstChild;
-    var box=document.createElement('div'); box.innerHTML=html;
+    var box=document.createElement("div"); box.innerHTML=html;
     while(box.firstChild) tc.insertBefore(box.firstChild, first);
   }
   function ensureStickyCTA(){
-    if(byId('friend-sticky-cta')) return;
-    var d=document.createElement('div');
-    d.className='friend-sticky-cta'; d.id='friend-sticky-cta';
-    d.innerHTML='<div class="friend-sticky-inner"><button class="fund" onclick="openFundModal()">💚 Fund account</button><button class="plans" onclick="dbGoSoftPay();">📶 Pick plan</button></div>';
+    if(byId("friend-sticky-cta")) return;
+    var d=document.createElement("div");
+    d.className="friend-sticky-cta"; d.id="friend-sticky-cta";
+    d.innerHTML="<div class=\"friend-sticky-inner\"><button class=\"fund\" onclick=\"openFundModal()\">\uD83D\uDC9A Fund account</button><button class=\"plans\" onclick=\"dbGoSoftPay();\">\uD83D\uDCF6 Pick plan</button></div>";
     document.body.appendChild(d);
-    document.body.className += ' friend-show-sticky';
+    document.body.className += " friend-show-sticky";
   }
   function polishCopy(){
-    var f=byId('plans-fund-btn'); if(f) f.innerHTML='+ Add small money';
     var dbal=byId('d-va'); if(dbal && /Loading|Virtual|account|Bank/i.test(dbal.textContent||'')){
       if(!dbal.getAttribute('data-friendly')){ dbal.setAttribute('data-friendly','1'); }
     }
