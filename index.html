@@ -424,10 +424,14 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 @media(min-width:900px){.hero-bal-card{padding:28px 24px 22px;}}
 @media(hover:hover){.plan-card:hover{-webkit-box-shadow:0 4px 16px rgba(26,86,219,.12);box-shadow:0 4px 16px rgba(26,86,219,.12);-webkit-transform:translateY(-1px);transform:translateY(-1px);-webkit-transition:all .2s;transition:all .2s;}}
 /* Plan filter chips — frontend-only list arrangement */
-.plan-filter-card{grid-column:1/-1!important;background:#fff!important;border:1px solid #E6EAF1!important;border-radius:22px!important;box-shadow:0 10px 22px rgba(15,23,42,.06)!important;padding:14px!important;margin-bottom:2px!important;}
-.plan-filter-title{font-size:.76rem!important;color:#6B7280!important;font-weight:900!important;text-transform:uppercase!important;letter-spacing:.07em!important;margin:2px 0 8px!important;}
+.plan-filter-card{grid-column:1/-1!important;background:#f0fdf4!important;border:2px solid #3d9758!important;border-radius:22px!important;box-shadow:0 10px 22px rgba(61,151,88,.10)!important;padding:14px!important;margin-bottom:2px!important;}
+.plan-filter-title{font-size:.76rem!important;color:#166534!important;font-weight:900!important;text-transform:uppercase!important;letter-spacing:.07em!important;margin:2px 0 8px!important;}
 .plan-chip-row{display:-webkit-box!important;display:-webkit-flex!important;display:flex!important;gap:8px!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;padding:2px 0 10px!important;}
-.plan-chip{border:1px solid #E0E5EF!important;background:#fff!important;color:#6B7280!important;border-radius:999px!important;padding:9px 14px!important;font-size:.78rem!important;font-weight:900!important;white-space:nowrap!important;font-family:Arial,Helvetica,sans-serif!important;cursor:pointer!important;-webkit-appearance:none!important;-webkit-tap-highlight-color:transparent!important;}
+.plan-chip{border:1.5px solid #a7f3d0!important;background:#fff!important;color:#166534!important;border-radius:999px!important;padding:9px 14px!important;font-size:.78rem!important;font-weight:900!important;white-space:nowrap!important;font-family:Arial,Helvetica,sans-serif!important;cursor:pointer!important;-webkit-appearance:none!important;-webkit-tap-highlight-color:transparent!important;}
+.plan-search-wrap{grid-column:1/-1;margin-bottom:8px;position:relative;}
+.plan-search-input{width:100%;padding:11px 14px 11px 38px;border:1.5px solid #a7f3d0;border-radius:14px;font-size:.84rem;font-weight:700;font-family:Arial,Helvetica,sans-serif;background:#fff;color:#111827;outline:none;-webkit-appearance:none;box-sizing:border-box;}
+.plan-search-input:focus{border-color:#3d9758;box-shadow:0 0 0 3px rgba(61,151,88,.15);}
+.plan-search-icon{position:absolute;left:12px;top:50%;-webkit-transform:translateY(-50%);transform:translateY(-50%);font-size:15px;pointer-events:none;opacity:.6;}
 .plan-chip.act{background:#EEF2FF!important;color:#1A56DB!important;border-color:#1A56DB!important;}
 .plan-count{grid-column:1/-1!important;font-size:.78rem!important;color:#7B8494!important;font-weight:700!important;margin:2px 2px -4px!important;}
 
@@ -671,8 +675,8 @@ button,.btn,.plan-btn,.tab,.logout-btn,.plan-chip,.avatar,.avatar-menu button{
 .btn-lite{background:#E9EEFF!important;color:#1A56DB!important;border:1px solid #D6DFFF!important;}
 #pay-days-7.btn-blue,#pay-days-28.btn-blue,#m-sub-days-7.btn-blue,#m-sub-days-28.btn-blue{background:#3d9758!important;color:#fff!important;border:none!important;}
 #pay-days-7.btn-lite,#pay-days-28.btn-lite,#m-sub-days-7.btn-lite,#m-sub-days-28.btn-lite{background:#E9EEFF!important;color:#1A56DB!important;border:1px solid #D6DFFF!important;}
-.plan-chip.act{background:#3d9758!important;color:#fff!important;border-color:#3d9758!important;font-weight:900!important;}
-.plan-chip:not(.act){background:#fff!important;color:#6B7280!important;border-color:#E0E5EF!important;}
+.plan-chip.act{background:#3d9758!important;color:#fff!important;border-color:#3d9758!important;font-weight:900!important;box-shadow:0 4px 12px rgba(61,151,88,.25)!important;}
+.plan-chip:not(.act){background:#fff!important;color:#166534!important;border-color:#a7f3d0!important;}
 .avatar-signout,#logout-btn{background:#F8FAFC!important;color:#667085!important;border:1px solid #E5E7EB!important;box-shadow:none!important;}
 .modal-x{background:none!important;border:none!important;box-shadow:none!important;color:#888!important;padding:0!important;line-height:1!important;-webkit-appearance:none!important;appearance:none!important;}
 .eye{background:none!important;border:none!important;box-shadow:none!important;color:#888!important;-webkit-appearance:none!important;appearance:none!important;}
@@ -886,6 +890,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <div class="hero-bal-label">Wallet Balance</div>
       <div class="hero-bal-amount" id="d-bal-dash">&#8358;0.00</div>
       <div class="hero-bal-va" id="d-va-dash">Loading&#8230;</div>
+      <div id="hero-bal-status" style="display:none;font-size:.72rem;font-weight:800;margin-top:5px;opacity:.9;"></div>
       <button class="hero-fund-btn" id="d-fund-btn" onclick="openFundModal()" ontouchstart="">+ Add small money</button>
     </div>
     <div class="streak-strip" id="streak-strip" style="display:none;">
@@ -2104,17 +2109,17 @@ function updateGreeting(name) {
 
 function updateWalletLabel() {
   var el = $('wallet-status');
-  if (!el) return;
+  var hs = $('hero-bal-status');
   var bal = parseFloat(gBal) || 0;
   if (bal >= 10000) {
-    el.className = 'wallet-status active';
-    el.textContent = 'Active Wallet';
+    if (el) { el.className = 'wallet-status active'; el.textContent = 'Active Wallet'; }
+    if (hs) { hs.style.display = 'none'; hs.textContent = ''; }
   } else if (bal < 100) {
-    el.className = 'wallet-status low';
-    el.textContent = 'Low Wallet';
+    if (el) { el.className = 'wallet-status low'; el.textContent = 'Low Wallet'; }
+    if (hs) { hs.style.display = 'block'; hs.style.color = '#fde68a'; hs.textContent = '⚠ Low — tap to top up now'; }
   } else {
-    el.className = 'wallet-status normal';
-    el.textContent = 'Normal Wallet';
+    if (el) { el.className = 'wallet-status normal'; el.textContent = 'Normal Wallet'; }
+    if (hs) { hs.style.display = 'none'; hs.textContent = ''; }
   }
 }
 
@@ -2271,12 +2276,15 @@ function _renderPlans(allPlans) {
       function planType(pl) {
         var cat = (pl.category || '').toLowerCase().replace(/^\s+|\s+$/g, '');
         var vd  = parseInt(pl.validity_days, 10) || 30;
-        if (cat === 'daily' || vd === 1) return 'Daily';
-        if (cat === 'weekly' || (vd > 1 && vd <= 7)) return 'Weekly';
-        if (cat === 'monthly' || (vd > 7 && vd <= 31)) return 'Monthly';
+        /* Specific categories must be checked FIRST before validity_days fallback */
         if (cat === 'mega') return 'Mega';
         if (cat === 'router') return 'Router';
         if (cat === 'always_on' || cat === 'always-on' || cat === 'always on') return 'Always On';
+        if (cat === 'airtime') return 'Airtime';
+        /* Validity-day based classification for standard plans */
+        if (cat === 'daily' || vd === 1) return 'Daily';
+        if (cat === 'weekly' || (vd > 1 && vd <= 7)) return 'Weekly';
+        if (cat === 'monthly' || (vd > 7 && vd <= 31)) return 'Monthly';
         if (cat) return cat.charAt(0).toUpperCase() + cat.slice(1).replace(/_/g, ' ');
         return 'Monthly';
       }
@@ -2314,6 +2322,7 @@ function _renderPlans(allPlans) {
         shown.push(p);
       }
       html += '<div class="plan-count">' + shown.length + ' plan' + (shown.length === 1 ? '' : 's') + ' available</div>';
+      html += '<div class="plan-search-wrap"><span class="plan-search-icon">🔍</span><input class="plan-search-input" id="plan-search" type="text" placeholder="Search by size, network, price, days…" oninput="filterPlanSearch(this.value)" autocomplete="off" autocorrect="off" spellcheck="false"></div>';
 
       if (!shown.length) {
         html += '<div class="empty" style="grid-column:1/-1;">No plan found under this selection.</div>';
@@ -2328,7 +2337,7 @@ function _renderPlans(allPlans) {
         var nn = normNet(p.network);
         var pillC = netCls(nn);
         var _acl=(_acl||'');_acl=(p.network||'').toUpperCase();var _accentC=_acl==='MTN'?'net-mtn-accent':_acl==='AIRTEL'?'net-airtel-accent':_acl==='GLO'?'net-glo-accent':_acl==='9MOBILE'?'net-9mobile-accent':'';
-        html += '<div class="plan-card plan-card-animate ' + _accentC + '">' +
+        html += '<div class="plan-card plan-card-animate ' + _accentC + '" data-search="' + esc2([nn, p.data_size, type, p.selling_price, p.daily_price, p.validity_days].join(' ').toLowerCase()) + '">' +
           '<div>' +
             '<div class="plan-top">' +
               '<span class="plan-net ' + pillC + '">' + esc2(nn) + '</span>' +
@@ -2351,6 +2360,20 @@ function setPlanFilter(kind, value) {
   if (kind === 'net') wrap._netFilter = value || 'ALL';
   if (kind === 'type') wrap._typeFilter = value || 'ALL';
   loadPlans();
+}
+
+function filterPlanSearch(q) {
+  var term = (q || '').toLowerCase().replace(/₦|,/g, '').trim();
+  var cards = document.querySelectorAll ? document.querySelectorAll('#plans-list .plan-card') : [];
+  var visible = 0;
+  for (var i = 0; i < cards.length; i++) {
+    var haystack = (cards[i].getAttribute('data-search') || '');
+    var show = !term || haystack.indexOf(term) > -1;
+    cards[i].style.display = show ? '' : 'none';
+    if (show) visible++;
+  }
+  var countEl = document.querySelector ? document.querySelector('#plans-list .plan-count') : null;
+  if (countEl) countEl.textContent = visible + ' plan' + (visible === 1 ? '' : 's') + ' available';
 }
 
 var _gSubsCache = [];   // most recent loadSubs result — used by openSubModal for progress context
@@ -5703,9 +5726,9 @@ window.friendDailyAction = friendDailyAction;
 function renderSavingsCard() {
   var d=gRetention||{},saved=parseFloat(d.month_saved)||0,plans=parseInt(d.month_plans)||0,card=$('savings-card');
   if(!card)return;
-  if(saved<50||plans<1){card.style.display='none';return;}
-  if($('savings-amount'))$('savings-amount').textContent=fmtN(saved);
-  if($('savings-sub'))$('savings-sub').textContent='across '+plans+' plan'+(plans!==1?'s':'')+' this month — paying in installments instead of upfront.';
+  if(plans<1){card.style.display='none';return;}
+  if($('savings-amount'))$('savings-amount').textContent=saved>0?fmtN(saved):fmtN(0);
+  if($('savings-sub'))$('savings-sub').textContent=plans+' plan'+(plans!==1?'s':'')+' paid this month'+(saved>0?' — paying in installments instead of upfront.':'.');
   card.style.display='';
 }
 
@@ -6270,7 +6293,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
     on($('db-start-plan'),'click',function(){ safeShowTab('plans'); setTimeout(function(){ safeOpenModal('m-fund'); },160); });
     on($('db-view-plans'),'click',function(){ if(typeof window.dbGoSoftPay==='function') window.dbGoSoftPay(); else safeShowTab('plans'); });
 
-    var grid=make('div','momentum-grid','<div class="momentum-card" id="db-mc-save" onclick="safeShowTab(\'wallet\')" style="cursor:pointer;"><div class="momentum-label">Saved This Month</div><div class="momentum-value" id="db-m-save">—</div><div class="momentum-sub" id="db-m-save-sub">loading…</div></div><div class="momentum-card" id="db-mc-streak" onclick="safeShowTab(\'dash\')" style="cursor:pointer;"><div class="momentum-label">Daily Streak</div><div class="momentum-value" id="db-m-streak">—</div><div class="momentum-sub" id="db-m-streak-sub">loading…</div></div><div class="momentum-card" id="db-mc-plans" onclick="safeShowTab(\'subs\')" style="cursor:pointer;"><div class="momentum-label">Plans Completed</div><div class="momentum-value" id="db-m-next">—</div><div class="momentum-sub" id="db-m-next-sub">tap to view</div></div><div class="momentum-card" id="db-mc-wallet" onclick="safeOpenModal(\'m-fund\')" style="cursor:pointer;"><div class="momentum-label">Wallet Balance</div><div class="momentum-value" id="db-m-progress">—</div><div class="momentum-sub" id="db-m-progress-sub">tap to fund</div></div>');
+    var grid=make('div','momentum-grid','<div class="momentum-card" id="db-mc-save" onclick="safeShowTab(\'wallet\')" style="cursor:pointer;"><div class="momentum-label">Funded This Month</div><div class="momentum-value" id="db-m-save">—</div><div class="momentum-sub" id="db-m-save-sub">loading…</div></div><div class="momentum-card" id="db-mc-streak" onclick="safeShowTab(\'dash\')" style="cursor:pointer;"><div class="momentum-label">Daily Streak</div><div class="momentum-value" id="db-m-streak">—</div><div class="momentum-sub" id="db-m-streak-sub">loading…</div></div><div class="momentum-card" id="db-mc-plans" onclick="safeShowTab(\'subs\')" style="cursor:pointer;"><div class="momentum-label">Plans Completed</div><div class="momentum-value" id="db-m-next">—</div><div class="momentum-sub" id="db-m-next-sub">tap to view</div></div><div class="momentum-card" id="db-mc-wallet" onclick="safeOpenModal(\'m-fund\')" style="cursor:pointer;"><div class="momentum-label">Wallet Balance</div><div class="momentum-value" id="db-m-progress">—</div><div class="momentum-sub" id="db-m-progress-sub">tap to fund</div></div>');
     var hb=$('hero-bal-card'); if(hb && hb.parentNode){ hb.parentNode.insertBefore(grid,hb.nextSibling); }
 
     var guide=make('div','first-plan-guide','<div class="first-plan-title">First plan? We’ll walk you through it.</div><div class="first-plan-copy">No stress. Fund any amount, choose your network, and subscribe in less than 60 seconds.</div><div class="first-plan-steps"><div class="first-plan-step"><span class="first-plan-num">1</span>Send money to your DataBulge account</div><div class="first-plan-step"><span class="first-plan-num">2</span>Pick MTN, Airtel, Glo or 9mobile</div><div class="first-plan-step"><span class="first-plan-num">3</span>Start small and complete gradually</div></div><button type="button" class="btn btn-blue" id="db-guide-btn" style="margin:0;">Get my first plan</button>');
@@ -6323,7 +6346,10 @@ window.detectAndSaveLocation = detectAndSaveLocation;
     /* Saved this month */
     if ($('db-m-save')) {
       text($('db-m-save'), saved > 0 ? '₦' + Math.round(saved).toLocaleString() : '₦0');
-      if ($('db-m-save-sub')) text($('db-m-save-sub'), mPlans > 0 ? mPlans + ' plan' + (mPlans!==1?'s':'') + ' paid this month' : 'No plans completed yet this month');
+      if ($('db-m-save-sub')) {
+        if (mPlans > 0) text($('db-m-save-sub'), mPlans + ' plan' + (mPlans!==1?'s':'') + ' active this month');
+        else text($('db-m-save-sub'), 'No plans this month yet');
+      }
     }
     /* Daily streak */
     if ($('db-m-streak')) {
@@ -6331,9 +6357,9 @@ window.detectAndSaveLocation = detectAndSaveLocation;
       text($('db-m-streak'), fireIcon + (cur || '0'));
       if ($('db-m-streak-sub')) {
         if (cur === 0) text($('db-m-streak-sub'), 'Open daily to build your streak');
-        else if (cur === 1) text($('db-m-streak-sub'), 'day — come back tomorrow!');
-        else if (cur < 7) text($('db-m-streak-sub'), 'days in a row — keep it up!');
-        else text($('db-m-streak-sub'), 'days straight! Best: ' + best);
+        else if (cur === 1) text($('db-m-streak-sub'), '1 day — come back tomorrow!');
+        else if (cur < 7) text($('db-m-streak-sub'), cur + ' days in a row — keep it up!');
+        else text($('db-m-streak-sub'), 'days straight. You are consistent! Best: ' + best + ' days');
       }
     }
     /* Plans completed */
