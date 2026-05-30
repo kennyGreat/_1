@@ -2341,14 +2341,13 @@ function _renderPlans(allPlans) {
         var nn = normNet(p.network);
         var pillC = netCls(nn);
         var _acl=(_acl||'');_acl=(p.network||'').toUpperCase();var _accentC=_acl==='MTN'?'net-mtn-accent':_acl==='AIRTEL'?'net-airtel-accent':_acl==='GLO'?'net-glo-accent':_acl==='9MOBILE'?'net-9mobile-accent':'';
-        html += '<div class="plan-card plan-card-animate ' + _accentC + '" data-search="' + esc2([
-            nn,
-            (p.data_size||'').toLowerCase(),
-            type.toLowerCase(),
-            Math.round(parseFloat(p.selling_price)||0).toString(),
-            Math.round(parseFloat(p.daily_price)||0).toString(),
-            (p.validity_days||30).toString()
-          ].join('|')) + '">' +
+        var _sp = Math.round(parseFloat(p.selling_price)||0);
+        var _dp = Math.round(parseFloat(p.daily_price)||0);
+        var _vd = parseInt(p.validity_days)||30;
+        var _sz = (p.data_size||'').toLowerCase().replace(/\s+/g,'');
+        var _szNum = parseFloat(_sz) || 0;
+        var _szUnit = _sz.replace(/[\d.]/g,'').trim();
+        html += '<div class="plan-card plan-card-animate ' + _accentC + '" data-sp="' + _sp + '" data-dp="' + _dp + '" data-vd="' + _vd + '" data-sz="' + esc2(_sz) + '" data-szn="' + _szNum + '" data-szu="' + esc2(_szUnit) + '" data-net="' + esc2(nn.toLowerCase()) + '" data-type="' + esc2(type.toLowerCase()) + '" data-search="' + esc2([nn.toLowerCase(), _sz, type.toLowerCase(), _sp, _dp, _vd].join('|')) + '">' +
           '<div>' +
             '<div class="plan-top">' +
               '<span class="plan-net ' + pillC + '">' + esc2(nn) + '</span>' +
@@ -2376,51 +2375,161 @@ function setPlanFilter(kind, value) {
 function launchPlanSearch() {
   var inp = document.getElementById('plan-search');
   var raw = (inp ? inp.value : '').trim();
-  var term = raw.toLowerCase().replace(/₦|,/g, '').trim();
+  if (!raw) { clearPlanSearch(); return; }
+
+  var q = raw.toLowerCase()
+    .replace(/₦|naira|ngn/g, '')
+    .replace(/\bper\s+day\b/g, 'daily')
+    .replace(/\b(gig|gigs)\b/g, 'gb')
+    .replace(/\b(meg|megs|megabyte[s]?)\b/g, 'mb')
+    .replace(/\b(one|1)\s*gb\b/g, '1gb')
+    .replace(/\b(two|2)\s*gb\b/g, '2gb')
+    .replace(/\b(three|3)\s*gb\b/g, '3gb')
+    .replace(/\b(four|4)\s*gb\b/g, '4gb')
+    .replace(/\b(five|5)\s*gb\b/g, '5gb')
+    .replace(/\b(ten|10)\s*gb\b/g, '10gb')
+    .replace(/\b1\s*week|7\s*days?\b/g, 'weekly')
+    .replace(/\b2\s*weeks?|14\s*days?\b/g, 'weekly')
+    .replace(/\b30\s*days?|1\s*month|one\s*month\b/g, 'monthly')
+    .replace(/\b1\s*day|one\s*day\b/g, 'daily')
+    .replace(/\bairtell?\b/g, 'airtel')
+    .replace(/\b9\s*mobile\b/g, '9mobile')
+    .replace(/\bglo\s*mobile\b/g, 'glo')
+    .trim();
+
+  /* Extract intent signals */
+  var wantCheap    = /\b(cheap|cheapest|affordable|lowest|budget|small|tiny|least)\b/.test(q);
+  var wantBig      = /\b(big|biggest|large|largest|most data|heavy|huge|max|maximum)\b/.test(q);
+  var wantUnder    = q.match(/\b(under|below|less\s*than|at\s*most|max\s*price)\s*(\d+)/);
+  var wantOver     = q.match(/\b(above|over|more\s*than|at\s*least|min\s*price)\s*(\d+)/);
+  var wantAround   = q.match(/\b(around|about|near|close\s*to|~)\s*(\d+)/);
+  var wantExact    = q.match(/\b(exactly|equal\s*to)\s*(\d+)/);
+  var wantDailyAmt = q.match(/\b(\d+)\s*(\/day|daily|per\s*day)\b/);
+
+  var underPrice  = wantUnder  ? parseInt(wantUnder[2])  : null;
+  var overPrice   = wantOver   ? parseInt(wantOver[2])   : null;
+  var aroundPrice = wantAround ? parseInt(wantAround[2]) : null;
+  var exactPrice  = wantExact  ? parseInt(wantExact[2])  : null;
+  var dailyAmt    = wantDailyAmt ? parseInt(wantDailyAmt[1]) : null;
+
+  /* Extract network */
+  var netMatch = q.match(/\b(mtn|glo|airtel|9mobile)\b/);
+  var wantNet  = netMatch ? netMatch[1] : null;
+
+  /* Extract type */
+  var wantType = null;
+  if (/\bdaily\b/.test(q))           wantType = 'daily';
+  else if (/\bweekly\b/.test(q))     wantType = 'weekly';
+  else if (/\bmonthly\b/.test(q))    wantType = 'monthly';
+  else if (/\bmega\b/.test(q))       wantType = 'mega';
+  else if (/\brouter\b/.test(q))     wantType = 'router';
+  else if (/\balways.on\b/.test(q))  wantType = 'always on';
+
+  /* Extract size e.g. "2gb", "500mb", "1.5gb" */
+  var sizeMatch = q.match(/(\d+(?:\.\d+)?)\s*(gb|mb|tb)/);
+  var wantSzNum = sizeMatch ? parseFloat(sizeMatch[1]) : null;
+  var wantSzUnit = sizeMatch ? sizeMatch[2] : null;
+
+  /* Extract standalone price number e.g. "1000", "500 plan" */
+  var standalonePrice = null;
+  if (!wantUnder && !wantOver && !wantAround && !wantExact && !wantDailyAmt) {
+    var priceMatch = q.replace(/\b(mtn|glo|airtel|9mobile|daily|weekly|monthly|mega|router|gb|mb|tb|cheap|big|affordable)\b/g,'').match(/\b(\d{3,})\b/);
+    if (priceMatch) standalonePrice = parseInt(priceMatch[1]);
+  }
+
   var cards = document.querySelectorAll ? document.querySelectorAll('#plans-list .plan-card') : [];
-  var visible = 0;
-  var firstMatch = null;
-  var tokens = term ? term.split(/\s+/).filter(Boolean) : [];
-  function matchesPlan(haystack) {
-    if (!tokens.length) return true;
-    var fields = haystack.split('|');
-    for (var t = 0; t < tokens.length; t++) {
-      var tok = tokens[t]; var matched = false;
-      for (var f = 0; f < fields.length; f++) {
-        var field = fields[f];
-        if (field === tok || field.indexOf(tok) === 0 || (' ' + field + ' ').indexOf(' ' + tok + ' ') > -1) { matched = true; break; }
-        if (/^\d+$/.test(tok) && /^\d+$/.test(field) && field === tok) { matched = true; break; }
-        if (/\d+(gb|mb|tb)/.test(tok) && field === tok) { matched = true; break; }
-      }
-      if (!matched) return false;
-    }
-    return true;
-  }
+  var results = [];
+
   for (var i = 0; i < cards.length; i++) {
-    var haystack = (cards[i].getAttribute('data-search') || '').toLowerCase();
-    var show = matchesPlan(haystack);
-    cards[i].style.display = show ? '' : 'none';
-    cards[i].classList.remove('nugget-highlight');
-    if (show) { visible++; if (!firstMatch) firstMatch = cards[i]; }
+    var c   = cards[i];
+    var sp  = parseInt(c.getAttribute('data-sp'))  || 0;
+    var dp  = parseInt(c.getAttribute('data-dp'))  || 0;
+    var vd  = parseInt(c.getAttribute('data-vd'))  || 30;
+    var sz  = c.getAttribute('data-sz')  || '';
+    var szn = parseFloat(c.getAttribute('data-szn')) || 0;
+    var szu = c.getAttribute('data-szu') || '';
+    var net = c.getAttribute('data-net') || '';
+    var typ = c.getAttribute('data-type') || '';
+    var score = 0;
+    var pass  = true;
+
+    /* Hard filters — must pass all */
+    if (wantNet  && net !== wantNet)   { pass = false; }
+    if (wantType && typ.indexOf(wantType) === -1) { pass = false; }
+    if (underPrice  !== null && sp > underPrice)  { pass = false; }
+    if (overPrice   !== null && sp < overPrice)   { pass = false; }
+    if (exactPrice  !== null && sp !== exactPrice) { pass = false; }
+    if (aroundPrice !== null && (sp < aroundPrice * 0.75 || sp > aroundPrice * 1.30)) { pass = false; }
+    if (dailyAmt    !== null && Math.abs(dp - dailyAmt) > dailyAmt * 0.20) { pass = false; }
+    if (wantSzNum !== null && wantSzUnit !== null) {
+      /* Convert to MB for comparison */
+      var wantMB = wantSzUnit === 'gb' ? wantSzNum * 1024 : wantSzUnit === 'tb' ? wantSzNum * 1048576 : wantSzNum;
+      var planMB = szu === 'gb' ? szn * 1024 : szu === 'tb' ? szn * 1048576 : szn;
+      if (Math.abs(planMB - wantMB) > wantMB * 0.20) { pass = false; } /* ±20% tolerance */
+    }
+    if (standalonePrice !== null && Math.abs(sp - standalonePrice) > standalonePrice * 0.15) { pass = false; }
+
+    if (!pass) { c.style.display = 'none'; c.classList.remove('nugget-highlight'); continue; }
+
+    /* Scoring — rank by relevance */
+    if (wantNet  && net === wantNet)   score += 30;
+    if (wantType && typ.indexOf(wantType) > -1) score += 20;
+    if (wantCheap) score += (10000 / (sp + 1));        /* lower price = higher score */
+    if (wantBig)   score += szn * (szu === 'gb' ? 1024 : 1); /* bigger = higher */
+    if (aroundPrice !== null) score += 20 - Math.abs(sp - aroundPrice) / aroundPrice * 20;
+    if (standalonePrice !== null) score += 20 - Math.abs(sp - standalonePrice) / standalonePrice * 20;
+    if (wantSzNum !== null) {
+      var wMB2 = wantSzUnit === 'gb' ? wantSzNum*1024 : wantSzNum;
+      var pMB2 = szu === 'gb' ? szn*1024 : szn;
+      score += 20 - Math.abs(pMB2 - wMB2) / (wMB2 + 1) * 20;
+    }
+
+    c.style.display = '';
+    c.classList.remove('nugget-highlight');
+    results.push({ el: c, score: score, sp: sp });
   }
-  if (term) {
-    for (var j = 0; j < cards.length; j++) {
-      if (cards[j].style.display !== 'none') {
-        cards[j].classList.add('nugget-highlight');
-        setTimeout(function(c){ c.classList.remove('nugget-highlight'); }, 3500, cards[j]);
+
+  /* Re-order cards by score in the DOM */
+  if (results.length > 1) {
+    results.sort(function(a, b) {
+      if (b.score !== a.score) return b.score - a.score;
+      return a.sp - b.sp; /* tie-break: cheaper first */
+    });
+    var wrap = document.getElementById('plans-list');
+    if (wrap) {
+      var grid = wrap.querySelector('.plan-grid') || wrap;
+      for (var r = 0; r < results.length; r++) {
+        grid.appendChild(results[r].el);
       }
     }
   }
+
+  /* Highlight matched cards */
+  for (var k = 0; k < results.length; k++) {
+    results[k].el.classList.add('nugget-highlight');
+    setTimeout(function(c){ c.classList.remove('nugget-highlight'); }, 3500, results[k].el);
+  }
+
+  /* Update count */
+  var visible = results.length;
   var countEl = document.getElementById('plan-count-lbl');
   if (countEl) {
-    if (term && visible === 0) { countEl.textContent = 'No plans found for "' + raw + '"'; countEl.style.color = '#b91c1c'; }
-    else { countEl.textContent = visible + ' plan' + (visible === 1 ? '' : 's') + ' available'; countEl.style.color = ''; }
+    if (visible === 0) { countEl.textContent = 'No plans found for "' + raw + '"'; countEl.style.color = '#b91c1c'; }
+    else { countEl.textContent = visible + ' plan' + (visible === 1 ? '' : 's') + ' found'; countEl.style.color = '#166534'; }
   }
-  if (firstMatch) { setTimeout(function() { try { firstMatch.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch(e) {} }, 80); }
+
+  /* Scroll to best result */
+  if (results.length) {
+    setTimeout(function() {
+      try { results[0].el.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch(e) {}
+    }, 80);
+  }
+
   var clr = document.getElementById('plan-search-clear');
-  if (clr) clr.style.display = term ? 'block' : 'none';
+  if (clr) clr.style.display = 'block';
   try { if (inp) inp.blur(); } catch(e) {}
 }
+
 function clearPlanSearch() {
   var inp = document.getElementById('plan-search');
   if (inp) inp.value = '';
