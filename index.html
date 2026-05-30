@@ -2341,7 +2341,14 @@ function _renderPlans(allPlans) {
         var nn = normNet(p.network);
         var pillC = netCls(nn);
         var _acl=(_acl||'');_acl=(p.network||'').toUpperCase();var _accentC=_acl==='MTN'?'net-mtn-accent':_acl==='AIRTEL'?'net-airtel-accent':_acl==='GLO'?'net-glo-accent':_acl==='9MOBILE'?'net-9mobile-accent':'';
-        html += '<div class="plan-card plan-card-animate ' + _accentC + '" data-search="' + esc2([nn, p.data_size, type, p.selling_price, p.daily_price, p.validity_days].join(' ').toLowerCase()) + '">' +
+        html += '<div class="plan-card plan-card-animate ' + _accentC + '" data-search="' + esc2([
+            nn,
+            (p.data_size||'').toLowerCase(),
+            type.toLowerCase(),
+            Math.round(parseFloat(p.selling_price)||0).toString(),
+            Math.round(parseFloat(p.daily_price)||0).toString(),
+            (p.validity_days||30).toString()
+          ].join('|')) + '">' +
           '<div>' +
             '<div class="plan-top">' +
               '<span class="plan-net ' + pillC + '">' + esc2(nn) + '</span>' +
@@ -2368,13 +2375,30 @@ function setPlanFilter(kind, value) {
 
 function launchPlanSearch() {
   var inp = document.getElementById('plan-search');
-  var term = (inp ? inp.value : '').toLowerCase().replace(/₦|,/g, '').trim();
+  var raw = (inp ? inp.value : '').trim();
+  var term = raw.toLowerCase().replace(/₦|,/g, '').trim();
   var cards = document.querySelectorAll ? document.querySelectorAll('#plans-list .plan-card') : [];
   var visible = 0;
   var firstMatch = null;
+  var tokens = term ? term.split(/\s+/).filter(Boolean) : [];
+  function matchesPlan(haystack) {
+    if (!tokens.length) return true;
+    var fields = haystack.split('|');
+    for (var t = 0; t < tokens.length; t++) {
+      var tok = tokens[t]; var matched = false;
+      for (var f = 0; f < fields.length; f++) {
+        var field = fields[f];
+        if (field === tok || field.indexOf(tok) === 0 || (' ' + field + ' ').indexOf(' ' + tok + ' ') > -1) { matched = true; break; }
+        if (/^\d+$/.test(tok) && /^\d+$/.test(field) && field === tok) { matched = true; break; }
+        if (/\d+(gb|mb|tb)/.test(tok) && field === tok) { matched = true; break; }
+      }
+      if (!matched) return false;
+    }
+    return true;
+  }
   for (var i = 0; i < cards.length; i++) {
-    var haystack = (cards[i].getAttribute('data-search') || '');
-    var show = !term || haystack.indexOf(term) > -1;
+    var haystack = (cards[i].getAttribute('data-search') || '').toLowerCase();
+    var show = matchesPlan(haystack);
     cards[i].style.display = show ? '' : 'none';
     cards[i].classList.remove('nugget-highlight');
     if (show) { visible++; if (!firstMatch) firstMatch = cards[i]; }
@@ -2389,7 +2413,7 @@ function launchPlanSearch() {
   }
   var countEl = document.getElementById('plan-count-lbl');
   if (countEl) {
-    if (term && visible === 0) { countEl.textContent = 'No plans found for "' + inp.value.trim() + '"'; countEl.style.color = '#b91c1c'; }
+    if (term && visible === 0) { countEl.textContent = 'No plans found for "' + raw + '"'; countEl.style.color = '#b91c1c'; }
     else { countEl.textContent = visible + ' plan' + (visible === 1 ? '' : 's') + ' available'; countEl.style.color = ''; }
   }
   if (firstMatch) { setTimeout(function() { try { firstMatch.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch(e) {} }, 80); }
