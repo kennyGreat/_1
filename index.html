@@ -141,7 +141,7 @@ body{overscroll-behavior-y:none;}
 .net-other{background:#eaedff;color:#1A56DB;}
 .plan-price{font-size:1rem;font-weight:900;color:#1A56DB;}
 .plan-sub{font-size:.75rem;color:#888;}
-.plan-btn{display:block;width:100%;margin-top:10px;padding:9px;background:#1A56DB;color:#fff;border:none;border-radius:6px;font-size:.88rem;font-weight:700;cursor:pointer;font-family:inherit;-webkit-appearance:none;}
+.plan-btn{display:block;width:100%;margin-top:10px;padding:12px;background:#1A56DB;color:#fff;border:none;border-radius:6px;font-size:.88rem;font-weight:700;cursor:pointer;font-family:inherit;-webkit-appearance:none;}
 
 /* Subscription rows */
 .sub-row{border:1px solid #e5e7eb;border-radius:8px;padding:12px;margin-bottom:10px;background:#fff;}
@@ -264,7 +264,7 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 .btn-google{border-radius:12px!important;min-height:42px!important;background:#fff!important;border:1.5px solid #E1E5EF!important;color:#3c4043!important;font-weight:700!important;box-shadow:0 2px 8px rgba(0,0,0,.06)!important;}
 
 /* App shell */
-#pg-app{background:var(--db-bg)!important;min-height:100vh!important;padding-bottom:90px!important;}
+#pg-app{background:var(--db-bg)!important;min-height:100vh!important;padding-bottom:70px!important;}
 .top-bar{
   background:#1A56DB!important;
   background:linear-gradient(135deg,#1A56DB,#1740B0)!important;
@@ -346,7 +346,7 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 .plan-net{border-radius:999px!important;padding:4px 9px!important;font-size:.64rem!important;font-weight:900!important;text-transform:uppercase!important;white-space:nowrap!important;}
 .plan-price{font-size:1.35rem!important;color:#111827!important;font-weight:900!important;letter-spacing:-.04em!important;margin-top:4px!important;padding-top:10px!important;border-top:1px solid #E5E7EB!important;}
 .plan-sub{font-size:.70rem!important;color:#697386!important;line-height:1.45!important;text-transform:uppercase!important;letter-spacing:.04em!important;}
-.plan-btn{border-radius:12px!important;background:#1A56DB!important;background:var(--db-blue)!important;color:#fff!important;padding:10px 8px!important;font-size:.80rem!important;margin-top:12px!important;font-weight:900!important;}
+.plan-btn{border-radius:12px!important;background:#1A56DB!important;background:var(--db-blue)!important;color:#fff!important;padding:13px 8px!important;font-size:.84rem!important;margin-top:8px!important;margin-bottom:4px!important;font-weight:900!important;}
 .net-MTN{background:#FEF3C7!important;color:#92400E!important;}
 .net-GLO{background:#eaf5ee!important;color:#2d7a44!important;}
 .net-AIRTEL{background:#FEE2E2!important;color:#B91C1C!important;}
@@ -465,8 +465,8 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
   #plans-list{grid-template-columns:1fr!important;}
   .tab-content{padding:10px 8px 28px!important;}
   .bnav-btn span{font-size:.58rem!important;}
-  #bottom-nav{height:56px!important;}
-  #pg-app{padding-bottom:60px!important;}
+  #bottom-nav{height:46px!important;}
+  #pg-app{padding-bottom:56px!important;}
 }
 
 /* ── Regular phones (360–599px) — default, no change needed ── */
@@ -503,10 +503,10 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 
   /* Bottom nav spans full width of app shell */
   #bottom-nav{max-width:740px!important;left:50%!important;right:auto!important;-webkit-transform:translateX(-50%)!important;transform:translateX(-50%)!important;border-radius:0 0 0 0!important;}
-  #pg-app{padding-bottom:72px!important;}
-  #bottom-nav{height:68px!important;}
-  .bnav-btn span{font-size:.72rem!important;}
-  .bnav-btn svg{width:24px!important;height:24px!important;}
+  #pg-app{padding-bottom:62px!important;}
+  #bottom-nav{height:54px!important;}
+  .bnav-btn span{font-size:.68rem!important;}
+  .bnav-btn svg{width:22px!important;height:22px!important;}
 
   /* Two-column plan grid */
   #plans-list{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:16px!important;}
@@ -552,12 +552,12 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
     -webkit-transform:translateX(-50%)!important;
     transform:translateX(-50%)!important;
     border-radius:0 0 24px 24px!important;
-    height:70px!important;
+    height:56px!important;
     border-top:1px solid #E5E7EB!important;
   }
-  #pg-app{padding-bottom:78px!important;}
-  .bnav-btn span{font-size:.75rem!important;}
-  .bnav-btn svg{width:26px!important;height:26px!important;}
+  #pg-app{padding-bottom:66px!important;}
+  .bnav-btn span{font-size:.70rem!important;}
+  .bnav-btn svg{width:22px!important;height:22px!important;}
 
   /* Three-column plan grid on desktop */
   #plans-list{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:18px!important;}
@@ -860,7 +860,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
   </div>
 
   <!-- Bottom Navigation Bar (WhatsApp style) -->
-  <nav id="bottom-nav" style="position:fixed;bottom:0;left:0;right:0;width:100%;background:#fff;border-top:1px solid #e5e7eb;display:-webkit-box;display:-webkit-flex;display:flex;z-index:9000;height:62px;box-shadow:0 -2px 12px rgba(0,0,0,.08);-webkit-transform:none;transform:none;will-change:auto;isolation:isolate;-webkit-backface-visibility:hidden;backface-visibility:hidden;">
+  <nav id="bottom-nav" style="position:fixed;bottom:0;left:0;right:0;width:100%;background:#fff;border-top:1px solid #e5e7eb;display:-webkit-box;display:-webkit-flex;display:flex;z-index:9000;height:50px;box-shadow:0 -2px 12px rgba(0,0,0,.08);-webkit-transform:none;transform:none;will-change:auto;isolation:isolate;-webkit-backface-visibility:hidden;backface-visibility:hidden;">
     <button class="bnav-btn act" id="tab-dash" data-t="dash" onclick="showTab('dash')" style="flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
       <span style="font-size:.62rem;font-weight:700;font-family:inherit;">Dashboard</span>
@@ -1275,7 +1275,10 @@ button.tab,button.plan-chip{box-shadow:none!important;}
 
       <div class="field">
         <label style="font-weight:700;color:#333;margin-bottom:6px;display:block;">Phone Number for Delivery</label>
-        <input id="m-sub-phone" type="tel" placeholder="08012345678" oninput="subAutoDetectNetwork(this.value)">
+        <div style="position:relative;">
+          <input id="m-sub-phone" type="tel" placeholder="08012345678" oninput="subAutoDetectNetwork(this.value);_phoneAutocomplete(this.value);" autocomplete="off">
+          <div id="m-sub-autocomplete" style="display:none;position:absolute;left:0;right:0;top:100%;z-index:10;margin-top:2px;border:1.5px solid #d0d8ff;border-radius:10px;overflow:hidden;background:#fff;box-shadow:0 4px 12px rgba(0,0,0,.10);"></div>
+        </div>
         <div id="m-sub-saved-phones" style="display:none;margin-top:7px;"></div>
         <div id="m-sub-net-detect" style="display:none;margin-top:5px;font-size:.76rem;font-weight:700;padding:4px 8px;border-radius:5px;"></div>
         <label style="font-size:.77rem;color:#555;margin-top:8px;margin-bottom:4px;display:block;">Network Provider <span style="font-weight:400;color:#1A56DB;">— tap to select</span></label>
@@ -2598,6 +2601,7 @@ function loadSubs() {
         }
         _gSubsCache = r.data;
         wrap.innerHTML = renderSubsList(r.data, false);
+        _mergeServerPhones(r.data);
       }
     );
   });
@@ -2859,35 +2863,53 @@ function _renderSavedPhones() {
   var wrap = $('m-sub-saved-phones');
   if (!wrap) return;
   var phones = _getSavedPhones();
-  // Filter out the profile phone — it's already pre-filled
-  var profilePhone = (gProfile && gProfile.phone) || '';
   var current = ($('m-sub-phone') ? $('m-sub-phone').value : '').replace(/^\s+|\s+$/g, '');
 
-  // Show chips for saved numbers
   if (!phones.length) {
     wrap.style.display = 'none';
     wrap.innerHTML = '';
     return;
   }
 
-  var html = '<div style="font-size:.72rem;font-weight:700;color:#888;margin-bottom:5px;letter-spacing:.04em;text-transform:uppercase;">Saved Numbers</div>';
-  html += '<div style="display:-webkit-box;display:-webkit-flex;display:flex;flex-wrap:wrap;gap:6px;">';
+  var html =
+    '<button type="button" id="saved-phones-toggle" onclick="_toggleSavedPhones()" ' +
+    'style="display:inline-flex;align-items:center;gap:6px;padding:5px 12px;font-size:.78rem;font-weight:800;' +
+    'border-radius:8px;border:1.5px solid #d0d8ff;background:#f5f7ff;color:#3c4c8c;cursor:pointer;' +
+    'font-family:inherit;-webkit-tap-highlight-color:transparent;">' +
+    '\\uD83D\\uDCF1 Saved numbers (' + phones.length + ') ' +
+    '<span id="saved-phones-arrow" style="font-size:.6rem;">&#9660;</span></button>' +
+    '<div id="saved-phones-list" style="display:none;margin-top:6px;border:1.5px solid #e0e4ea;border-radius:10px;overflow:hidden;background:#fff;">';
+
   for (var i = 0; i < phones.length; i++) {
     var p = phones[i];
     var isActive = (p === current);
     html +=
       '<button type="button" onclick="pickSavedPhone(\'' + esc(p) + '\')" ' +
-      'style="padding:5px 11px;font-size:.8rem;font-weight:700;border-radius:20px;border:1.5px solid ' +
-      (isActive ? '#1A56DB' : '#d0d8ff') + ';background:' +
-      (isActive ? '#e8eeff' : '#f5f7ff') + ';color:' +
-      (isActive ? '#1A56DB' : '#3c4c8c') + ';cursor:pointer;font-family:inherit;' +
+      'style="display:block;width:100%;text-align:left;padding:10px 14px;font-size:.84rem;font-weight:700;' +
+      'border:none;border-bottom:1px solid #f0f0f0;background:' +
+      (isActive ? '#eef2ff' : '#fff') + ';color:' +
+      (isActive ? '#1A56DB' : '#333') + ';cursor:pointer;font-family:inherit;' +
       '-webkit-tap-highlight-color:transparent;">' +
-      esc(p) +
+      (isActive ? '\\u2713 ' : '') + esc(p) +
       '</button>';
   }
   html += '</div>';
+
   wrap.innerHTML = html;
   wrap.style.display = 'block';
+}
+
+function _toggleSavedPhones() {
+  var list = $('saved-phones-list');
+  var arrow = $('saved-phones-arrow');
+  if (!list) return;
+  if (list.style.display === 'none') {
+    list.style.display = 'block';
+    if (arrow) arrow.innerHTML = '&#9650;';
+  } else {
+    list.style.display = 'none';
+    if (arrow) arrow.innerHTML = '&#9660;';
+  }
 }
 
 function pickSavedPhone(phone) {
@@ -2895,8 +2917,88 @@ function pickSavedPhone(phone) {
   if (!el) return;
   el.value = phone;
   subAutoDetectNetwork(phone);
-  _renderSavedPhones();   // re-render to highlight active chip
+  var list = $('saved-phones-list');
+  var arrow = $('saved-phones-arrow');
+  if (list) list.style.display = 'none';
+  if (arrow) arrow.innerHTML = '&#9660;';
+  _renderSavedPhones();
 }
+window._toggleSavedPhones = _toggleSavedPhones;
+window.pickSavedPhone = pickSavedPhone;
+
+function _mergeServerPhones(subs) {
+  if (!subs || !subs.length) return;
+  var key = _phonesKey();
+  if (!key) return;
+  var existing = _getSavedPhones();
+  for (var i = 0; i < subs.length; i++) {
+    var ph = subs[i] && subs[i].phone_number;
+    if (!ph) continue;
+    ph = ('' + ph).replace(/^\s+|\s+$/g, '');
+    if (ph.length < 10) continue;
+    var found = false;
+    for (var j = 0; j < existing.length; j++) {
+      if (existing[j] === ph) { found = true; break; }
+    }
+    if (!found) existing.push(ph);
+  }
+  if (existing.length > 5) existing = existing.slice(0, 5);
+  try { _store.set(key, JSON.stringify(existing)); } catch(e) {}
+  if (typeof _renderSavedPhones === 'function') _renderSavedPhones();
+}
+
+/* ── Phone autocomplete: suggest saved numbers as user types ── */
+function _phoneAutocomplete(typed) {
+  var box = $('m-sub-autocomplete');
+  if (!box) return;
+  typed = (typed || '').replace(/\s/g, '');
+
+  if (!typed || typed.length < 2 || typed.length >= 11) {
+    box.style.display = 'none';
+    box.innerHTML = '';
+    return;
+  }
+
+  var phones = _getSavedPhones();
+  var matches = [];
+  for (var i = 0; i < phones.length; i++) {
+    var p = phones[i].replace(/\s/g, '');
+    if (p.indexOf(typed) === 0 && p !== typed) {
+      matches.push(phones[i]);
+    }
+  }
+
+  if (!matches.length) {
+    box.style.display = 'none';
+    box.innerHTML = '';
+    return;
+  }
+
+  var html = '';
+  for (var j = 0; j < matches.length; j++) {
+    var m = matches[j];
+    var display = '<strong>' + esc(m.substring(0, typed.length)) + '</strong>' + esc(m.substring(typed.length));
+    html +=
+      '<button type="button" onclick="_pickAutocomplete(\'' + esc(m) + '\')" ' +
+      'style="display:block;width:100%;text-align:left;padding:10px 14px;font-size:.88rem;font-weight:600;' +
+      'border:none;border-bottom:1px solid #f0f0f0;background:#fff;color:#333;cursor:pointer;' +
+      'font-family:inherit;-webkit-tap-highlight-color:transparent;">' +
+      display + '</button>';
+  }
+  box.innerHTML = html;
+  box.style.display = 'block';
+}
+
+function _pickAutocomplete(phone) {
+  var el = $('m-sub-phone');
+  if (el) el.value = phone;
+  subAutoDetectNetwork(phone);
+  var box = $('m-sub-autocomplete');
+  if (box) { box.style.display = 'none'; box.innerHTML = ''; }
+  _renderSavedPhones();
+}
+window._phoneAutocomplete = _phoneAutocomplete;
+window._pickAutocomplete = _pickAutocomplete;
 
 function calcPlanDaily(plan, days) {
   var price = parseFloat(plan && plan.selling_price) || 0;
@@ -4984,7 +5086,7 @@ body,.card-sub,.plan-sub,.sub-meta,.msg-body,.notif-row,.row-label,.field label,
 .bnav-btn{color:#6b7280!important;}
 .bnav-btn.act{color:#3d9758!important;}
 .bnav-btn.act svg{stroke:#3d9758!important;}
-#bottom-nav{height:68px!important;box-shadow:0 -8px 26px rgba(15,23,42,.10)!important;border-top:1px solid #dbe3ef!important;}
+#bottom-nav{height:54px!important;box-shadow:0 -8px 26px rgba(15,23,42,.10)!important;border-top:1px solid #dbe3ef!important;}
 #pg-app{padding-bottom:76px!important;}
 
 /* Warm companion home */
