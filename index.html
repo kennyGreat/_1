@@ -89,6 +89,7 @@ html,body{width:100%;min-height:100%;background:#fff;font-family:Arial,Helvetica
 .terms-err.on{display:block;}
 
 /* ── MODAL ── */
+.nav-hidden{display:none!important;}
 .modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.55);z-index:800;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:20px 14px;}
 .modal.on{display:block;}
 .modal-box{background:#fff;border-radius:8px;max-width:440px;width:100%;margin:0 auto;overflow:hidden;}
@@ -465,8 +466,8 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
   #plans-list{grid-template-columns:1fr!important;}
   .tab-content{padding:10px 8px 28px!important;}
   .bnav-btn span{font-size:.58rem!important;}
-  #bottom-nav{height:42px!important;}
-  #pg-app{padding-bottom:56px!important;}
+  #bottom-nav{height:56px!important;}
+  #pg-app{padding-bottom:60px!important;}
 }
 
 /* ── Regular phones (360–599px) — default, no change needed ── */
@@ -503,8 +504,10 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 
   /* Bottom nav spans full width of app shell */
   #bottom-nav{max-width:740px!important;left:50%!important;right:auto!important;-webkit-transform:translateX(-50%)!important;transform:translateX(-50%)!important;border-radius:0 0 0 0!important;}
-  #pg-app{padding-bottom:56px!important;}
-  #bottom-nav{height:48px!important;}
+  #pg-app{padding-bottom:72px!important;}
+  #bottom-nav{height:68px!important;}
+  .bnav-btn span{font-size:.72rem!important;}
+  .bnav-btn svg{width:24px!important;height:24px!important;}
 
   /* Two-column plan grid */
   #plans-list{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:16px!important;}
@@ -550,10 +553,10 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
     -webkit-transform:translateX(-50%)!important;
     transform:translateX(-50%)!important;
     border-radius:0 0 24px 24px!important;
-    height:50px!important;
+    height:70px!important;
     border-top:1px solid #E5E7EB!important;
   }
-  #pg-app{padding-bottom:60px!important;}
+  #pg-app{padding-bottom:78px!important;}
   .bnav-btn span{font-size:.70rem!important;}
   .bnav-btn svg{width:22px!important;height:22px!important;}
 
@@ -858,7 +861,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
   </div>
 
   <!-- Bottom Navigation Bar (WhatsApp style) -->
-  <nav id="bottom-nav" style="position:fixed;bottom:0;left:0;right:0;width:100%;background:#fff;border-top:1px solid #e5e7eb;display:-webkit-box;display:-webkit-flex;display:flex;z-index:9000;height:44px;box-shadow:0 -2px 12px rgba(0,0,0,.08);-webkit-transform:none;transform:none;will-change:auto;isolation:isolate;-webkit-backface-visibility:hidden;backface-visibility:hidden;">
+  <nav id="bottom-nav" style="position:fixed;bottom:0;left:0;right:0;width:100%;background:#fff;border-top:1px solid #e5e7eb;display:-webkit-box;display:-webkit-flex;display:flex;z-index:9000;height:62px;box-shadow:0 -2px 12px rgba(0,0,0,.08);-webkit-transform:none;transform:none;will-change:auto;isolation:isolate;-webkit-backface-visibility:hidden;backface-visibility:hidden;">
     <button class="bnav-btn act" id="tab-dash" data-t="dash" onclick="showTab('dash')" style="flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
       <span style="font-size:.62rem;font-weight:700;font-family:inherit;">Dashboard</span>
@@ -1786,8 +1789,8 @@ function fmtN(n) {
   return '\u20A6' + v.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
-function openModal(id) { var m = $(id); if(m) m.className = 'modal on'; var nav = $('bottom-nav'); if(nav) nav.style.display = 'none'; }
-function closeModal(id) { var m = $(id); if(m) m.className = 'modal'; var nav = $('bottom-nav'); if(nav) nav.style.display = ''; }
+function openModal(id) { var m = $(id); if(m) m.className = 'modal on'; var nav = $('bottom-nav'); if(nav) nav.className = 'nav-hidden'; }
+function closeModal(id) { var m = $(id); if(m) m.className = 'modal'; var nav = $('bottom-nav'); if(nav) nav.className = ''; }
 
 function showScreen(id) {
   var ids = ['scr-w','scr-l','scr-s','scr-r'];
@@ -5084,7 +5087,7 @@ body,.card-sub,.plan-sub,.sub-meta,.msg-body,.notif-row,.row-label,.field label,
 .bnav-btn{color:#6b7280!important;}
 .bnav-btn.act{color:#3d9758!important;}
 .bnav-btn.act svg{stroke:#3d9758!important;}
-#bottom-nav{height:48px!important;box-shadow:0 -8px 26px rgba(15,23,42,.10)!important;border-top:1px solid #dbe3ef!important;}
+#bottom-nav{height:68px!important;box-shadow:0 -8px 26px rgba(15,23,42,.10)!important;border-top:1px solid #dbe3ef!important;}
 #pg-app{padding-bottom:76px!important;}
 
 /* Warm companion home */
