@@ -5674,7 +5674,32 @@ window.checkDataUsage = checkDataUsage;
 function registerPushToken() { /* no-op */ }
 window.registerPushToken = registerPushToken;
 
-/* Native bridge exports removed in web version */
+/* Notification system exports for reliable bell updates */
+window.notifLoad        = notifLoad;
+window.showNotifToast   = showNotifToast;
+window.notifUpdateBadge = notifUpdateBadge;
+window.notifRender      = notifRender;
+window._notifAll        = _notifAll;
+
+window.injectPushToBell = function(title, body, type) {
+  var n = {
+    id: '_push_' + Date.now() + '_' + Math.random().toString(36).substr(2,4),
+    title: title || 'DataBulge',
+    message: body || '',
+    type: type || 'info',
+    category: 'push',
+    icon: '\uD83D\uDD14',
+    is_read: false,
+    created_at: new Date().toISOString()
+  };
+  if (typeof _notifAll !== 'undefined') {
+    _notifAll.unshift(n);
+    var unread = 0;
+    for (var i = 0; i < _notifAll.length; i++) { if (!_notifAll[i].is_read) unread++; }
+    if (typeof notifUpdateBadge === 'function') notifUpdateBadge(unread);
+    if (_notifDrawerOpen && typeof notifRender === 'function') notifRender();
+  }
+};
 
 /* ═══ RETENTION SYSTEM ════════════════════════════════════════
    ES5 — Android 4.4+ compatible. No arrow functions, no const.
