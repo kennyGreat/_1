@@ -264,7 +264,7 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 .btn-google{border-radius:12px!important;min-height:42px!important;background:#fff!important;border:1.5px solid #E1E5EF!important;color:#3c4043!important;font-weight:700!important;box-shadow:0 2px 8px rgba(0,0,0,.06)!important;}
 
 /* App shell */
-#pg-app{background:var(--db-bg)!important;min-height:100vh!important;padding-bottom:22px!important;}
+#pg-app{background:var(--db-bg)!important;min-height:100vh!important;padding-bottom:90px!important;}
 .top-bar{
   background:#1A56DB!important;
   background:linear-gradient(135deg,#1A56DB,#1740B0)!important;
@@ -1742,6 +1742,8 @@ function _setSession(d) {
   // Keep window references in sync so cross-script-block code (notif system, push IIFE) sees the session
   window.gUser  = gUser;
   window.gToken = gToken;
+  // Pick up any FCM token that arrived before the session was established
+  /* pendingFcmToken removed in web version */
 }
 
 function _loadSession() {
@@ -1797,7 +1799,10 @@ function showScreen(id) {
 
 function showPage(id) {
   var app = $('pg-app');
+  var auth = $('pg-auth');
   if (app) app.className = 'pg on';
+  // Hide auth page completely to prevent blue background flash
+  if (auth) { auth.className = 'pg'; auth.style.display = 'none'; }
 }
 
 var _subsLastLoad  = 0;
@@ -2086,9 +2091,14 @@ function bootApp() {
   // (< 5s) without waiting for the poll cycle.
   dbStartWalletRealtime();
 
-  // Expose session state on window so cross-script-block code (notif system) can read it
+  // Expose session state on window so cross-script-block code (push IIFE, notif system) can read it
   window.gUser  = gUser;
   window.gToken = gToken;
+
+  // Request Capacitor push token — runs on native Android/iOS only, no-op on web
+  setTimeout(function() {
+    try { requestCapacitorPushToken(); } catch(e) {}
+  }, 2500);
 }
 
 
@@ -2346,7 +2356,7 @@ function _renderPlans(allPlans) {
         var _vd = parseInt(p.validity_days)||30;
         var _sz = (p.data_size||'').toLowerCase().replace(/\s+/g,'');
         var _szNum = parseFloat(_sz) || 0;
-        var _szUnit = _sz.replace(/[\d.]/g,'').trim();
+        var _szUnit = _sz.replace(/[\d.]/g,'').trim(); /* mb, gb, tb */
         html += '<div class="plan-card plan-card-animate ' + _accentC + '" data-sp="' + _sp + '" data-dp="' + _dp + '" data-vd="' + _vd + '" data-sz="' + esc2(_sz) + '" data-szn="' + _szNum + '" data-szu="' + esc2(_szUnit) + '" data-net="' + esc2(nn.toLowerCase()) + '" data-type="' + esc2(type.toLowerCase()) + '" data-search="' + esc2([nn.toLowerCase(), _sz, type.toLowerCase(), _sp, _dp, _vd].join('|')) + '">' +
           '<div>' +
             '<div class="plan-top">' +
@@ -2372,6 +2382,7 @@ function setPlanFilter(kind, value) {
   loadPlans();
 }
 
+/* ── Smart plan search — exact matches first, then smart filtering ── */
 function launchPlanSearch() {
   var inp = document.getElementById('plan-search');
   var raw = (inp ? inp.value : '').trim();
@@ -2397,7 +2408,10 @@ function launchPlanSearch() {
     .replace(/\bglo\s*mobile\b/g, 'glo')
     .trim();
 
-  /* Extract intent signals */
+  /* Split query into individual search words */
+  var words = q.split(/\s+/).filter(function(w) { return w.length > 0; });
+
+  /* Extract structured intent signals */
   var wantCheap    = /\b(cheap|cheapest|affordable|lowest|budget|small|tiny|least)\b/.test(q);
   var wantBig      = /\b(big|biggest|large|largest|most data|heavy|huge|max|maximum)\b/.test(q);
   var wantUnder    = q.match(/\b(under|below|less\s*than|at\s*most|max\s*price)\s*(\d+)/);
@@ -2412,11 +2426,9 @@ function launchPlanSearch() {
   var exactPrice  = wantExact  ? parseInt(wantExact[2])  : null;
   var dailyAmt    = wantDailyAmt ? parseInt(wantDailyAmt[1]) : null;
 
-  /* Extract network */
   var netMatch = q.match(/\b(mtn|glo|airtel|9mobile)\b/);
   var wantNet  = netMatch ? netMatch[1] : null;
 
-  /* Extract type */
   var wantType = null;
   if (/\bdaily\b/.test(q))           wantType = 'daily';
   else if (/\bweekly\b/.test(q))     wantType = 'weekly';
@@ -2425,17 +2437,19 @@ function launchPlanSearch() {
   else if (/\brouter\b/.test(q))     wantType = 'router';
   else if (/\balways.on\b/.test(q))  wantType = 'always on';
 
-  /* Extract size e.g. "2gb", "500mb", "1.5gb" */
   var sizeMatch = q.match(/(\d+(?:\.\d+)?)\s*(gb|mb|tb)/);
   var wantSzNum = sizeMatch ? parseFloat(sizeMatch[1]) : null;
   var wantSzUnit = sizeMatch ? sizeMatch[2] : null;
 
-  /* Extract standalone price number e.g. "1000", "500 plan" */
   var standalonePrice = null;
   if (!wantUnder && !wantOver && !wantAround && !wantExact && !wantDailyAmt) {
     var priceMatch = q.replace(/\b(mtn|glo|airtel|9mobile|daily|weekly|monthly|mega|router|gb|mb|tb|cheap|big|affordable)\b/g,'').match(/\b(\d{3,})\b/);
     if (priceMatch) standalonePrice = parseInt(priceMatch[1]);
   }
+
+  var hasStructuredQuery = wantNet || wantType || wantSzNum !== null || wantUnder || wantOver ||
+                           wantAround || wantExact || wantDailyAmt || standalonePrice !== null ||
+                           wantCheap || wantBig;
 
   var cards = document.querySelectorAll ? document.querySelectorAll('#plans-list .plan-card') : [];
   var results = [];
@@ -2450,32 +2464,57 @@ function launchPlanSearch() {
     var szu = c.getAttribute('data-szu') || '';
     var net = c.getAttribute('data-net') || '';
     var typ = c.getAttribute('data-type') || '';
+    var searchStr = (c.getAttribute('data-search') || '').toLowerCase();
+    var cardText = (c.textContent || c.innerText || '').toLowerCase();
     var score = 0;
-    var pass  = true;
+    var pass = false;
 
-    /* Hard filters — must pass all */
-    if (wantNet  && net !== wantNet)   { pass = false; }
-    if (wantType && typ.indexOf(wantType) === -1) { pass = false; }
-    if (underPrice  !== null && sp > underPrice)  { pass = false; }
-    if (overPrice   !== null && sp < overPrice)   { pass = false; }
-    if (exactPrice  !== null && sp !== exactPrice) { pass = false; }
-    if (aroundPrice !== null && (sp < aroundPrice * 0.75 || sp > aroundPrice * 1.30)) { pass = false; }
-    if (dailyAmt    !== null && Math.abs(dp - dailyAmt) > dailyAmt * 0.20) { pass = false; }
-    if (wantSzNum !== null && wantSzUnit !== null) {
-      /* Convert to MB for comparison */
-      var wantMB = wantSzUnit === 'gb' ? wantSzNum * 1024 : wantSzUnit === 'tb' ? wantSzNum * 1048576 : wantSzNum;
-      var planMB = szu === 'gb' ? szn * 1024 : szu === 'tb' ? szn * 1048576 : szn;
-      if (Math.abs(planMB - wantMB) > wantMB * 0.20) { pass = false; } /* ±20% tolerance */
+    /* TIER 1: Direct text match — every word in the query appears in the card */
+    var allWordsMatch = true;
+    var wordHits = 0;
+    for (var w = 0; w < words.length; w++) {
+      if (searchStr.indexOf(words[w]) > -1 || cardText.indexOf(words[w]) > -1) {
+        wordHits++;
+      } else {
+        allWordsMatch = false;
+      }
     }
-    if (standalonePrice !== null && Math.abs(sp - standalonePrice) > standalonePrice * 0.15) { pass = false; }
+    if (allWordsMatch && words.length > 0) {
+      pass = true;
+      score += 100 + wordHits * 20; /* exact match gets highest score */
+    }
+
+    /* TIER 2: Structured filters — network, type, size, price */
+    if (!pass && hasStructuredQuery) {
+      pass = true; /* start true, disqualify on mismatch */
+      if (wantNet  && net !== wantNet)   pass = false;
+      if (wantType && typ.indexOf(wantType) === -1) pass = false;
+      if (underPrice  !== null && sp > underPrice)  pass = false;
+      if (overPrice   !== null && sp < overPrice)   pass = false;
+      if (exactPrice  !== null && Math.abs(sp - exactPrice) > exactPrice * 0.05) pass = false;
+      if (aroundPrice !== null && (sp < aroundPrice * 0.85 || sp > aroundPrice * 1.15)) pass = false;
+      if (dailyAmt    !== null && Math.abs(dp - dailyAmt) > dailyAmt * 0.10) pass = false;
+      if (wantSzNum !== null && wantSzUnit !== null) {
+        var wantMB = wantSzUnit === 'gb' ? wantSzNum * 1024 : wantSzUnit === 'tb' ? wantSzNum * 1048576 : wantSzNum;
+        var planMB = szu === 'gb' ? szn * 1024 : szu === 'tb' ? szn * 1048576 : szn;
+        if (Math.abs(planMB - wantMB) > wantMB * 0.05) pass = false; /* tight ±5% match on size */
+      }
+      if (standalonePrice !== null && Math.abs(sp - standalonePrice) > standalonePrice * 0.08) pass = false;
+    }
+
+    /* TIER 3: Partial word match — at least half the words match */
+    if (!pass && words.length > 1 && wordHits >= Math.ceil(words.length * 0.5)) {
+      pass = true;
+      score += wordHits * 10;
+    }
 
     if (!pass) { c.style.display = 'none'; c.classList.remove('nugget-highlight'); continue; }
 
-    /* Scoring — rank by relevance */
+    /* Scoring for ranking */
     if (wantNet  && net === wantNet)   score += 30;
     if (wantType && typ.indexOf(wantType) > -1) score += 20;
-    if (wantCheap) score += (10000 / (sp + 1));        /* lower price = higher score */
-    if (wantBig)   score += szn * (szu === 'gb' ? 1024 : 1); /* bigger = higher */
+    if (wantCheap) score += (10000 / (sp + 1));
+    if (wantBig)   score += szn * (szu === 'gb' ? 1024 : 1);
     if (aroundPrice !== null) score += 20 - Math.abs(sp - aroundPrice) / aroundPrice * 20;
     if (standalonePrice !== null) score += 20 - Math.abs(sp - standalonePrice) / standalonePrice * 20;
     if (wantSzNum !== null) {
@@ -2493,7 +2532,7 @@ function launchPlanSearch() {
   if (results.length > 1) {
     results.sort(function(a, b) {
       if (b.score !== a.score) return b.score - a.score;
-      return a.sp - b.sp; /* tie-break: cheaper first */
+      return a.sp - b.sp;
     });
     var wrap = document.getElementById('plans-list');
     if (wrap) {
@@ -4410,7 +4449,13 @@ function earnStartAd() {
   if (!btn || btn.disabled || _earnAdInProgress) return;
   if (!window.gUser || !window.gToken) { window.toast && window.toast('Please log in first.'); return; }
   _earnAdInProgress = true;
-  earnShowWebTimer();
+
+  var isNative = (typeof window.Capacitor !== 'undefined' && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+  if (isNative) {
+    earnShowNativeAd();
+  } else {
+    earnShowWebTimer();
+  }
 }
 
 function earnShowWebTimer() {
@@ -4454,14 +4499,40 @@ function earnShowWebTimer() {
   }, 1000);
 }
 
+function earnShowNativeAd() {
+  var AdMob = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.AdMob;
+  if (!AdMob) { earnShowWebTimer(); return; }
 
+  var btn = document.getElementById('earn-watch-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Loading ad\u2026'; }
 
+  _earnAdStartedAt = new Date().toISOString();
+
+  AdMob.prepareRewardVideoAd({ adId: 'ca-app-pub-9059847852972551/7330185515', isTesting: false })
+    .then(function() { return AdMob.showRewardVideoAd(); })
+    .then(function() { earnOnComplete(); })
+    .catch(function() {
+      _earnAdInProgress = false;
+      earnResetAdSlot();
+      if (btn) { btn.disabled = false; btn.textContent = 'Watch Ad & Earn'; btn.style.background = ''; btn.style.color = ''; }
+      window.toast && window.toast('No ad available right now. Try again soon.');
+    });
+
+  if (AdMob.addListener) {
+    AdMob.addListener('onRewardedVideoAdRewarded', function() { earnOnComplete(); });
+    AdMob.addListener('onRewardedVideoAdFailedToLoad', function() {
+      _earnAdInProgress = false; earnResetAdSlot();
+      if (btn) { btn.disabled = false; btn.textContent = 'Watch Ad & Earn'; btn.style.background = ''; btn.style.color = ''; }
+      window.toast && window.toast('No ad available right now. Try again soon.');
+    });
+  }
+}
 
 function earnOnComplete() {
   var btn = document.getElementById('earn-watch-btn');
   if (btn) { btn.textContent = 'Claiming reward\u2026'; }
 
-  var platform = 'web';
+  var platform = (typeof window.Capacitor !== 'undefined' && window.Capacitor.getPlatform) ? window.Capacitor.getPlatform() : 'web';
 
   // Pass started_at so backend can verify ≥28 seconds elapsed
   window.rpc('grant_ad_reward', JSON.stringify({
@@ -4836,27 +4907,6 @@ html,body{background:radial-gradient(circle at top left,#EEF6FF 0,#F6F8FC 34%,#F
 .card-title,.sec-title{font-size:.72rem!important;letter-spacing:.10em!important;color:#667085!important;}
 .card-val{font-size:2rem!important;letter-spacing:-.06em!important;}
 .card-sub{font-size:.78rem!important;color:#667085!important;line-height:1.55!important;}
-.plan-filter-card{padding:16px!important;background:linear-gradient(135deg,#FFFFFF,#F8FBFF)!important;}
-.plan-chip{border-radius:16px!important;padding:10px 14px!important;background:#F7F9FC!important;border:0!important;box-shadow:inset 0 0 0 1px #E6EAF1!important;}
-.plan-chip.act{background:linear-gradient(135deg,#1A56DB,#3d9758)!important;color:#fff!important;box-shadow:0 10px 22px rgba(26,86,219,.18)!important;}
-.plan-count{background:#fff!important;border-radius:999px!important;padding:8px 12px!important;display:inline-block!important;width:auto!important;justify-self:start!important;box-shadow:0 8px 18px rgba(15,23,42,.06)!important;}
-.plan-card{position:relative;overflow:hidden;border:0!important;border-radius:28px!important;box-shadow:0 16px 35px rgba(15,23,42,.10)!important;background:#fff!important;-webkit-transition:.22s ease!important;transition:.22s ease!important;}
-.plan-card:before{content:'';position:absolute;top:-48px;right:-48px;width:108px;height:108px;border-radius:50%;background:rgba(26,86,219,.09);}
-.plan-card.net-mtn-accent{background:linear-gradient(145deg,#FFF9DB,#FFFFFF 58%)!important;}
-.plan-card.net-airtel-accent{background:linear-gradient(145deg,#FFF0F2,#FFFFFF 58%)!important;}
-.plan-card.net-glo-accent{background:linear-gradient(145deg,#ECFFF4,#FFFFFF 58%)!important;}
-.plan-card.net-9mobile-accent{background:linear-gradient(145deg,#E9FFFB,#FFFFFF 58%)!important;}
-.plan-size{font-size:1.15rem!important;line-height:1.18!important;letter-spacing:-.05em!important;}
-.plan-price{font-size:1.55rem!important;color:#111827!important;border-top:0!important;padding-top:12px!important;}
-.plan-sub strong{font-size:1.02rem;color:#3d9758!important;}
-.plan-btn{min-height:44px!important;border-radius:16px!important;background:linear-gradient(135deg,#3d9758,#2F7D49)!important;color:#fff!important;box-shadow:0 12px 22px rgba(61,151,88,.20)!important;}
-.btn-blue,#plans-fund-btn,#d-fund-btn,#af-fund-btn,#m-sub-btn,.pay-btn,#m-pay-btn{background:linear-gradient(135deg,#3d9758,#2F7D49)!important;color:#fff!important;box-shadow:0 12px 22px rgba(61,151,88,.18)!important;}
-.btn-lite{border:0!important;background:#EFF4FF!important;color:#1A56DB!important;}
-.sub-row{background:linear-gradient(135deg,#FFFFFF,#F7FBFF)!important;}
-.prog-bar{height:9px!important;border-radius:999px!important;background:#EEF2F6!important;}
-.prog-fill{border-radius:999px!important;background:linear-gradient(90deg,#1A56DB,#3d9758)!important;}
-.msg-row.unread,.notif-row.unread{background:linear-gradient(135deg,#EEF4FF,#FFFFFF)!important;}
-#toast{border-radius:18px!important;}
 .friend-daily{display:-webkit-box;display:-webkit-flex;display:flex;gap:10px;-webkit-box-align:center;-webkit-align-items:center;align-items:center;background:linear-gradient(135deg,#FFF7D6,#FFFFFF)!important;border:1px solid #FFE8A3!important;border-radius:22px!important;padding:13px 14px!important;margin-bottom:14px!important;box-shadow:0 12px 30px rgba(245,158,11,.12)!important;}
 .friend-daily-icon{width:42px;height:42px;border-radius:16px;background:#fff;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;font-size:1.25rem;box-shadow:0 8px 18px rgba(245,158,11,.14);-webkit-flex-shrink:0;flex-shrink:0;}
 .friend-daily-title{font-size:.86rem;font-weight:950;letter-spacing:-.02em;color:#7C4A03;margin-bottom:2px;}
@@ -4976,6 +5026,7 @@ body,.card-sub,.plan-sub,.sub-meta,.msg-body,.notif-row,.row-label,.field label,
 /* Easier plan discovery */
 #tc-plans > .card:first-child{border-radius:26px!important;background:linear-gradient(135deg,#ffffff,#f8fafc)!important;border-color:#dbe3ef!important;}
 #tc-plans .card-title{font-size:.78rem!important;color:#374151!important;}
+/* Ensure payment option card clears the sticky top-bar on load */
 html{scroll-padding-top:70px;}
 #tc-plans{scroll-margin-top:70px;}
 #d-bal{font-size:2rem!important;color:#07111f!important;}
@@ -5191,6 +5242,7 @@ function dbDismissPushCard(card) {
   }, 380);
 }
 
+// Expose for Capacitor push tap (native layer calls this)
 window.dbShowPushCard  = dbShowPushCard;
 window.dbDismissPushCard = dbDismissPushCard;
 
@@ -5515,13 +5567,11 @@ function checkDataUsage(subscriptionId, mbUsed, mbTotal) {
 }
 window.checkDataUsage = checkDataUsage;
 
+/* Push tokens disabled in web version */
+function registerPushToken() { /* no-op */ }
+window.registerPushToken = registerPushToken;
 
-
-
-/* Web bridge — expose functions needed by the notification system */
-window.parseHash       = parseHash;
-window.notifLoad       = notifLoad;
-window.showNotifToast  = showNotifToast;
+/* Native bridge exports removed in web version */
 
 /* ═══ RETENTION SYSTEM ════════════════════════════════════════
    ES5 — Android 4.4+ compatible. No arrow functions, no const.
@@ -5628,7 +5678,7 @@ function renderDynamicStrip() {
       nuggets.push({
         cls: '', icon: '\uD83D\uDCB3',
         text: 'Tired of always going to your bank to transfer money to your DataBulge wallet? Set up Auto-Fund once — the minimum is \u20A6100 — and your wallet is credited automatically every day until your plan is complete. Cancel anytime.',
-        action: function() { nuggetLaunchFeature('fund'); }
+        action: function() { nuggetLaunchFeature('autofund'); }
       });
       nuggets.push({
         cls: 'warn', icon: '\uD83D\uDCB8',
@@ -5699,33 +5749,28 @@ function renderDynamicStrip() {
 
 function dynamicStripAction(){if(_dynamicStripAction)_dynamicStripAction();}
 
-/* ── highlightTarget: navigate to tab, scroll to element, flash green ring ── */
 function highlightTarget(tabName, elementId) {
   showTab(tabName);
-  /* Wait for tab content to be visible, then scroll + highlight */
   setTimeout(function() {
     var el = elementId ? document.getElementById(elementId) : null;
     if (!el) {
-      /* No specific element — just scroll to top of tab */
       try { window.scrollTo(0, 0); document.documentElement.scrollTop = 0; document.body.scrollTop = 0; } catch(e) {}
       return;
     }
-    /* Scroll element into view */
-    try {
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    } catch(e) {
-      try { el.scrollIntoView(true); } catch(x) {}
-    }
-    /* Add highlight ring */
+    try { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch(e) { try { el.scrollIntoView(true); } catch(x) {} }
     el.classList.add('nugget-highlight');
-    /* Remove highlight after 3.5s (3 pulse cycles × ~1s each + buffer) */
-    setTimeout(function() {
-      el.classList.remove('nugget-highlight');
-    }, 3500);
+    setTimeout(function() { el.classList.remove('nugget-highlight'); }, 3500);
   }, 160);
 }
 window.highlightTarget = highlightTarget;
 
+/* ── nuggetLaunchFeature: deep-launch a feature directly from a nugget tap ──
+   type = 'plan'      → go to Buy Data, open exact plan modal, focus phone field
+   type = 'plan_sub'  → go to My Plan tab, highlight specific sub-row-{subId}
+   type = 'autofund'  → open Fund modal, focus auto-fund amount input
+   type = 'fund'      → open Fund modal (wallet top-up)
+   planId             → exact plan UUID from data_plans table
+────────────────────────────────────────────────────────────────────────────── */
 function nuggetLaunchFeature(type, planOrSubId) {
   if (type === 'autofund') {
     openFundModal();
@@ -5740,31 +5785,56 @@ function nuggetLaunchFeature(type, planOrSubId) {
     }, 320);
     return;
   }
-  if (type === 'fund') { openFundModal(); return; }
-  if (type === 'plan_sub') { highlightTarget('subs', planOrSubId ? ('sub-row-' + planOrSubId) : null); return; }
+
+  if (type === 'fund') {
+    openFundModal();
+    return;
+  }
+
+  if (type === 'plan_sub') {
+    highlightTarget('subs', planOrSubId ? ('sub-row-' + planOrSubId) : null);
+    return;
+  }
+
   if (type === 'plan') {
+    /* Switch to Buy Data tab and scroll to top */
     showTab('plans');
-    setTimeout(function() { try { window.scrollTo(0,0); document.documentElement.scrollTop=0; document.body.scrollTop=0; } catch(e){} }, 0);
+    setTimeout(function() {
+      try { window.scrollTo(0,0); document.documentElement.scrollTop=0; document.body.scrollTop=0; } catch(e) {}
+    }, 0);
+
     function _openPlanById(planId) {
       var wrap = document.getElementById('plans-list');
       var planKey = planId ? ('id_' + String(planId)) : null;
+
+      /* If no planId or plan not yet in DOM, fall back to first rendered plan-btn */
       if (!planKey || !wrap || !wrap._planById || !wrap._planById[String(planId)]) {
         var firstBtn = wrap && wrap.querySelector('.plan-btn');
-        if (firstBtn) { var onc = firstBtn.getAttribute('onclick')||''; var mm = onc.match(/openSubModal\('([^']+)'\)/); if (mm) planKey = mm[1]; }
+        if (firstBtn) {
+          var onc = firstBtn.getAttribute('onclick') || '';
+          var m = onc.match(/openSubModal\('([^']+)'\)/);
+          if (m) planKey = m[1];
+        }
       }
+
       if (!planKey) return false;
+
+      /* Highlight the matching plan card */
       var cards = wrap ? wrap.querySelectorAll('.plan-card') : [];
       for (var c = 0; c < cards.length; c++) {
         var btn = cards[c].querySelector('.plan-btn');
-        if (btn && (btn.getAttribute('onclick')||'').indexOf(planKey) > -1) {
+        if (btn && (btn.getAttribute('onclick') || '').indexOf(planKey) > -1) {
           cards[c].classList.add('nugget-highlight');
           try { cards[c].scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch(e) {}
           setTimeout(function(card){ card.classList.remove('nugget-highlight'); }, 3500, cards[c]);
           break;
         }
       }
+
+      /* Open the subscription modal */
       if (typeof openSubModal === 'function') {
         openSubModal(planKey);
+        /* Focus phone field */
         setTimeout(function() {
           var ph = document.getElementById('m-sub-phone');
           if (ph) {
@@ -5777,19 +5847,25 @@ function nuggetLaunchFeature(type, planOrSubId) {
       }
       return true;
     }
+
+    /* Try immediately — plans may already be loaded */
     var wrap = document.getElementById('plans-list');
     if (wrap && wrap._planById && Object.keys(wrap._planById).length) {
       setTimeout(function(){ _openPlanById(planOrSubId); }, 120);
       return;
     }
+
+    /* Plans not yet loaded — poll until they are (max 5s) */
     var _tries = 0;
     var _iv = setInterval(function() {
-      _tries++; if (_tries > 25) { clearInterval(_iv); return; }
+      _tries++;
+      if (_tries > 25) { clearInterval(_iv); return; }
       var w = document.getElementById('plans-list');
       if (!w || !w._planById || !Object.keys(w._planById).length) return;
       clearInterval(_iv);
       setTimeout(function(){ _openPlanById(planOrSubId); }, 80);
     }, 200);
+    return;
   }
 }
 window.nuggetLaunchFeature = nuggetLaunchFeature;
@@ -5838,11 +5914,11 @@ function _buildNuggetPool() {
       nuggets.push({ icon: '\uD83D\uDCF6', text: 'Pay ' + fmtN(sDaily) + ' for ' + sPayLeft + ' more day' + (sPayLeft !== 1 ? 's' : '') + ' and your ' + sSize + ' ' + sNet + ' data gets delivered. Never run out of data again.', action: (function(sid){ return function(){ nuggetLaunchFeature('plan_sub', sid); }; })(s.id) });
       nuggets.push({ icon: '\uD83D\uDCB3', text: 'Tired of always going to your bank to transfer money to your DataBulge wallet? Set up Auto-Fund once — the minimum is \u20A6100 — and your wallet is credited automatically every day until your plan is complete. Cancel anytime.', action: function(){ nuggetLaunchFeature('autofund'); } });
       nuggets.push({ icon: '\uD83D\uDCB8', text: 'Always keep your DataBulge wallet funded. You never know when you will run out of data and there will be no money in your account. A little payment a day keeps the data on.', action: function(){ nuggetLaunchFeature('fund'); } });
-      nuggets.push({ icon: '\uD83D\uDCC5', text: sSize + ' ' + sNet + ' plan — split over ' + sDays + ' days, that is just ' + fmtN(sDaily) + ' at a time. Small payments, big data.', action: (function(sid){ return function(){ nuggetLaunchFeature('plan_sub', sid); }; })(s.id) });
+      nuggets.push({ icon: '\uD83D\uDCC5', text: sSize + ' ' + sNet + ' plan — split over ' + sDays + ' days, that is just ' + fmtN(sDaily) + ' at a time. Small payments, big data.', action: (function(pid){ return function(){ nuggetLaunchFeature('plan', pid); }; })(sPlanId) });
       nuggets.push({ icon: '\uD83D\uDCB0', text: 'Tap Pay Now whenever you are ready — you are always in control of when you pay.', action: (function(pid){ return function(){ nuggetLaunchFeature('plan', pid); }; })(sPlanId) });
     }
   } else {
-    var _cPlanId = (typeof _plansCache !== 'undefined' && _plansCache && _plansCache.length) ? _plansCache.reduce(function(a,b){ return (parseFloat(a.selling_price)||0)<=(parseFloat(b.selling_price)||0)?a:b; }).id : null;
+    var _cPlanId = (_plansCache && _plansCache.length) ? _plansCache.reduce(function(a,b){ return (parseFloat(a.selling_price)||0) <= (parseFloat(b.selling_price)||0) ? a : b; }).id : null;
     nuggets.push({ icon: '\uD83D\uDCF6', text: 'Start small. Pay ' + fmtN(starterDaily) + ' a day for ' + starterDays + ' days and get ' + starterSize + ' of data delivered straight to your phone. No lump sum needed.', action: (function(pid){ return function(){ nuggetLaunchFeature('plan', pid); }; })(_cPlanId) });
     nuggets.push({ icon: '\uD83D\uDCB3', text: 'No need to always go to your bank to transfer money. Set up Auto-Fund once and your wallet tops up automatically every day until your plan is complete. Cancel anytime.', action: function(){ nuggetLaunchFeature('autofund'); } });
     nuggets.push({ icon: '\uD83D\uDCB8', text: 'Always keep your DataBulge wallet funded. You never know when you will run out of data and there will be no money in your account. A little payment a day keeps the data on.', action: function(){ nuggetLaunchFeature('fund'); } });
@@ -6244,8 +6320,14 @@ window.confirmAirtime = confirmAirtime;
 
 
 
-
-
+/* ── Request push token from Capacitor native plugins ───
+   Requires @capacitor/push-notifications installed:
+   npm install @capacitor/push-notifications
+   npx cap sync android
+──────────────────────────────────────────────────────── */
+/* Push tokens disabled in web version */
+function requestCapacitorPushToken() { /* no-op */ }
+window.requestCapacitorPushToken = requestCapacitorPushToken;
 
 /* ── Responsive bottom nav positioning ──────────────── */
 function fixBottomNav() {
@@ -6300,6 +6382,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
       clearInterval(_bootCheck);
       notifLoad();
       setTimeout(notifStartRealtime, 1000);
+      setTimeout(requestCapacitorPushToken, 2000);
       setInterval(notifLoad, 10000);  // poll every 10s so the bell badge reflects new delivery/refund events promptly
     }
   }, 800);
@@ -6328,33 +6411,46 @@ window.detectAndSaveLocation = detectAndSaveLocation;
   function safeEsc(s){try{return (typeof esc==='function')?esc(s):(String(s||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];}));}catch(e){return String(s||'');}}
   function todayMessage(){
     var arr=[
-      ["\uD83C\uDF24\uFE0F","Small money can still keep you connected. Pick a plan and move at your pace."],
-      ["\uD83D\uDC9A","No pressure today. Fund what you can, when you can."],
-      ["\uD83D\uDE80","Your data life should feel simple. Start small and stay online."],
-      ["\u2728","You are one tiny step away from staying connected today."],
-      ["\uD83D\uDCF6","DataBulge is here to help you breathe easier, not stress you."]
+      ['\uD83C\uDF24\uFE0F','Small money can still keep you connected. Pick a plan and move at your pace.'],
+      ['\uD83D\uDC9A','No pressure today. Fund what you can, when you can.'],
+      ['\uD83D\uDE80','Your data life should feel simple. Start small and stay online.'],
+      ['\u2728','You are one tiny step away from staying connected today.'],
+      ['\uD83D\uDCF6','DataBulge is here to help you breathe easier, not stress you.']
     ];
     var d=new Date(); return arr[d.getDay()%arr.length];
   }
   function ensureCompanionHero(){
-    var tc=byId("tc-dash"); if(!tc) return;
-    var old=byId("friend-hero");
+    var tc=byId('tc-dash'); if(!tc) return;
+    var old=byId('friend-hero');
     var bal=money(window.gBal||0);
-    var html="<div class=\"friend-hero\" id=\"friend-hero\"><div class=\"friend-hero-top\"><div><div class=\"friend-kicker\">Welcome Back,</div><div class=\"friend-title\">Let\u2019s keep you connected today.</div><div class=\"friend-sub\">Buy data now, pay small small, and stay online without pressure.</div></div><div class=\"friend-pill\">\uD83D\uDCF6 I am your data friend</div></div><div class=\"friend-balance\"><div><div class=\"friend-bal-label\">Available balance</div><div class=\"friend-bal-val\" id=\"friend-bal-val\">"+bal+"</div></div><div style=\"font-size:.76rem;opacity:.82;font-weight:800;text-align:right;\">Ready when you are</div></div><div class=\"friend-cta-row\"><button class=\"friend-cta primary\" onclick=\"openFundModal()\" ontouchstart=\"\">Add small money</button><button class=\"friend-cta secondary\" onclick=\"dbGoSoftPay();\" ontouchstart=\"\">Find a plan</button></div></div><div class=\"friend-quick-grid\" id=\"friend-quick-grid\"><button class=\"friend-action-card fund\" onclick=\"openFundModal()\" ontouchstart=\"\"><span class=\"emoji\">\uD83D\uDC9A</span><strong>Fund with ease</strong><span>Your wallet updates automatically after transfer.</span></button><button class=\"friend-action-card plan\" onclick=\"dbGoSoftPay();\" ontouchstart=\"\"><span class=\"emoji\">\uD83C\uDFAF</span><strong>Choose your vibe</strong><span>MTN, Airtel, Glo or 9mobile \u2014 paid your way.</span></button></div>";
-    if(old){ var bv=byId("friend-bal-val"); if(bv) bv.innerHTML=bal; return; }
+    var html=''+
+      '<div class="friend-hero" id="friend-hero">'+
+        '<div class="friend-hero-top"><div><div class="friend-kicker">Welcome Back,</div>'+
+        '<div class="friend-title">Let\u2019s keep you connected today.</div>'+
+        '<div class="friend-sub">Buy data now, pay small small, and stay online without pressure.</div></div>'+
+        '<div class="friend-pill">\uD83D\uDCF6 I am your data friend</div></div>'+
+        '<div class="friend-balance"><div><div class="friend-bal-label">Available balance</div><div class="friend-bal-val" id="friend-bal-val">'+bal+'</div></div><div style="font-size:.76rem;opacity:.82;font-weight:800;text-align:right;">Ready when you are</div></div>'+
+        '<div class="friend-cta-row"><button class="friend-cta primary" onclick="openFundModal()" ontouchstart="">Add small money</button><button class="friend-cta secondary" onclick="dbGoSoftPay();" ontouchstart="">Find a plan</button></div>'+
+      '</div>'+
+      '<div class="friend-quick-grid" id="friend-quick-grid"><button class="friend-action-card fund" onclick="openFundModal()" ontouchstart=""><span class="emoji">\uD83D\uDC9A</span><strong>Fund with ease</strong><span>Your wallet updates automatically after transfer.</span></button><button class="friend-action-card plan" onclick="dbGoSoftPay();" ontouchstart=""><span class="emoji">\uD83C\uDFAF</span><strong>Choose your vibe</strong><span>MTN, Airtel, Glo or 9mobile \u2014 paid your way.</span></button></div>';
+    if(old){
+      var bv=byId('friend-bal-val'); if(bv) bv.innerHTML=bal;
+      return;
+    }
     var first=tc.firstChild;
-    var box=document.createElement("div"); box.innerHTML=html;
+    var box=document.createElement('div'); box.innerHTML=html;
     while(box.firstChild) tc.insertBefore(box.firstChild, first);
   }
   function ensureStickyCTA(){
-    if(byId("friend-sticky-cta")) return;
-    var d=document.createElement("div");
-    d.className="friend-sticky-cta"; d.id="friend-sticky-cta";
-    d.innerHTML="<div class=\"friend-sticky-inner\"><button class=\"fund\" onclick=\"openFundModal()\">\uD83D\uDC9A Fund account</button><button class=\"plans\" onclick=\"dbGoSoftPay();\">\uD83D\uDCF6 Pick plan</button></div>";
+    if(byId('friend-sticky-cta')) return;
+    var d=document.createElement('div');
+    d.className='friend-sticky-cta'; d.id='friend-sticky-cta';
+    d.innerHTML='<div class="friend-sticky-inner"><button class="fund" onclick="openFundModal()">\uD83D\uDC9A Fund account</button><button class="plans" onclick="dbGoSoftPay();">\uD83D\uDCF6 Pick plan</button></div>';
     document.body.appendChild(d);
-    document.body.className += " friend-show-sticky";
+    document.body.className += ' friend-show-sticky';
   }
   function polishCopy(){
+    var f=byId('plans-fund-btn'); if(f) f.innerHTML='+ Add small money';
     var dbal=byId('d-va'); if(dbal && /Loading|Virtual|account|Bank/i.test(dbal.textContent||'')){
       if(!dbal.getAttribute('data-friendly')){ dbal.setAttribute('data-friendly','1'); }
     }
@@ -6899,8 +6995,10 @@ function doChangePassword() {
 })();
 </script>
 
-
-
+<script>
+/* Web version: native bridge removed */
+window.isDataBulgeNativeApp = function() { return false; };
+</script>
 
 </body>
 </html>
