@@ -898,6 +898,19 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <div id="hero-bal-status" style="display:none;font-size:.72rem;font-weight:800;margin-top:5px;opacity:.9;"></div>
       <button class="hero-fund-btn" id="d-fund-btn" onclick="openFundModal()" ontouchstart="">+ Add small money</button>
     </div>
+
+    <!-- Auto-Fund active status card — only visible when mandate is active -->
+    <div id="dash-autofund-card" style="display:none;background:linear-gradient(135deg,#eaf9f0,#f0fdf4);border:1.5px solid #86efac;border-radius:18px;padding:13px 15px;margin-bottom:12px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:1.2rem;">&#128179;</span>
+          <span style="font-size:.82rem;font-weight:900;color:#166534;">Auto-Fund Active</span>
+        </div>
+        <span style="font-size:.68rem;background:#dcfce7;color:#166534;border-radius:20px;padding:2px 8px;font-weight:800;">LIVE</span>
+      </div>
+      <div id="dash-af-detail" style="font-size:.76rem;color:#15803d;margin-bottom:10px;line-height:1.5;"></div>
+      <button onclick="dashCancelAutoFund()" style="width:100%;padding:9px;background:#fff;color:#dc2626;border:1.5px solid #fca5a5;border-radius:10px;font-size:.78rem;font-weight:800;font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;">&#9209; Cancel Auto-Fund</button>
+    </div>
     <div class="streak-strip" id="streak-strip" style="display:none;">
       <div class="streak-fire" id="streak-fire">&#128293;</div>
       <div style="-webkit-box-flex:1;-webkit-flex:1;flex:1;">
@@ -2340,7 +2353,7 @@ function _renderPlans(allPlans) {
         shown.push(p);
       }
       html += '<div class="plan-count" id="plan-count-lbl">' + shown.length + ' plan' + (shown.length === 1 ? '' : 's') + ' available</div>';
-      html += '<div class="plan-search-wrap"><span class="plan-search-icon">🔍</span><input class="plan-search-input" id="plan-search" type="text" placeholder="Search by size, network, price, days…" onkeydown="if(event.keyCode===13||event.which===13){launchPlanSearch();}" autocomplete="off" autocorrect="off" spellcheck="false"><button class="plan-search-btn" onclick="launchPlanSearch()" type="button">Search</button><button class="plan-search-clear" id="plan-search-clear" onclick="clearPlanSearch()" type="button" style="display:none;">✕</button></div>';
+      html += '<div class="plan-search-wrap"><span class="plan-search-icon">🔍</span><input class="plan-search-input" id="plan-search" type="text" placeholder="Search by size, network, price, days…" onkeydown="if(event.keyCode===13||event.which===13){launchPlanSearch();}" oninput="_debounceSearch()" autocomplete="off" autocorrect="off" spellcheck="false"><button class="plan-search-btn" onclick="launchPlanSearch()" type="button">Search</button><button class="plan-search-clear" id="plan-search-clear" onclick="clearPlanSearch()" type="button" style="display:none;">✕</button></div>';
 
       if (!shown.length) {
         html += '<div class="empty" style="grid-column:1/-1;">No plan found under this selection.</div>';
@@ -2361,7 +2374,7 @@ function _renderPlans(allPlans) {
         var _sz = (p.data_size||'').toLowerCase().replace(/\s+/g,'');
         var _szNum = parseFloat(_sz) || 0;
         var _szUnit = _sz.replace(/[\d.]/g,'').trim(); /* mb, gb, tb */
-        html += '<div class="plan-card plan-card-animate ' + _accentC + '" data-sp="' + _sp + '" data-dp="' + _dp + '" data-vd="' + _vd + '" data-sz="' + esc2(_sz) + '" data-szn="' + _szNum + '" data-szu="' + esc2(_szUnit) + '" data-net="' + esc2(nn.toLowerCase()) + '" data-type="' + esc2(type.toLowerCase()) + '" data-search="' + esc2([nn.toLowerCase(), _sz, type.toLowerCase(), _sp, _dp, _vd].join('|')) + '">' +
+        html += '<div class="plan-card plan-card-animate ' + _accentC + '" data-plan-id="' + String(p.id) + '" data-sp="' + _sp + '" data-dp="' + _dp + '" data-vd="' + _vd + '" data-sz="' + esc2(_sz) + '" data-szn="' + _szNum + '" data-szu="' + esc2(_szUnit) + '" data-net="' + esc2(nn.toLowerCase()) + '" data-type="' + esc2(type.toLowerCase()) + '" data-search="' + esc2([nn.toLowerCase(), _sz, type.toLowerCase(), _sp, _dp, _vd].join('|')) + '">' +
           '<div>' +
             '<div class="plan-top">' +
               '<span class="plan-net ' + pillC + '">' + esc2(nn) + '</span>' +
@@ -2386,8 +2399,19 @@ function setPlanFilter(kind, value) {
   loadPlans();
 }
 
+/* ── Debounced live search — triggers as user types ── */
+var _searchTimer = null;
+function _debounceSearch() {
+  if (_searchTimer) clearTimeout(_searchTimer);
+  _searchTimer = setTimeout(function() {
+    try { launchPlanSearch(); } catch(e) {}
+  }, 300);
+}
+window._debounceSearch = _debounceSearch;
+
 /* ── Smart plan search — exact matches first, then smart filtering ── */
 function launchPlanSearch() {
+  try {
   var inp = document.getElementById('plan-search');
   var raw = (inp ? inp.value : '').trim();
   if (!raw) { clearPlanSearch(); return; }
@@ -2571,6 +2595,7 @@ function launchPlanSearch() {
   var clr = document.getElementById('plan-search-clear');
   if (clr) clr.style.display = 'block';
   try { if (inp) inp.blur(); } catch(e) {}
+  } catch(searchErr) { /* silently handle search errors */ }
 }
 
 function clearPlanSearch() {
