@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy — DataBulge</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background: #f4f6fb;
+    color: #1a1a2e;
+    font-size: 15px;
+    line-height: 1.75;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: linear-gradient(135deg, #0f2952 0%, #173A73 50%, #1A56DB 100%);
+    padding: 48px 24px 40px;
+    text-align: center;
+    color: #fff;
+  }
+  .header-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  .logo-icon {
+    width: 52px; height: 52px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .logo-icon svg { width: 32px; height: 32px; }
+  .logo-name { text-align: left; }
+  .logo-name span:first-child { display: block; font-size: 18px; font-weight: 300; letter-spacing: 1px; opacity: .9; }
+  .logo-name span:last-child  { display: block; font-size: 22px; font-weight: 800; letter-spacing: .5px; }
+  .header h1 { font-size: 28px; font-weight: 700; margin-bottom: 8px; }
+  .header-meta { font-size: 13px; opacity: .75; display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; }
+  .header-meta span::before { content: '📅 '; }
+
+  /* ── CONTAINER ── */
+  .container { max-width: 820px; margin: 0 auto; padding: 0 20px 60px; }
+
+  /* ── INTRO CARD ── */
+  .intro {
+    background: #fff;
+    border-radius: 14px;
+    padding: 28px 32px;
+    margin: 32px 0 24px;
+    border-left: 4px solid #1A56DB;
+    box-shadow: 0 2px 12px rgba(26,86,219,.08);
+    font-size: 15px;
+    color: #333;
+  }
+  .intro p + p { margin-top: 12px; }
+
+  /* ── SECTION ── */
+  .section {
+    background: #fff;
+    border-radius: 14px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,.05);
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 20px 28px;
+    background: #f8faff;
+    border-bottom: 1px solid #e8eef8;
+    cursor: pointer;
+    user-select: none;
+  }
+  .section-number {
+    width: 32px; height: 32px;
+    background: #1A56DB;
+    color: #fff;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700;
+    flex-shrink: 0;
+  }
+  .section-title { font-size: 16px; font-weight: 700; color: #0f2952; flex: 1; }
+  .section-chevron { font-size: 12px; color: #888; transition: transform .25s; }
+  .section.open .section-chevron { transform: rotate(180deg); }
+  .section-body { padding: 24px 28px; display: none; }
+  .section.open .section-body { display: block; }
+
+  /* ── INFO TABLE (Section 1) ── */
+  .info-table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+  .info-table td { padding: 9px 12px; font-size: 14px; border-bottom: 1px solid #f0f2f8; }
+  .info-table td:first-child { font-weight: 600; color: #555; width: 140px; white-space: nowrap; }
+  .info-table td:last-child { color: #1a1a2e; }
+  .info-table tr:last-child td { border-bottom: none; }
+  .info-table a { color: #1A56DB; text-decoration: none; }
+  .info-table a:hover { text-decoration: underline; }
+
+  /* ── SUBSECTION ── */
+  .sub-label {
+    font-size: 13px; font-weight: 700; color: #1A56DB;
+    text-transform: uppercase; letter-spacing: .06em;
+    margin: 20px 0 8px;
+  }
+  .sub-label:first-child { margin-top: 0; }
+
+  /* ── LISTS ── */
+  ul.policy-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 16px;
+  }
+  ul.policy-list li {
+    padding: 7px 0 7px 22px;
+    position: relative;
+    font-size: 14.5px;
+    color: #333;
+    border-bottom: 1px solid #f5f6fb;
+  }
+  ul.policy-list li:last-child { border-bottom: none; }
+  ul.policy-list li::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 17px;
+    width: 7px; height: 7px;
+    background: #1A56DB;
+    border-radius: 50%;
+  }
+  ul.policy-list li strong { color: #0f2952; }
+
+  /* ── NOT COLLECT / NOT USE ── */
+  .no-list li::before { background: #dc2626; }
+  .no-label {
+    font-size: 13px; font-weight: 700; color: #dc2626;
+    text-transform: uppercase; letter-spacing: .06em;
+    margin: 20px 0 8px;
+  }
+
+  /* ── BODY TEXT ── */
+  .body-text { font-size: 14.5px; color: #333; margin-bottom: 14px; }
+  .body-text:last-child { margin-bottom: 0; }
+
+  /* ── HIGHLIGHT BOX ── */
+  .highlight {
+    background: #f0f5ff;
+    border: 1px solid #c7d9ff;
+    border-radius: 10px;
+    padding: 16px 20px;
+    font-size: 14px;
+    color: #1a3a72;
+    margin-top: 16px;
+  }
+  .highlight strong { display: block; margin-bottom: 4px; color: #0f2952; }
+
+  /* ── CONTACT BLOCK ── */
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 16px;
+  }
+  .contact-item {
+    background: #f8faff;
+    border: 1px solid #e0e8f8;
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+  .contact-item .label { font-size: 11px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 4px; }
+  .contact-item .value { font-size: 14px; color: #0f2952; font-weight: 500; }
+  .contact-item a { color: #1A56DB; text-decoration: none; }
+  @media (max-width: 520px) { .contact-grid { grid-template-columns: 1fr; } }
+
+  /* ── FOOTER ── */
+  .footer {
+    text-align: center;
+    padding: 32px 20px;
+    font-size: 13px;
+    color: #888;
+    border-top: 1px solid #e8eef8;
+    margin-top: 8px;
+  }
+  .footer strong { color: #1A56DB; }
+
+  /* ── OPEN ALL BY DEFAULT ON DESKTOP ── */
+  @media (min-width: 640px) {
+    .section-body { display: block; }
+    .section-chevron { display: none; }
+    .section-header { cursor: default; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-logo">
+    <div class="logo-icon">
+      <svg viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="20" cy="20" r="18" fill="rgba(255,255,255,0.2)"/>
+        <rect x="10" y="26" width="5" height="8" rx="1.5" fill="white" opacity=".5"/>
+        <rect x="17" y="21" width="5" height="13" rx="1.5" fill="white" opacity=".7"/>
+        <rect x="24" y="15" width="5" height="19" rx="1.5" fill="white"/>
+        <circle cx="13" cy="22" r="3.5" fill="none" stroke="white" stroke-width="2" opacity=".8"/>
+        <line x1="15.5" y1="24.5" x2="18" y2="27" stroke="white" stroke-width="2" stroke-linecap="round" opacity=".8"/>
+      </svg>
+    </div>
+    <div class="logo-name">
+      <span>data</span>
+      <span>bulge</span>
+    </div>
+  </div>
+  <h1>Privacy Policy</h1>
+  <div class="header-meta">
+    <span>Effective Date: June 3, 2026</span>
+    <span>Last Updated: June 3, 2026</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- INTRO -->
+  <div class="intro">
+    <p>DataBulge is a product of <strong>Vortexedge Limited</strong> (RC 9193139), a company incorporated in Nigeria. We operate the DataBulge platform available at <a href="https://www.databulge.com" style="color:#1A56DB;">www.databulge.com</a> and on Android ("the Platform"). This Privacy Policy explains how we collect, use, store, protect and share your personal information when you use our Platform.</p>
+    <p>By creating an account or using DataBulge, you agree to the terms of this Privacy Policy. If you do not agree, please do not use our Platform.</p>
+  </div>
+
+  <!-- SECTION 1 -->
+  <div class="section open" id="s1">
+    <div class="section-header" onclick="toggle('s1')">
+      <div class="section-number">1</div>
+      <div class="section-title">Who We Are</div>
+      <div class="section-chevron">▼</div>
+    </div>
+    <div class="section-body">
+      <table class="info-table">
+        <tr><td>Company</td><td>Vortexedge Limited</td></tr>
+        <tr><td>RC Number</td><td>9193139</td></tr>
+        <tr><td>Product</td><td>DataBulge</td></tr>
+        <tr><td>Website</td><td><a href="https://www.databulge.com">www.databulge.com</a></td></tr>
+        <tr><td>Contact</td><td><a href="mailto:support@databulge.com">support@databulge.com</a></td></tr>
+        <tr><td>Address</td><td>No. 57 Kunai Street, Sabon Tasha, Kaduna, Nigeria</td></tr>
+      </table>
+      <div class="highlight">
+        <strong>Data Controller</strong>
+        Vortexedge Limited is the Data Controller of your personal information as defined under the Nigeria Data Protection Act, 2023 (NDPA) and the Nigeria Data Protection Regulation (NDPR).
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 2 -->
+  <div class="section open" id="s2">
+    <div class="section-header" onclick="toggle('s2')">
+      <div class="section-number">2</div>
+      <div class="section-title">Information We Collect</div>
+      <div class="section-chevron">▼</div>
+    </div>
+    <div class="section-body">
+      <p class="body-text">We collect only what is necessary to provide our services:</p>
+
+      <div class="sub-label">a) Information you provide directly</div>
+      <ul class="policy-list">
+        <li>Full name</li>
+        <li>Email address</li>
+        <li>Phone number(s) for data delivery</li>
+        <li>Password (stored in encrypted form — we never see it)</li>
+      </ul>
+
+      <div class="sub-label">b) Financial information</div>
+      <ul class="policy-list">
+        <li>Wallet transaction history (top-ups, payments, refunds)</li>
+        <li>Virtual account details assigned to you</li>
+        <li>Payment card details for Auto-Fund (processed and stored by Paystack — we do not store raw card data)</li>
+      </ul>
+
+      <div class="sub-label">c) Usage information</div>
+      <ul class="policy-list">
+        <li>Data plans you subscribe to</li>
+        <li>Payment installment history</li>
+        <li>App activity (pages visited, actions taken)</li>
+        <li>Device type, browser, and operating system</li>
+      </ul>
+
+      <div class="sub-label">d) Technical information</div>
+      <ul class="policy-list">
+        <li>IP address</li>
+        <li>Push notification token (for delivery alerts)</li>
+        <li>App crash reports</li>
+      </ul>
+
+      <div class="no-label">As a fraud mintigation policy, We may requires BVN and NIN for KYC of users' wallet above Ten Thousand Naira (N10,000)</div>
+      <ul class="policy-list no-list">
+        <li>We do NOT collect Your BVN or NIN</li>
+        <li>We do NOT collect Your bank login credentials</li>
+        <li>We do NOT collect Any biometric data</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 3 -->
+  <div class="section open" id="s3">
+    <div class="section-header" onclick="toggle('s3')">
+      <div class="section-number">3</div>
+      <div class="section-title">How We Use Your Information</div>
+      <div class="section-chevron">▼</div>
+    </div>
+    <div class="section-body">
+      <div class="sub-label">We use your information to</div>
+      <ul class="policy-list">
+        <li>Create and manage your DataBulge account</li>
+        <li>Process data plan subscriptions and deliver mobile data to your number</li>
+        <li>Manage your wallet, process payments, and issue refunds</li>
+        <li>Send you transaction alerts, delivery confirmations, and service updates via push notification, email, or SMS</li>
+        <li>Detect and prevent fraud, abuse, and unauthorised access</li>
+        <li>Improve the Platform based on usage patterns</li>
+        <li>Comply with legal obligations under Nigerian law including NDPA, NDPR, and CBN guidelines</li>
+        <li>Respond to your support requests</li>
+      </ul>
+
+      <div class="no-label">We do NOT use your information for</div>
+      <ul class="policy-list no-list">
+        <li>Selling to third-party advertisers</li>
+        <li>Building advertising profiles</li>
+        <li>Any purpose other than what is stated above</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 4 -->
+  <div class="section open" id="s4">
+    <div class="section-header" onclick="toggle('s4')">
+      <div class="section-number">4</div>
+      <div class="section-title">Legal Basis for Processing</div>
+      <div class="section-chevron">▼</div>
+    </div>
+    <div class="section-body">
+      <p class="body-text">Under the Nigeria Data Protection Act 2023, we process your data on the following lawful bases:</p>
+      <ul class="policy-list">
+        <li><strong>Contract:</strong> Processing is necessary to deliver the service you signed up for</li>
+        <li><strong>Consent:</strong> Where you have given us explicit permission (e.g. push notifications)</li>
+        <li><strong>Legal obligation:</strong> Where we are required to retain records under Nigerian law</li>
+        <li><strong>Legitimate interest:</strong> To detect fraud and keep the Platform secure</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SECTION 5 -->
+  <div class="section open" id="s5">
+    <div class="section-header" onclick="toggle('s5')">
+      <div class="section-number">5</div>
+      <div class="section-title">How We Share Your Information</div>
+      <div class="section-chevron">▼</div>
+    </div>
+    <div class="section-body">
+      <p class="body-text">We share your data only where strictly necessary:</p>
+      <ul class="policy-list">
+        <li><strong>Lenco (Bills API):</strong> We share your phone number and plan details with Lenco to deliver mobile data to your number. Lenco processes this as our service provider.</li>
+        <li><strong>Paystack:</strong> We share your email and payment amount with Paystack to process wallet top-ups and Auto-Fund card charges. Paystack is PCI-DSS compliant and handles card data directly.</li>
+        <li><strong>Supabase:</strong> Our database infrastructure provider. Your data is stored on Supabase servers in the EU (eu-west-1) under a data processing agreement.</li>
+        <li><strong>Network Operators (MTN, Airtel, Glo, 9mobile):</strong> Your phone number is passed to the relevant operator solely to activate the data plan you purchased.</li>
+        <li><strong>Law enforcement:</strong> Where required by a valid court order or Nigerian law.</li>
+      </ul>
+      <div class="highlight">
+        <strong>We do NOT sell your data</strong>
+        We do not sell, rent, or trade your personal information to any third party — ever.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 6 -->
+  <div class="section open" id="s6">
+    <div class="section-header" onclick="toggle('s6')">
+      <div class="section-number">6</div>
+      <div class="section-title">Data Storage &amp; Security</div>
+      <div class="section-chevron">▼</div>
+    </div>
+    <div class="section-body">
+      <p class="body-text">Your data is stored on secure cloud infrastructure (Supabase, eu-west-1 region). We implement the following measures to protect your data:</p>
+      <ul class="policy-list">
+        <li><strong>Row-Level Security (RLS):</strong> Your data is only accessible to your account — no other user can query it</li>
+        <li><strong>Encrypted connections:</strong> All communication between your device and our servers uses HTTPS/TLS encryption</li>
+        <li><strong>Password hashing:</strong> Passwords are hashed using industry-standard methods — we cannot see your password</li>
+        <li><strong>Access controls:</strong> Only authorised Vortexedge personnel can access backend systems</li>
+        <li><strong>Wallet protection:</strong> Wallet balances are protected by atomic database transactions to prevent unauthorised modification</li>
+        <li><strong>Regular security reviews and patching</strong></li>
+      </ul>
+      <p class="body-text">Despite these measures, no system is 100% secure. In the event of a data breach that poses risk to your rights, we will notify you and the Nigeria Data Protection Commission (NDPC) within the timeframe required by law.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 7 -->
+  <div class="section open" id="s7">
+    <div class="section-header" onclick="toggle('s7')">
+      <div class="section-number">7</div>
+      <div class="section-title">Data Retention</div>
+      <div class="section-chevron">▼</div>
+    </div>
+    <div class="section-body">
+      <p class="body-text">We retain your data for as long as your account is active or as required by Nigerian law:</p>
+      <ul class="policy-list">
+        <li><strong>Account and profile data:</strong> Retained for the life of your account, plus 2 years after closure</li>
+        <li><strong>Transaction records:</strong> Retained for 7 years as required by Nigerian financial regulations</li>
+        <li><strong>Push notification tokens:</strong> Deleted when you uninstall the app or revoke permission</li>
+        <li><strong>Support correspondence:</strong> Retained for 3 years</li>
+      </ul>
+      <p class="body-text">You may request deletion of your account and personal data at any time (see Section 9).</p>
+    </div>
+  </div>
+
+  <!-- SECTION 8 -->
+  <div class="section open" id="s8">
+    <div class="section-header" onclick="toggle('s8')">
+      <div class="section-number">8</div>
+      <div class="section-title">Cookies &amp; Tracking</div>
+      <div class="section-chevron">▼</div>
+    </div>
+    <div class="section-body">
+      <p class="body-text">The DataBulge web platform uses:</p>
+      <ul class="policy-list">
+        <li><strong>Session storage:</strong> To keep you logged in during your browsing session only</li>
+        <li><strong>Local storage:</strong> To save your session token and preferences on your device</li>
+      </ul>
+      <p class="body-text">We do not use third-party advertising cookies or tracking pixels. We do not use Google Analytics or Facebook Pixel in a way that shares your personal data with those platforms.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 9 -->
+  <div class="section open" id="s9">
+    <div class="section-header" onclick="toggle('s9')">
+      <div class="section-number">9</div>
+      <div class="section-title">Your Rights</div>
+      <div class="section-chevron">▼</div>
+    </div>
+    <div class="section-body">
+      <p class="body-text">Under the Nigeria Data Protection Act 2023, you have the following rights:</p>
+      <ul class="policy-list">
+        <li><strong>Right to access:</strong> Request a copy of the personal data we hold about you</li>
+        <li><strong>Right to rectification:</strong> Ask us to correct inaccurate or incomplete data</li>
+        <li><strong>Right to erasure:</strong> Request deletion of your account and personal data</li>
+        <li><strong>Right to data portability:</strong> Receive your data in a structured, machine-readable format</li>
+        <li><strong>Right to object:</strong> Object to processing of your data for specific purposes</li>
+        <li><strong>Right to withdraw consent:</strong> Withdraw consent at any time where processing is based on consent (e.g. push notifications can be disabled in your phone settings)</li>
+      </ul>
+      <div class="highlight">
+        To exercise any of these rights, contact us at <a href="mailto:support@databulge.com" style="color:#1A56DB;font-weight:600;">support@databulge.com</a>. We will respond within <strong>30 days</strong> of receiving your request.
+      </div>
+    </div>
+  </div>
+
+  <!-- SECTION 10 -->
+  <div class="section open" id="s10">
+    <div class="section-header" onclick="toggle('s10')">
+      <div class="section-number">10</div>
+      <div class="section-title">Children's Privacy</div>
+      <div class="section-chevron">▼</div>
+    </div>
+    <div class="section-body">
+      <p class="body-text">DataBulge is not intended for use by persons under the age of 18. We do not knowingly collect personal data from minors. If you believe a minor has created an account on our Platform, please contact us immediately at <a href="mailto:support@databulge.com" style="color:#1A56DB;">support@databulge.com</a> and we will delete the account promptly.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 11 -->
+  <div class="section open" id="s11">
+    <div class="section-header" onclick="toggle('s11')">
+      <div class="section-number">11</div>
+      <div class="section-title">Third-Party Links</div>
+      <div class="section-chevron">▼</div>
+    </div>
+    <div class="section-body">
+      <p class="body-text">Our Platform may contain links to external websites (e.g. network operator portals). We are not responsible for the privacy practices of those websites. We encourage you to read their privacy policies before providing any personal information.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 12 -->
+  <div class="section open" id="s12">
+    <div class="section-header" onclick="toggle('s12')">
+      <div class="section-number">12</div>
+      <div class="section-title">International Data Transfers</div>
+      <div class="section-chevron">▼</div>
+    </div>
+    <div class="section-body">
+      <p class="body-text">Your data is stored on Supabase infrastructure located in the European Union (eu-west-1 / Ireland). This transfer is made under appropriate safeguards in accordance with the NDPA and NDPR, including data processing agreements that require Supabase to maintain security standards equivalent to Nigerian data protection law.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 13 -->
+  <div class="section open" id="s13">
+    <div class="section-header" onclick="toggle('s13')">
+      <div class="section-number">13</div>
+      <div class="section-title">Changes to This Policy</div>
+      <div class="section-chevron">▼</div>
+    </div>
+    <div class="section-body">
+      <p class="body-text">We may update this Privacy Policy from time to time. When we make material changes, we will:</p>
+      <ul class="policy-list">
+        <li>Update the "Last Updated" date at the top of this policy</li>
+        <li>Notify you via the app or by email before the changes take effect</li>
+      </ul>
+      <p class="body-text">Your continued use of DataBulge after changes are posted constitutes your acceptance of the updated policy.</p>
+    </div>
+  </div>
+
+  <!-- SECTION 14 -->
+  <div class="section open" id="s14">
+    <div class="section-header" onclick="toggle('s14')">
+      <div class="section-number">14</div>
+      <div class="section-title">Contact Us &amp; Complaints</div>
+      <div class="section-chevron">▼</div>
+    </div>
+    <div class="section-body">
+      <p class="body-text">If you have any questions, concerns or complaints about how we handle your personal data, please contact us:</p>
+      <div class="contact-grid">
+        <div class="contact-item">
+          <div class="label">Email</div>
+          <div class="value"><a href="mailto:support@databulge.com">support@databulge.com</a></div>
+        </div>
+        <div class="contact-item">
+          <div class="label">Website</div>
+          <div class="value"><a href="https://www.databulge.com">www.databulge.com</a></div>
+        </div>
+        <div class="contact-item">
+          <div class="label">Company</div>
+          <div class="value">Vortexedge Limited</div>
+        </div>
+        <div class="contact-item">
+          <div class="label">Address</div>
+          <div class="value">No. 57 Kunai Street, Sabon Tasha, Kaduna, Nigeria</div>
+        </div>
+      </div>
+      <div class="highlight" style="margin-top:20px;">
+        <strong>Complaints to the Regulator</strong>
+        If you are not satisfied with our response, you have the right to lodge a complaint with the Nigeria Data Protection Commission (NDPC) at <a href="https://www.ndpc.gov.ng" style="color:#1A56DB;">www.ndpc.gov.ng</a>.
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    <p>© 2026 Vortexedge Limited. All rights reserved.</p>
+    <p style="margin-top:4px;"><strong>DataBulge</strong> — Data on your own terms.</p>
+  </div>
+
+</div>
+
+<script>
+  function toggle(id) {
+    // Only toggle on mobile (sections stay open on desktop via CSS)
+    if (window.innerWidth >= 640) return;
+    var el = document.getElementById(id);
+    el.classList.toggle('open');
+  }
+</script>
+
+</body>
+</html>
