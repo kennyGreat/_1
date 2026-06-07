@@ -891,7 +891,6 @@ button.tab,button.plan-chip{box-shadow:none!important;}
 
   <!-- DASHBOARD TAB - RETENTION REDESIGN -->
   <div id="tc-dash" class="tab-content">
-    <div id="promo-banner" style="display:none;margin-bottom:12px;"></div>
     <div class="hero-bal-card" id="hero-bal-card">
       <div class="hero-bal-label">Wallet Balance</div>
       <div class="hero-bal-amount" id="d-bal-dash">&#8358;0.00</div>
@@ -1059,7 +1058,6 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       </div>
     </div>
     </div>
-    <button class="btn btn-blue" id="open-transfer-btn" onclick="openTransferModal()" style="width:100%;margin:0 0 12px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:8px;">&#128184; Send to a DataBulge friend</button>
     <div id="wallet-tab-content"><div class="empty">Loading account&hellip;</div></div>
   </div>
 
@@ -1390,48 +1388,6 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       </div>
     </div>
     <div class="modal-foot"></div>
-  </div>
-</div>
-
-<!-- SEND / TRANSFER MODAL -->
-<div class="modal" id="m-transfer">
-  <div class="modal-box">
-    <div class="modal-hdr"><div class="modal-title">Send Money</div><button class="modal-x" id="m-transfer-x">&#215;</button></div>
-    <div class="modal-body">
-      <div id="m-transfer-err" class="err"></div>
-
-      <!-- Step 1: find recipient -->
-      <div id="transfer-step-find">
-        <p style="font-size:.8rem;color:#555;line-height:1.55;margin-bottom:10px;">Send wallet balance to another DataBulge user using their phone number or email. It is instant and free.</p>
-        <label style="font-size:.78rem;font-weight:700;color:#333;display:block;margin-bottom:4px;">Recipient phone or email</label>
-        <input type="text" id="transfer-query" placeholder="e.g. 08012345678 or name@email.com" autocomplete="off" style="display:block;width:100%;padding:11px 12px;border:1.5px solid #ddd;border-radius:6px;font-size:.93rem;color:#111;background:#fff;outline:none;-webkit-appearance:none;margin-bottom:12px;">
-        <button class="btn btn-blue" id="transfer-find-btn" style="width:100%;margin:0;">Find user</button>
-      </div>
-
-      <!-- Step 2: confirm recipient + amount -->
-      <div id="transfer-step-amount" style="display:none;">
-        <div style="background:#eaf5ee;border:1px solid #b2dfdb;border-radius:8px;padding:12px;margin-bottom:12px;">
-          <div style="font-size:.72rem;font-weight:700;color:#888;text-transform:uppercase;margin-bottom:3px;">Sending to</div>
-          <div style="font-size:1rem;font-weight:900;color:#111;" id="transfer-recip-name">&mdash;</div>
-          <div style="font-size:.78rem;color:#666;" id="transfer-recip-contact">&mdash;</div>
-        </div>
-        <label style="font-size:.78rem;font-weight:700;color:#333;display:block;margin-bottom:4px;">Amount (&#8358;)</label>
-        <input type="number" id="transfer-amt" placeholder="e.g. 500" inputmode="numeric" style="display:block;width:100%;padding:11px 12px;border:1.5px solid #ddd;border-radius:6px;font-size:.93rem;color:#111;background:#fff;outline:none;-webkit-appearance:none;margin-bottom:8px;">
-        <div style="font-size:.74rem;color:#888;margin-bottom:6px;">Your balance: <strong id="transfer-bal">&#8358;0.00</strong> &middot; Min &#8358;50 &middot; Daily limit &#8358;50,000</div>
-        <label style="font-size:.78rem;font-weight:700;color:#333;display:block;margin-bottom:4px;">Note (optional)</label>
-        <input type="text" id="transfer-note" maxlength="80" placeholder="e.g. For your data" style="display:block;width:100%;padding:11px 12px;border:1.5px solid #ddd;border-radius:6px;font-size:.9rem;color:#111;background:#fff;outline:none;-webkit-appearance:none;margin-bottom:12px;">
-        <button class="btn btn-blue" id="transfer-send-btn" style="width:100%;margin:0 0 8px;">Send now</button>
-        <button class="btn btn-lite" id="transfer-back-btn" style="width:100%;margin:0;">&#8592; Use a different recipient</button>
-      </div>
-
-      <!-- Step 3: success -->
-      <div id="transfer-step-done" style="display:none;text-align:center;padding:8px 0;">
-        <div style="font-size:2.6rem;margin-bottom:6px;">&#9989;</div>
-        <div style="font-size:1.05rem;font-weight:900;color:#3d9758;margin-bottom:4px;" id="transfer-done-title">Sent!</div>
-        <div style="font-size:.82rem;color:#555;line-height:1.5;margin-bottom:14px;" id="transfer-done-msg">&mdash;</div>
-        <button class="btn btn-blue" id="transfer-done-btn" style="width:100%;margin:0;">Done</button>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -1767,10 +1723,8 @@ function refreshToken(cb) {
     JSON.stringify({ refresh_token: gRefresh }),
     function(err, res) {
       if (err || !res || !res.data || !res.data.access_token) { cb(err || 'Refresh failed'); return; }
-      // Supabase refresh returns the rotated refresh_token + new access_token.
-      // Preserve cached user if the response omits it (_setSession handles that).
       _setSession(res.data);
-      window.gUser = gUser; window.gToken = gToken;
+      // _setSession already syncs window.gToken
       cb(null);
     }
   );
@@ -1790,9 +1744,8 @@ function _setSession(d) {
   if (d.user) gUser = d.user;
   _store.set('db_sess', JSON.stringify({ at: gToken, rt: gRefresh, ex: gExpiry, user: gUser }));
   // Keep window references in sync so cross-script-block code (notif system, push IIFE) sees the session
-  window.gUser    = gUser;
-  window.gToken   = gToken;
-  window.gRefresh = gRefresh;
+  window.gUser  = gUser;
+  window.gToken = gToken;
   // Pick up any FCM token that arrived before the session was established
   /* pendingFcmToken removed in web version */
 }
@@ -1876,25 +1829,6 @@ function dbGoSoftPay(){
     setTimeout(_toTop, 200);
   } catch(e) {}
 }
-
-/* Home "Complete your ongoing plan" card → opens the My Plan tab so the
-   user lands on their ongoing subscription, not the Buy Data tab. */
-function dbGoMyPlan(){
-  try {
-    showTab('subs');
-    function _toTopMP() {
-      try { window.scrollTo(0, 0); } catch(e) {}
-      try { document.documentElement.scrollTop = 0; } catch(e) {}
-      try { document.body.scrollTop = 0; } catch(e) {}
-      try { var _a = document.getElementById('pg-app'); if (_a) _a.scrollTop = 0; } catch(e) {}
-    }
-    _toTopMP();
-    setTimeout(_toTopMP, 0);
-    setTimeout(_toTopMP, 80);
-    setTimeout(_toTopMP, 200);
-  } catch(e) {}
-}
-window.dbGoMyPlan = dbGoMyPlan;
 
 function showTab(t) {
   var tabs = ['dash','plans','subs','wallet','inbox','earn'];
@@ -2089,19 +2023,8 @@ function bootPublicApp() {
   loadPlans();
 }
 
-var _tokenRefreshTimer = null;
-function bootApp(onReady) {
-  if (!gUser) { if (typeof onReady === 'function') onReady(); return; }
-  // KEEP SESSION ALIVE: refresh the access token every 45 minutes while the
-  // app is open so it never silently expires mid-use. Refresh-token rotation
-  // is handled by refreshToken/_setSession. One timer only.
-  if (!_tokenRefreshTimer) {
-    _tokenRefreshTimer = setInterval(function() {
-      if (window.gRefresh || gRefresh) {
-        refreshToken(function(){ /* silent; failure handled on next API call */ });
-      }
-    }, 45 * 60 * 1000);
-  }
+function bootApp() {
+  if (!gUser) return;
   var meta = gUser.user_metadata || {};
   var name = meta.full_name || gUser.email.split('@')[0];
   var initials = '';
@@ -2120,23 +2043,11 @@ function bootApp(onReady) {
   _dashLastLoad  = _now;
 
   // ── BOOT SEQUENCE ─────────────────────────────────────────
-  // The DASHBOARD (first screen) only needs the WALLET balance to be
-  // meaningful. Lift the splash as soon as the wallet is loaded — this is
-  // the fastest correct first paint. Plans load in the background for the
-  // Buy Data tab (not the first screen) and never block entry.
-  var _readyFired = false;
-  function _fireReady() {
-    if (!_readyFired) { _readyFired = true; if (typeof onReady === 'function') onReady(); }
-  }
-  // Hard safety cap: never let the splash trap the user beyond 5s even if
-  // the wallet call hangs.
-  setTimeout(_fireReady, 5000);
-
-  // Primary gate: wallet balance loaded → show the dashboard immediately.
-  loadWalletBalance(function() { _fireReady(); });
-
-  // Plans load in the background — does NOT gate the splash.
-  try { loadPlans(function() {}); } catch (e) {}
+  // Fire wallet + plans in parallel immediately — both are needed
+  // for the first visible screen. loadPlans uses cached data after
+  // the first load so subsequent calls are instant.
+  loadWalletBalance(function() {});
+  loadPlans();
 
   // My Plan tab — defer 200ms (not visible, low priority)
   setTimeout(function() { loadSubs(); }, 200);
@@ -2322,52 +2233,7 @@ function loadDashboard() {
     if ($('d-bal-dash')) $('d-bal-dash').textContent = bs;
   }
   loadWalletBalance(function() {});
-  loadPromos();
 }
-
-/* ── PROMO / NUGGET BANNER ─────────────────────────────────── */
-function loadPromos() {
-  if (!window.gUser || !window.gToken) return;
-  rpc('get_active_promos', JSON.stringify({ p_user_id: gUser.id }), function(err, res) {
-    var banner = document.getElementById('promo-banner');
-    if (!banner) return;
-    if (err || !res || !res.ok || !res.promos || !res.promos.length) {
-      banner.style.display = 'none'; return;
-    }
-    banner.style.display = 'block';
-    var html = '';
-    for (var i = 0; i < res.promos.length; i++) {
-      var p = res.promos[i];
-      var isPromo = p.type === 'promo';
-      var bg = isPromo ? 'linear-gradient(135deg,#3d9758,#2d7a44)' : 'linear-gradient(135deg,#1A56DB,#1244a8)';
-      html += '<div style="background:' + bg + ';border-radius:14px;padding:14px 16px;margin-bottom:8px;color:#fff;position:relative;overflow:hidden;">' +
-        '<div style="position:absolute;top:-20px;right:-20px;font-size:5rem;opacity:.08;">' + (p.icon || '\uD83D\uDCE2') + '</div>' +
-        '<div style="font-size:.78rem;font-weight:700;opacity:.8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">' + (isPromo ? '\uD83C\uDF89 Special Offer' : '\uD83D\uDCA1 Daily Nugget') + '</div>' +
-        '<div style="font-size:.95rem;font-weight:900;margin-bottom:4px;">' + (p.title || '') + '</div>' +
-        '<div style="font-size:.78rem;opacity:.88;line-height:1.5;margin-bottom:' + (isPromo && p.promo_code ? '10px' : '0') + ';">' + (p.message || '') + '</div>';
-      if (isPromo && p.promo_code && !p.already_redeemed) {
-        html += '<button onclick="redeemPromo(\'' + p.promo_code + '\')" style="background:#fff;color:#2d7a44;border:none;border-radius:8px;padding:7px 14px;font-size:.8rem;font-weight:900;cursor:pointer;font-family:inherit;">Redeem Code: ' + p.promo_code + '</button>';
-      } else if (isPromo && p.already_redeemed) {
-        html += '<span style="background:rgba(255,255,255,.2);border-radius:8px;padding:5px 12px;font-size:.75rem;font-weight:700;">\u2705 Already Redeemed</span>';
-      }
-      html += '</div>';
-    }
-    banner.innerHTML = html;
-  });
-}
-function redeemPromo(promoCode) {
-  if (!window.gUser) return;
-  rpc('redeem_promo_code', JSON.stringify({ p_user_id: gUser.id, p_promo_code: promoCode }), function(err, res) {
-    if (!err && res && res.ok) {
-      toast(res.message || '\u2705 Promo redeemed!');
-      loadPromos(); loadDashboard();
-    } else {
-      toast('\u26A0\uFE0F ' + ((res && (res.message || res.error)) || 'Could not redeem promo.'));
-    }
-  });
-}
-window.loadPromos = loadPromos;
-window.redeemPromo = redeemPromo;
 
 function netCls(net) {
   var n = (net || '').toUpperCase();
@@ -2382,33 +2248,29 @@ var _plansCache    = null;  // cached plan data — static, never changes mid-se
 var _plansCacheTs  = 0;    // timestamp of last fetch
 var PLANS_CACHE_MS = 5 * 60 * 1000; // re-fetch after 5 minutes max
 
-function loadPlans(cb) {
+function loadPlans() {
   var wrap = $('plans-list');
   var now  = Date.now();
-  var _done = function() { if (typeof cb === 'function') { try { cb(); } catch(e) {} } };
 
   // Serve from cache instantly if fresh — avoids redundant network round trips
   if (_plansCache && (now - _plansCacheTs) < PLANS_CACHE_MS) {
     _renderPlans(_plansCache);
-    _done();
     return;
   }
 
-  if (wrap) wrap.innerHTML = '<div class="empty" style="padding:20px 0;">Loading plans\u2026</div>';
+  wrap.innerHTML = '<div class="empty" style="padding:20px 0;">Loading plans\u2026</div>';
 
   restGet('/data_plans',
     'is_active=eq.true&order=network,sort_order,selling_price&select=id,data_size,network,selling_price,daily_price,validity_days,category',
     function(e, r) {
       if (!r || !r.ok || !r.data || !r.data.length) {
-        if (wrap) wrap.innerHTML = '<div class="empty">No plans available right now.</div>';
-        _done();   // still mark ready so the splash never hangs
+        wrap.innerHTML = '<div class="empty">No plans available right now.</div>';
         return;
       }
       // Cache for this session
       _plansCache   = r.data;
       _plansCacheTs = Date.now();
       _renderPlans(r.data);
-      _done();
     });
 }
 
@@ -3400,8 +3262,7 @@ function confirmSub() {
     var progAmt = progAmtEl ? (parseFloat(progAmtEl.value) || 0) : (gSelSub.daily || 0);
     errHide('m-sub-err');
     if (!progAmt || progAmt <= 0) { errShow('m-sub-err', 'Please enter an amount to pay.'); return; }
-    if (gSelSub && gSelSub.remaining > 0) { progAmt = Math.min(progAmt, gSelSub.remaining); }
-    if (progAmt > gBal + 0.01)     { errShow('m-sub-err', 'Insufficient wallet balance. Please fund your account first.'); return; }
+    if (progAmt > gBal)            { errShow('m-sub-err', 'Insufficient wallet balance. Please fund your account first.'); return; }
     if (progAmt > gSelSub.remaining + 1) { errShow('m-sub-err', 'Amount exceeds the outstanding balance of ' + fmtN(gSelSub.remaining) + '.'); return; }
     btnLoad('m-sub-btn', true, 'Paying\u2026');
     ensureToken(function(err) {
@@ -3527,9 +3388,7 @@ function confirmSub() {
 function openPayModal(subId, dailyAmt, remaining) {
   gSelSub = { id: subId, daily: dailyAmt, remaining: remaining };
   var sugAmt = dailyAmt > 0 ? Math.min(dailyAmt, remaining) : remaining;
-  // Only the amount actually DUE matters — never demand more than what's left to finish.
-  var dueNow = sugAmt;
-  var insufficientBal = gBal < dueNow;
+  var insufficientBal = gBal < dailyAmt;
   var newRemaining = Math.max(0, remaining - sugAmt);
   var isLast    = dailyAmt > 0 && Math.ceil(remaining / dailyAmt) <= 1;
   var isAlmost  = !isLast && dailyAmt > 0 && Math.ceil(remaining / dailyAmt) <= 2;
@@ -3577,10 +3436,7 @@ function confirmPay() {
   var amt = parseFloat($('m-pay-amt').value);
   errHide('m-pay-err');
   if (!amt || amt <= 0) { errShow('m-pay-err', 'Enter a valid amount.'); return; }
-  // Cap the charge at what's actually left to finish the plan.
-  if (gSelSub && gSelSub.remaining > 0) { amt = Math.min(amt, gSelSub.remaining); }
-  // Only block if the wallet can't cover the (capped) amount actually due.
-  if (amt > gBal + 0.01) { errShow('m-pay-err', 'Insufficient account balance.'); return; }
+  if (amt > gBal)       { errShow('m-pay-err', 'Insufficient account balance.'); return; }
   if (!gSelSub)         { return; }
   btnLoad('m-pay-btn', true, 'Paying\u2026');
   ensureToken(function(err) {
@@ -3652,91 +3508,6 @@ function copyText(txt) {
   ta.select();
   try { document.execCommand('copy'); toast('Copied'); } catch(e) { toast('Copy failed'); }
   document.body.removeChild(ta);
-}
-
-/* ── PEER-TO-PEER TRANSFER ──────────────────────────────────── */
-var gTransferRecipient = null;
-
-function openTransferModal() {
-  gTransferRecipient = null;
-  errHide('m-transfer-err');
-  if ($('transfer-query')) $('transfer-query').value = '';
-  if ($('transfer-amt'))   $('transfer-amt').value   = '';
-  if ($('transfer-note'))  $('transfer-note').value  = '';
-  if ($('transfer-step-find'))   $('transfer-step-find').style.display   = 'block';
-  if ($('transfer-step-amount')) $('transfer-step-amount').style.display = 'none';
-  if ($('transfer-step-done'))   $('transfer-step-done').style.display   = 'none';
-  if ($('transfer-bal'))   $('transfer-bal').textContent = fmtN(gBal);
-  openModal('m-transfer');
-}
-window.openTransferModal = openTransferModal;
-
-function transferFind() {
-  var q = ($('transfer-query').value || '').trim();
-  errHide('m-transfer-err');
-  if (q.length < 3) { errShow('m-transfer-err', 'Enter a phone number or email.'); return; }
-  if (!gUser) return;
-  btnLoad('transfer-find-btn', true, 'Find user');
-  rpc('lookup_databulge_user', JSON.stringify({ p_query: q }), function(err, res) {
-    btnLoad('transfer-find-btn', false, 'Find user');
-    var d = (res && res.data !== undefined) ? res.data : res; // xhr wraps jsonb in .data
-    if (err || !d || !d.found) {
-      errShow('m-transfer-err', (d && d.error) || 'No DataBulge user found with that phone or email.');
-      return;
-    }
-    if (d.user_id === gUser.id) {
-      errShow('m-transfer-err', 'You cannot send to yourself.');
-      return;
-    }
-    gTransferRecipient = { id: d.user_id, name: d.name, contact: d.phone_masked || q };
-    if ($('transfer-recip-name'))    $('transfer-recip-name').textContent    = d.name || 'DataBulge user';
-    if ($('transfer-recip-contact')) $('transfer-recip-contact').textContent = d.phone_masked || q;
-    if ($('transfer-bal'))           $('transfer-bal').textContent           = fmtN(gBal);
-    $('transfer-step-find').style.display   = 'none';
-    $('transfer-step-amount').style.display = 'block';
-    errHide('m-transfer-err');
-  });
-}
-
-function transferBack() {
-  gTransferRecipient = null;
-  errHide('m-transfer-err');
-  $('transfer-step-amount').style.display = 'none';
-  $('transfer-step-find').style.display   = 'block';
-}
-
-function transferSend() {
-  errHide('m-transfer-err');
-  if (!gTransferRecipient || !gUser) { transferBack(); return; }
-  var amt = parseFloat($('transfer-amt').value);
-  if (!amt || amt < 50) { errShow('m-transfer-err', 'Minimum transfer is \u20a650.'); return; }
-  if (amt > gBal + 0.01) { errShow('m-transfer-err', 'Insufficient balance.'); return; }
-  var note = ($('transfer-note').value || '').trim() || null;
-
-  btnLoad('transfer-send-btn', true, 'Send now');
-  rpc('transfer_wallet_balance', JSON.stringify({
-    p_sender_id: gUser.id,
-    p_recipient_id: gTransferRecipient.id,
-    p_amount: amt,
-    p_note: note
-  }), function(err, res) {
-    btnLoad('transfer-send-btn', false, 'Send now');
-    var d = (res && res.data !== undefined) ? res.data : res;
-    if (err || !d || !d.success) {
-      errShow('m-transfer-err', (d && d.error) || 'Transfer failed. Please try again.');
-      return;
-    }
-    // success
-    gBal = Number(d.sender_balance);
-    if (typeof refreshBalanceUI === 'function') refreshBalanceUI();
-    if ($('d-bal-dash')) $('d-bal-dash').textContent = fmtN(gBal);
-    if ($('transfer-done-title')) $('transfer-done-title').textContent = '\u20a6' + Number(d.amount).toLocaleString() + ' sent!';
-    if ($('transfer-done-msg'))   $('transfer-done-msg').textContent   = 'Sent to ' + (d.recipient_name || 'your friend') + '. New balance: ' + fmtN(gBal) + '.';
-    $('transfer-step-amount').style.display = 'none';
-    $('transfer-step-done').style.display   = 'block';
-    if (typeof loadWalletTab === 'function') loadWalletTab();
-    if (typeof loadDashCashflow === 'function') loadDashCashflow();
-  });
 }
 
 function openFundModal() {
@@ -4109,77 +3880,25 @@ function init() {
   if (parseHash()) { hideSplash(); return; }
 
   if (_loadSession()) {
-    // STAY LOGGED IN: render the app BEHIND the splash, then only hide the
-    // splash once the first screen's essential data has actually loaded.
-    // The user never sees a half-empty app. Refresh token quietly in bg.
-    showPage('app');
-    bootApp(function() {
-      // onReady: fired after wallet + plans (first-screen essentials) load.
-      hideSplash();
-      setTimeout(handlePushDeepLink, 300);
-    });
-
     ensureToken(function(err) {
-      if (err) {
-        // Background refresh failed. Try ONE explicit refresh with the stored token.
-        refreshToken(function(err2) {
-          if (err2) {
-            // Refresh token is genuinely dead/revoked — now we must re-auth.
-            _clearSession();
-            window.location.replace('databulge-auth.html');
-          }
-          // else: silently refreshed, user stays in the app
-        });
+      if (!err && gUser) {
+        // Valid session — show the app and hide the splash
+        showPage('app');
+        hideSplash();
+        bootApp();
+      } else {
+        // Session expired — clear and redirect
+        _clearSession();
+        hideSplash();
+        window.location.replace('databulge-auth.html');
       }
     });
   } else {
+    // No session — redirect to auth immediately
     hideSplash();
     window.location.replace('databulge-auth.html');
   }
 }
-
-/* ── PUSH NOTIFICATION DEEP LINK ──────────────────────────────
-   When a user taps an FCM push, the data payload carries a
-   'target' (and optional metadata). Navigate to the right tab. */
-function handlePushDeepLink() {
-  var target = null, metadata = null;
-  try {
-    var params = new URLSearchParams(window.location.search);
-    target = params.get('target') || params.get('category') || null;
-    var ms = params.get('metadata');
-    if (ms) metadata = JSON.parse(decodeURIComponent(ms));
-  } catch(e) {}
-  if (!target) {
-    try {
-      var stored = localStorage.getItem('db_push_target');
-      if (stored) {
-        var p = JSON.parse(stored);
-        target = p.target || null; metadata = p.metadata || null;
-        localStorage.removeItem('db_push_target');
-      }
-    } catch(e) {}
-  }
-  if (!target) return;
-  if (target === 'delivery' || target === 'subscription' || target === 'data_usage') {
-    showTab('subs');
-    if (metadata && metadata.subscription_id) {
-      setTimeout(function() {
-        var card = document.getElementById('sub-card-' + metadata.subscription_id);
-        if (card && card.scrollIntoView) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      }, 600);
-    }
-  } else if (target === 'wallet' || target === 'autofund') {
-    showTab('wallet');
-  } else if (target === 'ad' || target === 'earn') {
-    showTab('earn');
-  } else if (target === 'inbox') {
-    showTab('inbox');
-  } else {
-    showTab('dash');
-  }
-  try { window.history.replaceState({}, document.title, window.location.pathname); } catch(e) {}
-}
-window.handlePushDeepLink = handlePushDeepLink;
 
 /* ── BUTTON WIRING ──────────────────────────────────────────── */
 
@@ -4360,11 +4079,6 @@ function wire() {
   if ($('plans-fund-btn')) $('plans-fund-btn').onclick = openFundModal;
   if ($('af-fund-btn'))    $('af-fund-btn').onclick    = function() { launchAutoFund(parseFloat($('af-fund-amt').value)||0, null, null); };
   if ($('af-cancel-btn'))  $('af-cancel-btn').onclick  = function() { doCancelAutoFund(gWalletMandateId, null); };
-  if ($('transfer-find-btn'))  $('transfer-find-btn').onclick  = transferFind;
-  if ($('transfer-send-btn'))  $('transfer-send-btn').onclick  = transferSend;
-  if ($('transfer-back-btn'))  $('transfer-back-btn').onclick  = transferBack;
-  if ($('m-transfer-x'))       $('m-transfer-x').onclick       = function() { closeModal('m-transfer'); };
-  if ($('transfer-done-btn'))  $('transfer-done-btn').onclick  = function() { closeModal('m-transfer'); };
   if ($('m-sub-cancel-af-btn')) $('m-sub-cancel-af-btn').onclick = function() { doCancelAutoFund(gSubMandateId, null); };
 
   $('compose-btn-open').onclick = openComposeModal;
@@ -5956,22 +5670,11 @@ function checkDataUsage(subscriptionId, mbUsed, mbTotal) {
 }
 window.checkDataUsage = checkDataUsage;
 
-/* ── FCM Push Token Registration ────────────────────────
-   Saves device FCM token to push_subscriptions table so
-   the sendPushNotification edge function can reach this device.
-   Real native implementation — required for APK push to work.
-──────────────────────────────────────────────────────── */
-function registerPushToken(fcmToken) {
-  if (!fcmToken || !window.gUser || !window.gToken) return;
-  var isNative = (typeof window.Capacitor !== 'undefined' && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
-  var hint     = isNative ? (window.Capacitor.getPlatform ? window.Capacitor.getPlatform() : 'android') : 'web';
-  var h = { 'Authorization': 'Bearer ' + window.gToken, 'Content-Type': 'application/json', 'apikey': window.ANON_KEY, 'Prefer': 'resolution=merge-duplicates' };
-  window.xhr('POST', window.REST + '/push_subscriptions', h,
-    JSON.stringify({ user_id: window.gUser.id, endpoint: fcmToken, device_hint: hint, p256dh: '', auth: '' }),
-    function(e) { if (!e) console.log('[Push] FCM token registered'); }
-  );
-}
+/* Push tokens disabled in web version */
+function registerPushToken() { /* no-op */ }
 window.registerPushToken = registerPushToken;
+
+/* Native bridge exports removed in web version */
 
 /* ═══ RETENTION SYSTEM ════════════════════════════════════════
    ES5 — Android 4.4+ compatible. No arrow functions, no const.
@@ -6725,48 +6428,8 @@ window.confirmAirtime = confirmAirtime;
    npm install @capacitor/push-notifications
    npx cap sync android
 ──────────────────────────────────────────────────────── */
-/* ── Request push token from Capacitor native plugins ───
-   Requires @capacitor/push-notifications installed in the APK.
-   Registers for FCM, listens for incoming pushes, and wires
-   tap-to-open deep linking. Real native implementation.
-──────────────────────────────────────────────────────── */
-function requestCapacitorPushToken() {
-  var isNative = (typeof window.Capacitor !== 'undefined' && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
-  if (!isNative) return;
-
-  var Push = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.PushNotifications;
-  if (!Push) return;
-
-  Push.requestPermissions().then(function(result) {
-    if (result.receive === 'granted') {
-      Push.register();
-      Push.addListener('registration', function(token) {
-        registerPushToken(token.value);
-      });
-      Push.addListener('registrationError', function(err) {
-        console.warn('[Push] Registration error:', err);
-      });
-      // FCM already shows the OS notification drop — just refresh the bell
-      Push.addListener('pushNotificationReceived', function(notification) {
-        if (typeof notifLoad === 'function') notifLoad();
-      });
-      // Tap on a push: store deep-link target then navigate
-      Push.addListener('pushNotificationActionPerformed', function(action) {
-        try {
-          var data     = (action && action.notification && action.notification.data) ? action.notification.data : {};
-          var category = data.category || data.type || 'dash';
-          var meta     = data.metadata ? (typeof data.metadata === 'string' ? data.metadata : JSON.stringify(data.metadata)) : null;
-          localStorage.setItem('db_push_target', JSON.stringify({ target: (data.target || category), metadata: meta }));
-        } catch(e) {}
-        if (window.gUser && typeof handlePushDeepLink === 'function') {
-          handlePushDeepLink();
-        } else if (typeof openNotifDrawer === 'function') {
-          openNotifDrawer();
-        }
-      });
-    }
-  }).catch(function(e) { console.warn('[Push] Permission error:', e); });
-}
+/* Push tokens disabled in web version */
+function requestCapacitorPushToken() { /* no-op */ }
 window.requestCapacitorPushToken = requestCapacitorPushToken;
 
 /* ── Responsive bottom nav positioning ──────────────── */
@@ -6872,7 +6535,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
         '<div class="friend-balance"><div><div class="friend-bal-label">Available balance</div><div class="friend-bal-val" id="friend-bal-val">'+bal+'</div></div><div style="font-size:.76rem;opacity:.82;font-weight:800;text-align:right;">Ready when you are</div></div>'+
         '<div class="friend-cta-row"><button class="friend-cta primary" onclick="openFundModal()" ontouchstart="">Add small money</button><button class="friend-cta secondary" onclick="dbGoSoftPay();" ontouchstart="">Find a plan</button></div>'+
       '</div>'+
-      '<div class="friend-quick-grid" id="friend-quick-grid"><button class="friend-action-card fund" onclick="openFundModal()" ontouchstart=""><span class="emoji">\uD83D\uDC9A</span><strong>Fund with ease</strong><span>Your wallet updates automatically after transfer.</span></button><button class="friend-action-card plan" onclick="dbGoMyPlan();" ontouchstart=""><span class="emoji">\uD83C\uDFAF</span><strong>Complete your ongoing plan</strong><span>Your vibe, your way \u2014 manifest it to the fullest.</span></button></div>';
+      '<div class="friend-quick-grid" id="friend-quick-grid"><button class="friend-action-card fund" onclick="openFundModal()" ontouchstart=""><span class="emoji">\uD83D\uDC9A</span><strong>Fund with ease</strong><span>Your wallet updates automatically after transfer.</span></button><button class="friend-action-card plan" onclick="dbGoSoftPay();" ontouchstart=""><span class="emoji">\uD83C\uDFAF</span><strong>Choose your vibe</strong><span>MTN, Airtel, Glo or 9mobile \u2014 paid your way.</span></button></div>';
     if(old){
       var bv=byId('friend-bal-val'); if(bv) bv.innerHTML=bal;
       return;
@@ -6967,9 +6630,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
       }
     }catch(e){}
   }
-  // Backstop only: readiness gate in bootApp normally controls the splash.
-  setTimeout(revealFallback, 9000);
-  // On a real JS error, reveal quickly so users are never trapped behind the splash.
+  setTimeout(revealFallback, 6500);
   window.addEventListener('error',function(){setTimeout(revealFallback,700);});
 })();
 </script>
@@ -7119,16 +6780,13 @@ window.detectAndSaveLocation = detectAndSaveLocation;
     }
   }
   function emergencySplash(){
-    // Absolute last-resort backstop. The primary control is the readiness
-    // gate in bootApp (hides splash when wallet+plans load, 6s soft cap).
-    // This only fires if something truly hangs beyond that.
     setTimeout(function(){
       var sp=$('db-splash');
       if(sp && sp.className!=='hide'){
         sp.style.opacity='0';
         setTimeout(function(){ sp.className='hide'; sp.style.display='none'; },260);
       }
-    },9000);
+    },4200);
   }
   function run(){
     renameNav(); injectHome(); updateDynamic(); enhancePlans(); purposefulMessages(); celebrateIfCompleted();
@@ -7437,140 +7095,6 @@ function doChangePassword() {
     }
     return result;
   };
-})();
-</script>
-
-<script>
-/* ============================================================
-   SWIPE NAVIGATION
-   - Left/right swipe between visible tabs (dash, subs, wallet…)
-   - Left/right swipe closes an open modal (alternative to X)
-   - On the Fund modal, swipe toggles between its payment panels
-     (Bank Transfer <-> Auto-Fund) before closing
-   Ignores vertical scrolls, and swipes that start on inputs,
-   range sliders, or horizontally-scrollable strips (plan chips).
-   ============================================================ */
-(function () {
-  var startX = 0, startY = 0, startT = 0, tracking = false, startEl = null;
-
-  var THRESH   = 60;   // min horizontal px to count as a swipe
-  var V_LIMIT  = 50;   // max vertical drift to still count as horizontal
-  var MAX_TIME = 700;  // max ms for a swipe gesture
-
-  // Visible tab order (matches the bottom nav; hidden tabs excluded)
-  function visibleTabs() {
-    var order = ['dash', 'plans', 'subs', 'wallet', 'inbox', 'earn'];
-    var out = [];
-    for (var i = 0; i < order.length; i++) {
-      var btn = document.getElementById('tab-' + order[i]);
-      if (!btn) continue;
-      // skip tabs hidden in the nav (display:none)
-      var hidden = (btn.style && btn.style.display === 'none') ||
-                   (window.getComputedStyle && getComputedStyle(btn).display === 'none');
-      if (!hidden) out.push(order[i]);
-    }
-    return out.length ? out : ['dash', 'subs', 'wallet'];
-  }
-
-  function currentTab() {
-    var tabs = ['dash', 'plans', 'subs', 'wallet', 'inbox', 'earn'];
-    for (var i = 0; i < tabs.length; i++) {
-      var tc = document.getElementById('tc-' + tabs[i]);
-      if (tc && /\bon\b/.test(tc.className)) return tabs[i];
-    }
-    return 'dash';
-  }
-
-  // Topmost open modal (className contains 'on')
-  function openModalEl() {
-    var modals = document.querySelectorAll('.modal');
-    for (var i = modals.length - 1; i >= 0; i--) {
-      if (/\bon\b/.test(modals[i].className)) return modals[i];
-    }
-    return null;
-  }
-
-  // Don't hijack swipes that begin on interactive / scrollable things
-  function isExempt(el) {
-    var n = el, depth = 0;
-    while (n && n.nodeType === 1 && depth < 8) {
-      var tag = (n.tagName || '').toLowerCase();
-      if (tag === 'input' || tag === 'textarea' || tag === 'select') return true;
-      if (n.getAttribute && n.getAttribute('type') === 'range') return true;
-      // horizontally scrollable strips (plan chips, etc.)
-      if (n.scrollWidth && n.clientWidth && (n.scrollWidth - n.clientWidth) > 8) {
-        var ov = getComputedStyle(n).overflowX;
-        if (ov === 'auto' || ov === 'scroll') return true;
-      }
-      if (n.getAttribute && n.getAttribute('data-no-swipe') === '1') return true;
-      n = n.parentNode; depth++;
-    }
-    return false;
-  }
-
-  function onStart(e) {
-    var t = e.touches ? e.touches[0] : e;
-    startX = t.clientX; startY = t.clientY; startT = Date.now();
-    startEl = e.target;
-    tracking = !isExempt(startEl);
-  }
-
-  function onEnd(e) {
-    if (!tracking) return;
-    tracking = false;
-    var t = e.changedTouches ? e.changedTouches[0] : e;
-    var dx = t.clientX - startX;
-    var dy = t.clientY - startY;
-    var dt = Date.now() - startT;
-    if (dt > MAX_TIME) return;
-    if (Math.abs(dx) < THRESH) return;
-    if (Math.abs(dy) > V_LIMIT) return;          // it's a vertical scroll
-    if (Math.abs(dx) < Math.abs(dy) * 1.5) return; // not clearly horizontal
-
-    var goRight = dx > 0;   // swipe right = previous
-    var goLeft  = dx < 0;   // swipe left  = next
-
-    // 1) If a modal is open, handle modal-level swipe
-    var modal = openModalEl();
-    if (modal) {
-      // Fund modal: swipe toggles its two payment panels first
-      if (modal.id === 'm-fund' && typeof window.switchFundTab === 'function') {
-        var afVisible = (function () {
-          var af = document.getElementById('fund-panel-af');
-          return af && af.style.display !== 'none';
-        })();
-        if (goLeft && !afVisible) { window.switchFundTab('af'); return; } // next panel
-        if (goRight && afVisible) { window.switchFundTab('va'); return; } // prev panel
-        // at an edge -> close
-        if (typeof window.closeModal === 'function') window.closeModal('m-fund');
-        return;
-      }
-      // Any other modal: swipe in either direction closes it
-      if (typeof window.closeModal === 'function') {
-        window.closeModal(modal.id);
-      } else {
-        modal.className = 'modal';
-        var nav = document.getElementById('bottom-nav'); if (nav) nav.className = '';
-      }
-      return;
-    }
-
-    // 2) No modal open -> navigate tabs
-    if (typeof window.showTab !== 'function') return;
-    var tabs = visibleTabs();
-    var cur  = currentTab();
-    var idx  = tabs.indexOf(cur);
-    if (idx === -1) return;
-    var next = goLeft ? idx + 1 : idx - 1;   // left = forward, right = back
-    if (next < 0 || next >= tabs.length) return; // no wrap-around at edges
-    window.showTab(tabs[next]);
-  }
-
-  document.addEventListener('touchstart', onStart, { passive: true });
-  document.addEventListener('touchend',   onEnd,   { passive: true });
-  // Desktop / trackpad fallback (pointer drag)
-  document.addEventListener('mousedown', function (e) { onStart(e); });
-  document.addEventListener('mouseup',   function (e) { if (tracking) onEnd(e); });
 })();
 </script>
 
