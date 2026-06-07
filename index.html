@@ -1,8 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<!-- ============================================================
+     DataBulge WEB VERSION
+     - FCM / Capacitor native push: STRIPPED (no OS notifications)
+     - Notifications surface via the in-app SOUNDING BELL (chime + badge)
+     - push_subscriptions writes: disabled
+     - Native AdMob: falls back to web timer
+     This file is for browser / PWA use. The APK uses index.html.
+     ============================================================ -->
 <meta charset="UTF-8">
 <script>
+window.DATABULGE_WEB = true; /* identifies the web build */
+
 (function(){
   try{
     var ua=navigator.userAgent||'';
@@ -364,6 +374,8 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 .hero-bal-amount{font-size:2.2rem;font-weight:900;letter-spacing:-.04em;line-height:1.1;}
 .hero-bal-va{font-size:.72rem;opacity:.7;margin-top:6px;line-height:1.4;}
 .hero-fund-btn{display:block;width:100%;margin-top:16px;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.35);color:#fff;border-radius:12px;padding:13px 16px;font-size:.95rem;font-weight:900;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:rgba(255,255,255,.15);text-align:center;-webkit-appearance:none;min-height:48px;touch-action:manipulation;position:relative;z-index:2;}
+.hero-love-btn{position:absolute;top:12px;right:12px;background:rgba(255,255,255,.18);border:1.5px solid rgba(255,255,255,.35);color:#fff;border-radius:20px;padding:6px 13px;font-size:.72rem;font-weight:900;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:rgba(255,255,255,.15);-webkit-appearance:none;touch-action:manipulation;z-index:3;line-height:1;}.hero-love-btn:active{opacity:.82;-webkit-transform:scale(.96);transform:scale(.96);}.hero-bal-card{position:relative;}
+.upgrade-opt:active{opacity:.8;-webkit-transform:scale(.99);transform:scale(.99);}
 .hero-fund-btn:active{opacity:.82;-webkit-transform:scale(.98);transform:scale(.98);}
 @-webkit-keyframes balPop{0%{-webkit-transform:scale(1.08);opacity:.6}100%{-webkit-transform:scale(1);opacity:1}}
 @keyframes balPop{0%{transform:scale(1.08);opacity:.6}100%{transform:scale(1);opacity:1}}
@@ -891,7 +903,9 @@ button.tab,button.plan-chip{box-shadow:none!important;}
 
   <!-- DASHBOARD TAB - RETENTION REDESIGN -->
   <div id="tc-dash" class="tab-content">
+    <div id="promo-banner" style="display:none;margin-bottom:12px;"></div>
     <div class="hero-bal-card" id="hero-bal-card">
+      <button class="hero-love-btn" id="d-love-btn" onclick="openTransferModal()" ontouchstart="">❤️ Show love</button>
       <div class="hero-bal-label">Wallet Balance</div>
       <div class="hero-bal-amount" id="d-bal-dash">&#8358;0.00</div>
       <div class="hero-bal-va" id="d-va-dash">Loading&#8230;</div>
@@ -1058,6 +1072,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       </div>
     </div>
     </div>
+    <button class="btn btn-blue" id="open-transfer-btn" onclick="openTransferModal()" style="width:100%;margin:0 0 12px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:8px;">&#128184; Send to a DataBulge friend</button>
     <div id="wallet-tab-content"><div class="empty">Loading account&hellip;</div></div>
   </div>
 
@@ -1352,6 +1367,19 @@ button.tab,button.plan-chip{box-shadow:none!important;}
 
 
 
+<div class="modal" id="m-upgrade">
+  <div class="modal-card" style="max-width:420px;">
+    <div class="modal-head">
+      <h3 style="margin:0;font-size:1.05rem;font-weight:900;color:#111;">\u2B06\uFE0F Upgrade Plan</h3>
+      <button class="modal-x" onclick="closeModal('m-upgrade')" ontouchstart="">&times;</button>
+    </div>
+    <div class="modal-body" id="upgrade-body">
+      <p style="font-size:.8rem;color:#555;line-height:1.55;margin-bottom:10px;" id="upgrade-intro">Choose a higher plan. Everything you\u2019ve already paid carries over \u2014 you just continue paying the difference.</p>
+      <div id="upgrade-list" style="max-height:50vh;overflow-y:auto;"></div>
+      <div class="err" id="m-upgrade-err" style="margin-top:8px;"></div>
+    </div>
+  </div>
+</div>
 <div class="modal" id="m-fund">
   <div class="modal-box">
     <div class="modal-hdr"><div class="modal-title">Fund Account</div><button class="modal-x" id="m-fund-x">&#215;</button></div>
@@ -1388,6 +1416,48 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       </div>
     </div>
     <div class="modal-foot"></div>
+  </div>
+</div>
+
+<!-- SEND / TRANSFER MODAL -->
+<div class="modal" id="m-transfer">
+  <div class="modal-box">
+    <div class="modal-hdr"><div class="modal-title">Send Money</div><button class="modal-x" id="m-transfer-x">&#215;</button></div>
+    <div class="modal-body">
+      <div id="m-transfer-err" class="err"></div>
+
+      <!-- Step 1: find recipient -->
+      <div id="transfer-step-find">
+        <p style="font-size:.8rem;color:#555;line-height:1.55;margin-bottom:10px;">Send wallet balance to another DataBulge user using their phone number or email. It is instant and free.</p>
+        <label style="font-size:.78rem;font-weight:700;color:#333;display:block;margin-bottom:4px;">Recipient phone or email</label>
+        <input type="text" id="transfer-query" placeholder="e.g. 08012345678 or name@email.com" autocomplete="off" style="display:block;width:100%;padding:11px 12px;border:1.5px solid #ddd;border-radius:6px;font-size:.93rem;color:#111;background:#fff;outline:none;-webkit-appearance:none;margin-bottom:12px;">
+        <button class="btn btn-blue" id="transfer-find-btn" style="width:100%;margin:0;">Find user</button>
+      </div>
+
+      <!-- Step 2: confirm recipient + amount -->
+      <div id="transfer-step-amount" style="display:none;">
+        <div style="background:#eaf5ee;border:1px solid #b2dfdb;border-radius:8px;padding:12px;margin-bottom:12px;">
+          <div style="font-size:.72rem;font-weight:700;color:#888;text-transform:uppercase;margin-bottom:3px;">Sending to</div>
+          <div style="font-size:1rem;font-weight:900;color:#111;" id="transfer-recip-name">&mdash;</div>
+          <div style="font-size:.78rem;color:#666;" id="transfer-recip-contact">&mdash;</div>
+        </div>
+        <label style="font-size:.78rem;font-weight:700;color:#333;display:block;margin-bottom:4px;">Amount (&#8358;)</label>
+        <input type="number" id="transfer-amt" placeholder="e.g. 500" inputmode="numeric" style="display:block;width:100%;padding:11px 12px;border:1.5px solid #ddd;border-radius:6px;font-size:.93rem;color:#111;background:#fff;outline:none;-webkit-appearance:none;margin-bottom:8px;">
+        <div style="font-size:.74rem;color:#888;margin-bottom:6px;">Your balance: <strong id="transfer-bal">&#8358;0.00</strong> &middot; Min &#8358;50 &middot; Daily limit &#8358;50,000</div>
+        <label style="font-size:.78rem;font-weight:700;color:#333;display:block;margin-bottom:4px;">Note (optional)</label>
+        <input type="text" id="transfer-note" maxlength="80" placeholder="e.g. For your data" style="display:block;width:100%;padding:11px 12px;border:1.5px solid #ddd;border-radius:6px;font-size:.9rem;color:#111;background:#fff;outline:none;-webkit-appearance:none;margin-bottom:12px;">
+        <button class="btn btn-blue" id="transfer-send-btn" style="width:100%;margin:0 0 8px;">Send now</button>
+        <button class="btn btn-lite" id="transfer-back-btn" style="width:100%;margin:0;">&#8592; Use a different recipient</button>
+      </div>
+
+      <!-- Step 3: success -->
+      <div id="transfer-step-done" style="display:none;text-align:center;padding:8px 0;">
+        <div style="font-size:2.6rem;margin-bottom:6px;">&#9989;</div>
+        <div style="font-size:1.05rem;font-weight:900;color:#3d9758;margin-bottom:4px;" id="transfer-done-title">Sent!</div>
+        <div style="font-size:.82rem;color:#555;line-height:1.5;margin-bottom:14px;" id="transfer-done-msg">&mdash;</div>
+        <button class="btn btn-blue" id="transfer-done-btn" style="width:100%;margin:0;">Done</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1723,8 +1793,10 @@ function refreshToken(cb) {
     JSON.stringify({ refresh_token: gRefresh }),
     function(err, res) {
       if (err || !res || !res.data || !res.data.access_token) { cb(err || 'Refresh failed'); return; }
+      // Supabase refresh returns the rotated refresh_token + new access_token.
+      // Preserve cached user if the response omits it (_setSession handles that).
       _setSession(res.data);
-      // _setSession already syncs window.gToken
+      window.gUser = gUser; window.gToken = gToken;
       cb(null);
     }
   );
@@ -1744,8 +1816,9 @@ function _setSession(d) {
   if (d.user) gUser = d.user;
   _store.set('db_sess', JSON.stringify({ at: gToken, rt: gRefresh, ex: gExpiry, user: gUser }));
   // Keep window references in sync so cross-script-block code (notif system, push IIFE) sees the session
-  window.gUser  = gUser;
-  window.gToken = gToken;
+  window.gUser    = gUser;
+  window.gToken   = gToken;
+  window.gRefresh = gRefresh;
   // Pick up any FCM token that arrived before the session was established
   /* pendingFcmToken removed in web version */
 }
@@ -1829,6 +1902,25 @@ function dbGoSoftPay(){
     setTimeout(_toTop, 200);
   } catch(e) {}
 }
+
+/* Home "Complete your ongoing plan" card → opens the My Plan tab so the
+   user lands on their ongoing subscription, not the Buy Data tab. */
+function dbGoMyPlan(){
+  try {
+    showTab('subs');
+    function _toTopMP() {
+      try { window.scrollTo(0, 0); } catch(e) {}
+      try { document.documentElement.scrollTop = 0; } catch(e) {}
+      try { document.body.scrollTop = 0; } catch(e) {}
+      try { var _a = document.getElementById('pg-app'); if (_a) _a.scrollTop = 0; } catch(e) {}
+    }
+    _toTopMP();
+    setTimeout(_toTopMP, 0);
+    setTimeout(_toTopMP, 80);
+    setTimeout(_toTopMP, 200);
+  } catch(e) {}
+}
+window.dbGoMyPlan = dbGoMyPlan;
 
 function showTab(t) {
   var tabs = ['dash','plans','subs','wallet','inbox','earn'];
@@ -2023,8 +2115,19 @@ function bootPublicApp() {
   loadPlans();
 }
 
-function bootApp() {
-  if (!gUser) return;
+var _tokenRefreshTimer = null;
+function bootApp(onReady) {
+  if (!gUser) { if (typeof onReady === 'function') onReady(); return; }
+  // KEEP SESSION ALIVE: refresh the access token every 45 minutes while the
+  // app is open so it never silently expires mid-use. Refresh-token rotation
+  // is handled by refreshToken/_setSession. One timer only.
+  if (!_tokenRefreshTimer) {
+    _tokenRefreshTimer = setInterval(function() {
+      if (window.gRefresh || gRefresh) {
+        refreshToken(function(){ /* silent; failure handled on next API call */ });
+      }
+    }, 45 * 60 * 1000);
+  }
   var meta = gUser.user_metadata || {};
   var name = meta.full_name || gUser.email.split('@')[0];
   var initials = '';
@@ -2043,11 +2146,23 @@ function bootApp() {
   _dashLastLoad  = _now;
 
   // ── BOOT SEQUENCE ─────────────────────────────────────────
-  // Fire wallet + plans in parallel immediately — both are needed
-  // for the first visible screen. loadPlans uses cached data after
-  // the first load so subsequent calls are instant.
-  loadWalletBalance(function() {});
-  loadPlans();
+  // The DASHBOARD (first screen) only needs the WALLET balance to be
+  // meaningful. Lift the splash as soon as the wallet is loaded — this is
+  // the fastest correct first paint. Plans load in the background for the
+  // Buy Data tab (not the first screen) and never block entry.
+  var _readyFired = false;
+  function _fireReady() {
+    if (!_readyFired) { _readyFired = true; if (typeof onReady === 'function') onReady(); }
+  }
+  // Hard safety cap: never let the splash trap the user beyond 5s even if
+  // the wallet call hangs.
+  setTimeout(_fireReady, 5000);
+
+  // Primary gate: wallet balance loaded → show the dashboard immediately.
+  loadWalletBalance(function() { _fireReady(); });
+
+  // Plans load in the background — does NOT gate the splash.
+  try { loadPlans(function() {}); } catch (e) {}
 
   // My Plan tab — defer 200ms (not visible, low priority)
   setTimeout(function() { loadSubs(); }, 200);
@@ -2233,7 +2348,52 @@ function loadDashboard() {
     if ($('d-bal-dash')) $('d-bal-dash').textContent = bs;
   }
   loadWalletBalance(function() {});
+  loadPromos();
 }
+
+/* ── PROMO / NUGGET BANNER ─────────────────────────────────── */
+function loadPromos() {
+  if (!window.gUser || !window.gToken) return;
+  rpc('get_active_promos', JSON.stringify({ p_user_id: gUser.id }), function(err, res) {
+    var banner = document.getElementById('promo-banner');
+    if (!banner) return;
+    if (err || !res || !res.ok || !res.promos || !res.promos.length) {
+      banner.style.display = 'none'; return;
+    }
+    banner.style.display = 'block';
+    var html = '';
+    for (var i = 0; i < res.promos.length; i++) {
+      var p = res.promos[i];
+      var isPromo = p.type === 'promo';
+      var bg = isPromo ? 'linear-gradient(135deg,#3d9758,#2d7a44)' : 'linear-gradient(135deg,#1A56DB,#1244a8)';
+      html += '<div style="background:' + bg + ';border-radius:14px;padding:14px 16px;margin-bottom:8px;color:#fff;position:relative;overflow:hidden;">' +
+        '<div style="position:absolute;top:-20px;right:-20px;font-size:5rem;opacity:.08;">' + (p.icon || '\uD83D\uDCE2') + '</div>' +
+        '<div style="font-size:.78rem;font-weight:700;opacity:.8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">' + (isPromo ? '\uD83C\uDF89 Special Offer' : '\uD83D\uDCA1 Daily Nugget') + '</div>' +
+        '<div style="font-size:.95rem;font-weight:900;margin-bottom:4px;">' + (p.title || '') + '</div>' +
+        '<div style="font-size:.78rem;opacity:.88;line-height:1.5;margin-bottom:' + (isPromo && p.promo_code ? '10px' : '0') + ';">' + (p.message || '') + '</div>';
+      if (isPromo && p.promo_code && !p.already_redeemed) {
+        html += '<button onclick="redeemPromo(\'' + p.promo_code + '\')" style="background:#fff;color:#2d7a44;border:none;border-radius:8px;padding:7px 14px;font-size:.8rem;font-weight:900;cursor:pointer;font-family:inherit;">Redeem Code: ' + p.promo_code + '</button>';
+      } else if (isPromo && p.already_redeemed) {
+        html += '<span style="background:rgba(255,255,255,.2);border-radius:8px;padding:5px 12px;font-size:.75rem;font-weight:700;">\u2705 Already Redeemed</span>';
+      }
+      html += '</div>';
+    }
+    banner.innerHTML = html;
+  });
+}
+function redeemPromo(promoCode) {
+  if (!window.gUser) return;
+  rpc('redeem_promo_code', JSON.stringify({ p_user_id: gUser.id, p_promo_code: promoCode }), function(err, res) {
+    if (!err && res && res.ok) {
+      toast(res.message || '\u2705 Promo redeemed!');
+      loadPromos(); loadDashboard();
+    } else {
+      toast('\u26A0\uFE0F ' + ((res && (res.message || res.error)) || 'Could not redeem promo.'));
+    }
+  });
+}
+window.loadPromos = loadPromos;
+window.redeemPromo = redeemPromo;
 
 function netCls(net) {
   var n = (net || '').toUpperCase();
@@ -2248,29 +2408,33 @@ var _plansCache    = null;  // cached plan data — static, never changes mid-se
 var _plansCacheTs  = 0;    // timestamp of last fetch
 var PLANS_CACHE_MS = 5 * 60 * 1000; // re-fetch after 5 minutes max
 
-function loadPlans() {
+function loadPlans(cb) {
   var wrap = $('plans-list');
   var now  = Date.now();
+  var _done = function() { if (typeof cb === 'function') { try { cb(); } catch(e) {} } };
 
   // Serve from cache instantly if fresh — avoids redundant network round trips
   if (_plansCache && (now - _plansCacheTs) < PLANS_CACHE_MS) {
     _renderPlans(_plansCache);
+    _done();
     return;
   }
 
-  wrap.innerHTML = '<div class="empty" style="padding:20px 0;">Loading plans\u2026</div>';
+  if (wrap) wrap.innerHTML = '<div class="empty" style="padding:20px 0;">Loading plans\u2026</div>';
 
   restGet('/data_plans',
     'is_active=eq.true&order=network,sort_order,selling_price&select=id,data_size,network,selling_price,daily_price,validity_days,category',
     function(e, r) {
       if (!r || !r.ok || !r.data || !r.data.length) {
-        wrap.innerHTML = '<div class="empty">No plans available right now.</div>';
+        if (wrap) wrap.innerHTML = '<div class="empty">No plans available right now.</div>';
+        _done();   // still mark ready so the splash never hangs
         return;
       }
       // Cache for this session
       _plansCache   = r.data;
       _plansCacheTs = Date.now();
       _renderPlans(r.data);
+      _done();
     });
 }
 
@@ -2725,6 +2889,7 @@ function renderSubsList(subs, compact) {
     } else if ((isActive || isPending) && remaining > 0) {
       html += '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:7px;margin-top:4px;">' +
         '<button class="pay-btn" style="flex:1;" onclick="openPayModal(\'' + esc(s.id) + '\',' + (dailyPrice||0) + ',' + remaining + ')">Pay Now</button>' +
+        '<button style="padding:8px 12px;background:#fff;border:1.5px solid #2A3FA3;color:#2A3FA3;border-radius:6px;font-size:.78rem;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="openUpgradeModal(\'' + esc(s.id) + '\')" ontouchstart="">\u2B06\uFE0F Upgrade</button>' +
         /* Report Issue button hidden per product decision — keep markup & handler for easy re-enable */
         '<button style="display:none;padding:8px 10px;background:#fff;border:1px solid #e5e7eb;color:#374151;border-radius:6px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="openRefundModal(\'' + esc(s.id) + '\',\'' + esc(displayName + ' ' + displayNetwork) + '\',\'' + esc(s.phone_number || '') + '\')">&#9888; Report Issue</button>' +
       '</div>';
@@ -3262,7 +3427,8 @@ function confirmSub() {
     var progAmt = progAmtEl ? (parseFloat(progAmtEl.value) || 0) : (gSelSub.daily || 0);
     errHide('m-sub-err');
     if (!progAmt || progAmt <= 0) { errShow('m-sub-err', 'Please enter an amount to pay.'); return; }
-    if (progAmt > gBal)            { errShow('m-sub-err', 'Insufficient wallet balance. Please fund your account first.'); return; }
+    if (gSelSub && gSelSub.remaining > 0) { progAmt = Math.min(progAmt, gSelSub.remaining); }
+    if (progAmt > gBal + 0.01)     { errShow('m-sub-err', 'Insufficient wallet balance. Please fund your account first.'); return; }
     if (progAmt > gSelSub.remaining + 1) { errShow('m-sub-err', 'Amount exceeds the outstanding balance of ' + fmtN(gSelSub.remaining) + '.'); return; }
     btnLoad('m-sub-btn', true, 'Paying\u2026');
     ensureToken(function(err) {
@@ -3388,7 +3554,9 @@ function confirmSub() {
 function openPayModal(subId, dailyAmt, remaining) {
   gSelSub = { id: subId, daily: dailyAmt, remaining: remaining };
   var sugAmt = dailyAmt > 0 ? Math.min(dailyAmt, remaining) : remaining;
-  var insufficientBal = gBal < dailyAmt;
+  // Only the amount actually DUE matters — never demand more than what's left to finish.
+  var dueNow = sugAmt;
+  var insufficientBal = gBal < dueNow;
   var newRemaining = Math.max(0, remaining - sugAmt);
   var isLast    = dailyAmt > 0 && Math.ceil(remaining / dailyAmt) <= 1;
   var isAlmost  = !isLast && dailyAmt > 0 && Math.ceil(remaining / dailyAmt) <= 2;
@@ -3436,7 +3604,10 @@ function confirmPay() {
   var amt = parseFloat($('m-pay-amt').value);
   errHide('m-pay-err');
   if (!amt || amt <= 0) { errShow('m-pay-err', 'Enter a valid amount.'); return; }
-  if (amt > gBal)       { errShow('m-pay-err', 'Insufficient account balance.'); return; }
+  // Cap the charge at what's actually left to finish the plan.
+  if (gSelSub && gSelSub.remaining > 0) { amt = Math.min(amt, gSelSub.remaining); }
+  // Only block if the wallet can't cover the (capped) amount actually due.
+  if (amt > gBal + 0.01) { errShow('m-pay-err', 'Insufficient account balance.'); return; }
   if (!gSelSub)         { return; }
   btnLoad('m-pay-btn', true, 'Paying\u2026');
   ensureToken(function(err) {
@@ -3508,6 +3679,94 @@ function copyText(txt) {
   ta.select();
   try { document.execCommand('copy'); toast('Copied'); } catch(e) { toast('Copy failed'); }
   document.body.removeChild(ta);
+}
+
+/* ── PEER-TO-PEER TRANSFER ──────────────────────────────────── */
+var gTransferRecipient = null;
+
+function openTransferModal() {
+  gTransferRecipient = null;
+  errHide('m-transfer-err');
+  if ($('transfer-query')) $('transfer-query').value = '';
+  if ($('transfer-amt'))   $('transfer-amt').value   = '';
+  if ($('transfer-note'))  $('transfer-note').value  = '';
+  if ($('transfer-step-find'))   $('transfer-step-find').style.display   = 'block';
+  if ($('transfer-step-amount')) $('transfer-step-amount').style.display = 'none';
+  if ($('transfer-step-done'))   $('transfer-step-done').style.display   = 'none';
+  if ($('transfer-bal'))   $('transfer-bal').textContent = fmtN(gBal);
+  openModal('m-transfer');
+}
+window.openTransferModal = openTransferModal;
+
+function transferFind() {
+  var q = ($('transfer-query').value || '').trim();
+  errHide('m-transfer-err');
+  var isEmail = q.indexOf('@') > 0;
+  var digits = q.replace(/\D/g, '');
+  if (!isEmail && digits.length < 10) { errShow('m-transfer-err', 'Enter a valid phone number or email.'); return; }
+  if (isEmail && q.length < 5) { errShow('m-transfer-err', 'Enter a valid phone number or email.'); return; }
+  if (!gUser) return;
+  btnLoad('transfer-find-btn', true, 'Find user');
+  rpc('lookup_databulge_user', JSON.stringify({ p_query: q }), function(err, res) {
+    btnLoad('transfer-find-btn', false, 'Find user');
+    var d = (res && res.data !== undefined) ? res.data : res; // xhr wraps jsonb in .data
+    if (err || !d || !d.found) {
+      errShow('m-transfer-err', (d && d.error) || 'No DataBulge user found with that phone number or email.');
+      return;
+    }
+    if (d.user_id === gUser.id) {
+      errShow('m-transfer-err', 'You cannot send to yourself.');
+      return;
+    }
+    gTransferRecipient = { id: d.user_id, name: d.name, contact: d.phone_masked || q };
+    if ($('transfer-recip-name'))    $('transfer-recip-name').textContent    = d.name || 'DataBulge user';
+    if ($('transfer-recip-contact')) $('transfer-recip-contact').textContent = d.phone_masked || q;
+    if ($('transfer-bal'))           $('transfer-bal').textContent           = fmtN(gBal);
+    $('transfer-step-find').style.display   = 'none';
+    $('transfer-step-amount').style.display = 'block';
+    errHide('m-transfer-err');
+  });
+}
+
+function transferBack() {
+  gTransferRecipient = null;
+  errHide('m-transfer-err');
+  $('transfer-step-amount').style.display = 'none';
+  $('transfer-step-find').style.display   = 'block';
+}
+
+function transferSend() {
+  errHide('m-transfer-err');
+  if (!gTransferRecipient || !gUser) { transferBack(); return; }
+  var amt = parseFloat($('transfer-amt').value);
+  if (!amt || amt < 50) { errShow('m-transfer-err', 'Minimum transfer is \u20a650.'); return; }
+  if (amt > gBal + 0.01) { errShow('m-transfer-err', 'Insufficient balance.'); return; }
+  var note = ($('transfer-note').value || '').trim() || null;
+
+  btnLoad('transfer-send-btn', true, 'Send now');
+  rpc('transfer_wallet_balance', JSON.stringify({
+    p_sender_id: gUser.id,
+    p_recipient_id: gTransferRecipient.id,
+    p_amount: amt,
+    p_note: note
+  }), function(err, res) {
+    btnLoad('transfer-send-btn', false, 'Send now');
+    var d = (res && res.data !== undefined) ? res.data : res;
+    if (err || !d || !d.success) {
+      errShow('m-transfer-err', (d && d.error) || 'Transfer failed. Please try again.');
+      return;
+    }
+    // success
+    gBal = Number(d.sender_balance);
+    if (typeof refreshBalanceUI === 'function') refreshBalanceUI();
+    if ($('d-bal-dash')) $('d-bal-dash').textContent = fmtN(gBal);
+    if ($('transfer-done-title')) $('transfer-done-title').textContent = '\u20a6' + Number(d.amount).toLocaleString() + ' sent!';
+    if ($('transfer-done-msg'))   $('transfer-done-msg').textContent   = 'Sent to ' + (d.recipient_name || 'your friend') + '. New balance: ' + fmtN(gBal) + '.';
+    $('transfer-step-amount').style.display = 'none';
+    $('transfer-step-done').style.display   = 'block';
+    if (typeof loadWalletTab === 'function') loadWalletTab();
+    if (typeof loadDashCashflow === 'function') loadDashCashflow();
+  });
 }
 
 function openFundModal() {
@@ -3880,25 +4139,77 @@ function init() {
   if (parseHash()) { hideSplash(); return; }
 
   if (_loadSession()) {
+    // STAY LOGGED IN: render the app BEHIND the splash, then only hide the
+    // splash once the first screen's essential data has actually loaded.
+    // The user never sees a half-empty app. Refresh token quietly in bg.
+    showPage('app');
+    bootApp(function() {
+      // onReady: fired after wallet + plans (first-screen essentials) load.
+      hideSplash();
+      setTimeout(handlePushDeepLink, 300);
+    });
+
     ensureToken(function(err) {
-      if (!err && gUser) {
-        // Valid session — show the app and hide the splash
-        showPage('app');
-        hideSplash();
-        bootApp();
-      } else {
-        // Session expired — clear and redirect
-        _clearSession();
-        hideSplash();
-        window.location.replace('databulge-auth.html');
+      if (err) {
+        // Background refresh failed. Try ONE explicit refresh with the stored token.
+        refreshToken(function(err2) {
+          if (err2) {
+            // Refresh token is genuinely dead/revoked — now we must re-auth.
+            _clearSession();
+            window.location.replace('databulge-auth.html');
+          }
+          // else: silently refreshed, user stays in the app
+        });
       }
     });
   } else {
-    // No session — redirect to auth immediately
     hideSplash();
     window.location.replace('databulge-auth.html');
   }
 }
+
+/* ── PUSH NOTIFICATION DEEP LINK ──────────────────────────────
+   When a user taps an FCM push, the data payload carries a
+   'target' (and optional metadata). Navigate to the right tab. */
+function handlePushDeepLink() {
+  var target = null, metadata = null;
+  try {
+    var params = new URLSearchParams(window.location.search);
+    target = params.get('target') || params.get('category') || null;
+    var ms = params.get('metadata');
+    if (ms) metadata = JSON.parse(decodeURIComponent(ms));
+  } catch(e) {}
+  if (!target) {
+    try {
+      var stored = localStorage.getItem('db_push_target');
+      if (stored) {
+        var p = JSON.parse(stored);
+        target = p.target || null; metadata = p.metadata || null;
+        localStorage.removeItem('db_push_target');
+      }
+    } catch(e) {}
+  }
+  if (!target) return;
+  if (target === 'delivery' || target === 'subscription' || target === 'data_usage') {
+    showTab('subs');
+    if (metadata && metadata.subscription_id) {
+      setTimeout(function() {
+        var card = document.getElementById('sub-card-' + metadata.subscription_id);
+        if (card && card.scrollIntoView) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 600);
+    }
+  } else if (target === 'wallet' || target === 'autofund') {
+    showTab('wallet');
+  } else if (target === 'ad' || target === 'earn') {
+    showTab('earn');
+  } else if (target === 'inbox') {
+    showTab('inbox');
+  } else {
+    showTab('dash');
+  }
+  try { window.history.replaceState({}, document.title, window.location.pathname); } catch(e) {}
+}
+window.handlePushDeepLink = handlePushDeepLink;
 
 /* ── BUTTON WIRING ──────────────────────────────────────────── */
 
@@ -4079,6 +4390,11 @@ function wire() {
   if ($('plans-fund-btn')) $('plans-fund-btn').onclick = openFundModal;
   if ($('af-fund-btn'))    $('af-fund-btn').onclick    = function() { launchAutoFund(parseFloat($('af-fund-amt').value)||0, null, null); };
   if ($('af-cancel-btn'))  $('af-cancel-btn').onclick  = function() { doCancelAutoFund(gWalletMandateId, null); };
+  if ($('transfer-find-btn'))  $('transfer-find-btn').onclick  = transferFind;
+  if ($('transfer-send-btn'))  $('transfer-send-btn').onclick  = transferSend;
+  if ($('transfer-back-btn'))  $('transfer-back-btn').onclick  = transferBack;
+  if ($('m-transfer-x'))       $('m-transfer-x').onclick       = function() { closeModal('m-transfer'); };
+  if ($('transfer-done-btn'))  $('transfer-done-btn').onclick  = function() { closeModal('m-transfer'); };
   if ($('m-sub-cancel-af-btn')) $('m-sub-cancel-af-btn').onclick = function() { doCancelAutoFund(gSubMandateId, null); };
 
   $('compose-btn-open').onclick = openComposeModal;
@@ -4603,6 +4919,7 @@ function earnShowWebTimer() {
 }
 
 function earnShowNativeAd() {
+  /* WEB VERSION: no native AdMob plugin. Always use the web timer fallback. */
   var AdMob = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.AdMob;
   if (!AdMob) { earnShowWebTimer(); return; }
 
@@ -5520,6 +5837,8 @@ function notifMarkAllRead() {
 }
 
 /* ── Fetch notifications from backend ────────────────── */
+var _webNotifLastUnread = null;   // tracks unread count to detect new arrivals (web sounding bell)
+var _webNotifPrimed     = false;  // skip sound on the very first load after login
 function notifLoad() {
   if (!window.gUser || !window.gToken) {
     /* No session yet — still show seeds so drawer is never blank */
@@ -5539,7 +5858,26 @@ function notifLoad() {
     }
     var d = res.data;
     _notifAll = d.notifications || [];
-    notifUpdateBadge(d.unread_count || 0);
+    var unread = d.unread_count || 0;
+
+    /* WEB SOUNDING BELL: this web build has no FCM OS notifications, so the
+       in-app bell is the only signal. When the unread count goes UP between
+       polls, play the chime + briefly pulse the bell so the user notices. */
+    if (_webNotifPrimed && _webNotifLastUnread !== null && unread > _webNotifLastUnread) {
+      try { dbPlayNotifSound(); } catch(e) {}
+      try {
+        var bell = document.getElementById('notif-bell') || document.getElementById('bell-btn');
+        if (bell) {
+          bell.style.transition = 'transform .15s';
+          bell.style.transform  = 'scale(1.25)';
+          setTimeout(function(){ bell.style.transform = 'scale(1)'; }, 200);
+        }
+      } catch(e) {}
+    }
+    _webNotifLastUnread = unread;
+    _webNotifPrimed     = true;
+
+    notifUpdateBadge(unread);
     notifRender();
   });
 }
@@ -5554,6 +5892,7 @@ function openNotifDrawer() {
   var drawer  = document.getElementById('notif-drawer');
   var overlay = document.getElementById('notif-overlay');
   if (!drawer) return;
+  window.__notifOpenFlag = true;
   if (overlay) overlay.style.display = 'block';
   drawer.style.webkitTransform = 'translateX(0)';
   drawer.style.transform       = 'translateX(0)';
@@ -5569,6 +5908,7 @@ function closeNotifDrawer() {
   var drawer  = document.getElementById('notif-drawer');
   var overlay = document.getElementById('notif-overlay');
   if (!drawer) return;
+  window.__notifOpenFlag = false;
   drawer.style.webkitTransform = 'translateX(110%)';
   drawer.style.transform       = 'translateX(110%)';
   if (overlay) setTimeout(function() { overlay.style.display = 'none'; }, 280);
@@ -5670,11 +6010,16 @@ function checkDataUsage(subscriptionId, mbUsed, mbTotal) {
 }
 window.checkDataUsage = checkDataUsage;
 
-/* Push tokens disabled in web version */
-function registerPushToken() { /* no-op */ }
+/* ── FCM Push Token Registration ────────────────────────
+   Saves device FCM token to push_subscriptions table so
+   the sendPushNotification edge function can reach this device.
+   Real native implementation — required for APK push to work.
+──────────────────────────────────────────────────────── */
+function registerPushToken() {
+  /* WEB VERSION: FCM/native push is stripped. No token, no push_subscriptions write.
+     Notifications surface via the in-app sounding bell (see notifLoad). */
+}
 window.registerPushToken = registerPushToken;
-
-/* Native bridge exports removed in web version */
 
 /* ═══ RETENTION SYSTEM ════════════════════════════════════════
    ES5 — Android 4.4+ compatible. No arrow functions, no const.
@@ -6428,8 +6773,14 @@ window.confirmAirtime = confirmAirtime;
    npm install @capacitor/push-notifications
    npx cap sync android
 ──────────────────────────────────────────────────────── */
-/* Push tokens disabled in web version */
-function requestCapacitorPushToken() { /* no-op */ }
+/* ── Request push token from Capacitor native plugins ───
+   Requires @capacitor/push-notifications installed in the APK.
+   Registers for FCM, listens for incoming pushes, and wires
+   tap-to-open deep linking. Real native implementation.
+──────────────────────────────────────────────────────── */
+function requestCapacitorPushToken() {
+  /* WEB VERSION: no Capacitor, no native push registration. Intentional no-op. */
+}
 window.requestCapacitorPushToken = requestCapacitorPushToken;
 
 /* ── Responsive bottom nav positioning ──────────────── */
@@ -6535,7 +6886,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
         '<div class="friend-balance"><div><div class="friend-bal-label">Available balance</div><div class="friend-bal-val" id="friend-bal-val">'+bal+'</div></div><div style="font-size:.76rem;opacity:.82;font-weight:800;text-align:right;">Ready when you are</div></div>'+
         '<div class="friend-cta-row"><button class="friend-cta primary" onclick="openFundModal()" ontouchstart="">Add small money</button><button class="friend-cta secondary" onclick="dbGoSoftPay();" ontouchstart="">Find a plan</button></div>'+
       '</div>'+
-      '<div class="friend-quick-grid" id="friend-quick-grid"><button class="friend-action-card fund" onclick="openFundModal()" ontouchstart=""><span class="emoji">\uD83D\uDC9A</span><strong>Fund with ease</strong><span>Your wallet updates automatically after transfer.</span></button><button class="friend-action-card plan" onclick="dbGoSoftPay();" ontouchstart=""><span class="emoji">\uD83C\uDFAF</span><strong>Choose your vibe</strong><span>MTN, Airtel, Glo or 9mobile \u2014 paid your way.</span></button></div>';
+      '<div class="friend-quick-grid" id="friend-quick-grid"><button class="friend-action-card fund" onclick="openFundModal()" ontouchstart=""><span class="emoji">\uD83D\uDC9A</span><strong>Fund with ease</strong><span>Your wallet updates automatically after transfer.</span></button><button class="friend-action-card plan" onclick="dbGoMyPlan();" ontouchstart=""><span class="emoji">\uD83C\uDFAF</span><strong>Choose your vibe</strong><span>Continue your ongoing plan \u2014 Manifest it to the fullest.</span></button></div>';
     if(old){
       var bv=byId('friend-bal-val'); if(bv) bv.innerHTML=bal;
       return;
@@ -6630,7 +6981,9 @@ window.detectAndSaveLocation = detectAndSaveLocation;
       }
     }catch(e){}
   }
-  setTimeout(revealFallback, 6500);
+  // Backstop only: readiness gate in bootApp normally controls the splash.
+  setTimeout(revealFallback, 9000);
+  // On a real JS error, reveal quickly so users are never trapped behind the splash.
   window.addEventListener('error',function(){setTimeout(revealFallback,700);});
 })();
 </script>
@@ -6780,13 +7133,16 @@ window.detectAndSaveLocation = detectAndSaveLocation;
     }
   }
   function emergencySplash(){
+    // Absolute last-resort backstop. The primary control is the readiness
+    // gate in bootApp (hides splash when wallet+plans load, 6s soft cap).
+    // This only fires if something truly hangs beyond that.
     setTimeout(function(){
       var sp=$('db-splash');
       if(sp && sp.className!=='hide'){
         sp.style.opacity='0';
         setTimeout(function(){ sp.className='hide'; sp.style.display='none'; },260);
       }
-    },4200);
+    },9000);
   }
   function run(){
     renameNav(); injectHome(); updateDynamic(); enhancePlans(); purposefulMessages(); celebrateIfCompleted();
@@ -7070,6 +7426,79 @@ function doChangePassword() {
 </script>
 
 <script>
+
+/* ============================================================
+   PLAN UPGRADE — move an ongoing plan up to a higher one.
+   Carries over everything already paid; user pays the difference.
+   ============================================================ */
+var gUpgradeSubId = null;
+function openUpgradeModal(subId) {
+  gUpgradeSubId = subId;
+  errHide('m-upgrade-err');
+  var list = $('upgrade-list');
+  if (list) list.innerHTML = '<div class="empty" style="padding:20px 0;">Loading upgrade options\u2026</div>';
+  openModal('m-upgrade');
+  if (!gUser) return;
+  rpc('get_upgrade_options', { p_subscription_id: subId, p_user_id: gUser.id }, function(err, res) {
+    var d = (res && res.data !== undefined) ? res.data : res;
+    if (err || !d || !d.ok) {
+      if (list) list.innerHTML = '';
+      errShow('m-upgrade-err', (d && d.error) || 'Could not load upgrade options.');
+      return;
+    }
+    if ($('upgrade-intro')) $('upgrade-intro').textContent =
+      'Current plan: ' + (d.current_plan || '') + '. You\u2019ve paid ' + fmtN(d.amount_paid || 0) +
+      ' \u2014 it carries over. Pick a higher plan below.';
+    var opts = d.options || [];
+    if (!opts.length) {
+      if (list) list.innerHTML = '<div class="empty" style="padding:20px 0;">You\u2019re already on the highest plan for this network.</div>';
+      return;
+    }
+    var html = '';
+    for (var i = 0; i < opts.length; i++) {
+      var o = opts[i];
+      html += '<button class="upgrade-opt" onclick="doUpgrade(\'' + esc(o.id) + '\')" ontouchstart="" ' +
+        'style="display:block;width:100%;text-align:left;background:#f7f8ff;border:1.5px solid #e5e7eb;border-radius:10px;padding:11px 13px;margin-bottom:8px;cursor:pointer;font-family:inherit;">' +
+        '<div style="display:flex;justify-content:space-between;align-items:center;">' +
+          '<span style="font-weight:900;color:#111;font-size:.95rem;">' + esc(o.data_size) + ' ' + esc(o.network) + '</span>' +
+          '<span style="font-weight:900;color:#2A3FA3;font-size:.9rem;">' + fmtN(o.new_total) + '</span>' +
+        '</div>' +
+        '<div style="font-size:.74rem;color:#666;margin-top:3px;">' +
+          fmtN(o.new_daily) + '/day \u00B7 ' + fmtN(o.remaining_after_upgrade) + ' left after upgrade' +
+        '</div>' +
+      '</button>';
+    }
+    if (list) list.innerHTML = html;
+  });
+}
+function doUpgrade(newPlanId) {
+  if (!gUser || !gUpgradeSubId) return;
+  errHide('m-upgrade-err');
+  var list = $('upgrade-list');
+  if (list) list.style.opacity = '.5';
+  rpc('upgrade_subscription', { p_user_id: gUser.id, p_subscription_id: gUpgradeSubId, p_new_plan_id: newPlanId }, function(err, res) {
+    if (list) list.style.opacity = '1';
+    var d = (res && res.data !== undefined) ? res.data : res;
+    if (err || !d || !d.ok) {
+      errShow('m-upgrade-err', (d && d.error) || 'Upgrade failed. Please try again.');
+      return;
+    }
+    closeModal('m-upgrade');
+    if (typeof toast === 'function') {
+      toast(d.completed
+        ? '\u2B06\uFE0F Upgraded to ' + d.new_plan + ' \u2014 fully paid, data on its way!'
+        : '\u2B06\uFE0F Upgraded to ' + d.new_plan + '. ' + fmtN(d.remaining) + ' left to complete.');
+    }
+    if (typeof loadSubs === 'function') loadSubs();
+    if (typeof loadWalletBalance === 'function') loadWalletBalance(function(){});
+  });
+}
+window.openUpgradeModal = openUpgradeModal;
+window.doUpgrade = doUpgrade;
+
+</script>
+
+<script>
 /* Scroll-to-top patch: all tabs except Buy Data (plans) always open at the very top. */
 (function(){
   if (window.__dbTabTopPatch) return;
@@ -7095,6 +7524,167 @@ function doChangePassword() {
     }
     return result;
   };
+})();
+</script>
+
+<script>
+/* ============================================================
+   SWIPE NAVIGATION
+   - Left/right swipe between visible tabs (dash, subs, wallet…)
+   - Left/right swipe closes an open modal (alternative to X)
+   - On the Fund modal, swipe toggles between its payment panels
+     (Bank Transfer <-> Auto-Fund) before closing
+   Ignores vertical scrolls, and swipes that start on inputs,
+   range sliders, or horizontally-scrollable strips (plan chips).
+   ============================================================ */
+(function () {
+  var startX = 0, startY = 0, startT = 0, tracking = false, isTouch = false;
+
+  var THRESH   = 55;   // min horizontal px to count as a swipe
+  var V_LIMIT  = 45;   // max vertical drift to still count as horizontal
+  var MAX_TIME = 600;  // max ms for a swipe gesture
+
+  function visibleTabs() {
+    var order = ['dash', 'plans', 'subs', 'wallet', 'inbox', 'earn'];
+    var out = [];
+    for (var i = 0; i < order.length; i++) {
+      var btn = document.getElementById('tab-' + order[i]);
+      if (!btn) continue;
+      var hidden = (btn.style && btn.style.display === 'none') ||
+                   (window.getComputedStyle && getComputedStyle(btn).display === 'none');
+      if (!hidden) out.push(order[i]);
+    }
+    return out.length ? out : ['dash', 'subs', 'wallet'];
+  }
+
+  function currentTab() {
+    var tabs = ['dash', 'plans', 'subs', 'wallet', 'inbox', 'earn'];
+    for (var i = 0; i < tabs.length; i++) {
+      var tc = document.getElementById('tc-' + tabs[i]);
+      if (tc && /\bon\b/.test(tc.className)) return tabs[i];
+    }
+    return 'dash';
+  }
+
+  function openModalEl() {
+    var modals = document.querySelectorAll('.modal');
+    for (var i = modals.length - 1; i >= 0; i--) {
+      if (/\bon\b/.test(modals[i].className)) return modals[i];
+    }
+    return null;
+  }
+
+  // Is the notification drawer open?
+  function notifDrawerOpen() {
+    var d = document.getElementById('notif-drawer');
+    if (!d) return false;
+    var tf = (d.style && (d.style.transform || d.style.webkitTransform)) || '';
+    // open when translateX(0); closed when translateX(110%)
+    if (window.__notifOpenFlag === true) return true;
+    return tf.indexOf('translateX(0') !== -1;
+  }
+
+  function isExempt(el) {
+    var n = el, depth = 0;
+    while (n && n.nodeType === 1 && depth < 8) {
+      var tag = (n.tagName || '').toLowerCase();
+      if (tag === 'input' || tag === 'textarea' || tag === 'select') return true;
+      if (n.getAttribute && n.getAttribute('type') === 'range') return true;
+      if (n.scrollWidth && n.clientWidth && (n.scrollWidth - n.clientWidth) > 8) {
+        var ov = getComputedStyle(n).overflowX;
+        if (ov === 'auto' || ov === 'scroll') return true;
+      }
+      if (n.getAttribute && n.getAttribute('data-no-swipe') === '1') return true;
+      n = n.parentNode; depth++;
+    }
+    return false;
+  }
+
+  function begin(x, y, target) {
+    startX = x; startY = y; startT = Date.now();
+    tracking = !isExempt(target);
+  }
+
+  function finish(x, y) {
+    if (!tracking) return;
+    tracking = false;
+    var dx = x - startX;
+    var dy = y - startY;
+    var dt = Date.now() - startT;
+    if (dt > MAX_TIME) return;
+    if (Math.abs(dx) < THRESH) return;
+    if (Math.abs(dy) > V_LIMIT) return;
+    if (Math.abs(dx) < Math.abs(dy) * 1.5) return;
+
+    var goRight = dx > 0;
+    var goLeft  = dx < 0;
+
+    // 1) Notification drawer open -> swipe (either direction) closes it
+    if (notifDrawerOpen() && typeof window.closeNotifDrawer === 'function') {
+      window.closeNotifDrawer();
+      return;
+    }
+
+    // 2) A modal is open
+    var modal = openModalEl();
+    if (modal) {
+      if (modal.id === 'm-fund' && typeof window.switchFundTab === 'function') {
+        var afVisible = (function () {
+          var af = document.getElementById('fund-panel-af');
+          return af && af.style.display !== 'none';
+        })();
+        if (goLeft && !afVisible) { window.switchFundTab('af'); return; }
+        if (goRight && afVisible) { window.switchFundTab('va'); return; }
+        if (typeof window.closeModal === 'function') window.closeModal('m-fund');
+        return;
+      }
+      if (typeof window.closeModal === 'function') {
+        window.closeModal(modal.id);
+      } else {
+        modal.className = 'modal';
+        var nav0 = document.getElementById('bottom-nav'); if (nav0) nav0.className = '';
+      }
+      return;
+    }
+
+    // 3) No overlay open -> navigate tabs
+    if (typeof window.showTab !== 'function') return;
+    var tabs = visibleTabs();
+    var cur  = currentTab();
+    var idx  = tabs.indexOf(cur);
+    if (idx === -1) return;
+    var next = goLeft ? idx + 1 : idx - 1;
+    if (next < 0 || next >= tabs.length) return;
+    window.showTab(tabs[next]);
+  }
+
+  // ---- Touch handlers (primary on mobile) ----
+  document.addEventListener('touchstart', function (e) {
+    isTouch = true;
+    if (!e.touches || e.touches.length !== 1) { tracking = false; return; } // ignore multi-touch
+    var t = e.touches[0];
+    begin(t.clientX, t.clientY, e.target);
+  }, { passive: true });
+
+  document.addEventListener('touchend', function (e) {
+    if (!isTouch) return;
+    var t = e.changedTouches ? e.changedTouches[0] : null;
+    if (!t) { tracking = false; return; }
+    finish(t.clientX, t.clientY);
+  }, { passive: true });
+
+  document.addEventListener('touchcancel', function () { tracking = false; }, { passive: true });
+
+  // ---- Mouse fallback (desktop only; suppressed once touch is seen) ----
+  document.addEventListener('mousedown', function (e) {
+    if (isTouch) return;            // never run mouse path on touch devices
+    if (e.button !== 0) return;     // left button only
+    begin(e.clientX, e.clientY, e.target);
+  });
+  document.addEventListener('mouseup', function (e) {
+    if (isTouch) return;
+    if (tracking) finish(e.clientX, e.clientY);
+  });
 })();
 </script>
 
