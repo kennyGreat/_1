@@ -891,25 +891,13 @@ button.tab,button.plan-chip{box-shadow:none!important;}
 
   <!-- DASHBOARD TAB - RETENTION REDESIGN -->
   <div id="tc-dash" class="tab-content">
+    <div id="promo-banner" style="display:none;margin-bottom:12px;"></div>
     <div class="hero-bal-card" id="hero-bal-card">
       <div class="hero-bal-label">Wallet Balance</div>
       <div class="hero-bal-amount" id="d-bal-dash">&#8358;0.00</div>
       <div class="hero-bal-va" id="d-va-dash">Loading&#8230;</div>
       <div id="hero-bal-status" style="display:none;font-size:.72rem;font-weight:800;margin-top:5px;opacity:.9;"></div>
       <button class="hero-fund-btn" id="d-fund-btn" onclick="openFundModal()" ontouchstart="">+ Add small money</button>
-    </div>
-
-    <!-- Auto-Fund active status card — only visible when mandate is active -->
-    <div id="dash-autofund-card" style="display:none;background:linear-gradient(135deg,#eaf9f0,#f0fdf4);border:1.5px solid #86efac;border-radius:18px;padding:13px 15px;margin-bottom:12px;">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;">
-        <div style="display:flex;align-items:center;gap:8px;">
-          <span style="font-size:1.2rem;">&#128179;</span>
-          <span style="font-size:.82rem;font-weight:900;color:#166534;">Auto-Fund Active</span>
-        </div>
-        <span style="font-size:.68rem;background:#dcfce7;color:#166534;border-radius:20px;padding:2px 8px;font-weight:800;">LIVE</span>
-      </div>
-      <div id="dash-af-detail" style="font-size:.76rem;color:#15803d;margin-bottom:10px;line-height:1.5;"></div>
-      <button onclick="dashCancelAutoFund()" style="width:100%;padding:9px;background:#fff;color:#dc2626;border:1.5px solid #fca5a5;border-radius:10px;font-size:.78rem;font-weight:800;font-family:inherit;cursor:pointer;-webkit-tap-highlight-color:transparent;">&#9209; Cancel Auto-Fund</button>
     </div>
     <div class="streak-strip" id="streak-strip" style="display:none;">
       <div class="streak-fire" id="streak-fire">&#128293;</div>
@@ -1736,8 +1724,10 @@ function refreshToken(cb) {
     JSON.stringify({ refresh_token: gRefresh }),
     function(err, res) {
       if (err || !res || !res.data || !res.data.access_token) { cb(err || 'Refresh failed'); return; }
+      // Supabase refresh returns the rotated refresh_token + new access_token.
+      // Preserve cached user if the response omits it (_setSession handles that).
       _setSession(res.data);
-      // _setSession already syncs window.gToken
+      window.gUser = gUser; window.gToken = gToken;
       cb(null);
     }
   );
@@ -1757,8 +1747,9 @@ function _setSession(d) {
   if (d.user) gUser = d.user;
   _store.set('db_sess', JSON.stringify({ at: gToken, rt: gRefresh, ex: gExpiry, user: gUser }));
   // Keep window references in sync so cross-script-block code (notif system, push IIFE) sees the session
-  window.gUser  = gUser;
-  window.gToken = gToken;
+  window.gUser    = gUser;
+  window.gToken   = gToken;
+  window.gRefresh = gRefresh;
   // Pick up any FCM token that arrived before the session was established
   /* pendingFcmToken removed in web version */
 }
@@ -1842,6 +1833,25 @@ function dbGoSoftPay(){
     setTimeout(_toTop, 200);
   } catch(e) {}
 }
+
+/* Home "Complete your ongoing plan" card → opens the My Plan tab so the
+   user lands on their ongoing subscription, not the Buy Data tab. */
+function dbGoMyPlan(){
+  try {
+    showTab('subs');
+    function _toTopMP() {
+      try { window.scrollTo(0, 0); } catch(e) {}
+      try { document.documentElement.scrollTop = 0; } catch(e) {}
+      try { document.body.scrollTop = 0; } catch(e) {}
+      try { var _a = document.getElementById('pg-app'); if (_a) _a.scrollTop = 0; } catch(e) {}
+    }
+    _toTopMP();
+    setTimeout(_toTopMP, 0);
+    setTimeout(_toTopMP, 80);
+    setTimeout(_toTopMP, 200);
+  } catch(e) {}
+}
+window.dbGoMyPlan = dbGoMyPlan;
 
 function showTab(t) {
   var tabs = ['dash','plans','subs','wallet','inbox','earn'];
@@ -2036,8 +2046,19 @@ function bootPublicApp() {
   loadPlans();
 }
 
-function bootApp() {
-  if (!gUser) return;
+var _tokenRefreshTimer = null;
+function bootApp(onReady) {
+  if (!gUser) { if (typeof onReady === 'function') onReady(); return; }
+  // KEEP SESSION ALIVE: refresh the access token every 45 minutes while the
+  // app is open so it never silently expires mid-use. Refresh-token rotation
+  // is handled by refreshToken/_setSession. One timer only.
+  if (!_tokenRefreshTimer) {
+    _tokenRefreshTimer = setInterval(function() {
+      if (window.gRefresh || gRefresh) {
+        refreshToken(function(){ /* silent; failure handled on next API call */ });
+      }
+    }, 45 * 60 * 1000);
+  }
   var meta = gUser.user_metadata || {};
   var name = meta.full_name || gUser.email.split('@')[0];
   var initials = '';
@@ -2056,11 +2077,23 @@ function bootApp() {
   _dashLastLoad  = _now;
 
   // ── BOOT SEQUENCE ─────────────────────────────────────────
-  // Fire wallet + plans in parallel immediately — both are needed
-  // for the first visible screen. loadPlans uses cached data after
-  // the first load so subsequent calls are instant.
-  loadWalletBalance(function() {});
-  loadPlans();
+  // The DASHBOARD (first screen) only needs the WALLET balance to be
+  // meaningful. Lift the splash as soon as the wallet is loaded — this is
+  // the fastest correct first paint. Plans load in the background for the
+  // Buy Data tab (not the first screen) and never block entry.
+  var _readyFired = false;
+  function _fireReady() {
+    if (!_readyFired) { _readyFired = true; if (typeof onReady === 'function') onReady(); }
+  }
+  // Hard safety cap: never let the splash trap the user beyond 5s even if
+  // the wallet call hangs.
+  setTimeout(_fireReady, 5000);
+
+  // Primary gate: wallet balance loaded → show the dashboard immediately.
+  loadWalletBalance(function() { _fireReady(); });
+
+  // Plans load in the background — does NOT gate the splash.
+  try { loadPlans(function() {}); } catch (e) {}
 
   // My Plan tab — defer 200ms (not visible, low priority)
   setTimeout(function() { loadSubs(); }, 200);
@@ -2246,7 +2279,52 @@ function loadDashboard() {
     if ($('d-bal-dash')) $('d-bal-dash').textContent = bs;
   }
   loadWalletBalance(function() {});
+  loadPromos();
 }
+
+/* ── PROMO / NUGGET BANNER ─────────────────────────────────── */
+function loadPromos() {
+  if (!window.gUser || !window.gToken) return;
+  rpc('get_active_promos', JSON.stringify({ p_user_id: gUser.id }), function(err, res) {
+    var banner = document.getElementById('promo-banner');
+    if (!banner) return;
+    if (err || !res || !res.ok || !res.promos || !res.promos.length) {
+      banner.style.display = 'none'; return;
+    }
+    banner.style.display = 'block';
+    var html = '';
+    for (var i = 0; i < res.promos.length; i++) {
+      var p = res.promos[i];
+      var isPromo = p.type === 'promo';
+      var bg = isPromo ? 'linear-gradient(135deg,#3d9758,#2d7a44)' : 'linear-gradient(135deg,#1A56DB,#1244a8)';
+      html += '<div style="background:' + bg + ';border-radius:14px;padding:14px 16px;margin-bottom:8px;color:#fff;position:relative;overflow:hidden;">' +
+        '<div style="position:absolute;top:-20px;right:-20px;font-size:5rem;opacity:.08;">' + (p.icon || '\uD83D\uDCE2') + '</div>' +
+        '<div style="font-size:.78rem;font-weight:700;opacity:.8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">' + (isPromo ? '\uD83C\uDF89 Special Offer' : '\uD83D\uDCA1 Daily Nugget') + '</div>' +
+        '<div style="font-size:.95rem;font-weight:900;margin-bottom:4px;">' + (p.title || '') + '</div>' +
+        '<div style="font-size:.78rem;opacity:.88;line-height:1.5;margin-bottom:' + (isPromo && p.promo_code ? '10px' : '0') + ';">' + (p.message || '') + '</div>';
+      if (isPromo && p.promo_code && !p.already_redeemed) {
+        html += '<button onclick="redeemPromo(\'' + p.promo_code + '\')" style="background:#fff;color:#2d7a44;border:none;border-radius:8px;padding:7px 14px;font-size:.8rem;font-weight:900;cursor:pointer;font-family:inherit;">Redeem Code: ' + p.promo_code + '</button>';
+      } else if (isPromo && p.already_redeemed) {
+        html += '<span style="background:rgba(255,255,255,.2);border-radius:8px;padding:5px 12px;font-size:.75rem;font-weight:700;">\u2705 Already Redeemed</span>';
+      }
+      html += '</div>';
+    }
+    banner.innerHTML = html;
+  });
+}
+function redeemPromo(promoCode) {
+  if (!window.gUser) return;
+  rpc('redeem_promo_code', JSON.stringify({ p_user_id: gUser.id, p_promo_code: promoCode }), function(err, res) {
+    if (!err && res && res.ok) {
+      toast(res.message || '\u2705 Promo redeemed!');
+      loadPromos(); loadDashboard();
+    } else {
+      toast('\u26A0\uFE0F ' + ((res && (res.message || res.error)) || 'Could not redeem promo.'));
+    }
+  });
+}
+window.loadPromos = loadPromos;
+window.redeemPromo = redeemPromo;
 
 function netCls(net) {
   var n = (net || '').toUpperCase();
@@ -2261,29 +2339,33 @@ var _plansCache    = null;  // cached plan data — static, never changes mid-se
 var _plansCacheTs  = 0;    // timestamp of last fetch
 var PLANS_CACHE_MS = 5 * 60 * 1000; // re-fetch after 5 minutes max
 
-function loadPlans() {
+function loadPlans(cb) {
   var wrap = $('plans-list');
   var now  = Date.now();
+  var _done = function() { if (typeof cb === 'function') { try { cb(); } catch(e) {} } };
 
   // Serve from cache instantly if fresh — avoids redundant network round trips
   if (_plansCache && (now - _plansCacheTs) < PLANS_CACHE_MS) {
     _renderPlans(_plansCache);
+    _done();
     return;
   }
 
-  wrap.innerHTML = '<div class="empty" style="padding:20px 0;">Loading plans\u2026</div>';
+  if (wrap) wrap.innerHTML = '<div class="empty" style="padding:20px 0;">Loading plans\u2026</div>';
 
   restGet('/data_plans',
     'is_active=eq.true&order=network,sort_order,selling_price&select=id,data_size,network,selling_price,daily_price,validity_days,category',
     function(e, r) {
       if (!r || !r.ok || !r.data || !r.data.length) {
-        wrap.innerHTML = '<div class="empty">No plans available right now.</div>';
+        if (wrap) wrap.innerHTML = '<div class="empty">No plans available right now.</div>';
+        _done();   // still mark ready so the splash never hangs
         return;
       }
       // Cache for this session
       _plansCache   = r.data;
       _plansCacheTs = Date.now();
       _renderPlans(r.data);
+      _done();
     });
 }
 
@@ -2353,7 +2435,7 @@ function _renderPlans(allPlans) {
         shown.push(p);
       }
       html += '<div class="plan-count" id="plan-count-lbl">' + shown.length + ' plan' + (shown.length === 1 ? '' : 's') + ' available</div>';
-      html += '<div class="plan-search-wrap"><span class="plan-search-icon">🔍</span><input class="plan-search-input" id="plan-search" type="text" placeholder="Search by size, network, price, days…" onkeydown="if(event.keyCode===13||event.which===13){launchPlanSearch();}" oninput="_debounceSearch()" autocomplete="off" autocorrect="off" spellcheck="false"><button class="plan-search-btn" onclick="launchPlanSearch()" type="button">Search</button><button class="plan-search-clear" id="plan-search-clear" onclick="clearPlanSearch()" type="button" style="display:none;">✕</button></div>';
+      html += '<div class="plan-search-wrap"><span class="plan-search-icon">🔍</span><input class="plan-search-input" id="plan-search" type="text" placeholder="Search by size, network, price, days…" onkeydown="if(event.keyCode===13||event.which===13){launchPlanSearch();}" autocomplete="off" autocorrect="off" spellcheck="false"><button class="plan-search-btn" onclick="launchPlanSearch()" type="button">Search</button><button class="plan-search-clear" id="plan-search-clear" onclick="clearPlanSearch()" type="button" style="display:none;">✕</button></div>';
 
       if (!shown.length) {
         html += '<div class="empty" style="grid-column:1/-1;">No plan found under this selection.</div>';
@@ -2374,7 +2456,7 @@ function _renderPlans(allPlans) {
         var _sz = (p.data_size||'').toLowerCase().replace(/\s+/g,'');
         var _szNum = parseFloat(_sz) || 0;
         var _szUnit = _sz.replace(/[\d.]/g,'').trim(); /* mb, gb, tb */
-        html += '<div class="plan-card plan-card-animate ' + _accentC + '" data-plan-id="' + String(p.id) + '" data-sp="' + _sp + '" data-dp="' + _dp + '" data-vd="' + _vd + '" data-sz="' + esc2(_sz) + '" data-szn="' + _szNum + '" data-szu="' + esc2(_szUnit) + '" data-net="' + esc2(nn.toLowerCase()) + '" data-type="' + esc2(type.toLowerCase()) + '" data-search="' + esc2([nn.toLowerCase(), _sz, type.toLowerCase(), _sp, _dp, _vd].join('|')) + '">' +
+        html += '<div class="plan-card plan-card-animate ' + _accentC + '" data-sp="' + _sp + '" data-dp="' + _dp + '" data-vd="' + _vd + '" data-sz="' + esc2(_sz) + '" data-szn="' + _szNum + '" data-szu="' + esc2(_szUnit) + '" data-net="' + esc2(nn.toLowerCase()) + '" data-type="' + esc2(type.toLowerCase()) + '" data-search="' + esc2([nn.toLowerCase(), _sz, type.toLowerCase(), _sp, _dp, _vd].join('|')) + '">' +
           '<div>' +
             '<div class="plan-top">' +
               '<span class="plan-net ' + pillC + '">' + esc2(nn) + '</span>' +
@@ -2399,19 +2481,8 @@ function setPlanFilter(kind, value) {
   loadPlans();
 }
 
-/* ── Debounced live search — triggers as user types ── */
-var _searchTimer = null;
-function _debounceSearch() {
-  if (_searchTimer) clearTimeout(_searchTimer);
-  _searchTimer = setTimeout(function() {
-    try { launchPlanSearch(); } catch(e) {}
-  }, 300);
-}
-window._debounceSearch = _debounceSearch;
-
 /* ── Smart plan search — exact matches first, then smart filtering ── */
 function launchPlanSearch() {
-  try {
   var inp = document.getElementById('plan-search');
   var raw = (inp ? inp.value : '').trim();
   if (!raw) { clearPlanSearch(); return; }
@@ -2595,7 +2666,6 @@ function launchPlanSearch() {
   var clr = document.getElementById('plan-search-clear');
   if (clr) clr.style.display = 'block';
   try { if (inp) inp.blur(); } catch(e) {}
-  } catch(searchErr) { /* silently handle search errors */ }
 }
 
 function clearPlanSearch() {
@@ -3287,7 +3357,8 @@ function confirmSub() {
     var progAmt = progAmtEl ? (parseFloat(progAmtEl.value) || 0) : (gSelSub.daily || 0);
     errHide('m-sub-err');
     if (!progAmt || progAmt <= 0) { errShow('m-sub-err', 'Please enter an amount to pay.'); return; }
-    if (progAmt > gBal)            { errShow('m-sub-err', 'Insufficient wallet balance. Please fund your account first.'); return; }
+    if (gSelSub && gSelSub.remaining > 0) { progAmt = Math.min(progAmt, gSelSub.remaining); }
+    if (progAmt > gBal + 0.01)     { errShow('m-sub-err', 'Insufficient wallet balance. Please fund your account first.'); return; }
     if (progAmt > gSelSub.remaining + 1) { errShow('m-sub-err', 'Amount exceeds the outstanding balance of ' + fmtN(gSelSub.remaining) + '.'); return; }
     btnLoad('m-sub-btn', true, 'Paying\u2026');
     ensureToken(function(err) {
@@ -3413,7 +3484,9 @@ function confirmSub() {
 function openPayModal(subId, dailyAmt, remaining) {
   gSelSub = { id: subId, daily: dailyAmt, remaining: remaining };
   var sugAmt = dailyAmt > 0 ? Math.min(dailyAmt, remaining) : remaining;
-  var insufficientBal = gBal < dailyAmt;
+  // Only the amount actually DUE matters — never demand more than what's left to finish.
+  var dueNow = sugAmt;
+  var insufficientBal = gBal < dueNow;
   var newRemaining = Math.max(0, remaining - sugAmt);
   var isLast    = dailyAmt > 0 && Math.ceil(remaining / dailyAmt) <= 1;
   var isAlmost  = !isLast && dailyAmt > 0 && Math.ceil(remaining / dailyAmt) <= 2;
@@ -3461,7 +3534,10 @@ function confirmPay() {
   var amt = parseFloat($('m-pay-amt').value);
   errHide('m-pay-err');
   if (!amt || amt <= 0) { errShow('m-pay-err', 'Enter a valid amount.'); return; }
-  if (amt > gBal)       { errShow('m-pay-err', 'Insufficient account balance.'); return; }
+  // Cap the charge at what's actually left to finish the plan.
+  if (gSelSub && gSelSub.remaining > 0) { amt = Math.min(amt, gSelSub.remaining); }
+  // Only block if the wallet can't cover the (capped) amount actually due.
+  if (amt > gBal + 0.01) { errShow('m-pay-err', 'Insufficient account balance.'); return; }
   if (!gSelSub)         { return; }
   btnLoad('m-pay-btn', true, 'Paying\u2026');
   ensureToken(function(err) {
@@ -3905,25 +3981,77 @@ function init() {
   if (parseHash()) { hideSplash(); return; }
 
   if (_loadSession()) {
+    // STAY LOGGED IN: render the app BEHIND the splash, then only hide the
+    // splash once the first screen's essential data has actually loaded.
+    // The user never sees a half-empty app. Refresh token quietly in bg.
+    showPage('app');
+    bootApp(function() {
+      // onReady: fired after wallet + plans (first-screen essentials) load.
+      hideSplash();
+      setTimeout(handlePushDeepLink, 300);
+    });
+
     ensureToken(function(err) {
-      if (!err && gUser) {
-        // Valid session — show the app and hide the splash
-        showPage('app');
-        hideSplash();
-        bootApp();
-      } else {
-        // Session expired — clear and redirect
-        _clearSession();
-        hideSplash();
-        window.location.replace('databulge-auth.html');
+      if (err) {
+        // Background refresh failed. Try ONE explicit refresh with the stored token.
+        refreshToken(function(err2) {
+          if (err2) {
+            // Refresh token is genuinely dead/revoked — now we must re-auth.
+            _clearSession();
+            window.location.replace('databulge-auth.html');
+          }
+          // else: silently refreshed, user stays in the app
+        });
       }
     });
   } else {
-    // No session — redirect to auth immediately
     hideSplash();
     window.location.replace('databulge-auth.html');
   }
 }
+
+/* ── PUSH NOTIFICATION DEEP LINK ──────────────────────────────
+   When a user taps an FCM push, the data payload carries a
+   'target' (and optional metadata). Navigate to the right tab. */
+function handlePushDeepLink() {
+  var target = null, metadata = null;
+  try {
+    var params = new URLSearchParams(window.location.search);
+    target = params.get('target') || params.get('category') || null;
+    var ms = params.get('metadata');
+    if (ms) metadata = JSON.parse(decodeURIComponent(ms));
+  } catch(e) {}
+  if (!target) {
+    try {
+      var stored = localStorage.getItem('db_push_target');
+      if (stored) {
+        var p = JSON.parse(stored);
+        target = p.target || null; metadata = p.metadata || null;
+        localStorage.removeItem('db_push_target');
+      }
+    } catch(e) {}
+  }
+  if (!target) return;
+  if (target === 'delivery' || target === 'subscription' || target === 'data_usage') {
+    showTab('subs');
+    if (metadata && metadata.subscription_id) {
+      setTimeout(function() {
+        var card = document.getElementById('sub-card-' + metadata.subscription_id);
+        if (card && card.scrollIntoView) card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }, 600);
+    }
+  } else if (target === 'wallet' || target === 'autofund') {
+    showTab('wallet');
+  } else if (target === 'ad' || target === 'earn') {
+    showTab('earn');
+  } else if (target === 'inbox') {
+    showTab('inbox');
+  } else {
+    showTab('dash');
+  }
+  try { window.history.replaceState({}, document.title, window.location.pathname); } catch(e) {}
+}
+window.handlePushDeepLink = handlePushDeepLink;
 
 /* ── BUTTON WIRING ──────────────────────────────────────────── */
 
@@ -5695,36 +5823,22 @@ function checkDataUsage(subscriptionId, mbUsed, mbTotal) {
 }
 window.checkDataUsage = checkDataUsage;
 
-/* Push tokens disabled in web version */
-function registerPushToken() { /* no-op */ }
+/* ── FCM Push Token Registration ────────────────────────
+   Saves device FCM token to push_subscriptions table so
+   the sendPushNotification edge function can reach this device.
+   Real native implementation — required for APK push to work.
+──────────────────────────────────────────────────────── */
+function registerPushToken(fcmToken) {
+  if (!fcmToken || !window.gUser || !window.gToken) return;
+  var isNative = (typeof window.Capacitor !== 'undefined' && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+  var hint     = isNative ? (window.Capacitor.getPlatform ? window.Capacitor.getPlatform() : 'android') : 'web';
+  var h = { 'Authorization': 'Bearer ' + window.gToken, 'Content-Type': 'application/json', 'apikey': window.ANON_KEY, 'Prefer': 'resolution=merge-duplicates' };
+  window.xhr('POST', window.REST + '/push_subscriptions', h,
+    JSON.stringify({ user_id: window.gUser.id, endpoint: fcmToken, device_hint: hint, p256dh: '', auth: '' }),
+    function(e) { if (!e) console.log('[Push] FCM token registered'); }
+  );
+}
 window.registerPushToken = registerPushToken;
-
-/* Notification system exports for reliable bell updates */
-window.notifLoad        = notifLoad;
-window.showNotifToast   = showNotifToast;
-window.notifUpdateBadge = notifUpdateBadge;
-window.notifRender      = notifRender;
-window._notifAll        = _notifAll;
-
-window.injectPushToBell = function(title, body, type) {
-  var n = {
-    id: '_push_' + Date.now() + '_' + Math.random().toString(36).substr(2,4),
-    title: title || 'DataBulge',
-    message: body || '',
-    type: type || 'info',
-    category: 'push',
-    icon: '\uD83D\uDD14',
-    is_read: false,
-    created_at: new Date().toISOString()
-  };
-  if (typeof _notifAll !== 'undefined') {
-    _notifAll.unshift(n);
-    var unread = 0;
-    for (var i = 0; i < _notifAll.length; i++) { if (!_notifAll[i].is_read) unread++; }
-    if (typeof notifUpdateBadge === 'function') notifUpdateBadge(unread);
-    if (_notifDrawerOpen && typeof notifRender === 'function') notifRender();
-  }
-};
 
 /* ═══ RETENTION SYSTEM ════════════════════════════════════════
    ES5 — Android 4.4+ compatible. No arrow functions, no const.
@@ -6478,8 +6592,48 @@ window.confirmAirtime = confirmAirtime;
    npm install @capacitor/push-notifications
    npx cap sync android
 ──────────────────────────────────────────────────────── */
-/* Push tokens disabled in web version */
-function requestCapacitorPushToken() { /* no-op */ }
+/* ── Request push token from Capacitor native plugins ───
+   Requires @capacitor/push-notifications installed in the APK.
+   Registers for FCM, listens for incoming pushes, and wires
+   tap-to-open deep linking. Real native implementation.
+──────────────────────────────────────────────────────── */
+function requestCapacitorPushToken() {
+  var isNative = (typeof window.Capacitor !== 'undefined' && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+  if (!isNative) return;
+
+  var Push = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.PushNotifications;
+  if (!Push) return;
+
+  Push.requestPermissions().then(function(result) {
+    if (result.receive === 'granted') {
+      Push.register();
+      Push.addListener('registration', function(token) {
+        registerPushToken(token.value);
+      });
+      Push.addListener('registrationError', function(err) {
+        console.warn('[Push] Registration error:', err);
+      });
+      // FCM already shows the OS notification drop — just refresh the bell
+      Push.addListener('pushNotificationReceived', function(notification) {
+        if (typeof notifLoad === 'function') notifLoad();
+      });
+      // Tap on a push: store deep-link target then navigate
+      Push.addListener('pushNotificationActionPerformed', function(action) {
+        try {
+          var data     = (action && action.notification && action.notification.data) ? action.notification.data : {};
+          var category = data.category || data.type || 'dash';
+          var meta     = data.metadata ? (typeof data.metadata === 'string' ? data.metadata : JSON.stringify(data.metadata)) : null;
+          localStorage.setItem('db_push_target', JSON.stringify({ target: (data.target || category), metadata: meta }));
+        } catch(e) {}
+        if (window.gUser && typeof handlePushDeepLink === 'function') {
+          handlePushDeepLink();
+        } else if (typeof openNotifDrawer === 'function') {
+          openNotifDrawer();
+        }
+      });
+    }
+  }).catch(function(e) { console.warn('[Push] Permission error:', e); });
+}
 window.requestCapacitorPushToken = requestCapacitorPushToken;
 
 /* ── Responsive bottom nav positioning ──────────────── */
@@ -6585,7 +6739,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
         '<div class="friend-balance"><div><div class="friend-bal-label">Available balance</div><div class="friend-bal-val" id="friend-bal-val">'+bal+'</div></div><div style="font-size:.76rem;opacity:.82;font-weight:800;text-align:right;">Ready when you are</div></div>'+
         '<div class="friend-cta-row"><button class="friend-cta primary" onclick="openFundModal()" ontouchstart="">Add small money</button><button class="friend-cta secondary" onclick="dbGoSoftPay();" ontouchstart="">Find a plan</button></div>'+
       '</div>'+
-      '<div class="friend-quick-grid" id="friend-quick-grid"><button class="friend-action-card fund" onclick="openFundModal()" ontouchstart=""><span class="emoji">\uD83D\uDC9A</span><strong>Fund with ease</strong><span>Your wallet updates automatically after transfer.</span></button><button class="friend-action-card plan" onclick="dbGoSoftPay();" ontouchstart=""><span class="emoji">\uD83C\uDFAF</span><strong>Choose your vibe</strong><span>MTN, Airtel, Glo or 9mobile \u2014 paid your way.</span></button></div>';
+      '<div class="friend-quick-grid" id="friend-quick-grid"><button class="friend-action-card fund" onclick="openFundModal()" ontouchstart=""><span class="emoji">\uD83D\uDC9A</span><strong>Fund with ease</strong><span>Your wallet updates automatically after transfer.</span></button><button class="friend-action-card plan" onclick="dbGoMyPlan();" ontouchstart=""><span class="emoji">\uD83C\uDFAF</span><strong>Complete your ongoing plan</strong><span>Your vibe, your way \u2014 manifest it to the fullest.</span></button></div>';
     if(old){
       var bv=byId('friend-bal-val'); if(bv) bv.innerHTML=bal;
       return;
@@ -6680,7 +6834,9 @@ window.detectAndSaveLocation = detectAndSaveLocation;
       }
     }catch(e){}
   }
-  setTimeout(revealFallback, 6500);
+  // Backstop only: readiness gate in bootApp normally controls the splash.
+  setTimeout(revealFallback, 9000);
+  // On a real JS error, reveal quickly so users are never trapped behind the splash.
   window.addEventListener('error',function(){setTimeout(revealFallback,700);});
 })();
 </script>
@@ -6830,13 +6986,16 @@ window.detectAndSaveLocation = detectAndSaveLocation;
     }
   }
   function emergencySplash(){
+    // Absolute last-resort backstop. The primary control is the readiness
+    // gate in bootApp (hides splash when wallet+plans load, 6s soft cap).
+    // This only fires if something truly hangs beyond that.
     setTimeout(function(){
       var sp=$('db-splash');
       if(sp && sp.className!=='hide'){
         sp.style.opacity='0';
         setTimeout(function(){ sp.className='hide'; sp.style.display='none'; },260);
       }
-    },4200);
+    },9000);
   }
   function run(){
     renameNav(); injectHome(); updateDynamic(); enhancePlans(); purposefulMessages(); celebrateIfCompleted();
