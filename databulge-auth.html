@@ -979,7 +979,7 @@ var _toastTimer = null;
 var _pollTimer  = null;
 var gRememberMe = false;
 
-/* ── REMEMBER ME + APK-ONLY GOOGLE HIDING ─────────────────── */
+/* ── REMEMBER ME ─────────────────── */
 function loadRememberedLogin() {
   var rem = _store.get('db_remember_me');
   var em  = _store.get('db_remember_email');
@@ -1002,10 +1002,14 @@ function saveRememberedLogin() {
   if (r.checked) {
     _store.set('db_remember_me', '1');
     _store.set('db_remember_email', e.value || '');
+    _nativeSet('db_remember_me', '1');
+    _nativeSet('db_remember_email', e.value || '');
     gRememberMe = true;
   } else {
     _store.del('db_remember_me');
     _store.del('db_remember_email');
+    _nativeDel('db_remember_me');
+    _nativeDel('db_remember_email');
     gRememberMe = false;
   }
 }
@@ -1020,32 +1024,6 @@ function isNativeAPK() {
   return false;
 }
 
-function hideGoogleOnlyInNativeAPK() {
-  if (!isNativeAPK()) return;
-
-  // Hide the Google button and its OR divider on the welcome screen.
-  // Google blocks OAuth inside embedded WebViews — the Forgot Password
-  // link on the welcome screen replaces it as the recovery entry point.
-  var googleBtn   = $('w-google-btn');
-  var googleDivdr = $('w-google-divdr');
-  if (googleBtn)   googleBtn.style.display   = 'none';
-  if (googleDivdr) googleDivdr.style.display = 'none';
-
-  // Also sweep any other google-class elements that may exist.
-  var nodes = document.querySelectorAll ? document.querySelectorAll('button,a,div') : [];
-  for (var i = 0; i < nodes.length; i++) {
-    var el  = nodes[i];
-    var txt = ((el.innerText || el.textContent || el.value || el.className || '') + '').toLowerCase();
-    if (
-      txt.indexOf('continue with google') > -1 ||
-      txt.indexOf('sign in with google') > -1 ||
-      (el.className && (el.className + '').toLowerCase().indexOf('btn-google') > -1)
-    ) {
-      el.style.display = 'none';
-    }
-  }
-}
-
 /* ── SAFE STORAGE ──────────────────────────────────────────── */
 var _store = (function() {
   var mem = {};
@@ -1057,6 +1035,73 @@ var _store = (function() {
     del: function(k)  { try { if(ok) localStorage.removeItem(k); else delete mem[k]; } catch(e) { delete mem[k]; } }
   };
 })();
+
+/* ── NATIVE PERSISTENT STORAGE (Capacitor Preferences) ──────────
+   The Android WebView can wipe localStorage when the app is fully
+   closed, which logs users out. Capacitor Preferences writes to
+   native storage that SURVIVES app closure. We mirror the session
+   here and hydrate it back into localStorage before the session
+   check runs, so users stay logged in until they log out. ───── */
+function _capPrefs() {
+  try {
+    if (typeof window.Capacitor !== 'undefined' &&
+        window.Capacitor.Plugins &&
+        window.Capacitor.Plugins.Preferences) {
+      return window.Capacitor.Plugins.Preferences;
+    }
+  } catch(e) {}
+  return null;
+}
+
+// Keys we want to survive app closure
+var _PERSIST_KEYS = ['db_sess', 'db_remember_me', 'db_remember_email'];
+
+// Save one key to native storage (fire-and-forget)
+function _nativeSet(key, value) {
+  var P = _capPrefs();
+  if (!P) return;
+  try { P.set({ key: key, value: value == null ? '' : String(value) }); } catch(e) {}
+}
+function _nativeDel(key) {
+  var P = _capPrefs();
+  if (!P) return;
+  try { P.remove({ key: key }); } catch(e) {}
+}
+
+// Pull persisted values from native storage back INTO localStorage.
+// Returns a promise-like via callback. No-op (immediate cb) on web.
+function _hydrateFromNative(cb) {
+  var P = _capPrefs();
+  if (!P) { cb(); return; }
+  var pending = _PERSIST_KEYS.length;
+  var done = false;
+  function finish() { if (!done) { done = true; cb(); } }
+  // Safety: never let hydration hang the boot
+  var guard = setTimeout(finish, 1200);
+  for (var i = 0; i < _PERSIST_KEYS.length; i++) {
+    (function(k) {
+      try {
+        P.get({ key: k }).then(function(res) {
+          try {
+            var v = res && typeof res.value !== 'undefined' ? res.value : null;
+            // Only write if native has a real value and localStorage is missing it
+            if (v !== null && v !== '' && !_store.get(k)) {
+              _store.set(k, v);
+            }
+          } catch(e) {}
+          pending--;
+          if (pending <= 0) { clearTimeout(guard); finish(); }
+        }).catch(function() {
+          pending--;
+          if (pending <= 0) { clearTimeout(guard); finish(); }
+        });
+      } catch(e) {
+        pending--;
+        if (pending <= 0) { clearTimeout(guard); finish(); }
+      }
+    })(_PERSIST_KEYS[i]);
+  }
+}
 
 /* ── XHR WRAPPER ────────────────────────────────────────────── */
 // Returns a plain object {ok, status, data}
@@ -1120,7 +1165,15 @@ function refreshToken(cb) {
     { 'apikey': ANON_KEY, 'Content-Type': 'application/json' },
     JSON.stringify({ refresh_token: gRefresh }),
     function(err, res) {
-      if (err || !res || !res.data || !res.data.access_token) { cb(err || 'Refresh failed'); return; }
+      if (err || !res || !res.data || !res.data.access_token) {
+        // Distinguish a NETWORK/server problem from a genuine auth rejection.
+        // 400/401 with an error body = refresh token truly invalid/revoked.
+        // Anything else (no response, timeout, 5xx) = transient — keep the user logged in.
+        var status = res && typeof res.status === 'number' ? res.status : 0;
+        var authRejected = (status === 400 || status === 401);
+        cb(authRejected ? 'revoked' : 'network');
+        return;
+      }
       _setSession(res.data);
       cb(null);
     }
@@ -1139,7 +1192,9 @@ function _setSession(d) {
   gRefresh = d.refresh_token || gRefresh;
   gExpiry  = d.expires_at ? d.expires_at * 1000 : (Date.now() + (d.expires_in || 3600) * 1000);
   if (d.user) gUser = d.user;
-  _store.set('db_sess', JSON.stringify({ at: gToken, rt: gRefresh, ex: gExpiry, user: gUser }));
+  var _sessStr = JSON.stringify({ at: gToken, rt: gRefresh, ex: gExpiry, user: gUser });
+  _store.set('db_sess', _sessStr);
+  _nativeSet('db_sess', _sessStr);   // persist to native storage (survives app close)
 }
 
 function _loadSession() {
@@ -1160,6 +1215,7 @@ function _clearSession() {
   gToken = gRefresh = gUser = gProfile = null;
   gExpiry = gBal = 0;
   _store.del('db_sess');
+  _nativeDel('db_sess');   // also clear native storage so logout is permanent
   if (_pollTimer) { clearInterval(_pollTimer); _pollTimer = null; }
 }
 
@@ -1189,7 +1245,6 @@ function showScreen(id) {
     var el = $(ids[i]);
     if (el) el.style.display = (ids[i] === id) ? 'block' : 'none';
   }
-  hideGoogleOnlyInNativeAPK();
 }
 
 function showPage(id) {
@@ -1561,7 +1616,6 @@ function parseHash() {
 /* ── INIT ───────────────────────────────────────────────────── */
 function init() {
   loadRememberedLogin();
-  hideGoogleOnlyInNativeAPK();
   // Check for Supabase recovery/OAuth hash first. If handled, stop here.
   if (parseHash()) return;
 
@@ -1603,13 +1657,26 @@ function init() {
 }
 
 function normalSessionCheck() {
-  // Check for stored session
+  // STAY LOGGED IN until the user logs out themselves.
   if (_loadSession()) {
-    // Validate / refresh the token
+    // If we already hold a token that hasn't expired, go straight in —
+    // no network round-trip needed (works even offline on reopen).
+    var now = Date.now();
+    if (gToken && gUser && gExpiry > now + 60000) {
+      bootApp();
+      return;
+    }
+    // Token expired (or near expiry): try to refresh it quietly.
     ensureToken(function(err) {
-      if (!err && gUser) {
-        bootApp();
+      if (!err) {
+        bootApp();                       // refreshed successfully
+      } else if (err === 'network') {
+        // Transient connectivity problem — DO NOT log out. Enter the app with
+        // the cached session; the main app refreshes the token in the background.
+        if (gUser) { bootApp(); }
+        else { showPage('auth'); showScreen('scr-w'); }
       } else {
+        // err === 'revoked' (or no refresh token): the session is genuinely dead.
         _clearSession();
         showPage('auth');
         showScreen('scr-w');
@@ -1769,11 +1836,6 @@ function wire() {
 
   // Auth actions
   $('l-btn').onclick      = doLogin;
-  if ($('w-google-btn')) $('w-google-btn').onclick = function() {
-    var base = window.location.href.split('#')[0].split('?')[0];
-    var redirectTo = base.replace(/\/[^\/]*$/, '/') + MAIN_APP_URL;
-    window.location.href = AUTH + '/authorize?provider=google&redirect_to=' + encodeURIComponent(redirectTo);
-  };
   if ($('w-forgot-btn')) $('w-forgot-btn').onclick = function() {
     var panel = $('w-forgot-panel');
     if (!panel) return;
@@ -1905,11 +1967,20 @@ function hideSplashSoon() {
   setTimeout(function(){ sp.className = 'hide'; }, 6000);
 }
 
-// Start
+// Start — hydrate native-stored session into localStorage FIRST, then init.
+function _bootSequence() {
+  hideSplashSoon();
+  wire();
+  // Pull any persisted session from native storage back into localStorage
+  // before the session check, so a WebView localStorage wipe doesn't log out.
+  _hydrateFromNative(function() {
+    init();
+  });
+}
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', function() { hideSplashSoon(); wire(); init(); });
+  document.addEventListener('DOMContentLoaded', _bootSequence);
 } else {
-  hideSplashSoon(); wire(); init();
+  _bootSequence();
 }
 </script>
 </body>
