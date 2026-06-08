@@ -394,6 +394,7 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 .dynamic-strip.warn .dynamic-strip-text{color:#78350f;}
 .dynamic-strip.green .dynamic-strip-text{color:#14532d;}
 .dynamic-strip.promo .dynamic-strip-text{color:#581c87;}
+.autofund-card{border-radius:14px;padding:14px 16px;margin-bottom:12px;background:#eff6ff;background:-webkit-linear-gradient(135deg,#eff6ff,#f0f9ff);background:linear-gradient(135deg,#eff6ff,#f0f9ff);border:1px solid #93c5fd;cursor:pointer;-webkit-tap-highlight-color:rgba(26,86,219,.08);}.autofund-card:active{opacity:.9;-webkit-transform:scale(.995);transform:scale(.995);}.autofund-card.warn{background:#fffbeb;border-color:#fcd34d;}.af-card-top{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;margin-bottom:8px;}.af-card-label{font-size:.72rem;font-weight:900;color:#1e40af;text-transform:uppercase;letter-spacing:.4px;-webkit-box-flex:1;-webkit-flex:1;flex:1;}.af-card-pill{font-size:.62rem;font-weight:800;padding:3px 9px;border-radius:20px;background:#dbeafe;color:#1d4ed8;text-transform:uppercase;letter-spacing:.3px;}.af-card-pill.paused{background:#fef3c7;color:#92400e;}.af-card-total{font-size:1.6rem;font-weight:900;color:#1e3a8a;line-height:1.1;}.af-card-sub{font-size:.74rem;color:#3b5b8c;margin-top:3px;line-height:1.4;}.af-card-row{display:-webkit-box;display:-webkit-flex;display:flex;margin-top:10px;gap:10px;}.af-card-stat{-webkit-box-flex:1;-webkit-flex:1;flex:1;background:rgba(255,255,255,.6);border-radius:9px;padding:7px 10px;}.af-card-stat-num{font-size:.95rem;font-weight:900;color:#1e3a8a;}.af-card-stat-lbl{font-size:.64rem;color:#64748b;font-weight:600;margin-top:1px;}
 .savings-card{border-radius:14px;padding:14px 16px;margin-bottom:12px;background:#f0fdf4;background:-webkit-linear-gradient(135deg,#f0fdf4,#ecfdf5);background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border:1px solid #6ee7b7;}
 .savings-amount{font-size:1.6rem;font-weight:900;color:#065f46;letter-spacing:-.03em;}
 .savings-label{font-size:.72rem;color:#065f46;opacity:.75;font-weight:700;text-transform:uppercase;letter-spacing:.06em;}
@@ -844,6 +845,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         <button class="avatar" id="av" type="button" aria-label="Open account menu" onclick="toggleAvatarMenu()"></button>
         <div class="avatar-menu" id="avatar-menu">
           <div class="wallet-status normal" id="wallet-status">Normal Wallet</div>
+          <button class="avatar-signout" type="button" onclick="toggleAvatarMenu();openSetPinModal()" style="margin-bottom:6px;">🔒 Set / Change PIN</button>
           <button class="avatar-signout" type="button" onclick="doLogout()">Sign out</button>
         </div>
       </div>
@@ -937,6 +939,28 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <div class="savings-label">You saved this month</div>
       <div class="savings-amount" id="savings-amount">&#8358;0</div>
       <div class="savings-sub" id="savings-sub">by paying in installments instead of upfront</div>
+    </div>
+    <div class="autofund-card" id="autofund-card" style="display:none;" onclick="openFundModal();setTimeout(function(){if(typeof switchFundTab==='function')switchFundTab('af')},150);">
+      <div class="af-card-top">
+        <div class="af-card-label">&#128184; Auto-Fund Inflow</div>
+        <div class="af-card-pill" id="af-card-pill">Active</div>
+      </div>
+      <div class="af-card-total" id="af-card-total">&#8358;0</div>
+      <div class="af-card-sub" id="af-card-sub">auto-funded into your wallet so far</div>
+      <div class="af-card-row">
+        <div class="af-card-stat">
+          <div class="af-card-stat-num" id="af-card-daily">&#8358;0</div>
+          <div class="af-card-stat-lbl">Daily amount</div>
+        </div>
+        <div class="af-card-stat">
+          <div class="af-card-stat-num" id="af-card-count">0</div>
+          <div class="af-card-stat-lbl">Times funded</div>
+        </div>
+        <div class="af-card-stat">
+          <div class="af-card-stat-num" id="af-card-card">&#8212;</div>
+          <div class="af-card-stat-lbl">Card</div>
+        </div>
+      </div>
     </div>
     <div id="dash-subs-d"><div class="empty" style="padding:16px 0;">Loading&#8230;</div></div>
     <div class="referral-card" id="referral-card" style="display:none!important;visibility:hidden!important;position:absolute!important;pointer-events:none!important;height:0!important;overflow:hidden!important;">
@@ -1377,6 +1401,58 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <p style="font-size:.8rem;color:#555;line-height:1.55;margin-bottom:10px;" id="upgrade-intro">Choose a higher plan. Everything you\u2019ve already paid carries over \u2014 you just continue paying the difference.</p>
       <div id="upgrade-list" style="max-height:50vh;overflow-y:auto;"></div>
       <div class="err" id="m-upgrade-err" style="margin-top:8px;"></div>
+    </div>
+  </div>
+</div>
+<div class="modal" id="m-pin">
+  <div class="modal-card" style="max-width:360px;">
+    <div class="modal-head">
+      <h3 id="pin-title" style="margin:0;font-size:1.05rem;font-weight:900;color:#111;">Enter your PIN</h3>
+      <button class="modal-x" onclick="closeModal('m-pin')" ontouchstart="">&times;</button>
+    </div>
+    <div class="modal-body" style="text-align:center;">
+      <p id="pin-sub" style="font-size:.82rem;color:#555;margin-bottom:14px;">Confirm your 4-digit PIN.</p>
+      <div id="pin-dots" style="margin:10px 0 16px;"></div>
+      <input id="pin-input" type="tel" inputmode="numeric" maxlength="4" autocomplete="off"
+        oninput="_pinRenderDots()" onkeyup="if(event.key==='Enter')_pinSubmit()"
+        style="width:160px;text-align:center;letter-spacing:14px;font-size:1.4rem;font-weight:900;padding:10px;border:1.5px solid #d0d4dd;border-radius:10px;font-family:inherit;" />
+      <div class="err" id="m-pin-err" style="margin-top:10px;"></div>
+      <button class="btn btn-blue" id="pin-submit-btn" onclick="_pinSubmit()" ontouchstart="" style="margin-top:14px;width:100%;">Confirm</button>
+      <button type="button" onclick="openForgotPin()" ontouchstart="" style="margin-top:10px;background:none;border:none;color:#1A56DB;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;text-decoration:underline;">Forgot PIN?</button>
+    </div>
+  </div>
+</div>
+<div class="modal" id="m-forgotpin">
+  <div class="modal-card" style="max-width:360px;">
+    <div class="modal-head">
+      <h3 style="margin:0;font-size:1.05rem;font-weight:900;color:#111;">Reset your PIN</h3>
+      <button class="modal-x" onclick="closeModal('m-forgotpin')" ontouchstart="">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:.82rem;color:#555;margin-bottom:12px;line-height:1.5;">For your security, confirm your account password to reset your PIN. You&rsquo;ll then choose a new one.</p>
+      <input id="forgotpin-pw" type="password" autocomplete="current-password" placeholder="Account password"
+        style="width:100%;padding:11px;border:1.5px solid #d0d4dd;border-radius:10px;font-family:inherit;font-size:.95rem;box-sizing:border-box;" />
+      <div class="err" id="m-forgotpin-err" style="margin-top:10px;"></div>
+      <button class="btn btn-blue" id="forgotpin-btn" onclick="_doForgotPin()" ontouchstart="" style="margin-top:14px;width:100%;">Verify &amp; reset PIN</button>
+    </div>
+  </div>
+</div>
+<div class="modal" id="m-setpin">
+  <div class="modal-card" style="max-width:360px;">
+    <div class="modal-head">
+      <h3 style="margin:0;font-size:1.05rem;font-weight:900;color:#111;">🔒 Set a 4-digit PIN</h3>
+      <button class="modal-x" onclick="closeModal('m-setpin')" ontouchstart="">&times;</button>
+    </div>
+    <div class="modal-body">
+      <p style="font-size:.82rem;color:#555;margin-bottom:12px;">Your PIN authorizes payments and balance sharing, and unlocks the app on this device. Avoid obvious PINs.</p>
+      <input id="setpin-old" type="tel" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="Current PIN" style="display:none;width:100%;text-align:center;letter-spacing:10px;font-size:1.2rem;font-weight:900;padding:10px;border:1.5px solid #d0d4dd;border-radius:10px;font-family:inherit;margin-bottom:10px;" />
+      <input id="setpin-input" type="tel" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="New PIN"
+        style="width:100%;text-align:center;letter-spacing:10px;font-size:1.2rem;font-weight:900;padding:10px;border:1.5px solid #d0d4dd;border-radius:10px;font-family:inherit;margin-bottom:10px;" />
+      <input id="setpin-confirm" type="tel" inputmode="numeric" maxlength="4" autocomplete="off" placeholder="Confirm PIN"
+        onkeyup="if(event.key==='Enter')_setPinSubmit()"
+        style="width:100%;text-align:center;letter-spacing:10px;font-size:1.2rem;font-weight:900;padding:10px;border:1.5px solid #d0d4dd;border-radius:10px;font-family:inherit;" />
+      <div class="err" id="m-setpin-err" style="margin-top:10px;"></div>
+      <button class="btn btn-blue" id="setpin-submit-btn" onclick="_setPinSubmit()" ontouchstart="" style="margin-top:14px;width:100%;">Save PIN</button>
     </div>
   </div>
 </div>
@@ -1932,7 +2008,7 @@ function showTab(t) {
     if (tc)  tc.className  = 'tab-content' + (tabs[i] === t ? ' on' : '');
   }
   var now = Date.now();
-  if (t === 'dash')   { if (now - _dashLastLoad  > STALE_MS) { _dashLastLoad  = now; loadDashCashflow(); } }
+  if (t === 'dash')   { if (now - _dashLastLoad  > STALE_MS) { _dashLastLoad  = now; loadDashCashflow(); } try { loadAutofundCard(); } catch(e) {} }
   if (t === 'subs')   { if (now - _subsLastLoad  > STALE_MS) { _subsLastLoad  = now; loadSubs(); } }
   if (t === 'wallet') loadWalletTab();
   if (t === 'inbox')  { if (now - _inboxLastLoad > STALE_MS) { _inboxLastLoad = now; loadInbox(); } updateInboxBadge(0); }
@@ -2140,6 +2216,9 @@ function bootApp(onReady) {
 
   showTab('dash');
   updatePayDaysUI();
+  try { loadAutofundCard(); } catch(e) {}
+  // DEVICE UNLOCK: if the user has set a PIN, require it to unlock on app open.
+  try { setTimeout(function(){ if (typeof maybeRequireUnlock === 'function') maybeRequireUnlock(); }, 600); } catch(e) {}
   var _now = Date.now();
   _subsLastLoad  = _now;
   _inboxLastLoad = _now;
@@ -3430,10 +3509,11 @@ function confirmSub() {
     if (gSelSub && gSelSub.remaining > 0) { progAmt = Math.min(progAmt, gSelSub.remaining); }
     if (progAmt > gBal + 0.01)     { errShow('m-sub-err', 'Insufficient wallet balance. Please fund your account first.'); return; }
     if (progAmt > gSelSub.remaining + 1) { errShow('m-sub-err', 'Amount exceeds the outstanding balance of ' + fmtN(gSelSub.remaining) + '.'); return; }
+    requirePin('pay for this plan', function(_pin) {
     btnLoad('m-sub-btn', true, 'Paying\u2026');
     ensureToken(function(err) {
       if (err) { btnLoad('m-sub-btn', false, 'Pay Now'); errShow('m-sub-err', 'Session error. Please sign out and back in.'); return; }
-      rpc('pay_installment', { p_user_id: gUser.id, p_subscription_id: gSelSub.id, p_amount: progAmt, p_reference: null },
+      rpc('pay_installment', { p_user_id: gUser.id, p_subscription_id: gSelSub.id, p_amount: progAmt, p_reference: null, p_pin: _pin },
         function(e, r) {
           btnLoad('m-sub-btn', false, 'Pay Now');
           if (e || !r || !r.ok || (r.data && !r.data.success)) {
@@ -3488,6 +3568,7 @@ function confirmSub() {
           } catch(e) {}
         }
       );
+    });
     });
     return;
   }
@@ -3609,10 +3690,11 @@ function confirmPay() {
   // Only block if the wallet can't cover the (capped) amount actually due.
   if (amt > gBal + 0.01) { errShow('m-pay-err', 'Insufficient account balance.'); return; }
   if (!gSelSub)         { return; }
+  requirePin('pay for this plan', function(_pin) {
   btnLoad('m-pay-btn', true, 'Paying\u2026');
   ensureToken(function(err) {
     if (err) { btnLoad('m-pay-btn', false, 'Pay from Wallet'); errShow('m-pay-err', 'Session error.'); return; }
-    rpc('pay_installment', { p_user_id: gUser.id, p_subscription_id: gSelSub.id, p_amount: amt, p_reference: null },
+    rpc('pay_installment', { p_user_id: gUser.id, p_subscription_id: gSelSub.id, p_amount: amt, p_reference: null, p_pin: _pin },
       function(e, r) {
         btnLoad('m-pay-btn', false, 'Pay from Wallet');
         if (e || !r || !r.ok || (r.data && !r.data.success)) {
@@ -3659,6 +3741,7 @@ function confirmPay() {
         } catch(e) {}
       }
     );
+  });
   });
 }
 
@@ -3743,12 +3826,14 @@ function transferSend() {
   if (amt > gBal + 0.01) { errShow('m-transfer-err', 'Insufficient balance.'); return; }
   var note = ($('transfer-note').value || '').trim() || null;
 
+  requirePin('send this money', function(_pin) {
   btnLoad('transfer-send-btn', true, 'Send now');
   rpc('transfer_wallet_balance', JSON.stringify({
     p_sender_id: gUser.id,
     p_recipient_id: gTransferRecipient.id,
     p_amount: amt,
-    p_note: note
+    p_note: note,
+    p_pin: _pin
   }), function(err, res) {
     btnLoad('transfer-send-btn', false, 'Send now');
     var d = (res && res.data !== undefined) ? res.data : res;
@@ -3766,6 +3851,7 @@ function transferSend() {
     $('transfer-step-done').style.display   = 'block';
     if (typeof loadWalletTab === 'function') loadWalletTab();
     if (typeof loadDashCashflow === 'function') loadDashCashflow();
+  });
   });
 }
 
@@ -4147,6 +4233,10 @@ function init() {
       // onReady: fired after wallet + plans (first-screen essentials) load.
       hideSplash();
       setTimeout(handlePushDeepLink, 300);
+      // DEVICE UNLOCK: if the user has set a PIN, require it to unlock the app
+      // on this device. Sign-in already happened in a prior session; this is
+      // the fast re-entry gate (like a banking app).
+      setTimeout(maybeRequireUnlock, 400);
     });
 
     ensureToken(function(err) {
@@ -7495,6 +7585,220 @@ function doUpgrade(newPlanId) {
 }
 window.openUpgradeModal = openUpgradeModal;
 window.doUpgrade = doUpgrade;
+
+</script>
+
+<script>
+
+/* ============================================================
+   4-DIGIT PIN — device unlock + payment/transfer authorization.
+   PIN is verified server-side (bcrypt). This is UI only.
+   ============================================================ */
+var _pinCb = null;           // callback waiting for a verified pin
+var _pinActionLabel = '';
+
+function _pinDigits() { return ($('pin-input') ? ($('pin-input').value || '').replace(/\D/g,'').slice(0,4) : ''); }
+function _pinRenderDots() {
+  var n = _pinDigits().length, dots = '';
+  for (var i=0;i<4;i++) dots += '<span style="display:inline-block;width:14px;height:14px;border-radius:50%;margin:0 6px;background:' + (i<n?'#1A56DB':'#d0d4dd') + ';"></span>';
+  if ($('pin-dots')) $('pin-dots').innerHTML = dots;
+}
+
+// Show the PIN entry modal to AUTHORIZE an action. cb receives the 4-digit pin string.
+function requirePin(actionLabel, cb) {
+  // If the user has no PIN yet, send them to set one first, then continue.
+  rpc('get_pin_status', { p_user_id: gUser.id }, function(e, r) {
+    var d = (r && r.data !== undefined) ? r.data : r;
+    if (!e && d && d.pin_set === false) {
+      openSetPinModal(function() { requirePin(actionLabel, cb); });
+      return;
+    }
+    _pinCb = cb; _pinActionLabel = actionLabel || 'continue';
+    if ($('pin-title')) $('pin-title').textContent = 'Enter your PIN';
+    if ($('pin-sub'))   $('pin-sub').textContent   = 'Confirm your 4-digit PIN to ' + _pinActionLabel + '.';
+    if ($('pin-input')) $('pin-input').value = '';
+    errHide('m-pin-err'); _pinRenderDots();
+    openModal('m-pin');
+    setTimeout(function(){ if ($('pin-input')) $('pin-input').focus(); }, 250);
+  });
+}
+
+function _pinSubmit() {
+  var pin = _pinDigits();
+  if (pin.length !== 4) { errShow('m-pin-err', 'Enter your 4-digit PIN.'); return; }
+  btnLoad('pin-submit-btn', true, 'Verifying\u2026');
+  rpc('verify_user_pin', { p_user_id: gUser.id, p_pin: pin }, function(e, r) {
+    btnLoad('pin-submit-btn', false, 'Confirm');
+    var d = (r && r.data !== undefined) ? r.data : r;
+    if (!e && d && d.ok) {
+      closeModal('m-pin');
+      var cb = _pinCb; _pinCb = null;
+      if (typeof cb === 'function') cb(pin);   // hand the verified pin to the action
+    } else {
+      errShow('m-pin-err', (d && d.error) || 'Incorrect PIN.');
+      if ($('pin-input')) $('pin-input').value = '';
+      _pinRenderDots();
+    }
+  });
+}
+
+// ---- Set / change PIN ----
+var _setPinCb = null;
+function openSetPinModal(cb) {
+  _setPinCb = cb || null;
+  if ($('setpin-input')) $('setpin-input').value = '';
+  if ($('setpin-confirm')) $('setpin-confirm').value = '';
+  if ($('setpin-old')) $('setpin-old').value = '';
+  errHide('m-setpin-err');
+  openModal('m-setpin');
+  // If the user already has a PIN, require the current one to change it.
+  if (gUser) {
+    rpc('get_pin_status', { p_user_id: gUser.id }, function(e, r) {
+      var d = (r && r.data !== undefined) ? r.data : r;
+      var hasPin = !e && d && d.pin_set === true;
+      if ($('setpin-old')) $('setpin-old').style.display = hasPin ? 'block' : 'none';
+      var head = document.querySelector('#m-setpin h3');
+      if (head) head.innerHTML = hasPin ? '\uD83D\uDD12 Change your PIN' : '\uD83D\uDD12 Set a 4-digit PIN';
+      setTimeout(function(){
+        var f = hasPin ? $('setpin-old') : $('setpin-input');
+        if (f) f.focus();
+      }, 250);
+    });
+  } else {
+    setTimeout(function(){ if ($('setpin-input')) $('setpin-input').focus(); }, 250);
+  }
+}
+function _setPinSubmit() {
+  var a = ($('setpin-input').value || '').replace(/\D/g,'');
+  var b = ($('setpin-confirm').value || '').replace(/\D/g,'');
+  var oldEl = $('setpin-old');
+  var oldVisible = oldEl && oldEl.style.display !== 'none';
+  var oldPin = oldVisible ? (oldEl.value || '').replace(/\D/g,'') : null;
+  errHide('m-setpin-err');
+  if (oldVisible && (!oldPin || oldPin.length !== 4)) { errShow('m-setpin-err', 'Enter your current PIN.'); return; }
+  if (a.length !== 4) { errShow('m-setpin-err', 'PIN must be 4 digits.'); return; }
+  if (a !== b) { errShow('m-setpin-err', 'The two PINs do not match.'); return; }
+  btnLoad('setpin-submit-btn', true, 'Saving\u2026');
+  rpc('set_user_pin', { p_user_id: gUser.id, p_new_pin: a, p_old_pin: oldPin }, function(e, r) {
+    btnLoad('setpin-submit-btn', false, 'Save PIN');
+    var d = (r && r.data !== undefined) ? r.data : r;
+    if (!e && d && d.ok) {
+      closeModal('m-setpin');
+      if (typeof toast === 'function') toast('\uD83D\uDD12 PIN set. You\u2019ll use it to authorize payments.');
+      var cb = _setPinCb; _setPinCb = null;
+      if (typeof cb === 'function') cb();
+    } else {
+      errShow('m-setpin-err', (d && d.error) || 'Could not save PIN.');
+      btnLoad('setpin-submit-btn', false, 'Save PIN');
+    }
+  });
+}
+// Device unlock on app open (only if a PIN is set).
+function maybeRequireUnlock() {
+  if (!gUser) return;
+  rpc('get_pin_status', { p_user_id: gUser.id }, function(e, r) {
+    var d = (r && r.data !== undefined) ? r.data : r;
+    if (e || !d || d.pin_set !== true) return;   // no PIN -> no unlock gate
+    // Show a blocking unlock prompt
+    _pinCb = function() { /* unlocked — nothing else needed */ };
+    _pinActionLabel = 'unlock';
+    if ($('pin-title')) $('pin-title').textContent = 'Welcome back';
+    if ($('pin-sub'))   $('pin-sub').textContent   = 'Enter your 4-digit PIN to unlock.';
+    if ($('pin-input')) $('pin-input').value = '';
+    errHide('m-pin-err'); _pinRenderDots();
+    openModal('m-pin');
+    setTimeout(function(){ if ($('pin-input')) $('pin-input').focus(); }, 250);
+  });
+}
+window.maybeRequireUnlock = maybeRequireUnlock;
+
+/* ── FORGOT PIN: re-auth with account password, then set a new PIN ── */
+function openForgotPin() {
+  closeModal('m-pin');
+  if ($('forgotpin-pw')) $('forgotpin-pw').value = '';
+  errHide('m-forgotpin-err');
+  openModal('m-forgotpin');
+  setTimeout(function(){ if ($('forgotpin-pw')) $('forgotpin-pw').focus(); }, 250);
+}
+function _doForgotPin() {
+  var pw = ($('forgotpin-pw') && $('forgotpin-pw').value) || '';
+  errHide('m-forgotpin-err');
+  if (!pw || pw.length < 6) { errShow('m-forgotpin-err', 'Enter your account password.'); return; }
+  if (!gUser || !gUser.email) { errShow('m-forgotpin-err', 'Please sign in again.'); return; }
+  btnLoad('forgotpin-btn', true, 'Verifying\u2026');
+  // 1) Re-authenticate: confirm the account password is correct
+  xhr('POST', AUTH + '/token?grant_type=password',
+    { 'apikey': ANON_KEY, 'Content-Type': 'application/json' },
+    JSON.stringify({ email: gUser.email, password: pw }),
+    function(err, res) {
+      if (err || !res || !res.data || !res.data.access_token) {
+        btnLoad('forgotpin-btn', false, 'Verify & reset PIN');
+        errShow('m-forgotpin-err', 'Incorrect password.');
+        return;
+      }
+      // 2) Password verified -> reset the PIN server-side
+      rpc('reset_user_pin', { p_user_id: gUser.id }, function(e2, r2) {
+        btnLoad('forgotpin-btn', false, 'Verify & reset PIN');
+        var d = (r2 && r2.data !== undefined) ? r2.data : r2;
+        if (e2 || !d || !d.ok) {
+          errShow('m-forgotpin-err', (d && d.error) || 'Could not reset PIN.');
+          return;
+        }
+        closeModal('m-forgotpin');
+        // 3) Let them set a new PIN now
+        openSetPinModal(function() {
+          if (typeof toast === 'function') toast('\uD83D\uDD12 New PIN set.');
+        });
+      });
+    }
+  );
+}
+window.openForgotPin = openForgotPin;
+window._doForgotPin = _doForgotPin;
+
+
+/* ── AUTO-FUND INFLOW DASHBOARD CARD (home tab) ───────────────── */
+function loadAutofundCard() {
+  if (!gUser) return;
+  var card = $('autofund-card');
+  if (!card) return;
+  rpc('get_autofund_summary', { p_user_id: gUser.id }, function(e, r) {
+    var d = (r && r.data !== undefined) ? r.data : r;
+    if (e || !d || !d.ok || !d.has_mandate) { card.style.display = 'none'; return; }
+
+    var total  = parseFloat(d.total_charged) || 0;
+    var daily  = parseFloat(d.amount) || 0;
+    var count  = parseInt(d.total_charges) || 0;
+    var paused = (d.status !== 'active');
+
+    if ($('af-card-total')) $('af-card-total').innerHTML = fmtN(total);
+    if ($('af-card-daily')) $('af-card-daily').innerHTML = fmtN(daily);
+    if ($('af-card-count')) $('af-card-count').textContent = count;
+    if ($('af-card-card'))  $('af-card-card').textContent = d.card_last4 ? ('\u2022' + d.card_last4) : '\u2014';
+
+    var pill = $('af-card-pill');
+    if (pill) {
+      pill.textContent = paused ? (d.status === 'suspended' ? 'Suspended' : 'Paused') : 'Active';
+      pill.className = 'af-card-pill' + (paused ? ' paused' : '');
+    }
+    card.className = 'autofund-card' + (paused ? ' warn' : '');
+
+    if ($('af-card-sub')) {
+      if (paused) {
+        $('af-card-sub').textContent = 'Auto-fund is paused \u2014 tap to manage your card.';
+      } else if (count === 0) {
+        $('af-card-sub').textContent = 'Set up \u2014 your wallet tops up ' + fmtN(daily) + ' daily.';
+      } else {
+        $('af-card-sub').textContent = 'auto-funded into your wallet so far';
+      }
+    }
+    card.style.display = 'block';
+  });
+}
+window.loadAutofundCard = loadAutofundCard;
+
+window.requirePin = requirePin;
+window.openSetPinModal = openSetPinModal;
 
 </script>
 
