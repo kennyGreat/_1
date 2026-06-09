@@ -1405,7 +1405,7 @@ function doLogin() {
    OAuth redirect is allowed. Consent is recorded locally (auditable)
    and the redirect only starts once the box is checked.
    After Google auth, Supabase redirects back to this page with
-   #access_token=... which the existing parseHash() handler consumes. */
+   #access_token=... which index.html's parseHash() handler consumes. */
 function startGoogleOAuth(termsBoxId, termsErrId) {
   var termsBox = $(termsBoxId);
   var termsErr = $(termsErrId);
@@ -1421,8 +1421,12 @@ function startGoogleOAuth(termsBoxId, termsErrId) {
     }));
   } catch(e) {}
 
-  // Redirect back to THIS auth page; parseHash() will pick up the session hash.
-  var redirectTo = window.location.origin + window.location.pathname;
+  // Redirect to the MAIN APP (index.html) after Google auth — NOT back to
+  // this auth page. index.html's own parseHash() consumes the #access_token
+  // session hash and boots the app. Build an absolute URL from the current
+  // directory so it works in any deploy folder.
+  var dir = window.location.pathname.replace(/[^\/]*$/, '');   // strip filename, keep folder
+  var redirectTo = window.location.origin + dir + 'index.html';
   var url = AUTH + '/authorize?provider=google&redirect_to=' +
             encodeURIComponent(redirectTo);
   try { window.location.href = url; } catch(e) {
