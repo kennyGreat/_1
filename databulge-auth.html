@@ -513,17 +513,16 @@ button,.btn,.plan-btn,.tab,.logout-btn,.plan-chip,.avatar,.avatar-menu button{
       <button class="btn btn-blue" id="w-login-btn">SIGN IN</button>
       <div class="divdr"><span>NEW HERE</span></div>
       <button class="btn btn-lite" id="w-signup-btn">Create New Account</button>
-      <button class="btn btn-lite" id="w-forgot-btn" style="color:#667085;margin-top:8px;">Forgot Password?</button>
-      <div id="w-forgot-panel" style="display:none;margin-top:10px;">
-        <div id="w-forgot-err" class="err"></div>
-        <div id="w-forgot-ok" class="ok" style="display:none;"></div>
-        <div class="field">
-          <label>Email address</label>
-          <input id="w-forgot-email" type="email" autocomplete="email" placeholder="you@example.com">
-        </div>
-        <button class="btn btn-blue" id="w-forgot-send-btn">Get Sign-in Link</button>
-
+      <div class="divdr"><span>OR</span></div>
+      <div class="chk-row" style="margin-bottom:8px;">
+        <input type="checkbox" id="w-terms">
+        <label class="chk-label" for="w-terms">I agree to the <button class="txt-link" id="w-terms-link">Terms &amp; Conditions</button></label>
       </div>
+      <div id="w-terms-err" class="terms-err">Please accept the Terms &amp; Conditions to continue.</div>
+      <button class="btn btn-google" id="w-google-btn" type="button">
+        <svg width="18" height="18" viewBox="0 0 48 48" style="margin-right:10px;" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        Continue with Google
+      </button>
     </div>
 
     <!-- Inline success message shown after forgot-password email is sent -->
@@ -545,6 +544,16 @@ button,.btn,.plan-btn,.tab,.logout-btn,.plan-chip,.avatar,.avatar-menu button{
       </div>
 
       <button class="btn btn-blue" id="l-btn">SIGN IN</button>
+      <div style="text-align:center;margin-top:10px;"><button class="txt-link" id="l-forgot-btn" style="font-size:.8rem;color:#667085;">Forgot Password?</button></div>
+      <div id="l-forgot-panel" style="display:none;margin-top:10px;">
+        <div id="l-forgot-err" class="err"></div>
+        <div id="l-forgot-ok" class="ok" style="display:none;"></div>
+        <div class="field">
+          <label>Email address</label>
+          <input id="l-forgot-email" type="email" autocomplete="email" placeholder="you@example.com">
+        </div>
+        <button class="btn btn-blue" id="l-forgot-send-btn">Get Sign-in Link</button>
+      </div>
       <div class="link-row">No account? <button class="txt-link" id="l-to-s">Create one</button></div>
     </div>
 
@@ -567,6 +576,11 @@ button,.btn,.plan-btn,.tab,.logout-btn,.plan-chip,.avatar,.avatar-menu button{
       </div>
       <div id="s-terms-err" class="terms-err">Please accept the Terms &amp; Conditions.</div>
       <button class="btn btn-blue" id="s-btn">Create Account</button>
+      <div class="divdr"><span>OR</span></div>
+      <button class="btn btn-google" id="s-google-btn" type="button">
+        <svg width="18" height="18" viewBox="0 0 48 48" style="margin-right:10px;" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+        Continue with Google
+      </button>
       <div class="link-row">Have an account? <button class="txt-link" id="s-to-l">Log In</button></div>
     </div>
 
@@ -966,6 +980,7 @@ function goMainApp() { window.location.replace(MAIN_APP_URL); }
 
 /* ── STATE ──────────────────────────────────────────────────── */
 var gUser       = null;   // {id, email, user_metadata}
+var _termsTarget = 's';   // which T&C checkbox the terms modal targets ('w' welcome / 's' signup)
 var gToken      = null;   // JWT access token
 var gRefresh    = null;   // refresh token
 var gExpiry     = 0;      // token expiry epoch ms
@@ -1385,6 +1400,36 @@ function doLogin() {
   _loginAttempt(1);
 }
 
+/* ── GOOGLE SIGN-IN (OAuth via Supabase GoTrue) ──────────────────
+   New users MUST tick "I agree to the Terms & Conditions" before the
+   OAuth redirect is allowed. Consent is recorded locally (auditable)
+   and the redirect only starts once the box is checked.
+   After Google auth, Supabase redirects back to this page with
+   #access_token=... which the existing parseHash() handler consumes. */
+function startGoogleOAuth(termsBoxId, termsErrId) {
+  var termsBox = $(termsBoxId);
+  var termsErr = $(termsErrId);
+  if (termsErr) termsErr.className = 'terms-err';
+  if (!termsBox || !termsBox.checked) {
+    if (termsErr) termsErr.className = 'terms-err on';
+    return;
+  }
+  // Record consent (timestamp + source) before leaving the page.
+  try {
+    _store.set('db_terms_consent', JSON.stringify({
+      accepted: true, at: new Date().toISOString(), via: 'google', src: termsBoxId
+    }));
+  } catch(e) {}
+
+  // Redirect back to THIS auth page; parseHash() will pick up the session hash.
+  var redirectTo = window.location.origin + window.location.pathname;
+  var url = AUTH + '/authorize?provider=google&redirect_to=' +
+            encodeURIComponent(redirectTo);
+  try { window.location.href = url; } catch(e) {
+    toast('Could not start Google sign-in. Please try again.');
+  }
+}
+
 function doSignup() {
   var name  = ($('s-name').value  || '').replace(/^\s+|\s+$/g, '');
   var phone = ($('s-phone').value || '').replace(/^\s+|\s+$/g, '');
@@ -1453,7 +1498,7 @@ function doSendMagicLink(email, errId, okId, btnId) {
     { 'apikey': ANON_KEY, 'Content-Type': 'application/json' },
     JSON.stringify({ action: 'send_magic_link', email: email }),
     function(err, res) {
-      var btnLabel = (btnId === 'ml-inline-btn' || btnId === 'w-forgot-send-btn') ? 'Get Sign-in Link' : 'Send Reset Link';
+      var btnLabel = (btnId === 'ml-inline-btn' || btnId === 'l-forgot-send-btn') ? 'Get Sign-in Link' : 'Send Reset Link';
       btnLoad(btnId, false, btnLabel);
       if (err || !res || !res.ok || (res.data && res.data.error)) {
         if (errEl) {
@@ -1836,25 +1881,28 @@ function wire() {
 
   // Auth actions
   $('l-btn').onclick      = doLogin;
-  if ($('w-forgot-btn')) $('w-forgot-btn').onclick = function() {
-    var panel = $('w-forgot-panel');
+  if ($('l-forgot-btn')) $('l-forgot-btn').onclick = function() {
+    var panel = $('l-forgot-panel');
     if (!panel) return;
     var isOpen = panel.style.display !== 'none';
     panel.style.display = isOpen ? 'none' : 'block';
     this.textContent = isOpen ? 'Forgot Password?' : 'Hide';
     if (!isOpen) {
-      var ef = $('w-forgot-email');
+      var ef = $('l-forgot-email');
+      // Prefill with whatever the user already typed in the sign-in email box
+      var le = $('l-email');
+      if (ef && le && le.value && !ef.value) ef.value = le.value;
       if (ef) setTimeout(function() { try { ef.focus(); } catch(e) {} }, 80);
     }
   };
-  if ($('w-forgot-send-btn')) $('w-forgot-send-btn').onclick = function() {
-    var email = ($('w-forgot-email') ? $('w-forgot-email').value : '').replace(/^\s+|\s+$/g, '');
-    doSendMagicLink(email, 'w-forgot-err', 'w-forgot-ok', 'w-forgot-send-btn');
+  if ($('l-forgot-send-btn')) $('l-forgot-send-btn').onclick = function() {
+    var email = ($('l-forgot-email') ? $('l-forgot-email').value : '').replace(/^\s+|\s+$/g, '');
+    doSendMagicLink(email, 'l-forgot-err', 'l-forgot-ok', 'l-forgot-send-btn');
   };
-  if ($('w-forgot-email')) $('w-forgot-email').onkeydown = function(e) {
+  if ($('l-forgot-email')) $('l-forgot-email').onkeydown = function(e) {
     if ((e||window.event).keyCode === 13) {
       var email = (this.value || '').replace(/^\s+|\s+$/g, '');
-      doSendMagicLink(email, 'w-forgot-err', 'w-forgot-ok', 'w-forgot-send-btn');
+      doSendMagicLink(email, 'l-forgot-err', 'l-forgot-ok', 'l-forgot-send-btn');
     }
   };
   $('s-btn').onclick      = doSignup;
@@ -1877,17 +1925,38 @@ function wire() {
   $('fg-email').onkeydown   = function(e) { if ((e||window.event).keyCode === 13) doForgot(); };
 
   // Terms modal
-  $('s-terms-link').onclick = function() { openModal('m-terms'); };
+  $('s-terms-link').onclick = function() { _termsTarget = 's'; openModal('m-terms'); };
   $('m-terms-x').onclick    = function() { closeModal('m-terms'); };
   $('m-terms-agree').onclick = function() {
-    $('s-terms').checked = true;
-    $('s-terms-err').className = 'terms-err';
+    if (_termsTarget === 'w') {
+      if ($('w-terms')) $('w-terms').checked = true;
+      if ($('w-terms-err')) $('w-terms-err').className = 'terms-err';
+    } else {
+      $('s-terms').checked = true;
+      $('s-terms-err').className = 'terms-err';
+    }
     closeModal('m-terms');
   };
 
   // Terms checkbox live feedback
   $('s-terms').onchange = function() {
     if ($('s-terms').checked) $('s-terms-err').className = 'terms-err';
+  };
+
+  // ── Google sign-in ──
+  // Welcome screen: open same Terms modal; "I Agree" ticks the welcome box.
+  if ($('w-terms-link')) $('w-terms-link').onclick = function() {
+    _termsTarget = 'w';
+    openModal('m-terms');
+  };
+  if ($('w-terms')) $('w-terms').onchange = function() {
+    if ($('w-terms').checked && $('w-terms-err')) $('w-terms-err').className = 'terms-err';
+  };
+  if ($('w-google-btn')) $('w-google-btn').onclick = function() {
+    startGoogleOAuth('w-terms', 'w-terms-err');
+  };
+  if ($('s-google-btn')) $('s-google-btn').onclick = function() {
+    startGoogleOAuth('s-terms', 's-terms-err');
   };
 
   // App tabs
