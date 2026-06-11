@@ -478,6 +478,26 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 .pin-key.act{color:#dc2626;font-size:1.1rem;font-weight:800;}
 .pin-forgot{display:block;width:100%;text-align:center;margin-top:14px;background:none;border:none;color:#1A56DB;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;}
 .pin-close-x{position:absolute;top:14px;right:16px;background:none;border:none;font-size:1.5rem;color:#94a3b8;cursor:pointer;line-height:1;}
+/* ── PIN status indicator (OPay-style verifying / success) ── */
+.pin-status{display:none;align-items:center;justify-content:center;gap:9px;margin:14px auto 2px;min-height:24px;font-size:.9rem;font-weight:700;}
+.pin-status.on{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-box-pack:center;}
+.pin-status.loading{color:#1A56DB;}
+.pin-status.success{color:#16a34a;}
+.pin-spinner{width:20px;height:20px;border:2.5px solid #dbeafe;border-top-color:#1A56DB;border-radius:50%;-webkit-animation:pinSpin .7s linear infinite;animation:pinSpin .7s linear infinite;}
+@-webkit-keyframes pinSpin{to{-webkit-transform:rotate(360deg);}}
+@keyframes pinSpin{to{transform:rotate(360deg);}}
+.pin-check{width:22px;height:22px;border-radius:50%;background:#16a34a;position:relative;-webkit-animation:pinPop2 .3s ease;animation:pinPop2 .3s ease;flex:0 0 auto;}
+.pin-check:after{content:'';position:absolute;left:7px;top:3.5px;width:5px;height:10px;border:solid #fff;border-width:0 2.5px 2.5px 0;-webkit-transform:rotate(45deg);transform:rotate(45deg);}
+@-webkit-keyframes pinPop2{0%{-webkit-transform:scale(.4);opacity:0;}100%{-webkit-transform:scale(1);opacity:1;}}
+@keyframes pinPop2{0%{transform:scale(.4);opacity:0;}100%{transform:scale(1);opacity:1;}}
+.pin-success-pop{position:fixed;inset:0;z-index:2147483647;display:none;-webkit-box-align:center;-webkit-box-pack:center;align-items:center;justify-content:center;background:rgba(15,23,42,.45);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);}
+.pin-success-pop.on{display:-webkit-box;display:-webkit-flex;display:flex;}
+.pin-success-card{background:#fff;border-radius:22px;padding:30px 34px;text-align:center;box-shadow:0 18px 50px rgba(0,0,0,.3);-webkit-animation:pinPop2 .32s ease;animation:pinPop2 .32s ease;max-width:300px;}
+.pin-success-ring{width:74px;height:74px;border-radius:50%;background:#dcfce7;margin:0 auto 16px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;}
+.pin-success-ring .pin-check{width:40px;height:40px;}
+.pin-success-ring .pin-check:after{left:13px;top:7px;width:9px;height:18px;border-width:0 4px 4px 0;}
+.pin-success-card h4{margin:0 0 6px;font-size:1.12rem;font-weight:900;color:#0f172a;}
+.pin-success-card p{margin:0;font-size:.86rem;color:#64748b;line-height:1.5;}
 
 .modal-box{overflow:hidden!important;}
 .modal-hdr,.modal-foot{box-shadow:none!important;border-color:#EEF1F6!important;}
@@ -1441,6 +1461,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <div class="pin-dot" data-i="3"></div>
     </div>
     <div class="err" id="m-pin-err" style="text-align:center;margin-top:6px;"></div>
+    <div class="pin-status" id="pin-status" aria-live="polite"></div>
     <input id="pin-input" class="pin-hidden-input" type="tel" inputmode="numeric" maxlength="4" autocomplete="off" />
     <div class="pin-keypad" id="pin-keypad">
       <button type="button" class="pin-key" onclick="_pinKey('1')" ontouchstart="">1</button>
@@ -7734,19 +7755,56 @@ function requirePin(actionLabel, cb) {
   });
 }
 
+function _pinKeypadEnabled(on) {
+  var kp = $('pin-keypad'); if (!kp) return;
+  kp.style.pointerEvents = on ? '' : 'none';
+  kp.style.opacity = on ? '' : '0.5';
+}
+function _pinStatus(state, msg) {
+  var el = $('pin-status'); if (!el) return;
+  if (!state) { el.className = 'pin-status'; el.innerHTML = ''; return; }
+  if (state === 'loading') {
+    el.className = 'pin-status on loading';
+    el.innerHTML = '<span class="pin-spinner"></span><span>' + (msg || 'Verifying\u2026') + '</span>';
+  } else if (state === 'success') {
+    el.className = 'pin-status on success';
+    el.innerHTML = '<span class="pin-check"></span><span>' + (msg || 'Verified') + '</span>';
+  }
+}
+function _pinSuccessPop(title, msg, cb) {
+  var pop = $('pin-success-pop');
+  if (!pop) { if (typeof cb === 'function') cb(); return; }
+  if (title && $('pin-success-title')) $('pin-success-title').textContent = title;
+  if (msg && $('pin-success-msg')) $('pin-success-msg').textContent = msg;
+  pop.className = 'pin-success-pop on';
+  setTimeout(function() {
+    pop.className = 'pin-success-pop';
+    if (typeof cb === 'function') cb();
+  }, 1600);
+}
+
 function _pinSubmit() {
   var pin = _pinDigits();
   if (pin.length !== 4) { errShow('m-pin-err', 'Enter your 4-digit PIN.'); return; }
+  errHide('m-pin-err');
+  _pinStatus('loading', 'Verifying\u2026');
+  _pinKeypadEnabled(false);
   btnLoad('pin-submit-btn', true, 'Verifying\u2026');
   rpc('verify_user_pin', { p_user_id: gUser.id, p_pin: pin }, function(e, r) {
     btnLoad('pin-submit-btn', false, 'Confirm');
+    _pinKeypadEnabled(true);
     var d = (r && r.data !== undefined) ? r.data : r;
     if (!e && d && d.ok) {
+      _pinStatus('success', 'Verified');
       _pinUnlockMode = false; _unlockActive = false;
-      closeModal('m-pin');
-      var cb = _pinCb; _pinCb = null;
-      if (typeof cb === 'function') cb(pin);   // hand the verified pin to the action
+      setTimeout(function() {
+        _pinStatus(null);
+        closeModal('m-pin');
+        var cb = _pinCb; _pinCb = null;
+        if (typeof cb === 'function') cb(pin);   // hand the verified pin to the action
+      }, 450);
     } else {
+      _pinStatus(null);
       errShow('m-pin-err', (d && d.error) || 'Incorrect PIN.');
       if ($('pin-input')) $('pin-input').value = '';
       _pinRenderDots();
@@ -7796,10 +7854,14 @@ function _setPinSubmit() {
     btnLoad('setpin-submit-btn', false, 'Save PIN');
     var d = (r && r.data !== undefined) ? r.data : r;
     if (!e && d && d.ok) {
+      var wasChange = oldVisible;
       closeModal('m-setpin');
-      if (typeof toast === 'function') toast('\uD83D\uDD12 PIN set. You\u2019ll use it to authorize payments.');
       var cb = _setPinCb; _setPinCb = null;
-      if (typeof cb === 'function') cb();
+      _pinSuccessPop(
+        wasChange ? 'PIN changed successfully' : 'PIN created successfully',
+        'You\u2019ll use this PIN to sign in and authorize payments.',
+        function() { if (typeof cb === 'function') cb(); }
+      );
     } else {
       errShow('m-setpin-err', (d && d.error) || 'Could not save PIN.');
       btnLoad('setpin-submit-btn', false, 'Save PIN');
@@ -7899,9 +7961,7 @@ function _doForgotPin() {
         }
         closeModal('m-forgotpin');
         // 3) Let them set a new PIN now
-        openSetPinModal(function() {
-          if (typeof toast === 'function') toast('\uD83D\uDD12 New PIN set.');
-        });
+        openSetPinModal(function() {});
       });
     }
   );
@@ -8181,6 +8241,14 @@ window.openSetPinModal = openSetPinModal;
 /* Web version: native bridge removed */
 window.isDataBulgeNativeApp = function() { return false; };
 </script>
+
+<div class="pin-success-pop" id="pin-success-pop">
+  <div class="pin-success-card">
+    <div class="pin-success-ring"><span class="pin-check"></span></div>
+    <h4 id="pin-success-title">PIN created successfully</h4>
+    <p id="pin-success-msg">You'll use this PIN to sign in and authorize payments.</p>
+  </div>
+</div>
 
 </body>
 </html>
