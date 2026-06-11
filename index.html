@@ -455,33 +455,29 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 
 /* Modals */
 .modal{backdrop-filter:blur(3px);}
-/* ── OPAY-STYLE PIN MODAL (always above every other modal/feature) ── */
-.modal.pin-modal{z-index:2147483600!important;background:rgba(15,23,42,.55);padding:0!important;}
-.modal.pin-modal{backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
-#m-pin.modal.pin-modal.on{display:-webkit-box!important;display:-webkit-flex!important;display:flex!important;-webkit-box-align:end;-webkit-align-items:flex-end;align-items:flex-end;}
-.modal.pin-modal#m-forgotpin.on,.modal.pin-modal#m-setpin.on{display:-webkit-box!important;display:-webkit-flex!important;display:flex!important;-webkit-box-align:end;-webkit-align-items:flex-end;align-items:flex-end;}
-.modal.pin-modal .modal-card{width:100%;max-width:480px!important;margin:0 auto;border-radius:26px 26px 0 0;padding-bottom:calc(18px + env(safe-area-inset-bottom,0px));-webkit-animation:pinUp .3s cubic-bezier(.22,.61,.36,1);animation:pinUp .3s cubic-bezier(.22,.61,.36,1);}
-.pin-sheet{width:100%;max-width:480px;margin:0 auto;background:#fff;border-radius:26px 26px 0 0;padding:14px 22px calc(26px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 50px rgba(0,0,0,.32);position:relative;-webkit-animation:pinUp .3s cubic-bezier(.22,.61,.36,1);animation:pinUp .3s cubic-bezier(.22,.61,.36,1);}
-.pin-sheet:before{content:'';display:block;width:42px;height:5px;border-radius:3px;background:#e2e8f0;margin:0 auto 16px;}
-@-webkit-keyframes pinUp{0%{-webkit-transform:translateY(100%);}100%{-webkit-transform:translateY(0);}}
-@keyframes pinUp{0%{transform:translateY(100%);}100%{transform:translateY(0);}}
-.pin-lock-badge{width:58px;height:58px;margin:0 auto 16px;border-radius:50%;background:#1A56DB;background:linear-gradient(135deg,#1A56DB,#2563eb);display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;font-size:1.6rem;box-shadow:0 8px 20px rgba(26,86,219,.32);}
-.pin-title{text-align:center;font-size:1.18rem;font-weight:900;color:#0f172a;margin:0 0 5px;}
-.pin-sub{text-align:center;font-size:.84rem;color:#64748b;margin:0 0 22px;line-height:1.45;}
-.pin-dots{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:20px;margin:0 0 8px;}
-.pin-dot{width:16px;height:16px;border-radius:50%;border:2px solid #cbd5e1;background:transparent;-webkit-transition:all .15s;transition:all .15s;}
-.pin-dot.filled{background:#1A56DB;border-color:#1A56DB;-webkit-transform:scale(1.18);transform:scale(1.18);box-shadow:0 2px 8px rgba(26,86,219,.35);}
+/* ── MODERN PIN MODAL (always above every other modal) ── */
+.modal.pin-modal{z-index:9500;background:rgba(15,23,42,.62);}
+.modal.pin-modal{backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
+.pin-sheet{max-width:340px;margin:0 auto;background:#fff;border-radius:22px;padding:26px 22px 22px;box-shadow:0 24px 60px rgba(0,0,0,.4);position:relative;-webkit-animation:pinPop .26s cubic-bezier(.18,.89,.32,1.28);animation:pinPop .26s cubic-bezier(.18,.89,.32,1.28);}
+@-webkit-keyframes pinPop{0%{opacity:0;-webkit-transform:translateY(18px) scale(.96);}100%{opacity:1;-webkit-transform:translateY(0) scale(1);}}
+@keyframes pinPop{0%{opacity:0;transform:translateY(18px) scale(.96);}100%{opacity:1;transform:translateY(0) scale(1);}}
+.pin-lock-badge{width:52px;height:52px;margin:0 auto 14px;border-radius:50%;background:#eff6ff;background:linear-gradient(135deg,#dbeafe,#eff6ff);display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;font-size:1.5rem;}
+.pin-title{text-align:center;font-size:1.12rem;font-weight:900;color:#0f172a;margin:0 0 4px;}
+.pin-sub{text-align:center;font-size:.82rem;color:#64748b;margin:0 0 20px;line-height:1.45;}
+.pin-dots{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:16px;margin:0 0 8px;}
+.pin-dot{width:15px;height:15px;border-radius:50%;border:2px solid #cbd5e1;background:transparent;-webkit-transition:all .15s;transition:all .15s;}
+.pin-dot.filled{background:#1A56DB;border-color:#1A56DB;-webkit-transform:scale(1.12);transform:scale(1.12);}
 .pin-modal.shake .pin-dots{-webkit-animation:pinShake .4s;animation:pinShake .4s;}
 @-webkit-keyframes pinShake{0%,100%{-webkit-transform:translateX(0);}20%,60%{-webkit-transform:translateX(-8px);}40%,80%{-webkit-transform:translateX(8px);}}
 @keyframes pinShake{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-8px);}40%,80%{transform:translateX(8px);}}
 .pin-hidden-input{position:absolute;opacity:0;height:1px;width:1px;pointer-events:none;}
-.pin-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:6px 8px;margin:22px auto 4px;max-width:330px;}
-.pin-key{height:62px;border:none;border-radius:18px;background:transparent;font-size:1.7rem;font-weight:800;color:#0f172a;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;-webkit-transition:background .12s,transform .08s;transition:background .12s,transform .08s;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;}
-.pin-key:active{background:#eef2ff;-webkit-transform:scale(.92);transform:scale(.92);}
+.pin-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0 6px;}
+.pin-key{height:54px;border:none;border-radius:14px;background:#f1f5f9;font-size:1.4rem;font-weight:800;color:#0f172a;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;-webkit-transition:background .12s,transform .08s;transition:background .12s,transform .08s;}
+.pin-key:active{background:#dbeafe;-webkit-transform:scale(.94);transform:scale(.94);}
 .pin-key.blank{background:transparent;cursor:default;}
-.pin-key.act{color:#1A56DB;font-size:1.5rem;font-weight:800;}
-.pin-forgot{display:block;width:100%;text-align:center;margin-top:16px;background:none;border:none;color:#1A56DB;font-size:.84rem;font-weight:800;cursor:pointer;font-family:inherit;}
-.pin-close-x{position:absolute;top:14px;right:18px;background:none;border:none;font-size:1.7rem;color:#94a3b8;cursor:pointer;line-height:1;z-index:2;}
+.pin-key.act{color:#dc2626;font-size:1.1rem;font-weight:800;}
+.pin-forgot{display:block;width:100%;text-align:center;margin-top:14px;background:none;border:none;color:#1A56DB;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;}
+.pin-close-x{position:absolute;top:14px;right:16px;background:none;border:none;font-size:1.5rem;color:#94a3b8;cursor:pointer;line-height:1;}
 
 .modal-box{overflow:hidden!important;}
 .modal-hdr,.modal-foot{box-shadow:none!important;border-color:#EEF1F6!important;}
@@ -1434,7 +1430,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
 </div>
 <div class="modal pin-modal" id="m-pin">
   <div class="pin-sheet">
-    <button class="pin-close-x" onclick="closeModal('m-pin')" ontouchstart="">&times;</button>
+    <button class="pin-close-x" id="pin-close-x" onclick="_pinCloseX()" ontouchstart="">&times;</button>
     <div class="pin-lock-badge">&#128274;</div>
     <h3 class="pin-title" id="pin-title">Enter your PIN</h3>
     <p class="pin-sub" id="pin-sub">Confirm your 4-digit PIN.</p>
@@ -1983,8 +1979,8 @@ function fmtN(n) {
   return '\u20A6' + v.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
-function openModal(id) { var m = $(id); if(m){ var pm = (' '+m.className+' ').indexOf(' pin-modal ')>-1; m.className = pm ? 'modal pin-modal on' : 'modal on'; } var nav = $('bottom-nav'); if(nav) nav.className = 'nav-hidden'; }
-function closeModal(id) { var m = $(id); if(m){ var pm = (' '+m.className+' ').indexOf(' pin-modal ')>-1; m.className = pm ? 'modal pin-modal' : 'modal'; } var nav = $('bottom-nav'); if(nav) nav.className = ''; }
+function openModal(id) { var m = $(id); if(m) m.className = 'modal on'; var nav = $('bottom-nav'); if(nav) nav.className = 'nav-hidden'; }
+function closeModal(id) { var m = $(id); if(m) m.className = 'modal'; var nav = $('bottom-nav'); if(nav) nav.className = ''; }
 
 function showScreen(id) {
   var ids = ['scr-w','scr-l','scr-s','scr-r'];
@@ -5731,81 +5727,35 @@ function notifTimeAgo(iso) {
    Synthesised via Web Audio API — no external file needed.
    Two-tone "ding" exactly like the Messenger notification.
 ────────────────────────────────────────────────────────── */
-/* ── PERSISTENT AUDIO CONTEXT (unlocked on first user gesture) ──
-   A single shared AudioContext is created lazily and "unlocked" on the
-   first tap/click/keypress. Browsers (esp. mobile Safari/Chrome) start
-   audio in a suspended state and only allow playback after a user
-   gesture; creating a fresh context per notification therefore stayed
-   silent. We keep one context alive and resume() it before each play. */
-var _dbAudioCtx = null;
-function dbGetAudioCtx() {
-  try {
-    var AC = window.AudioContext || window.webkitAudioContext;
-    if (!AC) return null;
-    if (!_dbAudioCtx) _dbAudioCtx = new AC();
-    return _dbAudioCtx;
-  } catch(e) { return null; }
-}
-function dbUnlockAudio() {
-  try {
-    var ctx = dbGetAudioCtx();
-    if (!ctx) return;
-    if (ctx.state === 'suspended' && ctx.resume) { try { ctx.resume(); } catch(e) {} }
-    // Play a near-silent blip so the context is fully primed for later sounds
-    var osc = ctx.createOscillator();
-    var g   = ctx.createGain();
-    g.gain.setValueAtTime(0.0001, ctx.currentTime);
-    osc.connect(g); g.connect(ctx.destination);
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + 0.02);
-  } catch(e) {}
-}
-(function _dbBindAudioUnlock() {
-  function once() {
-    dbUnlockAudio();
-    document.removeEventListener('touchend', once, true);
-    document.removeEventListener('mousedown', once, true);
-    document.removeEventListener('click', once, true);
-    document.removeEventListener('keydown', once, true);
-  }
-  try {
-    document.addEventListener('touchend', once, true);
-    document.addEventListener('mousedown', once, true);
-    document.addEventListener('click', once, true);
-    document.addEventListener('keydown', once, true);
-  } catch(e) {}
-})();
-
 function dbPlayNotifSound() {
   try {
-    var ctx = dbGetAudioCtx();
-    if (!ctx) return;
-    // Resume in case the browser parked the context (autoplay policy)
-    if (ctx.state === 'suspended' && ctx.resume) { try { ctx.resume(); } catch(e) {} }
+    var AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    var ctx = new AudioCtx();
 
-    function strike(freq, startT, dur, vol) {
+    function tone(freq, startT, dur, vol) {
       var osc  = ctx.createOscillator();
       var gain = ctx.createGain();
       osc.connect(gain);
       gain.connect(ctx.destination);
-      osc.type = 'triangle';                 // brighter, bell-like timbre
+      osc.type = 'sine';
       osc.frequency.setValueAtTime(freq, startT);
-      gain.gain.setValueAtTime(0.0001, startT);
-      gain.gain.linearRampToValueAtTime(vol, startT + 0.008);
-      gain.gain.exponentialRampToValueAtTime(0.0001, startT + dur);
+      gain.gain.setValueAtTime(0, startT);
+      gain.gain.linearRampToValueAtTime(vol, startT + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.001, startT + dur);
       osc.start(startT);
-      osc.stop(startT + dur + 0.02);
+      osc.stop(startT + dur + 0.01);
     }
 
     var now = ctx.currentTime;
-    // Alarm bell: three quick ringing strikes with a metallic overtone
-    var bell = [880.0, 1108.73];             // A5 fundamental + C#6 overtone
-    var strikes = [0, 0.16, 0.32];
-    for (var i = 0; i < strikes.length; i++) {
-      var t = now + strikes[i];
-      strike(bell[0], t, 0.42, 0.30);        // ringing body
-      strike(bell[1], t, 0.42, 0.14);        // metallic shimmer
-    }
+    // Messenger-style: two rising tones (E5 → G5)
+    tone(659.25, now,        0.18, 0.28);  // E5
+    tone(783.99, now + 0.14, 0.24, 0.22);  // G5
+    // Subtle harmonic shimmer on second tone
+    tone(1046.5, now + 0.14, 0.18, 0.06);  // C6 shimmer
+
+    // Auto-close context after sound
+    setTimeout(function() { try { ctx.close(); } catch(e) {} }, 800);
   } catch(e) {}
 }
 
@@ -7774,6 +7724,7 @@ function requirePin(actionLabel, cb) {
       return;
     }
     _pinCb = cb; _pinActionLabel = actionLabel || 'continue';
+    _pinUnlockMode = false;   // payment PIN is dismissable, unlike the unlock gate
     if ($('pin-title')) $('pin-title').textContent = 'Enter your PIN';
     if ($('pin-sub'))   $('pin-sub').textContent   = 'Confirm your 4-digit PIN to ' + _pinActionLabel + '.';
     if ($('pin-input')) $('pin-input').value = '';
@@ -7791,6 +7742,7 @@ function _pinSubmit() {
     btnLoad('pin-submit-btn', false, 'Confirm');
     var d = (r && r.data !== undefined) ? r.data : r;
     if (!e && d && d.ok) {
+      _pinUnlockMode = false; _unlockActive = false;
       closeModal('m-pin');
       var cb = _pinCb; _pinCb = null;
       if (typeof cb === 'function') cb(pin);   // hand the verified pin to the action
@@ -7855,23 +7807,63 @@ function _setPinSubmit() {
   });
 }
 // Device unlock on app open (only if a PIN is set).
+var _unlockActive = false;
+function _isNativeApp() {
+  try {
+    if (window.__DATABULGE_NATIVE_APP__) return true;
+    if (window.DataBulgeNative && window.DataBulgeNative.isNativeApp) return true;
+  } catch(e) {}
+  return false;
+}
+function _bioAvailable() { return false; }   // web build: no native fingerprint
 function maybeRequireUnlock() {
-  if (!gUser) return;
+  if (!gUser || _unlockActive) return;
   rpc('get_pin_status', { p_user_id: gUser.id }, function(e, r) {
     var d = (r && r.data !== undefined) ? r.data : r;
     if (e || !d || d.pin_set !== true) return;   // no PIN -> no unlock gate
-    // Show a blocking unlock prompt
-    _pinCb = function() { /* unlocked — nothing else needed */ };
-    _pinActionLabel = 'unlock';
-    if ($('pin-title')) $('pin-title').textContent = 'Welcome back';
-    if ($('pin-sub'))   $('pin-sub').textContent   = 'Enter your 4-digit PIN to unlock.';
-    if ($('pin-input')) $('pin-input').value = '';
-    errHide('m-pin-err'); _pinRenderDots();
-    openModal('m-pin');
-    setTimeout(function(){ if ($('pin-input')) $('pin-input').focus(); }, 250);
+    _showPinUnlock();
   });
 }
+function _showPinUnlock() {
+  _unlockActive = true;
+  _pinCb = function() { _unlockActive = false; };
+  _pinActionLabel = 'unlock';
+  _pinUnlockMode = true;
+  if ($('pin-title')) $('pin-title').textContent = 'Welcome back';
+  if ($('pin-sub'))   $('pin-sub').textContent   = 'Enter your 4-digit PIN to unlock.';
+  if ($('pin-input')) $('pin-input').value = '';
+  errHide('m-pin-err'); _pinRenderDots();
+  openModal('m-pin');
+  setTimeout(function(){ if ($('pin-input')) $('pin-input').focus(); }, 250);
+}
 window.maybeRequireUnlock = maybeRequireUnlock;
+
+var _pinUnlockMode = false;
+function _pinCloseX() {
+  if (_pinUnlockMode) { if (typeof toast === 'function') toast('Enter your PIN to continue.'); return; }
+  closeModal('m-pin');
+}
+
+/* ── RE-LOCK ON RESUME (web) ── */
+var _bgAt = 0;
+var _RELOCK_AFTER_MS = 30 * 1000;
+function _onAppBackground() { _bgAt = Date.now(); }
+function _onAppForeground() {
+  if (!gUser || _unlockActive) return;
+  if (_bgAt && (Date.now() - _bgAt) > _RELOCK_AFTER_MS) {
+    _bgAt = 0;
+    try { maybeRequireUnlock(); } catch(e) {}
+  }
+}
+(function _bindRelock() {
+  try {
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden) _onAppBackground(); else _onAppForeground();
+    }, false);
+    window.addEventListener('blur',  _onAppBackground, false);
+    window.addEventListener('focus', _onAppForeground, false);
+  } catch(e) {}
+})();
 
 /* ── FORGOT PIN: re-auth with account password, then set a new PIN ── */
 function openForgotPin() {
