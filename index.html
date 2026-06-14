@@ -488,6 +488,11 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 @keyframes pinSpin{to{transform:rotate(360deg);}}
 .pin-check{width:22px;height:22px;border-radius:50%;background:#16a34a;position:relative;-webkit-animation:pinPop2 .3s ease;animation:pinPop2 .3s ease;flex:0 0 auto;}
 .pin-check:after{content:'';position:absolute;left:7px;top:3.5px;width:5px;height:10px;border:solid #fff;border-width:0 2.5px 2.5px 0;-webkit-transform:rotate(45deg);transform:rotate(45deg);}
+.pin-status.error{color:#dc2626;}
+.pin-cross{width:22px;height:22px;border-radius:50%;background:#dc2626;position:relative;-webkit-animation:pinPop2 .3s ease;animation:pinPop2 .3s ease;flex:0 0 auto;}
+.pin-cross:before,.pin-cross:after{content:'';position:absolute;left:10px;top:5px;width:2.5px;height:12px;background:#fff;border-radius:2px;}
+.pin-cross:before{-webkit-transform:rotate(45deg);transform:rotate(45deg);}
+.pin-cross:after{-webkit-transform:rotate(-45deg);transform:rotate(-45deg);}
 @-webkit-keyframes pinPop2{0%{-webkit-transform:scale(.4);opacity:0;}100%{-webkit-transform:scale(1);opacity:1;}}
 @keyframes pinPop2{0%{transform:scale(.4);opacity:0;}100%{transform:scale(1);opacity:1;}}
 .pin-success-pop{position:fixed;inset:0;z-index:2147483647;display:none;-webkit-box-align:center;-webkit-box-pack:center;align-items:center;justify-content:center;background:rgba(15,23,42,.45);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);}
@@ -1042,6 +1047,11 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         </div>
 
       </div>
+      <!-- Rewards promise banner (attraction, shown before commitment) -->
+      <div id="db-rewards-banner" style="margin-bottom:12px;border-radius:14px;padding:14px 16px;background:-webkit-linear-gradient(135deg,#0b3d2e,#0f5132);background:linear-gradient(135deg,#0b3d2e,#0f5132);color:#fff;box-shadow:0 4px 14px rgba(15,81,50,.25);position:relative;overflow:hidden;">
+        <div style="font-size:.93rem;font-weight:900;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:6px;">&#128176; Earn as you pay</div>
+        <div style="font-size:.8rem;line-height:1.5;margin-top:5px;color:#d8f3e6;">Get <b style="color:#fff;">1% back on every installment</b> you pay. Loyal users unlock up to <b style="color:#fff;">15% off</b> future plans. Your cashback unlocks the moment your plan completes.</div>
+      </div>
       <div id="plans-list"><div class="empty">Loading plans&hellip;</div></div>
     </div>
     <!-- Airtime mode -->
@@ -1319,6 +1329,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
     <div class="modal-body">
       <div id="m-sub-err" class="err"></div>
       <div id="m-sub-info" style="font-size:.82rem;color:#444;margin-bottom:12px;"></div>
+      <div id="m-sub-rewards" style="display:none;margin-bottom:12px;border-radius:12px;padding:12px 14px;background:#f0fdf4;border:1px solid #bbf7d0;"></div>
 
       <div class="field" id="m-sub-dur-field">
         <label style="font-weight:700;color:#333;margin-bottom:7px;display:block;">Payment Duration</label>
@@ -3330,6 +3341,54 @@ function updateSubDaysUI() {
   _refreshSubInfo();
 }
 
+/* ── Rewards promise: live personalized breakdown in the subscribe modal ── */
+var dbRewardsCache = null;   /* { pending_cashback, spendable_balance, completed_plans, next_plan_discount_percent } */
+
+function dbLoadRewards(cb) {
+  try {
+    if (!window.gUser || !window.gUser.id) { if (cb) cb(); return; }
+    window.rpc('get_rewards_summary', JSON.stringify({ p_user_id: window.gUser.id }), function(err, res) {
+      if (!err && res && res.data) { dbRewardsCache = res.data; }
+      try { dbRenderRewardBreakdown(); } catch (e) {}
+      if (cb) cb();
+    });
+  } catch (e) { if (cb) cb(); }
+}
+
+function dbRenderRewardBreakdown() {
+  var box = document.getElementById('m-sub-rewards');
+  if (!box || !gSelPlan) return;
+
+  var calc = calcPlanDaily(gSelPlan, gModalPayDays);
+  var total = (calc && calc.total) || 0;
+  var cashback = Math.round(total * 0.01 * 100) / 100;   /* 1% of full plan = sum of all installment rewards */
+
+  var done = (dbRewardsCache && parseInt(dbRewardsCache.completed_plans)) || 0;
+  /* next-plan discount: recurring 15% from 10, 5% from 3 (mirrors backend) */
+  var discPct = done >= 10 ? 15 : (done >= 3 ? 5 : 0);
+
+  var rows = '';
+  rows += '<div class="row-line"><span class="row-label">&#128176; Cashback you\'ll earn</span>' +
+          '<span class="row-val" style="color:#15803d;font-weight:800;">' + fmtN(cashback) + '</span></div>';
+
+  if (discPct > 0) {
+    rows += '<div class="row-line"><span class="row-label">&#127881; Loyalty discount applied</span>' +
+            '<span class="row-val" style="color:#15803d;font-weight:800;">' + discPct + '% off</span></div>';
+  } else {
+    var left = 3 - done;
+    if (left < 1) left = 1;
+    rows += '<div class="row-line"><span class="row-label">&#11088; Loyalty discount</span>' +
+            '<span class="row-val" style="color:#64748b;font-weight:700;">' +
+            (done >= 3 ? '5% off' : ('Finish ' + left + ' more to unlock 5%')) + '</span></div>';
+  }
+
+  box.innerHTML =
+    '<div style="font-size:.82rem;font-weight:900;color:#166534;margin-bottom:8px;">What you get with this plan</div>' +
+    rows +
+    '<div style="font-size:.72rem;color:#3f6e52;margin-top:8px;line-height:1.45;">Cashback adds up as you pay each installment and unlocks the moment your plan completes.</div>';
+  box.style.display = 'block';
+}
+
 function updateSubInfo() {
   if (!gSelPlan) return;
   var calc = calcPlanDaily(gSelPlan, gModalPayDays);
@@ -3338,6 +3397,7 @@ function updateSubInfo() {
     '<div class="row-line"><span class="row-label">Payment Option</span><span class="row-val">' + gModalPayDays + ' days</span></div>' +
     '<div class="row-line"><span class="row-label">Daily Payment</span><span class="row-val">' + fmtN(calc.daily) + '</span></div>' +
     '<div class="row-line"><span class="row-label">Validity</span><span class="row-val">' + (gSelPlan.validity_days || 30) + ' days</span></div>';
+  try { dbRenderRewardBreakdown(); } catch (e) {}
 }
 
 function openSubModal(planIdx) {
@@ -3369,6 +3429,8 @@ function openSubModal(planIdx) {
   if (!plan) { toast('Plan not found. Please refresh and try again.'); return; }
   gSelPlan = plan;
   gModalPayDays = gPayDays;
+  try { var _rb = document.getElementById('m-sub-rewards'); if (_rb) _rb.style.display = 'none'; } catch (e) {}
+  dbLoadRewards();
 
   /* ── Check if user has an active/pending sub for this exact plan ── */
   var existingSub = null;
@@ -3505,6 +3567,7 @@ function _refreshSubInfo() {
     '<div class="row-line"><span class="row-label">Duration</span><span class="row-val">' + gModalPayDays + ' days</span></div>' +
     '<div class="row-line"><span class="row-label">Daily Payment</span><span class="row-val">' + fmtN(calc.daily) + '</span></div>' +
     '<div class="row-line"><span class="row-label">Account Balance</span><span class="row-val" style="color:' + (gBal >= calc.daily ? '#3d9758' : '#dc2626') + ';">' + fmtN(gBal) + '</span></div>';
+  try { dbRenderRewardBreakdown(); } catch (e) {}
 }
 
 function _friendlySubError(err, res) {
@@ -5650,12 +5713,6 @@ body,.card-sub,.plan-sub,.sub-meta,.msg-body,.notif-row,.row-label,.field label,
 .momentum-label{font-size:.7rem;font-weight:900;text-transform:uppercase;letter-spacing:.06em;color:#4b5563;margin-bottom:5px;}
 .momentum-value{font-size:1.42rem;font-weight:900;letter-spacing:-.04em;color:#07111f;}
 .momentum-sub{font-size:.76rem;line-height:1.45;color:#4b5563;margin-top:3px;}
-.first-plan-guide{background:linear-gradient(135deg,#fff7ed,#ffffff)!important;border:1.5px solid #fed7aa!important;border-radius:24px!important;padding:16px!important;margin-bottom:14px!important;box-shadow:0 12px 28px rgba(251,146,60,.13)!important;}
-.first-plan-title{font-size:1.03rem;font-weight:900;color:#7c2d12;margin-bottom:5px;}
-.first-plan-copy{font-size:.86rem;color:#7c2d12;line-height:1.55;margin-bottom:12px;}
-.first-plan-steps{display:grid;gap:8px;margin-bottom:12px;}
-.first-plan-step{display:flex;align-items:center;gap:9px;color:#431407;font-size:.82rem;font-weight:800;background:#fff;border:1px solid #ffedd5;border-radius:14px;padding:9px 10px;}
-.first-plan-num{width:24px;height:24px;border-radius:999px;background:#3d9758;color:#fff;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:900;flex-shrink:0;}
 
 .dynamic-strip{border-radius:20px!important;padding:14px!important;box-shadow:0 8px 20px rgba(15,23,42,.06)!important;}
 .dynamic-strip-text{font-size:.88rem!important;line-height:1.55!important;font-weight:800!important;}
@@ -7237,9 +7294,6 @@ window.detectAndSaveLocation = detectAndSaveLocation;
     var grid=make('div','momentum-grid','<div class="momentum-card" id="db-mc-save" onclick="safeShowTab(\'wallet\')" style="cursor:pointer;"><div class="momentum-label">Funded This Month</div><div class="momentum-value" id="db-m-save">—</div><div class="momentum-sub" id="db-m-save-sub">loading…</div></div><div class="momentum-card" id="db-mc-streak" onclick="safeShowTab(\'dash\')" style="cursor:pointer;"><div class="momentum-label">Daily Streak</div><div class="momentum-value" id="db-m-streak">—</div><div class="momentum-sub" id="db-m-streak-sub">loading…</div></div><div class="momentum-card" id="db-mc-plans" onclick="safeShowTab(\'subs\')" style="cursor:pointer;"><div class="momentum-label">Plans Completed</div><div class="momentum-value" id="db-m-next">—</div><div class="momentum-sub" id="db-m-next-sub">tap to view</div></div><div class="momentum-card" id="db-mc-wallet" onclick="safeOpenModal(\'m-fund\')" style="cursor:pointer;"><div class="momentum-label">Wallet Balance</div><div class="momentum-value" id="db-m-progress">—</div><div class="momentum-sub" id="db-m-progress-sub">tap to fund</div></div>');
     var hb=$('hero-bal-card'); if(hb && hb.parentNode){ hb.parentNode.insertBefore(grid,hb.nextSibling); }
 
-    var guide=make('div','first-plan-guide','<div class="first-plan-title">First plan? We’ll walk you through it.</div><div class="first-plan-copy">No stress. Fund any amount, choose your network, and subscribe in less than 60 seconds.</div><div class="first-plan-steps"><div class="first-plan-step"><span class="first-plan-num">1</span>Send money to your DataBulge account</div><div class="first-plan-step"><span class="first-plan-num">2</span>Pick MTN, Airtel, Glo or 9mobile</div><div class="first-plan-step"><span class="first-plan-num">3</span>Start small and complete gradually</div></div><button type="button" class="btn btn-blue" id="db-guide-btn" style="margin:0;">Get my first plan</button>');
-    var ds=$('dynamic-strip'); if(ds && ds.parentNode){ ds.parentNode.insertBefore(guide,ds); }
-    on($('db-guide-btn'),'click',function(){ if(typeof window.dbGoSoftPay==='function') window.dbGoSoftPay(); else safeShowTab('plans'); });
   }
   function enhancePlans(){
     var wrap=$('plans-list'); if(!wrap) return;
@@ -7769,6 +7823,9 @@ function _pinStatus(state, msg) {
   } else if (state === 'success') {
     el.className = 'pin-status on success';
     el.innerHTML = '<span class="pin-check"></span><span>' + (msg || 'Verified') + '</span>';
+  } else if (state === 'error') {
+    el.className = 'pin-status on error';
+    el.innerHTML = '<span class="pin-cross"></span><span>' + (msg || 'Incorrect PIN') + '</span>';
   }
 }
 function _pinSuccessPop(title, msg, cb) {
@@ -7804,11 +7861,12 @@ function _pinSubmit() {
         if (typeof cb === 'function') cb(pin);   // hand the verified pin to the action
       }, 450);
     } else {
-      _pinStatus(null);
+      _pinStatus('error', (d && d.error) || 'Incorrect PIN');
       errShow('m-pin-err', (d && d.error) || 'Incorrect PIN.');
       if ($('pin-input')) $('pin-input').value = '';
       _pinRenderDots();
       if (typeof _pinShake === 'function') _pinShake();
+      setTimeout(function(){ _pinStatus(null); }, 1100);
     }
   });
 }
