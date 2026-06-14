@@ -7242,9 +7242,16 @@ window.detectAndSaveLocation = detectAndSaveLocation;
     return subs.length===0 || (($('dash-subs-d')||{}).textContent||'').indexOf('Loading')>=0;
   }
   function injectHome(){
-    var dash=$('tc-dash'); if(!dash || $('momentum-grid')) return;
-    var grid=make('div','momentum-grid','<div class="momentum-card" id="db-mc-save" onclick="safeShowTab(\'wallet\')" style="cursor:pointer;"><div class="momentum-label">Funded This Month</div><div class="momentum-value" id="db-m-save">—</div><div class="momentum-sub" id="db-m-save-sub">loading…</div></div><div class="momentum-card" id="db-mc-streak" onclick="safeShowTab(\'dash\')" style="cursor:pointer;"><div class="momentum-label">Daily Streak</div><div class="momentum-value" id="db-m-streak">—</div><div class="momentum-sub" id="db-m-streak-sub">loading…</div></div><div class="momentum-card" id="db-mc-plans" onclick="safeShowTab(\'subs\')" style="cursor:pointer;"><div class="momentum-label">Plans Completed</div><div class="momentum-value" id="db-m-next">—</div><div class="momentum-sub" id="db-m-next-sub">tap to view</div></div><div class="momentum-card" id="db-mc-wallet" onclick="safeOpenModal(\'m-fund\')" style="cursor:pointer;"><div class="momentum-label">Wallet Balance</div><div class="momentum-value" id="db-m-progress">—</div><div class="momentum-sub" id="db-m-progress-sub">tap to fund</div></div>');
-    var hb=$('hero-bal-card'); if(hb && hb.parentNode){ hb.parentNode.insertBefore(grid,hb.nextSibling); }
+    var dash=$('tc-dash'); if(!dash) return;
+    /* Remove any stray/duplicate momentum grids before deciding to inject. */
+    var existing=dash.querySelectorAll?dash.querySelectorAll('.momentum-grid'):[];
+    if(existing.length){
+      for(var _g=1;_g<existing.length;_g++){ if(existing[_g].parentNode) existing[_g].parentNode.removeChild(existing[_g]); }
+      if(existing[0]&&!existing[0].id) existing[0].id='momentum-grid';
+      return;
+    }
+    var grid=make('div','momentum-grid','<div class="momentum-card" id="db-mc-save" onclick="safeShowTab(\'wallet\')" style="cursor:pointer;"><div class="momentum-label">Funded This Month</div><div class="momentum-value" id="db-m-save">—</div><div class="momentum-sub" id="db-m-save-sub">loading…</div></div><div class="momentum-card" id="db-mc-streak" onclick="safeShowTab(\'dash\')" style="cursor:pointer;"><div class="momentum-label">Daily Streak</div><div class="momentum-value" id="db-m-streak">—</div><div class="momentum-sub" id="db-m-streak-sub">loading…</div></div><div class="momentum-card" id="db-mc-plans" onclick="safeShowTab(\'subs\')" style="cursor:pointer;"><div class="momentum-label">Plans Completed</div><div class="momentum-value" id="db-m-next">—</div><div class="momentum-sub" id="db-m-next-sub">tap to view</div></div><div class="momentum-card" id="db-mc-wallet" onclick="safeOpenModal(\'m-fund\')" style="cursor:pointer;"><div class="momentum-label">Wallet Balance</div><div class="momentum-value" id="db-m-progress">—</div><div class="momentum-sub" id="db-m-progress-sub">tap to fund</div></div><div class="momentum-card" id="db-mc-earned" onclick="safeShowTab(\'subs\')" style="cursor:pointer;"><div class="momentum-label">Rewards Earned</div><div class="momentum-value" id="db-m-earned">—</div><div class="momentum-sub" id="db-m-earned-sub">loading…</div></div><div class="momentum-card" id="db-mc-unlocked" onclick="dbGoMyPlan()" style="cursor:pointer;"><div class="momentum-label">Rewards Unlocked</div><div class="momentum-value" id="db-m-unlocked">—</div><div class="momentum-sub" id="db-m-unlocked-sub">loading…</div></div>');
+    var hb=$('hero-bal-card'); if(hb && hb.parentNode){ grid.id='momentum-grid'; hb.parentNode.insertBefore(grid,hb.nextSibling); }
 
   }
   function enhancePlans(){
@@ -7337,7 +7344,35 @@ window.detectAndSaveLocation = detectAndSaveLocation;
         strip.style.display = '';
       }
     }
+    /* Rewards earned / unlocked cards — pull live figures */
+    if (typeof dbUpdateRewardCards === 'function') dbUpdateRewardCards();
   }
+  /* Populate the two reward momentum cards from get_rewards_summary. */
+  function dbUpdateRewardCards(){
+    var elE=$('db-m-earned'), elU=$('db-m-unlocked');
+    if(!elE && !elU) return;
+    function paint(c){
+      if(!c) return;
+      var earned   = parseFloat(c.total_earned_cashback)   || 0;
+      var unlocked = parseFloat(c.total_unlocked_cashback) || 0;
+      var locked   = parseFloat(c.locked_cashback)         || Math.max(earned-unlocked,0);
+      if($('db-m-earned')){
+        text($('db-m-earned'), '₦' + earned.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}));
+        if($('db-m-earned-sub')) text($('db-m-earned-sub'), earned>0 ? 'Earned from your rewarded activity' : 'Pay a plan to start earning 1% back');
+      }
+      if($('db-m-unlocked')){
+        text($('db-m-unlocked'), '₦' + unlocked.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}));
+        if($('db-m-unlocked-sub')){
+          if(locked>0) text($('db-m-unlocked-sub'), 'Complete your plan and unlock ₦' + locked.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}));
+          else if(unlocked>0) text($('db-m-unlocked-sub'), 'Unlocked and ready to spend');
+          else text($('db-m-unlocked-sub'), 'Complete a plan to unlock your cashback');
+        }
+      }
+    }
+    if(window.dbRewardsCache){ paint(window.dbRewardsCache); }
+    if(typeof dbLoadRewards==='function'){ dbLoadRewards(function(){ paint(window.dbRewardsCache); }); }
+  }
+  window.dbUpdateRewardCards = dbUpdateRewardCards;
   function renameNav(){
     var d=$('tab-dash'); if(d){ var s=d.querySelector('span'); if(s) s.innerHTML='Home'; }
     var p=$('tab-plans'); if(p){ var ps=p.querySelector('span'); /* tab label preserved */ }
