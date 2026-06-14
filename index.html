@@ -4611,29 +4611,6 @@ function loadDashCashflow() {
       }
     );
 
-    restGet('/subscriptions',
-      'user_id=eq.' + gUser.id + '&status=in.(pending,active)&select=id,status,total_price,amount_paid,daily_price,phone_number,payment_days,network,data_plans(data_size,network,category)&order=created_at.desc&limit=5',
-      function(e3, r3) {
-        var wrap = $('dash-subs-d'); if (!wrap) return;
-        var data = (r3 && r3.ok && r3.data) ? r3.data : [];
-        if (!data.length) { wrap.innerHTML = '<div class="empty">No active plans. Tap Buy Data to subscribe.</div>'; return; }
-        var html = '', i;
-        for (i = 0; i < data.length; i++) {
-          var s = data[i], pl = s.data_plans || {};
-          var paid = parseFloat(s.amount_paid) || 0, total = parseFloat(s.total_price) || 1;
-          var pct  = Math.min(100, (paid / total) * 100);
-          html += '<div style="border:1px solid #e5e7eb;border-radius:8px;padding:12px;margin-bottom:10px;background:#fff;">' +
-            '<div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;margin-bottom:6px;">' +
-              (function() { var isAir = pl.category === 'airtime' || pl.data_size === 'Airtime'; var dname = isAir ? (fmtN(parseFloat(s.total_price)/(1+(parseInt(s.payment_days)===28?0.05:0.03))) + ' ' + esc(s.network||'') + ' Airtime') : esc(pl.data_size||''); var dnet = isAir ? esc(s.network||'') : esc(pl.network||''); return '<span style="font-size:.93rem;font-weight:800;color:#111;">' + dname + ' <span class="plan-net ' + netCls(isAir?s.network:pl.network) + '">' + dnet + '</span></span>'; }()) +
-              '<span style="font-size:.72rem;font-weight:700;padding:2px 8px;border-radius:10px;background:#fef3c7;color:#92400e;">' + esc(s.status) + '</span>' +
-            '</div>' +
-            '<div style="background:#e5e7eb;border-radius:4px;height:6px;overflow:hidden;margin-bottom:4px;"><div style="background:#1A56DB;height:100%;border-radius:4px;width:' + pct.toFixed(1) + '%;"></div></div>' +
-            '<div style="font-size:.73rem;color:#888;">' + fmtN(paid) + ' of ' + fmtN(total) + ' paid' + (s.phone_number ? ' \u2022 ' + esc(s.phone_number) : '') + '</div>' +
-          '</div>';
-        }
-        wrap.innerHTML = html;
-      }
-    );
   });
 }
 
@@ -5612,8 +5589,8 @@ html,body{background:radial-gradient(circle at top left,#EEF6FF 0,#F6F8FC 34%,#F
 .card-sub{font-size:.78rem!important;color:#667085!important;line-height:1.55!important;}
 .friend-daily{display:-webkit-box;display:-webkit-flex;display:flex;gap:10px;-webkit-box-align:center;-webkit-align-items:center;align-items:center;background:linear-gradient(135deg,#FFF7D6,#FFFFFF)!important;border:1px solid #FFE8A3!important;border-radius:22px!important;padding:13px 14px!important;margin-bottom:14px!important;box-shadow:0 12px 30px rgba(245,158,11,.12)!important;}
 .friend-daily-icon{width:42px;height:42px;border-radius:16px;background:#fff;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;font-size:1.25rem;box-shadow:0 8px 18px rgba(245,158,11,.14);-webkit-flex-shrink:0;flex-shrink:0;}
-.friend-daily-title{font-size:.86rem;font-weight:950;letter-spacing:-.02em;color:#7C4A03;margin-bottom:2px;}
-.friend-daily-sub{font-size:.74rem;line-height:1.45;color:#8A5A0A;}
+.friend-daily-title{font-size:.92rem;font-weight:950;letter-spacing:-.02em;color:#7C4A03;margin-bottom:3px;}
+.friend-daily-sub{font-size:.86rem;line-height:1.5;color:#7C4A03;}
 .friend-hero{display:none!important;}
 .friend-hero:before{content:'';position:absolute;right:-42px;bottom:-54px;width:190px;height:190px;border-radius:50%;background:rgba(255,255,255,.10);pointer-events:none;}
 .friend-hero:after{content:'';position:absolute;left:-45px;top:-45px;width:120px;height:120px;border-radius:38px;background:rgba(255,255,255,.08);-webkit-transform:rotate(18deg);transform:rotate(18deg);pointer-events:none;}
@@ -5630,15 +5607,7 @@ html,body{background:radial-gradient(circle at top left,#EEF6FF 0,#F6F8FC 34%,#F
 .friend-cta.primary{background:#fff!important;color:#1550D4!important;box-shadow:0 12px 25px rgba(15,23,42,.12)!important;-webkit-box-flex:1;-webkit-flex:1;flex:1;}
 .friend-cta.secondary{background:rgba(255,255,255,.16)!important;color:#fff!important;border:1px solid rgba(255,255,255,.30)!important;-webkit-box-flex:1;-webkit-flex:1;flex:1;}
 .friend-pill{position:relative;z-index:1;display:inline-block;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:7px 10px;font-size:.72rem;font-weight:900;white-space:nowrap;}
-.friend-quick-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:15px;}
-.friend-action-card{border:0;border-radius:24px;padding:15px 14px;text-align:left;min-height:112px;box-shadow:0 14px 34px rgba(15,23,42,.09);font-family:Arial,Helvetica,sans-serif;cursor:pointer;-webkit-tap-highlight-color:transparent;touch-action:manipulation;-webkit-appearance:none;appearance:none;}
-.friend-action-card:active{opacity:.85;-webkit-transform:scale(.97);transform:scale(.97);}
-.friend-action-card strong{display:block;font-size:1rem;letter-spacing:-.04em;margin-bottom:5px;color:#111827;}
-.friend-action-card span{display:block;font-size:.74rem;line-height:1.45;color:#667085;font-weight:700;}
-.friend-action-card .emoji{font-size:1.45rem;margin-bottom:10px;display:block;}
-.friend-action-card.fund{background:linear-gradient(135deg,#EFFFF6,#FFFFFF)!important;}
-.friend-action-card.plan{background:linear-gradient(135deg,#EEF4FF,#FFFFFF)!important;}
-.friend-action-card:hover,.plan-card:hover{-webkit-transform:translateY(-2px);transform:translateY(-2px);}
+.plan-card:hover{-webkit-transform:translateY(-2px);transform:translateY(-2px);}
 .friend-sticky-cta{position:fixed;left:12px;right:12px;bottom:78px;z-index:120;display:none;max-width:940px;margin:0 auto;}
 .friend-sticky-inner{display:-webkit-box;display:-webkit-flex;display:flex;gap:10px;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(226,232,240,.9);border-radius:24px;padding:10px;box-shadow:0 18px 45px rgba(15,23,42,.18);}
 .friend-sticky-inner button{border:0;border-radius:16px;padding:12px 12px;font-size:.82rem;font-weight:950;font-family:Arial,Helvetica,sans-serif;-webkit-box-flex:1;-webkit-flex:1;flex:1;}
@@ -5649,10 +5618,10 @@ body.friend-show-sticky .friend-sticky-cta{display:block;}
 @keyframes friendFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
 .friend-pill,.companion-pill{-webkit-animation:friendFloat 3.5s ease-in-out infinite;animation:friendFloat 3.5s ease-in-out infinite;}
 .companion-pill{display:inline-block;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.22);border-radius:999px;padding:7px 10px;font-size:.72rem;font-weight:900;white-space:nowrap;color:#fff!important;}
-@media(max-width:360px){.friend-title{font-size:1.18rem}.friend-bal-val{font-size:1.82rem}.friend-quick-grid{grid-template-columns:1fr}.friend-cta-row{flex-direction:column}.friend-sticky-cta{bottom:68px;left:8px;right:8px}.friend-sticky-inner{border-radius:20px;padding:8px}}
-@media(min-width:768px){.friend-sticky-cta{left:50%!important;right:auto!important;width:720px!important;-webkit-transform:translateX(-50%);transform:translateX(-50%);}.friend-hero{padding:28px 24px 22px!important}.friend-title{font-size:1.7rem}.friend-quick-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
-@media(min-width:1024px){.friend-sticky-cta{width:860px!important;bottom:96px}.friend-quick-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
-@media(prefers-reduced-motion:reduce){.friend-pill,.companion-pill,.friend-daily-icon,.plan-card:hover,.friend-action-card:hover{-webkit-animation:none!important;animation:none!important;-webkit-transform:none!important;transform:none!important;}}
+@media(max-width:360px){.friend-title{font-size:1.18rem}.friend-bal-val{font-size:1.82rem}.friend-cta-row{flex-direction:column}.friend-sticky-cta{bottom:68px;left:8px;right:8px}.friend-sticky-inner{border-radius:20px;padding:8px}}
+@media(min-width:768px){.friend-sticky-cta{left:50%!important;right:auto!important;width:720px!important;-webkit-transform:translateX(-50%);transform:translateX(-50%);}.friend-hero{padding:28px 24px 22px!important}.friend-title{font-size:1.7rem}}
+@media(min-width:1024px){.friend-sticky-cta{width:860px!important;bottom:96px}}
+@media(prefers-reduced-motion:reduce){.friend-pill,.companion-pill,.friend-daily-icon,.plan-card:hover{-webkit-animation:none!important;animation:none!important;-webkit-transform:none!important;transform:none!important;}}
 
 
 /* ═══════════════════════════════════════════════════════════════
@@ -5691,16 +5660,6 @@ body,.card-sub,.plan-sub,.sub-meta,.msg-body,.notif-row,.row-label,.field label,
 #pg-app{padding-bottom:76px!important;}
 
 /* Warm companion home */
-.companion-welcome{background:linear-gradient(135deg,#1A56DB 0%,#173A73 65%,#0f766e 130%)!important;color:#fff!important;border-radius:26px!important;padding:20px 18px!important;margin-bottom:14px!important;box-shadow:0 16px 34px rgba(26,86,219,.23)!important;position:relative!important;overflow:hidden!important;}
-.companion-welcome:before{content:'';position:absolute;right:-40px;top:-50px;width:170px;height:170px;border-radius:999px;background:rgba(255,255,255,.09);}
-.companion-top{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:start;-webkit-align-items:flex-start;align-items:flex-start;-webkit-box-pack:end;-webkit-justify-content:flex-end;justify-content:flex-end;margin-bottom:8px;position:relative;z-index:1;}
-.companion-kicker{display:none!important;}
-.companion-title{font-size:1.34rem;font-weight:900;letter-spacing:-.04em;line-height:1.15;margin-bottom:7px;color:#fff!important;}
-.companion-copy{font-size:.88rem;line-height:1.55;color:rgba(255,255,255,.87)!important;max-width:92%;}
-.companion-actions{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;}
-.companion-actions button{border:0;border-radius:14px;padding:11px 13px;font-weight:900;font-size:.86rem;font-family:Arial,Helvetica,sans-serif;cursor:pointer;}
-.companion-primary{background:#3d9758;color:#fff;box-shadow:0 10px 24px rgba(61,151,88,.35);}
-.companion-secondary{background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.22)!important;}
 
 .hero-bal-card{border-radius:26px!important;background:linear-gradient(135deg,#1A56DB 0%,#173A73 65%,#0f766e 130%)!important;box-shadow:0 16px 34px rgba(26,86,219,.23)!important;overflow:hidden!important;}
 .hero-bal-label{color:rgba(255,255,255,.76)!important;}
@@ -5760,8 +5719,8 @@ html{scroll-padding-top:70px;}
 .db-confetti{position:fixed;width:9px;height:9px;border-radius:3px;z-index:99999;pointer-events:none;animation:dbConfetti 900ms ease-out forwards;}
 @keyframes dbConfetti{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(-135px) rotate(720deg);opacity:0}}
 @-webkit-keyframes dbConfetti{0%{-webkit-transform:translateY(0) rotate(0);opacity:1}100%{-webkit-transform:translateY(-135px) rotate(720deg);opacity:0}}
-@media(max-width:359px){.momentum-grid{grid-template-columns:1fr}.companion-title{font-size:1.15rem}.hero-bal-amount{font-size:2rem!important}.companion-actions button{width:100%;}.bnav-btn span{font-size:.58rem!important}}
-@media(min-width:768px){.momentum-grid{grid-template-columns:repeat(4,1fr)}.companion-title{font-size:1.65rem}.companion-copy{font-size:.95rem}}
+@media(max-width:359px){.momentum-grid{grid-template-columns:1fr}.hero-bal-amount{font-size:2rem!important}.bnav-btn span{font-size:.58rem!important}}
+@media(min-width:768px){.momentum-grid{grid-template-columns:repeat(4,1fr)}}
 @media(prefers-reduced-motion:reduce){.db-confetti{animation:none!important;display:none!important}.plan-card{transition:none!important}}
 </style>
 
@@ -6762,7 +6721,7 @@ function renderDashActivePlans(subs) {
       '<circle class="prog-ring-fill" cx="34" cy="34" r="'+R+'" stroke="'+netCol+'" stroke-dasharray="'+C.toFixed(1)+'" stroke-dashoffset="'+dash.toFixed(1)+'" style="-webkit-transform:rotate(-90deg);transform:rotate(-90deg);-webkit-transform-origin:center;transform-origin:center;"/>'+
       '<text class="prog-ring-text" x="34" y="34" fill="'+netCol+'">'+pct+'%</text>'+
       '</svg>';
-    html+='<div class="active-plan-card '+netCard+'">'+
+    html+='<div class="active-plan-card '+netCard+'" onclick="dbGoMyPlan()" style="cursor:pointer;-webkit-tap-highlight-color:rgba(0,0,0,.04);">'+
       '<div class="apc-network">'+esc(net)+'</div>'+
       '<div class="apc-name">'+name+'</div>'+
       '<div class="apc-ring-wrap">'+ring+
@@ -6773,8 +6732,8 @@ function renderDashActivePlans(subs) {
         '</div>'+
       '</div>'+
       '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">'+
-        '<button class="btn btn-blue" onclick="showTab(\'subs\')" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:9px 8px;font-size:.8rem;">View Plan</button>'+
-        (s.status==='pending'?'<button class="btn btn-lite" onclick="openPayModal(\''+esc(s.id)+'\','+daily+')" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:9px 8px;font-size:.8rem;">Pay Now</button>':'')+
+        '<button class="btn btn-blue" onclick="event.stopPropagation();showTab(\'subs\')" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:9px 8px;font-size:.8rem;">View Plan</button>'+
+        (s.status==='pending'?'<button class="btn btn-lite" onclick="event.stopPropagation();openPayModal(\''+esc(s.id)+'\','+daily+')" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:9px 8px;font-size:.8rem;">Pay Now</button>':'')+
       '</div>'+
     '</div>';
   }
@@ -7162,8 +7121,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
         '<div class="friend-pill">\uD83D\uDCF6 I am your data friend</div></div>'+
         '<div class="friend-balance"><div><div class="friend-bal-label">Available balance</div><div class="friend-bal-val" id="friend-bal-val">'+bal+'</div></div><div style="font-size:.76rem;opacity:.82;font-weight:800;text-align:right;">Ready when you are</div></div>'+
         '<div class="friend-cta-row"><button class="friend-cta primary" onclick="openFundModal()" ontouchstart="">Add small money</button><button class="friend-cta secondary" onclick="dbGoSoftPay();" ontouchstart="">Find a plan</button></div>'+
-      '</div>'+
-      '<div class="friend-quick-grid" id="friend-quick-grid"><button class="friend-action-card fund" onclick="openFundModal()" ontouchstart=""><span class="emoji">\uD83D\uDC9A</span><strong>Fund with ease</strong><span>Your wallet updates automatically after transfer.</span></button><button class="friend-action-card plan" onclick="dbGoMyPlan();" ontouchstart=""><span class="emoji">\uD83C\uDFAF</span><strong>Choose your vibe</strong><span>Continue your ongoing plan \u2014 Manifest it to the fullest.</span></button></div>';
+      '</div>';
     if(old){
       var bv=byId('friend-bal-val'); if(bv) bv.innerHTML=bal;
       return;
@@ -7284,13 +7242,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
     return subs.length===0 || (($('dash-subs-d')||{}).textContent||'').indexOf('Loading')>=0;
   }
   function injectHome(){
-    var dash=$('tc-dash'); if(!dash || $('db-companion-welcome')) return;
-    var welcome=make('div','companion-welcome','<div class="companion-top"><div class="companion-pill">📶 I am your data friend</div></div><div class="companion-title">Welcome, Let’s keep you online without pressure.</div><div class="companion-copy">Start small, stay connected, and watch your progress grow every day.</div><div class="companion-actions"><button type="button" class="companion-primary" id="db-start-plan">Start with any amount</button><button type="button" class="companion-secondary" id="db-view-plans">Explore plans</button></div>');
-    welcome.id='db-companion-welcome';
-    dash.insertBefore(welcome,dash.firstChild);
-    on($('db-start-plan'),'click',function(){ safeShowTab('plans'); setTimeout(function(){ safeOpenModal('m-fund'); },160); });
-    on($('db-view-plans'),'click',function(){ if(typeof window.dbGoSoftPay==='function') window.dbGoSoftPay(); else safeShowTab('plans'); });
-
+    var dash=$('tc-dash'); if(!dash || $('momentum-grid')) return;
     var grid=make('div','momentum-grid','<div class="momentum-card" id="db-mc-save" onclick="safeShowTab(\'wallet\')" style="cursor:pointer;"><div class="momentum-label">Funded This Month</div><div class="momentum-value" id="db-m-save">—</div><div class="momentum-sub" id="db-m-save-sub">loading…</div></div><div class="momentum-card" id="db-mc-streak" onclick="safeShowTab(\'dash\')" style="cursor:pointer;"><div class="momentum-label">Daily Streak</div><div class="momentum-value" id="db-m-streak">—</div><div class="momentum-sub" id="db-m-streak-sub">loading…</div></div><div class="momentum-card" id="db-mc-plans" onclick="safeShowTab(\'subs\')" style="cursor:pointer;"><div class="momentum-label">Plans Completed</div><div class="momentum-value" id="db-m-next">—</div><div class="momentum-sub" id="db-m-next-sub">tap to view</div></div><div class="momentum-card" id="db-mc-wallet" onclick="safeOpenModal(\'m-fund\')" style="cursor:pointer;"><div class="momentum-label">Wallet Balance</div><div class="momentum-value" id="db-m-progress">—</div><div class="momentum-sub" id="db-m-progress-sub">tap to fund</div></div>');
     var hb=$('hero-bal-card'); if(hb && hb.parentNode){ hb.parentNode.insertBefore(grid,hb.nextSibling); }
 
@@ -7840,6 +7792,19 @@ function _pinSuccessPop(title, msg, cb) {
   }, 1600);
 }
 
+// Distinguish a transport/server failure from a genuine wrong-PIN rejection.
+// xhr() reports 'Network error'/'Timeout' as the first arg; a missing response,
+// status 0, or a 5xx all mean the server never gave us a real PIN verdict.
+function _pinIsNetworkError(e, r) {
+  if (e) return true;                         // 'Network error' / 'Timeout'
+  if (!r) return true;                        // no response object at all
+  var st = (typeof r.status === 'number') ? r.status : 0;
+  if (st === 0) return true;                  // request never completed
+  if (st >= 500) return true;                 // server error, not a PIN verdict
+  return false;
+}
+window._pinIsNetworkError = _pinIsNetworkError;
+
 function _pinSubmit() {
   var pin = _pinDigits();
   if (pin.length !== 4) { errShow('m-pin-err', 'Enter your 4-digit PIN.'); return; }
@@ -7860,7 +7825,15 @@ function _pinSubmit() {
         var cb = _pinCb; _pinCb = null;
         if (typeof cb === 'function') cb(pin);   // hand the verified pin to the action
       }, 450);
+    } else if (_pinIsNetworkError(e, r)) {
+      // Transport/server problem — NOT a wrong PIN. Keep the entered digits,
+      // tell the truth, and let the user retry without re-typing.
+      _pinStatus('error', 'Connection problem');
+      errShow('m-pin-err', 'Connection problem. Check your internet and try again.');
+      if (typeof _pinShake === 'function') _pinShake();
+      setTimeout(function(){ _pinStatus(null); }, 1300);
     } else {
+      // Server responded and rejected the PIN — genuinely incorrect.
       _pinStatus('error', (d && d.error) || 'Incorrect PIN');
       errShow('m-pin-err', (d && d.error) || 'Incorrect PIN.');
       if ($('pin-input')) $('pin-input').value = '';
@@ -7920,6 +7893,9 @@ function _setPinSubmit() {
         'You\u2019ll use this PIN to sign in and authorize payments.',
         function() { if (typeof cb === 'function') cb(); }
       );
+    } else if (_pinIsNetworkError(e, r)) {
+      errShow('m-setpin-err', 'Connection problem. Check your internet and try again.');
+      btnLoad('setpin-submit-btn', false, 'Save PIN');
     } else {
       errShow('m-setpin-err', (d && d.error) || 'Could not save PIN.');
       btnLoad('setpin-submit-btn', false, 'Save PIN');
