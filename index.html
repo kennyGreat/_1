@@ -1428,7 +1428,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         <h3>3. HOW IT WORKS</h3>
         <p>Tap the +Fund Account button to fund your account. Once your account reaches the full plan cost, data is automatically delivered to your registered phone number.</p>
         <h3>4. SURCHARGE</h3>
-        <p>3% for 7-day cycles. 5% for 28-day cycles. Non-refundable once subscription is created.</p>
+        <p>A flat 5% service charge applies to every plan, regardless of payment cycle. Non-refundable once subscription is created.</p>
         <h3>5. REFUND POLICY</h3>
         <p>If delivery fails, your wallet is automatically refunded within 4 minutes. Successfully delivered data is non-refundable.</p>
         <h3>6. ELIGIBILITY</h3>
@@ -3320,8 +3320,20 @@ window._pickAutocomplete = _pickAutocomplete;
 
 function calcPlanDaily(plan, days) {
   var price = parseFloat(plan && plan.selling_price) || 0;
-  var total = days === 28 ? (price * 1.05) : (price * 1.03);
-  return { total: total, daily: days > 0 ? (total / days) : 0 };
+  /* Mirror backend createSubscription exactly: loyalty discount off the card
+     price BEFORE a flat 5% surge, so displayed total == charged total. */
+  var done = (window.dbRewardsCache && parseInt(window.dbRewardsCache.completed_plans)) || 0;
+  var discPct = done >= 10 ? 10 : (done >= 3 ? 3 : 0);
+  var discountedBase = Math.round(price * (1 - discPct / 100) * 100) / 100;
+  var total = Math.round(discountedBase * 1.05 * 100) / 100;
+  return {
+    total: total,
+    daily: days > 0 ? (total / days) : 0,
+    base: price,
+    discPct: discPct,
+    discountAmount: Math.round((price - discountedBase) * 100) / 100,
+    discountedBase: discountedBase
+  };
 }
 
 function updatePayDaysUI() {
@@ -3392,8 +3404,12 @@ function dbRenderRewardBreakdown() {
 function updateSubInfo() {
   if (!gSelPlan) return;
   var calc = calcPlanDaily(gSelPlan, gModalPayDays);
+  var discRow = (calc.discPct > 0)
+    ? '<div class="row-line"><span class="row-label">Loyalty discount (' + calc.discPct + '%)</span><span class="row-val" style="color:#15803d;font-weight:800;">\u2212' + fmtN(calc.discountAmount) + '</span></div>'
+    : '';
   $('m-sub-info').innerHTML =
     '<div class="row-line"><span class="row-label">Plan Price</span><span class="row-val">' + fmtN(gSelPlan.selling_price) + '</span></div>' +
+    discRow +
     '<div class="row-line"><span class="row-label">Payment Option</span><span class="row-val">' + gModalPayDays + ' days</span></div>' +
     '<div class="row-line"><span class="row-label">Daily Payment</span><span class="row-val">' + fmtN(calc.daily) + '</span></div>' +
     '<div class="row-line"><span class="row-label">Validity</span><span class="row-val">' + (gSelPlan.validity_days || 30) + ' days</span></div>';
@@ -3562,8 +3578,12 @@ function _syncSl(slId, on) {
 function _refreshSubInfo() {
   if (!gSelPlan) return;
   var calc = calcPlanDaily(gSelPlan, gModalPayDays);
+  var discRow = (calc.discPct > 0)
+    ? '<div class="row-line"><span class="row-label">Loyalty discount (' + calc.discPct + '%)</span><span class="row-val" style="color:#15803d;font-weight:800;">\u2212' + fmtN(calc.discountAmount) + '</span></div>'
+    : '';
   $('m-sub-info').innerHTML =
     '<div class="row-line"><span class="row-label">Plan Price</span><span class="row-val">' + fmtN(gSelPlan.selling_price) + '</span></div>' +
+    discRow +
     '<div class="row-line"><span class="row-label">Duration</span><span class="row-val">' + gModalPayDays + ' days</span></div>' +
     '<div class="row-line"><span class="row-label">Daily Payment</span><span class="row-val">' + fmtN(calc.daily) + '</span></div>' +
     '<div class="row-line"><span class="row-label">Account Balance</span><span class="row-val" style="color:' + (gBal >= calc.daily ? '#3d9758' : '#dc2626') + ';">' + fmtN(gBal) + '</span></div>';
