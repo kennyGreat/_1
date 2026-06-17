@@ -1368,6 +1368,22 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         </div>
       </div>
 
+      <div class="field" id="m-sub-autopay-field" style="border:1px solid #cdedd9;border-radius:8px;padding:12px;background:#f3fbf6;margin-bottom:12px;">
+        <div style="font-size:.87rem;font-weight:800;color:#0f5132;margin-bottom:6px;">&#9889; Auto-Pay</div>
+        <p style="font-size:.76rem;color:#555;margin-bottom:10px;line-height:1.5;">Pay your ongoing plan automatically from your wallet. Enter how much to move from your wallet to this plan each day &#8212; it keeps going daily until the plan is finished or you cancel. If your wallet is empty on a day, we simply skip it and try again the next day.</p>
+        <div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;gap:8px;margin-bottom:0;">
+          <span style="font-size:.82rem;color:#333;font-weight:600;">Enable Auto-Pay</span>
+          <label style="position:relative;display:inline-block;width:40px;height:22px;-webkit-flex-shrink:0;flex-shrink:0;">
+            <input type="checkbox" id="m-sub-autopay" style="opacity:0;width:0;height:0;position:absolute;">
+            <span id="m-sub-autopay-sl" style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:22px;-webkit-transition:.25s;transition:.25s;"></span>
+          </label>
+        </div>
+        <div id="m-autopay-fields" style="display:none;margin-top:10px;">
+          <label style="font-size:.77rem;color:#555;margin-bottom:4px;display:block;">Amount to pay from wallet each day (&#8358;)</label>
+          <input type="number" id="m-autopay-amt" placeholder="e.g. 15" style="display:block;width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:6px;font-size:.93rem;color:#111;background:#fff;outline:none;-webkit-appearance:none;">
+        </div>
+      </div>
+
       <div class="field">
         <label style="font-weight:700;color:#333;margin-bottom:6px;display:block;">Phone Number for Delivery</label>
         <div style="position:relative;">
@@ -2070,6 +2086,61 @@ function dbGoMyPlan(){
   } catch(e) {}
 }
 window.dbGoMyPlan = dbGoMyPlan;
+
+/* ── Auto-Pay controls on the My Plan cards ── */
+function dbLoadAutopayState() {
+  if (!window.gUser) return;
+  var rows = document.querySelectorAll('[id^="ap-row-"]');
+  if (!rows || !rows.length) return;
+  window.rpc('list_my_autopay', JSON.stringify({}), function(err, res) {
+    var data = (res && (res.data !== undefined ? res.data : res)) || [];
+    var bySub = {};
+    if (data && data.length) { for (var i = 0; i < data.length; i++) bySub[data[i].subscription_id] = data[i]; }
+    for (var r = 0; r < rows.length; r++) {
+      var subId = rows[r].id.replace('ap-row-', '');
+      var m = bySub[subId];
+      var label = document.getElementById('ap-label-' + subId);
+      var btn = document.getElementById('ap-btn-' + subId);
+      if (!label || !btn) continue;
+      if (m && m.status === 'active') {
+        label.innerHTML = '\u26A1 Auto-Pay on \u2014 \u20A6' + Number(m.daily_amount).toLocaleString() + '/day from wallet';
+        btn.textContent = 'Cancel';
+        btn.style.background = '#c0392b';
+        btn.setAttribute('data-on', '1');
+      } else {
+        label.innerHTML = '\u26A1 Auto-Pay';
+        btn.textContent = 'Turn on';
+        btn.style.background = '#0f5132';
+        btn.setAttribute('data-on', '0');
+      }
+    }
+  });
+}
+window.dbLoadAutopayState = dbLoadAutopayState;
+
+function dbToggleAutopay(subId, suggestedDaily) {
+  var btn = document.getElementById('ap-btn-' + subId);
+  var isOn = btn && btn.getAttribute('data-on') === '1';
+  if (isOn) {
+    window.rpc('cancel_autopay', JSON.stringify({ p_subscription_id: subId }), function(err, res) {
+      var d = res && (res.data !== undefined ? res.data : res);
+      if (!err && d && d.ok) { toast('Auto-Pay cancelled.'); dbLoadAutopayState(); }
+      else toast('Could not cancel. Please try again.');
+    });
+    return;
+  }
+  var def = suggestedDaily && suggestedDaily > 0 ? String(suggestedDaily) : '';
+  var amtStr = window.prompt('How much should we move from your wallet to this plan each day? (\u20A6)', def);
+  if (amtStr === null) return;
+  var amt = parseFloat(amtStr) || 0;
+  if (amt <= 0) { toast('Enter a valid daily amount.'); return; }
+  window.rpc('set_autopay', JSON.stringify({ p_subscription_id: subId, p_daily_amount: amt }), function(err, res) {
+    var d = res && (res.data !== undefined ? res.data : res);
+    if (!err && d && d.ok) { toast('\u26A1 Auto-Pay on \u2014 \u20A6' + amt + '/day until this plan is paid.'); dbLoadAutopayState(); }
+    else toast((d && d.error) || 'Could not enable Auto-Pay.');
+  });
+}
+window.dbToggleAutopay = dbToggleAutopay;
 
 function showTab(t) {
   var tabs = ['dash','plans','subs','wallet','inbox','earn'];
@@ -2918,6 +2989,7 @@ function loadSubs() {
         }
         _gSubsCache = r.data;
         wrap.innerHTML = renderSubsList(r.data, false);
+        if (typeof dbLoadAutopayState === 'function') setTimeout(dbLoadAutopayState, 100);
         _mergeServerPhones(r.data);
       }
     );
@@ -3044,6 +3116,10 @@ function renderSubsList(subs, compact) {
         '<button style="padding:8px 12px;background:#fff;border:1.5px solid #2A3FA3;color:#2A3FA3;border-radius:6px;font-size:.78rem;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="openUpgradeModal(\'' + esc(s.id) + '\')" ontouchstart="">\u2B06\uFE0F Upgrade</button>' +
         /* Report Issue button hidden per product decision — keep markup & handler for easy re-enable */
         '<button style="display:none;padding:8px 10px;background:#fff;border:1px solid #e5e7eb;color:#374151;border-radius:6px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="openRefundModal(\'' + esc(s.id) + '\',\'' + esc(displayName + ' ' + displayNetwork) + '\',\'' + esc(s.phone_number || '') + '\')">&#9888; Report Issue</button>' +
+      '</div>';
+      html += '<div id="ap-row-' + esc(s.id) + '" data-daily="' + (dailyPrice||0) + '" style="margin-top:7px;padding:8px 10px;background:#f3fbf6;border:1px solid #cdedd9;border-radius:6px;font-size:.78rem;color:#0f5132;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;gap:8px;">' +
+        '<span id="ap-label-' + esc(s.id) + '">\u26A1 Auto-Pay</span>' +
+        '<button id="ap-btn-' + esc(s.id) + '" onclick="dbToggleAutopay(\'' + esc(s.id) + '\',' + (dailyPrice||0) + ')" style="padding:5px 12px;background:#0f5132;color:#fff;border:none;border-radius:5px;font-size:.76rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;">Turn on</button>' +
       '</div>';
     }
 
@@ -3561,6 +3637,12 @@ function openSubModal(planIdx) {
   if (afFields) afFields.style.display = 'none';
   var afAmt = $('m-autofund-amt');
   if (afAmt) afAmt.value = '';
+  var apInput = $('m-sub-autopay');
+  if (apInput) { apInput.checked = false; _syncSl('m-sub-autopay-sl', false); }
+  var apFields = $('m-autopay-fields');
+  if (apFields) apFields.style.display = 'none';
+  var apAmt = $('m-autopay-amt');
+  if (apAmt) apAmt.value = '';
   var cb2 = $('m-sub-cancel-af-btn'); if (cb2) cb2.style.display = 'none';
   _renderSavedPhones();
   openModal('m-sub');
@@ -3722,9 +3804,12 @@ function confirmSub() {
   var autoRenew = $('m-sub-autorenew') ? $('m-sub-autorenew').checked : false;
   var autoFundOn = $('m-sub-autofund') ? $('m-sub-autofund').checked : false;
   var autoFundAmt = autoFundOn ? (parseFloat($('m-autofund-amt') && $('m-autofund-amt').value) || 0) : 0;
+  var autoPayOn = $('m-sub-autopay') ? $('m-sub-autopay').checked : false;
+  var autoPayAmt = autoPayOn ? (parseFloat($('m-autopay-amt') && $('m-autopay-amt').value) || 0) : 0;
   errHide('m-sub-err');
   if (!phone) { errShow('m-sub-err', 'Enter your phone number for data delivery.'); return; }
   if (autoFundOn && autoFundAmt < 100) { errShow('m-sub-err', 'Enter a valid Auto-Fund amount (minimum \u20A6100).'); return; }
+  if (autoPayOn && autoPayAmt <= 0) { errShow('m-sub-err', 'Enter how much to pay from your wallet each day for Auto-Pay.'); return; }
   btnLoad('m-sub-btn', true, 'Subscribing\u2026');
   ensureToken(function(err) {
     if (err) { btnLoad('m-sub-btn', false, 'Subscribe Now'); errShow('m-sub-err', 'Session error. Please sign out and back in.'); return; }
@@ -3770,6 +3855,15 @@ function confirmSub() {
         var pName = gSelPlan.data_size + ' (' + gSelPlan.network + ')';
         var newSubId = (r && r.data && r.data.id) ? r.data.id : null;
         setTimeout(function() { launchAutoFund(autoFundAmt, pName, newSubId); }, 500);
+      }
+      if (autoPayOn && autoPayAmt > 0 && r && r.data && r.data.id) {
+        var apSubId = r.data.id;
+        rpc('set_autopay', { p_subscription_id: apSubId, p_daily_amount: autoPayAmt }, function(ae, ar) {
+          var ad = ar && (ar.data !== undefined ? ar.data : ar);
+          if (!ae && ad && ad.ok) {
+            toast('\u26A1 Auto-Pay on \u2014 \u20A6' + autoPayAmt + '/day from your wallet until this plan is paid.');
+          }
+        });
       }
       setTimeout(function() { loadDashboard(); loadDashCashflow(); }, 1500);
     });
@@ -4664,6 +4758,11 @@ function wire() {
   };
   $('m-sub-autorenew').onchange = function() {
     _syncSl('m-sub-autorenew-sl', $('m-sub-autorenew').checked);
+  };
+  if ($('m-sub-autopay')) $('m-sub-autopay').onchange = function() {
+    _syncSl('m-sub-autopay-sl', $('m-sub-autopay').checked);
+    var f = $('m-autopay-fields');
+    if (f) f.style.display = $('m-sub-autopay').checked ? 'block' : 'none';
   };
   // Fund modal
   if ($('d-fund-btn'))    $('d-fund-btn').onclick    = openFundModal;
