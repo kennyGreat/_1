@@ -456,7 +456,7 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 /* Modals */
 .modal{backdrop-filter:blur(3px);}
 /* ── MODERN PIN MODAL (always above every other modal) ── */
-.modal.pin-modal{z-index:9500;background:rgba(15,23,42,.62);}
+.modal.pin-modal{z-index:2147483600!important;background:rgba(15,23,42,.62);}
 .modal.pin-modal{backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
 .pin-sheet{max-width:340px;margin:0 auto;background:#fff;border-radius:22px;padding:26px 22px 22px;box-shadow:0 24px 60px rgba(0,0,0,.4);position:relative;-webkit-animation:pinPop .26s cubic-bezier(.18,.89,.32,1.28);animation:pinPop .26s cubic-bezier(.18,.89,.32,1.28);}
 @-webkit-keyframes pinPop{0%{opacity:0;-webkit-transform:translateY(18px) scale(.96);}100%{opacity:1;-webkit-transform:translateY(0) scale(1);}}
@@ -1489,7 +1489,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
     </div>
     <div class="err" id="m-pin-err" style="text-align:center;margin-top:6px;"></div>
     <div class="pin-status" id="pin-status" aria-live="polite"></div>
-    <input id="pin-input" class="pin-hidden-input" type="tel" inputmode="numeric" maxlength="4" autocomplete="off" />
+    <input id="pin-input" class="pin-hidden-input" type="tel" inputmode="none" readonly maxlength="4" autocomplete="off" />
     <div class="pin-keypad" id="pin-keypad">
       <button type="button" class="pin-key" onclick="_pinKey('1')" ontouchstart="">1</button>
       <button type="button" class="pin-key" onclick="_pinKey('2')" ontouchstart="">2</button>
@@ -2027,8 +2027,21 @@ function fmtN(n) {
   return '\u20A6' + v.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 }
 
-function openModal(id) { var m = $(id); if(m) m.className = 'modal on'; var nav = $('bottom-nav'); if(nav) nav.className = 'nav-hidden'; }
-function closeModal(id) { var m = $(id); if(m) m.className = 'modal'; var nav = $('bottom-nav'); if(nav) nav.className = ''; }
+function openModal(id) {
+  var m = $(id);
+  if(m){
+    var pm = (' '+m.className+' ').indexOf(' pin-modal ')>-1;
+    m.className = pm ? 'modal pin-modal on' : 'modal on';
+    // Keep the PIN/unlock modal above every other open modal. Preserving the
+    // pin-modal class keeps its high z-index, and moving it to the last body
+    // child guarantees paint order over an already-open modal (e.g. transfer).
+    if (pm && m.parentNode === document.body && document.body.lastElementChild !== m) {
+      try { document.body.appendChild(m); } catch(e) {}
+    }
+  }
+  var nav = $('bottom-nav'); if(nav) nav.className = 'nav-hidden';
+}
+function closeModal(id) { var m = $(id); if(m){ var pm = (' '+m.className+' ').indexOf(' pin-modal ')>-1; m.className = pm ? 'modal pin-modal' : 'modal'; } var nav = $('bottom-nav'); if(nav) nav.className = ''; }
 
 function showScreen(id) {
   var ids = ['scr-w','scr-l','scr-s','scr-r'];
@@ -7911,7 +7924,7 @@ function requirePin(actionLabel, cb) {
     if ($('pin-input')) $('pin-input').value = '';
     errHide('m-pin-err'); _pinRenderDots();
     openModal('m-pin');
-    setTimeout(function(){ if ($('pin-input')) { try { $('pin-input').focus(); } catch(e) {} } }, 250);
+    /* No focus() on pin-input — entry is via the in-app keypad; focusing it would summon the device keyboard (double keypad). */
   });
 }
 
@@ -8086,7 +8099,7 @@ function _showPinUnlock() {
   if ($('pin-input')) $('pin-input').value = '';
   errHide('m-pin-err'); _pinRenderDots();
   openModal('m-pin');
-  setTimeout(function(){ if ($('pin-input')) $('pin-input').focus(); }, 250);
+  /* No focus() on pin-input — in-app keypad only, avoids the device keyboard. */
 }
 window.maybeRequireUnlock = maybeRequireUnlock;
 
