@@ -1340,6 +1340,15 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         <div id="m-sub-info" style="font-size:.82rem;color:#444;margin-bottom:12px;"></div>
         <div id="m-sub-rewards" style="display:none;margin-bottom:12px;border-radius:12px;padding:12px 14px;background:#f0fdf4;border:1px solid #bbf7d0;"></div>
 
+        <div class="field" id="m-sub-paymode-field">
+          <label style="font-weight:700;color:#333;margin-bottom:7px;display:block;">How do you want to pay?</label>
+          <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">
+            <button class="btn btn-blue" id="m-sub-mode-install" type="button" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;">Pay in installments</button>
+            <button class="btn btn-lite" id="m-sub-mode-once" type="button" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;">Pay once</button>
+          </div>
+          <div id="m-sub-once-note" style="display:none;font-size:.74rem;color:#3d9758;margin-top:6px;line-height:1.4;">You will pay the full amount now from your wallet and your data is delivered immediately.</div>
+        </div>
+
         <div class="field" id="m-sub-dur-field">
           <label style="font-weight:700;color:#333;margin-bottom:7px;display:block;">Payment Duration</label>
           <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">
@@ -1372,28 +1381,11 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <div class="m-sub-step" data-step="3" style="display:none;">
         <div style="font-size:.78rem;color:#888;margin-bottom:10px;">Optional &mdash; set these and we handle the rest for you.</div>
 
-        <div class="field" id="m-sub-autofund-field" style="border:1px solid #d0d8ff;border-radius:8px;padding:12px;background:#f5f6ff;margin-bottom:12px;">
-          <div style="font-size:.87rem;font-weight:800;color:#1A56DB;margin-bottom:6px;">&#128179; Auto-Fund</div>
-          <p style="font-size:.76rem;color:#555;margin-bottom:10px;line-height:1.5;">This takes the stress off you &#8212; enter an amount, pay with your card, your account is debited on your behalf daily with that amount and your wallet is credited instantly. you can cancel anytime.</p>
+        <div class="field" id="m-sub-autorenew-field" style="border:1px solid #c7d2fe;border-radius:8px;padding:12px;background:#eef2ff;margin-bottom:12px;">
+          <div style="font-size:.87rem;font-weight:800;color:#3730a3;margin-bottom:6px;">&#128260; Auto-Renew</div>
+          <p style="font-size:.76rem;color:#555;margin-bottom:10px;line-height:1.5;">When this plan finishes, we&#8217;ll automatically start it again for you &#8212; so you never run out of data. The first installment is charged at renewal, then it continues like a normal plan. You can cancel anytime.</p>
           <div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;gap:8px;margin-bottom:0;">
-            <span style="font-size:.82rem;color:#333;font-weight:600;">Enable Auto-Fund</span>
-            <label style="position:relative;display:inline-block;width:40px;height:22px;-webkit-flex-shrink:0;flex-shrink:0;">
-              <input type="checkbox" id="m-sub-autofund" style="opacity:0;width:0;height:0;position:absolute;">
-              <span id="m-sub-autofund-sl" style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:22px;-webkit-transition:.25s;transition:.25s;"></span>
-            </label>
-          </div>
-          <div id="m-autofund-fields" style="display:none;margin-top:10px;">
-            <label style="font-size:.77rem;color:#555;margin-bottom:4px;display:block;">Amount to auto-debit each time (&#8358;)</label>
-            <input type="number" id="m-autofund-amt" placeholder="e.g. 500" style="display:block;width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:6px;font-size:.93rem;color:#111;background:#fff;outline:none;-webkit-appearance:none;">
-          </div>
-        </div>
-
-        <div class="field" style="margin-bottom:12px;">
-          <div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;-webkit-box-align:center;-webkit-align-items:center;align-items:center;">
-            <div>
-              <div style="font-size:.85rem;font-weight:700;color:#333;">Auto-Renew</div>
-              <div style="font-size:.73rem;color:#888;margin-top:2px;">Auto-renew when complete</div>
-            </div>
+            <span style="font-size:.82rem;color:#333;font-weight:600;">Enable Auto-Renew</span>
             <label style="position:relative;display:inline-block;width:40px;height:22px;-webkit-flex-shrink:0;flex-shrink:0;">
               <input type="checkbox" id="m-sub-autorenew" style="opacity:0;width:0;height:0;position:absolute;">
               <span id="m-sub-autorenew-sl" style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:22px;-webkit-transition:.25s;transition:.25s;"></span>
@@ -1421,7 +1413,6 @@ button.tab,button.plan-chip{box-shadow:none!important;}
     <div class="modal-foot" style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;-webkit-box-pack:justify;justify-content:space-between;-webkit-box-align:center;align-items:center;flex-wrap:wrap;">
       <button class="btn" id="m-sub-back-btn" type="button" onclick="subStep(-1)" style="display:none;background:#f1f5f9;color:#475569;border:1.5px solid #e2e8f0;width:auto;padding:10px 18px;margin:0;font-family:inherit;font-size:.82rem;">&#8592; Back</button>
       <div style="-webkit-box-flex:1;-webkit-flex:1;flex:1;"></div>
-      <button class="btn" id="m-sub-cancel-af-btn" style="display:none;background:#fff2f2;color:#c0392b;border:1.5px solid #f5c6cb;width:auto;padding:10px 16px;margin:0;font-family:inherit;font-size:.82rem;">&#9209; Cancel Auto-Fund</button>
       <button class="btn btn-blue" id="m-sub-next-btn" type="button" onclick="subStep(1)" style="width:auto;display:inline-block;padding:10px 26px;margin:0;">Next &#8594;</button>
       <button class="btn btn-blue" id="m-sub-btn" style="width:auto;display:none;padding:10px 26px;margin:0;">Subscribe Now</button>
     </div>
@@ -2174,6 +2165,154 @@ function dbToggleAutopay(subId, suggestedDaily) {
 }
 window.dbToggleAutopay = dbToggleAutopay;
 
+/* ── Auto-Renew controls on the My Plan cards ── */
+function dbLoadAutorenewState() {
+  if (!window.gUser) return;
+  var rows = document.querySelectorAll('[id^="ar-row-"]');
+  if (!rows || !rows.length) return;
+  window.rpc('list_my_auto_renew', JSON.stringify({}), function(err, res) {
+    var data = (res && (res.data !== undefined ? res.data : res)) || [];
+    var on = {};
+    if (data && data.length) { for (var i = 0; i < data.length; i++) on[data[i].subscription_id] = true; }
+    for (var r = 0; r < rows.length; r++) {
+      var subId = rows[r].id.replace('ar-row-', '');
+      var label = document.getElementById('ar-label-' + subId);
+      var btn = document.getElementById('ar-btn-' + subId);
+      if (!label || !btn) continue;
+      if (on[subId]) {
+        label.innerHTML = '\uD83D\uDD04 Auto-Renew is on';
+        btn.textContent = 'Cancel';
+        btn.style.background = '#c0392b';
+        btn.setAttribute('data-on', '1');
+      } else {
+        label.innerHTML = '\uD83D\uDD04 Auto-Renew';
+        btn.textContent = 'Turn on';
+        btn.style.background = '#4338ca';
+        btn.setAttribute('data-on', '0');
+      }
+    }
+  });
+}
+window.dbLoadAutorenewState = dbLoadAutorenewState;
+
+function dbToggleAutorenew(subId) {
+  var btn = document.getElementById('ar-btn-' + subId);
+  var isOn = btn && btn.getAttribute('data-on') === '1';
+  if (isOn) {
+    // Cancel — only the user can do this.
+    window.rpc('set_auto_renew', JSON.stringify({ p_subscription_id: subId, p_on: false }), function(err, res) {
+      var d = res && (res.data !== undefined ? res.data : res);
+      if (!err && d && d.ok) { toast('Auto-Renew cancelled.'); dbLoadAutorenewState(); }
+      else toast('Could not cancel. Please try again.');
+    });
+    return;
+  }
+  // Turn on.
+  window.rpc('set_auto_renew', JSON.stringify({ p_subscription_id: subId, p_on: true }), function(err, res) {
+    var d = res && (res.data !== undefined ? res.data : res);
+    if (!err && d && d.ok) { toast('\uD83D\uDD04 Auto-Renew on \u2014 this plan will renew automatically when it completes.'); dbLoadAutorenewState(); }
+    else toast((d && d.error) || 'Could not enable Auto-Renew.');
+  });
+}
+window.dbToggleAutorenew = dbToggleAutorenew;
+
+/* ── Cancel an ongoing plan (user-initiated) ──
+   Clear forfeiture warning + explicit acceptance. Paid amount is NOT refunded. */
+function dbCancelPlan(subId, planLabel, paidAmount) {
+  var paidTxt = '\u20A6' + (Number(paidAmount) || 0).toLocaleString();
+  var ov = document.getElementById('db-cancel-plan-ov');
+  if (ov) ov.parentNode.removeChild(ov);
+  ov = document.createElement('div');
+  ov.id = 'db-cancel-plan-ov';
+  ov.style.cssText = 'position:fixed;inset:0;z-index:2147483000;background:rgba(15,23,42,.6);display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-box-pack:center;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;padding:20px;';
+  ov.innerHTML =
+    '<div style="background:#fff;border-radius:14px;max-width:380px;width:100%;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.3);">' +
+      '<div style="font-size:1.05rem;font-weight:800;color:#b91c1c;margin-bottom:10px;">\u26A0\uFE0F Cancel this plan?</div>' +
+      '<div style="font-size:.84rem;color:#333;line-height:1.6;margin-bottom:14px;">' +
+        'You\u2019re about to cancel <b>' + planLabel + '</b>. Please read carefully:' +
+        '<ul style="margin:10px 0 0 0;padding-left:18px;color:#444;">' +
+          '<li style="margin-bottom:6px;">The <b>' + paidTxt + '</b> you have already paid will <b>NOT be refunded</b>.</li>' +
+          '<li style="margin-bottom:6px;">Your data will <b>not</b> be delivered.</li>' +
+          '<li style="margin-bottom:6px;">Any Auto-Pay or Auto-Renew on this plan will be turned off.</li>' +
+          '<li>This <b>cannot be undone</b>.</li>' +
+        '</ul>' +
+      '</div>' +
+      '<label style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:start;-webkit-align-items:flex-start;align-items:flex-start;gap:8px;font-size:.8rem;color:#333;margin-bottom:16px;cursor:pointer;">' +
+        '<input type="checkbox" id="db-cancel-accept" style="margin-top:2px;width:16px;height:16px;-webkit-flex-shrink:0;flex-shrink:0;">' +
+        '<span>I understand I will lose the ' + paidTxt + ' I already paid, and I still want to cancel.</span>' +
+      '</label>' +
+      '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">' +
+        '<button id="db-cancel-keep" style="-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:11px;background:#f1f5f9;color:#334155;border:none;border-radius:8px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;">Keep my plan</button>' +
+        '<button id="db-cancel-go" disabled style="-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:11px;background:#fca5a5;color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:700;cursor:not-allowed;font-family:inherit;">Cancel plan</button>' +
+      '</div>' +
+    '</div>';
+  document.body.appendChild(ov);
+
+  var accept = document.getElementById('db-cancel-accept');
+  var goBtn = document.getElementById('db-cancel-go');
+  var keepBtn = document.getElementById('db-cancel-keep');
+  function close() { if (ov && ov.parentNode) ov.parentNode.removeChild(ov); }
+  accept.onchange = function() {
+    if (accept.checked) { goBtn.disabled = false; goBtn.style.background = '#dc2626'; goBtn.style.cursor = 'pointer'; }
+    else { goBtn.disabled = true; goBtn.style.background = '#fca5a5'; goBtn.style.cursor = 'not-allowed'; }
+  };
+  keepBtn.onclick = close;
+  goBtn.onclick = function() {
+    if (goBtn.disabled) return;
+    goBtn.disabled = true; goBtn.textContent = 'Cancelling\u2026';
+    window.rpc('cancel_subscription_by_user', JSON.stringify({ p_subscription_id: subId, p_confirm: true }), function(err, res) {
+      var d = res && (res.data !== undefined ? res.data : res);
+      close();
+      if (!err && d && d.ok) {
+        toast('Your plan has been cancelled.');
+        if (typeof loadSubs === 'function') loadSubs();
+      } else {
+        toast((d && d.error) || 'Could not cancel the plan. Please try again.');
+      }
+    });
+  };
+}
+window.dbCancelPlan = dbCancelPlan;
+
+/* ── Reusable warning modal with explicit checkbox acceptance ── */
+function dbConfirmWarning(opts) {
+  opts = opts || {};
+  var ov = document.getElementById('db-warn-ov');
+  if (ov) ov.parentNode.removeChild(ov);
+  ov = document.createElement('div');
+  ov.id = 'db-warn-ov';
+  ov.style.cssText = 'position:fixed;inset:0;z-index:2147483000;background:rgba(15,23,42,.6);display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-box-pack:center;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;padding:20px;';
+  ov.innerHTML =
+    '<div style="background:#fff;border-radius:14px;max-width:380px;width:100%;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.3);">' +
+      '<div style="font-size:1.05rem;font-weight:800;color:#b45309;margin-bottom:10px;">\u26A0\uFE0F ' + (opts.title || 'Please confirm') + '</div>' +
+      '<div style="font-size:.84rem;color:#333;line-height:1.6;margin-bottom:14px;">' + (opts.bodyHtml || '') + '</div>' +
+      '<label style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:start;-webkit-align-items:flex-start;align-items:flex-start;gap:8px;font-size:.8rem;color:#333;margin-bottom:16px;cursor:pointer;">' +
+        '<input type="checkbox" id="db-warn-accept" style="margin-top:2px;width:16px;height:16px;-webkit-flex-shrink:0;flex-shrink:0;">' +
+        '<span>' + (opts.acceptText || 'I understand and want to continue.') + '</span>' +
+      '</label>' +
+      '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">' +
+        '<button id="db-warn-keep" style="-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:11px;background:#f1f5f9;color:#334155;border:none;border-radius:8px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;">' + (opts.keepText || 'Go back') + '</button>' +
+        '<button id="db-warn-go" disabled style="-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:11px;background:#fcd34d;color:#7c2d12;border:none;border-radius:8px;font-size:.85rem;font-weight:700;cursor:not-allowed;font-family:inherit;">' + (opts.proceedText || 'Continue') + '</button>' +
+      '</div>' +
+    '</div>';
+  document.body.appendChild(ov);
+  var accept = document.getElementById('db-warn-accept');
+  var goBtn = document.getElementById('db-warn-go');
+  var keepBtn = document.getElementById('db-warn-keep');
+  function close() { if (ov && ov.parentNode) ov.parentNode.removeChild(ov); }
+  accept.onchange = function() {
+    if (accept.checked) { goBtn.disabled = false; goBtn.style.background = '#d97706'; goBtn.style.color = '#fff'; goBtn.style.cursor = 'pointer'; }
+    else { goBtn.disabled = true; goBtn.style.background = '#fcd34d'; goBtn.style.color = '#7c2d12'; goBtn.style.cursor = 'not-allowed'; }
+  };
+  keepBtn.onclick = close;
+  goBtn.onclick = function() {
+    if (goBtn.disabled) return;
+    close();
+    if (typeof opts.onProceed === 'function') opts.onProceed();
+  };
+}
+window.dbConfirmWarning = dbConfirmWarning;
+
 function showTab(t) {
   var tabs = ['dash','plans','subs','wallet','inbox','earn'];
   var i;
@@ -2788,7 +2927,7 @@ function _renderPlans(allPlans) {
             '</div>' +
             '<div class="plan-size">' + esc2(nn) + '<br>' + esc2(p.data_size) + '</div>' +
             '<div class="plan-sub" style="margin-top:5px;text-transform:none;letter-spacing:0;">' + (p.validity_days || 30) + '-Day Plan</div>' +
-            '<div class="plan-price">' + fmtN(p.selling_price) + '</div>' +
+            '<div class="plan-price">' + fmtN(dbDisplayPrice(p)) + '</div>' +
             '<div style="margin-top:8px;font-size:1rem;font-weight:900;color:#3d9758;">Pay in ' + gPayDays + ' days</div>' +
           '</div>' +
           '<button class="plan-btn" onclick="openSubModal(\'id_' + String(p.id) + '\')">Subscribe</button>' +
@@ -3022,6 +3161,7 @@ function loadSubs() {
         _gSubsCache = r.data;
         wrap.innerHTML = renderSubsList(r.data, false);
         if (typeof dbLoadAutopayState === 'function') setTimeout(dbLoadAutopayState, 100);
+        if (typeof dbLoadAutorenewState === 'function') setTimeout(dbLoadAutorenewState, 120);
         _mergeServerPhones(r.data);
       }
     );
@@ -3152,6 +3292,13 @@ function renderSubsList(subs, compact) {
       html += '<div id="ap-row-' + esc(s.id) + '" data-daily="' + (dailyPrice||0) + '" style="margin-top:7px;padding:8px 10px;background:#f3fbf6;border:1px solid #cdedd9;border-radius:6px;font-size:.78rem;color:#0f5132;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;gap:8px;">' +
         '<span id="ap-label-' + esc(s.id) + '">\u26A1 Auto-Pay</span>' +
         '<button id="ap-btn-' + esc(s.id) + '" onclick="dbToggleAutopay(\'' + esc(s.id) + '\',' + (dailyPrice||0) + ')" style="padding:5px 12px;background:#0f5132;color:#fff;border:none;border-radius:5px;font-size:.76rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;">Turn on</button>' +
+      '</div>';
+      html += '<div id="ar-row-' + esc(s.id) + '" style="margin-top:7px;padding:8px 10px;background:#eef2ff;border:1px solid #c7d2fe;border-radius:6px;font-size:.78rem;color:#3730a3;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;gap:8px;">' +
+        '<span id="ar-label-' + esc(s.id) + '">\uD83D\uDD04 Auto-Renew</span>' +
+        '<button id="ar-btn-' + esc(s.id) + '" onclick="dbToggleAutorenew(\'' + esc(s.id) + '\')" style="padding:5px 12px;background:#4338ca;color:#fff;border:none;border-radius:5px;font-size:.76rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;">Turn on</button>' +
+      '</div>';
+      html += '<div style="text-align:center;margin-top:8px;">' +
+        '<button onclick="dbCancelPlan(\'' + esc(s.id) + '\',\'' + esc(displayName + ' ' + displayNetwork) + '\',' + paid + ')" style="background:none;border:none;color:#9ca3af;font-size:.74rem;text-decoration:underline;cursor:pointer;font-family:inherit;padding:4px;">Cancel this plan</button>' +
       '</div>';
     }
 
@@ -3426,14 +3573,33 @@ function _pickAutocomplete(phone) {
 window._phoneAutocomplete = _phoneAutocomplete;
 window._pickAutocomplete = _pickAutocomplete;
 
+/* Milestone loyalty discount — mirrors backend get_loyalty_discount():
+   multiple of 10 -> 5%, multiple of 5 -> 2.5% (10-multiples are 5% only), else 0. */
+function dbLoyaltyDiscount(done) {
+  done = parseInt(done) || 0;
+  if (done <= 0) return 0;
+  if (done % 10 === 0) return 5;
+  if (done % 5 === 0) return 2.5;
+  return 0;
+}
+window.dbLoyaltyDiscount = dbLoyaltyDiscount;
+
+/* Displayed price = Premiumsub original (selling_price) + flat 5% surge,
+   rounded UP to whole Naira (matches backend). */
+function dbDisplayPrice(plan) {
+  var base = parseFloat(plan && (plan.selling_price !== undefined ? plan.selling_price : plan)) || 0;
+  return Math.ceil(base * 1.05);
+}
+window.dbDisplayPrice = dbDisplayPrice;
+
 function calcPlanDaily(plan, days) {
   var price = parseFloat(plan && plan.selling_price) || 0;
-  /* Mirror backend createSubscription exactly: loyalty discount off the card
-     price BEFORE a flat 5% surge, so displayed total == charged total. */
+  /* Mirror backend exactly: milestone loyalty discount off the card price
+     BEFORE a flat 5% surge, so displayed total == charged total. */
   var done = (window.dbRewardsCache && parseInt(window.dbRewardsCache.completed_plans)) || 0;
-  var discPct = done >= 10 ? 10 : (done >= 3 ? 3 : 0);
+  var discPct = dbLoyaltyDiscount(done);
   var discountedBase = Math.round(price * (1 - discPct / 100) * 100) / 100;
-  var total = Math.round(discountedBase * 1.05 * 100) / 100;
+  var total = Math.ceil(discountedBase * 1.05);   /* round UP to whole Naira (matches backend) */
   return {
     total: total,
     daily: days > 0 ? (total / days) : 0,
@@ -3484,22 +3650,24 @@ function dbRenderRewardBreakdown() {
   var cashback = Math.round(total * 0.01 * 100) / 100;   /* 1% of full plan = sum of all installment rewards */
 
   var done = (dbRewardsCache && parseInt(dbRewardsCache.completed_plans)) || 0;
-  /* next-plan discount: recurring 15% from 10, 5% from 3 (mirrors backend) */
-  var discPct = done >= 10 ? 10 : (done >= 3 ? 3 : 0);
+  /* milestone discount: 5% at every 10th completed, 2.5% at every 5th (mirrors backend) */
+  var discPct = dbLoyaltyDiscount(done);
 
   var rows = '';
   rows += '<div class="row-line"><span class="row-label">&#128176; You\'ll earn</span>' +
           '<span class="row-val" style="color:#15803d;font-weight:800;">' + fmtN(cashback) + '</span></div>';
 
   if (discPct > 0) {
-    rows += '<div class="row-line"><span class="row-label">&#127881; Loyalty discount applied</span>' +
+    rows += '<div class="row-line"><span class="row-label">&#127881; Milestone reward applied</span>' +
             '<span class="row-val" style="color:#15803d;font-weight:800;">' + discPct + '% off</span></div>';
   } else {
-    var left = 3 - done;
-    if (left < 1) left = 1;
-    rows += '<div class="row-line"><span class="row-label">&#11088; Loyalty discount</span>' +
+    var toNext = 5 - (done % 5);
+    if (toNext === 5) toNext = 5;
+    var nextIsTen = ((done + toNext) % 10 === 0);
+    var nextPct = nextIsTen ? '5%' : '2.5%';
+    rows += '<div class="row-line"><span class="row-label">&#11088; Loyalty reward</span>' +
             '<span class="row-val" style="color:#64748b;font-weight:700;">' +
-            (done >= 3 ? '3% off' : ('Finish ' + left + ' more to unlock 3%')) + '</span></div>';
+            (toNext + ' more plan' + (toNext > 1 ? 's' : '') + ' \u2192 ' + nextPct + ' off') + '</span></div>';
   }
 
   box.innerHTML =
@@ -3512,14 +3680,20 @@ function dbRenderRewardBreakdown() {
 function updateSubInfo() {
   if (!gSelPlan) return;
   var calc = calcPlanDaily(gSelPlan, gModalPayDays);
-  var discRow = (calc.discPct > 0)
-    ? '<div class="row-line"><span class="row-label">Loyalty discount (' + calc.discPct + '%)</span><span class="row-val" style="color:#15803d;font-weight:800;">\u2212' + fmtN(calc.discountAmount) + '</span></div>'
+  var shownPrice = dbDisplayPrice(gSelPlan);
+  var discInclusive = Math.round((shownPrice - calc.total) * 100) / 100;
+  var discRow = (calc.discPct > 0 && discInclusive > 0)
+    ? '<div class="row-line"><span class="row-label">Loyalty discount (' + calc.discPct + '%)</span><span class="row-val" style="color:#15803d;font-weight:800;">\u2212' + fmtN(discInclusive) + '</span></div>'
     : '';
   $('m-sub-info').innerHTML =
-    '<div class="row-line"><span class="row-label">Plan Price</span><span class="row-val">' + fmtN(gSelPlan.selling_price) + '</span></div>' +
+    '<div class="row-line"><span class="row-label">Plan Price</span><span class="row-val">' + fmtN(dbDisplayPrice(gSelPlan)) + '</span></div>' +
     discRow +
-    '<div class="row-line"><span class="row-label">Payment Option</span><span class="row-val">' + gModalPayDays + ' days</span></div>' +
-    '<div class="row-line"><span class="row-label">Daily Payment</span><span class="row-val">' + fmtN(calc.daily) + '</span></div>' +
+    (gPayOnce
+      ? '<div class="row-line"><span class="row-label">Payment Option</span><span class="row-val">Pay once (full)</span></div>' +
+        '<div class="row-line"><span class="row-label">You pay now</span><span class="row-val" style="font-weight:800;">' + fmtN(calc.total) + '</span></div>'
+      : '<div class="row-line"><span class="row-label">Payment Option</span><span class="row-val">' + gModalPayDays + ' days</span></div>' +
+        '<div class="row-line"><span class="row-label">Daily Payment</span><span class="row-val">' + fmtN(calc.daily) + '</span></div>'
+    ) +
     '<div class="row-line"><span class="row-label">Validity</span><span class="row-val">' + (gSelPlan.validity_days || 30) + ' days</span></div>';
   try { dbRenderRewardBreakdown(); } catch (e) {}
 }
@@ -3553,6 +3727,8 @@ function openSubModal(planIdx) {
   if (!plan) { toast('Plan not found. Please refresh and try again.'); return; }
   gSelPlan = plan;
   gModalPayDays = gPayDays;
+  gPayOnce = false;
+  if (typeof updateSubPayModeUI === 'function') updateSubPayModeUI();
   try { var _rb = document.getElementById('m-sub-rewards'); if (_rb) _rb.style.display = 'none'; } catch (e) {}
   dbLoadRewards();
 
@@ -3628,8 +3804,6 @@ function openSubModal(planIdx) {
     /* Hide duration selector and auto-fund section — not relevant for continuation */
     var durField = $('m-sub-dur-field');
     if (durField) durField.style.display = 'none';
-    var afField = $('m-sub-autofund-field');
-    if (afField) afField.style.display = 'none';
 
     /* Store existing sub on gSelSub so the Continue Pay button knows which sub to pay */
     gSelSub = { id: existingSub.id, daily: daily, remaining: remaining, _fromSubModal: true };
@@ -3649,8 +3823,6 @@ function openSubModal(planIdx) {
     /* Restore duration selector and auto-fund if they were hidden */
     var durNode = $('m-sub-dur-field');
     if (durNode) durNode.style.display = '';
-    var afNode2 = $('m-sub-autofund-field');
-    if (afNode2) afNode2.style.display = '';
     _refreshSubInfo();
     var meta3 = (gUser && gUser.user_metadata) || {};
     $('m-sub-phone').value = (gProfile && gProfile.phone) || meta3.phone || '';
@@ -3661,21 +3833,14 @@ function openSubModal(planIdx) {
     if (sb2) { sb2.textContent = 'Subscribe Now'; sb2.style.background = ''; }
   }
 
-  var afInput = $('m-sub-autofund');
   var arInput = $('m-sub-autorenew');
-  if (afInput) { afInput.checked = false; _syncSl('m-sub-autofund-sl', false); }
   if (arInput) { arInput.checked = false; _syncSl('m-sub-autorenew-sl', false); }
-  var afFields = $('m-autofund-fields');
-  if (afFields) afFields.style.display = 'none';
-  var afAmt = $('m-autofund-amt');
-  if (afAmt) afAmt.value = '';
   var apInput = $('m-sub-autopay');
   if (apInput) { apInput.checked = false; _syncSl('m-sub-autopay-sl', false); }
   var apFields = $('m-autopay-fields');
   if (apFields) apFields.style.display = 'none';
   var apAmt = $('m-autopay-amt');
   if (apAmt) apAmt.value = '';
-  var cb2 = $('m-sub-cancel-af-btn'); if (cb2) cb2.style.display = 'none';
   _renderSavedPhones();
   if (typeof subStepShow === 'function') subStepShow(1);
   openModal('m-sub');
@@ -3741,7 +3906,7 @@ function _refreshSubInfo() {
     ? '<div class="row-line"><span class="row-label">Loyalty discount (' + calc.discPct + '%)</span><span class="row-val" style="color:#15803d;font-weight:800;">\u2212' + fmtN(calc.discountAmount) + '</span></div>'
     : '';
   $('m-sub-info').innerHTML =
-    '<div class="row-line"><span class="row-label">Plan Price</span><span class="row-val">' + fmtN(gSelPlan.selling_price) + '</span></div>' +
+    '<div class="row-line"><span class="row-label">Plan Price</span><span class="row-val">' + fmtN(dbDisplayPrice(gSelPlan)) + '</span></div>' +
     discRow +
     '<div class="row-line"><span class="row-label">Duration</span><span class="row-val">' + gModalPayDays + ' days</span></div>' +
     '<div class="row-line"><span class="row-label">Daily Payment</span><span class="row-val">' + fmtN(calc.daily) + '</span></div>' +
@@ -3879,13 +4044,10 @@ function confirmSub() {
   var phone = ($('m-sub-phone').value || '').replace(/^\s+|\s+$/g, '');
   var days  = gModalPayDays || 7;
   var autoRenew = $('m-sub-autorenew') ? $('m-sub-autorenew').checked : false;
-  var autoFundOn = $('m-sub-autofund') ? $('m-sub-autofund').checked : false;
-  var autoFundAmt = autoFundOn ? (parseFloat($('m-autofund-amt') && $('m-autofund-amt').value) || 0) : 0;
   var autoPayOn = $('m-sub-autopay') ? $('m-sub-autopay').checked : false;
   var autoPayAmt = autoPayOn ? (parseFloat($('m-autopay-amt') && $('m-autopay-amt').value) || 0) : 0;
   errHide('m-sub-err');
   if (!phone) { errShow('m-sub-err', 'Enter your phone number for data delivery.'); return; }
-  if (autoFundOn && autoFundAmt < 100) { errShow('m-sub-err', 'Enter a valid Auto-Fund amount (minimum \u20A6100).'); return; }
   if (autoPayOn && autoPayAmt <= 0) { errShow('m-sub-err', 'Enter how much to pay from your wallet each day for Auto-Pay.'); return; }
   btnLoad('m-sub-btn', true, 'Subscribing\u2026');
   ensureToken(function(err) {
@@ -3925,14 +4087,25 @@ function confirmSub() {
       }
 
       closeModal('m-sub');
+      if (gPayOnce && r.data && r.data.id) {
+        var fullTotal = calcPlanDaily(gSelPlan, days).total;
+        toast('\u2705 Subscribed! Completing your full payment\u2026');
+        showTab('subs');
+        rpc('pay_installment', { p_user_id: gUser.id, p_subscription_id: r.data.id, p_amount: fullTotal, p_reference: null, p_pin: null }, function(pe, pr) {
+          var pd = pr && (pr.data !== undefined ? pr.data : pr);
+          if (!pe && pd && (pd.success || pd.ok || pd.completed)) {
+            toast('\uD83C\uDF89 Paid in full \u2014 your data is on the way!');
+          } else {
+            toast((pd && (pd.error || pd.message)) || 'Subscribed, but full payment didn\u2019t go through. Fund your wallet and tap Pay Now.');
+          }
+          loadSubs();
+          setTimeout(function() { loadDashboard(); loadDashCashflow(); }, 1500);
+        });
+        return;
+      }
       toast('\u2705 Subscribed to ' + gSelPlan.data_size + '! Fund your wallet and tap Pay Now to continue.');
       showTab('subs');
       loadSubs();
-      if (autoFundOn && autoFundAmt >= 100 && gSelPlan) {
-        var pName = gSelPlan.data_size + ' (' + gSelPlan.network + ')';
-        var newSubId = (r && r.data && r.data.id) ? r.data.id : null;
-        setTimeout(function() { launchAutoFund(autoFundAmt, pName, newSubId); }, 500);
-      }
       if (autoPayOn && autoPayAmt > 0 && r && r.data && r.data.id) {
         var apSubId = r.data.id;
         rpc('set_autopay', { p_subscription_id: apSubId, p_daily_amount: autoPayAmt }, function(ae, ar) {
@@ -4068,6 +4241,15 @@ var gCurrentMsgId = null;
 var _autoPayBusy = false;
 var gPayDays = 28;
 var gModalPayDays = 7;
+var gPayOnce = false;
+function updateSubPayModeUI() {
+  if ($('m-sub-mode-install')) $('m-sub-mode-install').className = 'btn ' + (gPayOnce ? 'btn-lite' : 'btn-blue');
+  if ($('m-sub-mode-once'))    $('m-sub-mode-once').className    = 'btn ' + (gPayOnce ? 'btn-blue' : 'btn-lite');
+  var dur = $('m-sub-dur-field'); if (dur) dur.style.display = gPayOnce ? 'none' : '';
+  var note = $('m-sub-once-note'); if (note) note.style.display = gPayOnce ? 'block' : 'none';
+  try { updateSubInfo(); } catch (e) {}
+}
+window.updateSubPayModeUI = updateSubPayModeUI;
 var gWalletMandateId = null;  // active wallet auto-fund mandate id
 var gSubMandateId    = null;  // active sub auto-fund mandate id
 
@@ -4827,12 +5009,9 @@ function wire() {
   // Subscribe modal day buttons
   $('m-sub-days-7').onclick  = function() { gModalPayDays = 7;  updateSubDaysUI(); };
   $('m-sub-days-28').onclick = function() { gModalPayDays = 28; updateSubDaysUI(); };
+  if ($('m-sub-mode-install')) $('m-sub-mode-install').onclick = function() { gPayOnce = false; updateSubPayModeUI(); };
+  if ($('m-sub-mode-once'))    $('m-sub-mode-once').onclick    = function() { gPayOnce = true;  updateSubPayModeUI(); };
   // Subscribe modal toggles
-  $('m-sub-autofund').onchange = function() {
-    _syncSl('m-sub-autofund-sl', $('m-sub-autofund').checked);
-    var f = $('m-autofund-fields');
-    if (f) f.style.display = $('m-sub-autofund').checked ? 'block' : 'none';
-  };
   $('m-sub-autorenew').onchange = function() {
     _syncSl('m-sub-autorenew-sl', $('m-sub-autorenew').checked);
   };
@@ -5003,7 +5182,6 @@ if (document.readyState === 'loading') {
   }
 
   function init(){
-    bindToggle('m-sub-autofund','m-sub-autofund-sl','m-autofund-fields');
     bindToggle('m-sub-autorenew','m-sub-autorenew-sl',null);
   }
 
@@ -5041,9 +5219,9 @@ function detectNetworkFE(phone) {
   else if (v.indexOf('234') === 0 && v.length === 13) v = '0' + v.slice(3);
   if (v.length !== 11 || v.charAt(0) !== '0') return null;
   var p = v.slice(0, 4);
-  var MTN     = ['0803','0806','0813','0814','0816','0903','0906','0913','0916','0703','0706','0810'];
-  var AIRTEL  = ['0802','0808','0812','0701','0708','0902','0907','0901','0904','0912'];
-  var GLO     = ['0805','0807','0811','0815','0905','0915'];
+  var MTN     = ['0803','0806','0813','0814','0816','0903','0906','0913','0916','0703','0706','0704','0810','0707'];
+  var AIRTEL  = ['0802','0808','0812','0701','0708','0902','0907','0901','0904','0912','0911'];
+  var GLO     = ['0805','0807','0811','0815','0905','0915','0705'];
   var NINE    = ['0809','0817','0818','0909','0908'];
   if (MTN.indexOf(p)    !== -1) return 'MTN';
   if (AIRTEL.indexOf(p) !== -1) return 'AIRTEL';
@@ -5093,6 +5271,8 @@ function subAutoDetectNetwork(val) {
   var badge    = document.getElementById('m-sub-net-detect');
   var grp      = document.getElementById('m-sub-net-btns');
   var isManual = grp && grp.dataset.manual === '1';
+  if (grp) grp.dataset.netWarnAck = '';
+  window._numWarnAck = '';
 
   if (detected) {
     if (badge) {
@@ -5129,26 +5309,72 @@ function subAutoDetectNetwork(val) {
     var planNet = (window.gSelPlan && window.gSelPlan.network) ? window.gSelPlan.network.toUpperCase() : '';
     var netErr  = document.getElementById('m-sub-net-err');
 
+    // Sanity-check the number format — a wrong/short number is a common mistake.
+    var digits = phone.replace(/\D/g, '');
+    var looksValid = (digits.length === 11 && digits.charAt(0) === '0') ||
+                     (digits.length === 13 && digits.indexOf('234') === 0) ||
+                     (digits.length === 14 && digits.indexOf('234') === 0);
+    if (!looksValid) {
+      if (window._numWarnAck === phone) {
+        // already accepted this exact number — continue
+      } else {
+        dbConfirmWarning({
+          title: 'Double-check this number',
+          bodyHtml: '<b>' + (phone || '(empty)') + '</b> doesn\u2019t look like a normal Nigerian number ' +
+            '(it should be 11 digits starting with 0, e.g. 0803&hellip;).' +
+            '<ul style="margin:10px 0 0 0;padding-left:18px;color:#444;">' +
+              '<li style="margin-bottom:6px;">Data is delivered to the number <b>exactly as typed</b>.</li>' +
+              '<li>If it\u2019s wrong, your data could go to someone else and <b>won\u2019t be refunded</b>.</li>' +
+            '</ul>',
+          acceptText: 'I have checked and ' + (phone || 'this number') + ' is correct.',
+          proceedText: 'Continue anyway',
+          keepText: 'Fix number',
+          onProceed: function() { window._numWarnAck = phone; window.confirmSub(); }
+        });
+        return;
+      }
+    }
+
     // Require network selection
     if (!selNet) {
       if (netErr) { netErr.textContent = 'Please select or confirm the network provider for this number.'; netErr.style.display = 'block'; }
       return;
     }
 
-    // Validate phone network matches plan network
+    // Validate phone network matches plan network.
+    // Number portability exists, so a prefix mismatch is a WARNING (not a hard
+    // block) — but it requires explicit acceptance via the warning modal.
     if (phone && planNet) {
       var detected = detectNetworkFE(phone);
       if (detected && detected !== planNet) {
-        if (netErr) {
-          netErr.textContent = '\u26A0\uFE0F ' + phone + ' is a ' + detected + ' number but this is a ' + planNet + ' plan. Please use a ' + planNet + ' number or choose a ' + detected + ' plan.';
-          netErr.style.display = 'block';
+        if (grp && grp.dataset.netWarnAck === (detected + '>' + planNet)) {
+          // already accepted this exact mismatch — fall through and allow
+        } else {
+          if (netErr) netErr.style.display = 'none';
+          dbConfirmWarning({
+            title: 'Number may not match this plan',
+            bodyHtml: '<b>' + phone + '</b> looks like a <b>' + detected + '</b> number, but you are buying a <b>' + planNet + '</b> plan.' +
+              '<ul style="margin:10px 0 0 0;padding-left:18px;color:#444;">' +
+                '<li style="margin-bottom:6px;">If you <b>ported</b> this number to ' + planNet + ', this is fine \u2014 continue.</li>' +
+                '<li style="margin-bottom:6px;">If not, the data may be sent to the wrong network and the purchase could fail.</li>' +
+                '<li>Double-check the number is correct before continuing.</li>' +
+              '</ul>',
+            acceptText: 'I confirm ' + phone + ' is a ' + planNet + ' number (or ported to ' + planNet + '), and I want to continue.',
+            proceedText: 'Continue anyway',
+            keepText: 'Fix number',
+            onProceed: function() {
+              if (grp) grp.dataset.netWarnAck = (detected + '>' + planNet);
+              origConfirmSub();
+            }
+          });
+          return;
         }
-        return;
       }
       if (selNet !== planNet) {
         if (netErr) {
           netErr.textContent = '\u26A0\uFE0F You selected ' + selNet + ' but this is a ' + planNet + ' plan. They must match.';
           netErr.style.display = 'block';
+          netErr.style.color = '#c0392b';
         }
         return;
       }
@@ -6527,7 +6753,7 @@ function renderDynamicStrip() {
         cheapest = _plansCache[i];
       }
     }
-    var cTotal   = Math.round(parseFloat(cheapest.selling_price) * 1.05 * 100) / 100;
+    var cTotal   = Math.ceil(parseFloat(cheapest.selling_price) * 1.05);
     starterDaily = Math.round(cTotal / 7 * 100) / 100;
     starterSize  = cheapest.data_size || '1GB';
   }
@@ -6774,7 +7000,7 @@ function _buildNuggetPool() {
     for (i = 1; i < _plansCache.length; i++) {
       if (parseFloat(_plansCache[i].selling_price) < parseFloat(cheapest.selling_price)) cheapest = _plansCache[i];
     }
-    var cTotal = Math.round(parseFloat(cheapest.selling_price) * 1.05 * 100) / 100;
+    var cTotal = Math.ceil(parseFloat(cheapest.selling_price) * 1.05);
     starterDaily = Math.round(cTotal / 7 * 100) / 100;
     starterSize  = cheapest.data_size || '1GB';
   }
