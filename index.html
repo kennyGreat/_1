@@ -3576,10 +3576,8 @@ window._pickAutocomplete = _pickAutocomplete;
 /* Milestone loyalty discount — mirrors backend get_loyalty_discount():
    multiple of 10 -> 5%, multiple of 5 -> 2.5% (10-multiples are 5% only), else 0. */
 function dbLoyaltyDiscount(done) {
-  done = parseInt(done) || 0;
-  if (done <= 0) return 0;
-  if (done % 10 === 0) return 5;
-  if (done % 5 === 0) return 2.5;
+  /* Loyalty discounts SUSPENDED (matches backend get_loyalty_discount=0).
+     Restore milestone logic: 10th->5, 5th->2.5. */
   return 0;
 }
 window.dbLoyaltyDiscount = dbLoyaltyDiscount;
@@ -3588,7 +3586,7 @@ window.dbLoyaltyDiscount = dbLoyaltyDiscount;
    rounded UP to whole Naira (matches backend). */
 function dbDisplayPrice(plan) {
   var base = parseFloat(plan && (plan.selling_price !== undefined ? plan.selling_price : plan)) || 0;
-  return Math.ceil(base * 1.05);
+  return Math.ceil(base * 1.02);
 }
 window.dbDisplayPrice = dbDisplayPrice;
 
@@ -3599,7 +3597,7 @@ function calcPlanDaily(plan, days) {
   var done = (window.dbRewardsCache && parseInt(window.dbRewardsCache.completed_plans)) || 0;
   var discPct = dbLoyaltyDiscount(done);
   var discountedBase = Math.round(price * (1 - discPct / 100) * 100) / 100;
-  var total = Math.ceil(discountedBase * 1.05);   /* round UP to whole Naira (matches backend) */
+  var total = Math.ceil(discountedBase * 1.02);   /* round UP to whole Naira (matches backend) */
   return {
     total: total,
     daily: days > 0 ? (total / days) : 0,
@@ -3644,6 +3642,10 @@ function dbLoadRewards(cb) {
 function dbRenderRewardBreakdown() {
   var box = document.getElementById('m-sub-rewards');
   if (!box || !gSelPlan) return;
+
+  /* Rewards SUSPENDED — hide breakdown. Remove next 2 lines to restore. */
+  box.style.display = 'none';
+  return;
 
   var calc = calcPlanDaily(gSelPlan, gModalPayDays);
   var total = (calc && calc.total) || 0;
@@ -6753,7 +6755,7 @@ function renderDynamicStrip() {
         cheapest = _plansCache[i];
       }
     }
-    var cTotal   = Math.ceil(parseFloat(cheapest.selling_price) * 1.05);
+    var cTotal   = Math.ceil(parseFloat(cheapest.selling_price) * 1.02);
     starterDaily = Math.round(cTotal / 7 * 100) / 100;
     starterSize  = cheapest.data_size || '1GB';
   }
@@ -7000,7 +7002,7 @@ function _buildNuggetPool() {
     for (i = 1; i < _plansCache.length; i++) {
       if (parseFloat(_plansCache[i].selling_price) < parseFloat(cheapest.selling_price)) cheapest = _plansCache[i];
     }
-    var cTotal = Math.ceil(parseFloat(cheapest.selling_price) * 1.05);
+    var cTotal = Math.ceil(parseFloat(cheapest.selling_price) * 1.02);
     starterDaily = Math.round(cTotal / 7 * 100) / 100;
     starterSize  = cheapest.data_size || '1GB';
   }
