@@ -810,6 +810,85 @@ button.tab,button.plan-chip{box-shadow:none!important;}
 @-webkit-keyframes db-ct-fall{to{-webkit-transform:translateY(110vh) rotate(720deg);opacity:0}}
 @keyframes db-ct-fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
 .db-bal-glow{color:#00e5be!important;text-shadow:0 0 16px rgba(0,229,190,.5);}
+
+/* BUCKET */
+#bucket-section{margin-bottom:14px;display:none;}
+.bucket-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.bucket-title{font-size:.95rem;font-weight:900;color:#1A56DB;}
+.bucket-empty{font-size:.8rem;color:#94a3b8;padding:8px 0;}
+.bucket-item{display:flex;align-items:center;gap:10px;background:#fff;border:1.5px solid #e0e9ff;border-radius:12px;padding:10px 12px;margin-bottom:8px;}
+.bucket-item-info{flex:1;min-width:0;}
+.bucket-item-name{font-size:.88rem;font-weight:800;color:#1e293b;}
+.bucket-item-price{font-size:.92rem;font-weight:900;color:#1A56DB;margin-top:2px;}
+.bucket-sub-btn{font-size:.78rem;font-weight:700;padding:5px 10px;border-radius:8px;border:none;background:#1A56DB;color:#fff;cursor:pointer;white-space:nowrap;font-family:inherit;}
+.bucket-rm-btn{font-size:1rem;background:none;border:none;color:#cbd5e1;cursor:pointer;padding:4px;line-height:1;}
+.plan-bucket-btn{position:absolute;top:8px;right:8px;background:none;border:none;font-size:1.05rem;cursor:pointer;padding:4px;line-height:1;opacity:.4;}
+.plan-bucket-btn.in-bucket{opacity:1;color:#1A56DB;}
+.plan-card{position:relative;}
+
+/* ── GENERAL MARKET SEGMENTS ───────────────────────────── */
+#gm-segments{display:none;margin-bottom:12px;}
+#gm-segments.visible{display:block;}
+.gm-seg-grid{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;gap:10px;}
+.gm-seg-tile{
+  -webkit-box-flex:1;-webkit-flex:1 1 calc(33% - 8px);flex:1 1 calc(33% - 8px);
+  min-width:90px;max-width:none;
+  background:#fff;border:1.5px solid #e0e9ff;border-radius:14px;
+  padding:14px 8px 12px;text-align:center;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;transition:border-color .15s,box-shadow .15s;
+}
+.gm-seg-tile:active{background:#f0f4ff;}
+.gm-seg-tile.active{border-color:#1A56DB;box-shadow:0 0 0 2px #1A56DB22;}
+.gm-seg-tile.coming-soon{opacity:.55;cursor:default;}
+.gm-seg-tile.coming-soon:active{background:#fff;}
+.gm-seg-icon{font-size:1.7rem;display:block;margin-bottom:5px;}
+.gm-seg-label{font-size:.72rem;font-weight:800;color:#1e293b;display:block;line-height:1.3;}
+.gm-seg-badge{
+  position:absolute;top:5px;right:6px;
+  font-size:.55rem;font-weight:800;padding:1px 5px;border-radius:6px;
+  background:#fef9c3;color:#854d0e;line-height:1.5;
+  text-transform:uppercase;letter-spacing:.3px;
+}
+/* segment back button */
+#gm-seg-back{
+  display:none;margin-bottom:10px;
+  background:none;border:none;color:#1A56DB;font-size:.82rem;
+  font-weight:700;cursor:pointer;padding:0;font-family:inherit;
+}
+#gm-seg-back.visible{display:inline-block;}
+
+/* ── SERVICE FORMS (Airtime, Electricity, Cable) ───── */
+#service-screen{display:none;margin-bottom:12px;}
+#service-screen.visible{display:block;}
+.svc-card{background:#fff;border-radius:14px;border:1.5px solid #e0e9ff;padding:16px;margin-bottom:12px;}
+.svc-title{font-size:.95rem;font-weight:900;color:#1e293b;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.svc-field{margin-bottom:12px;}
+.svc-label{font-size:.75rem;font-weight:700;color:#64748b;display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.3px;}
+.svc-input,.svc-select{width:100%;height:44px;border:1.5px solid #e0e9ff;border-radius:10px;background:#f8fafc;padding:0 12px;font-size:.9rem;color:#1e293b;outline:none;font-family:inherit;box-sizing:border-box;}
+.svc-input:focus,.svc-select:focus{border-color:#1A56DB;background:#fff;}
+.svc-amount-wrap{position:relative;}
+.svc-amount-prefix{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-weight:700;color:#64748b;font-size:.9rem;}
+.svc-amount-input{padding-left:28px!important;}
+.svc-btn{width:100%;height:48px;border:none;border-radius:12px;background:#1A56DB;color:#fff;font-size:.95rem;font-weight:800;cursor:pointer;font-family:inherit;margin-top:4px;}
+.svc-btn:active{opacity:.85;}
+.svc-btn:disabled{opacity:.5;cursor:not-allowed;}
+.svc-verify-row{display:flex;gap:8px;align-items:flex-end;}
+.svc-verify-row .svc-input{flex:1;}
+.svc-verify-btn{height:44px;padding:0 14px;border:1.5px solid #1A56DB;border-radius:10px;background:#f0f4ff;color:#1A56DB;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;}
+.svc-info-box{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:10px 12px;font-size:.8rem;color:#166534;margin-bottom:12px;display:none;}
+.svc-info-box.visible{display:block;}
+.svc-cable-tabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.svc-cable-tab{padding:6px 14px;border-radius:20px;border:1.5px solid #e0e9ff;background:#fff;font-size:.78rem;font-weight:700;color:#64748b;cursor:pointer;}
+.svc-cable-tab.active{background:#1A56DB;color:#fff;border-color:#1A56DB;}
+.svc-plan-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-height:260px;overflow-y:auto;}
+.svc-plan-item{border:1.5px solid #e0e9ff;border-radius:10px;padding:10px;cursor:pointer;background:#fff;}
+.svc-plan-item.selected{border-color:#1A56DB;background:#f0f4ff;}
+.svc-plan-name{font-size:.75rem;font-weight:700;color:#1e293b;line-height:1.3;}
+.svc-plan-price{font-size:.85rem;font-weight:900;color:#1A56DB;margin-top:3px;}
+.svc-network-pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.svc-net-pill{padding:6px 14px;border-radius:20px;border:1.5px solid #e0e9ff;background:#fff;font-size:.78rem;font-weight:700;color:#64748b;cursor:pointer;}
+.svc-net-pill.active{background:#1A56DB;color:#fff;border-color:#1A56DB;}
 </style>
 </head>
 <body>
@@ -1039,20 +1118,34 @@ button.tab,button.plan-chip{box-shadow:none!important;}
     </div>
     <!-- Data mode -->
     <div id="buy-mode-data">
-      <div class="card" style="margin-bottom:12px;">
+      <!-- ── MARKET SELECTOR ── -->
+      <div id="market-selector" style="margin-bottom:12px;">
+        <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:10px;">
+          <button id="market-btn-general" type="button" onclick="setMarket('general')"
+            style="flex:1;-webkit-box-flex:1;padding:14px 8px;border-radius:14px;border:2px solid #1A56DB;background:#1A56DB;color:#fff;font-size:.88rem;font-weight:900;cursor:pointer;font-family:inherit;line-height:1.4;text-align:center;">
+            &#127914; General Market<br><span style="font-size:.72rem;font-weight:500;opacity:.85;">Pay once at listed price · or pay in installments + 5% fee</span>
+          </button>
+          <button id="market-btn-installment" type="button" onclick="setMarket('installment')"
+            style="flex:1;-webkit-box-flex:1;padding:14px 8px;border-radius:14px;border:2px solid #d0d8ff;background:#f7f8ff;color:#1A56DB;font-size:.88rem;font-weight:900;cursor:pointer;font-family:inherit;line-height:1.4;text-align:center;">
+            &#128197; Installment Market<br><span style="font-size:.72rem;font-weight:500;opacity:.75;color:#555;">Tested plans · Pay daily in small bits</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ── MARKET WELCOME BANNER ── -->
+      <div id="market-welcome" style="margin-bottom:12px;padding:12px 14px;border-radius:12px;background:#f0f4ff;border:1.5px solid #c7d4fb;font-size:.82rem;color:#374151;line-height:1.6;"></div>
+      <!-- ── INSTALLMENT DAYS (shown only in installment market) ── -->
+      <div id="pay-toggle-card" style="display:none;margin-bottom:12px;" class="card">
         <div class="sec-title">Payment Option</div>
         <div id="pay-toggle-wrap" style="display:flex;gap:8px;">
           <button class="btn btn-lite" id="pay-days-7" style="margin:0;flex:1;">7 Days</button>
           <button class="btn btn-blue" id="pay-days-28" style="margin:0;flex:1;">28 Days</button>
         </div>
-
       </div>
-      <!-- Rewards promise banner (attraction, shown before commitment) -->
-      <div id="db-rewards-banner" style="margin-bottom:12px;border-radius:14px;padding:14px 16px;background:-webkit-linear-gradient(135deg,#0b3d2e,#0f5132);background:linear-gradient(135deg,#0b3d2e,#0f5132);color:#fff;box-shadow:0 4px 14px rgba(15,81,50,.25);position:relative;overflow:hidden;">
-        <div style="font-size:.93rem;font-weight:900;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:6px;">&#128176; Earn as you pay</div>
-        <div style="font-size:.8rem;line-height:1.5;margin-top:5px;color:#d8f3e6;">Get <b style="color:#fff;">1% back on every installment</b> you pay. Loyal users unlock up to <b style="color:#fff;">10% off</b> future plans. Your rewards unlock the moment your plan completes.</div>
-      </div>
-      <div id="plans-list"><div class="empty">Loading plans&hellip;</div></div>
+      <button id="gm-seg-back" onclick="backToGMSegments()">&larr; Back to services</button>
+      <div id="gm-segments"></div>
+      <div id="service-screen"></div>
+      <div id="plans-list" style="display:none;"><div class="empty">Loading plans&hellip;</div></div>
     </div>
     <!-- Airtime mode -->
     <div id="buy-mode-airtime" style="display:none!important;">
@@ -1129,6 +1222,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
   <!-- My Plans -->
   <div id="tc-subs" class="tab-content">
     <button class="btn btn-lite" id="refresh-subs-btn" style="margin-bottom:12px;">&#8635; Refresh</button>
+    <div id="bucket-section"></div>
     <div id="subs-list"><div class="empty">Loading&hellip;</div></div>
   </div>
 
@@ -2324,7 +2418,7 @@ function showTab(t) {
   }
   var now = Date.now();
   if (t === 'dash')   { if (now - _dashLastLoad  > STALE_MS) { _dashLastLoad  = now; loadDashCashflow(); } try { loadAutofundCard(); } catch(e) {} }
-  if (t === 'subs')   { if (now - _subsLastLoad  > STALE_MS) { _subsLastLoad  = now; loadSubs(); } }
+  if (t === 'subs')   { try { renderBucketSection(); } catch(e) {} if (now - _subsLastLoad  > STALE_MS) { _subsLastLoad  = now; loadSubs(); } }
   if (t === 'wallet') loadWalletTab();
   if (t === 'inbox')  { if (now - _inboxLastLoad > STALE_MS) { _inboxLastLoad = now; loadInbox(); } updateInboxBadge(0); }
   /* Ensure the friend-daily nugget is present on the newly-shown tab */
@@ -2798,6 +2892,535 @@ function netCls(net) {
   return 'net-other';
 }
 
+
+
+/* ═══════════════════════════════════════════════════════════
+   GENERAL MARKET — SEGMENT SYSTEM
+   gSegment = 'data' | 'airtime' | 'electricity' | 'cable' |
+              'waec' | 'jamb' | 'voice'
+   Only 'data' is live. Others show coming-soon state.
+   ═══════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════
+   SERVICE SCREENS — Airtime, Electricity, Cable TV
+   ═══════════════════════════════════════════════════════ */
+var _svcState = {};   // holds current service form state
+
+function showServiceScreen(html) {
+  var ss = document.getElementById('service-screen');
+  var pl = document.getElementById('plans-list');
+  if (pl) pl.style.display = 'none';
+  if (ss) { ss.innerHTML = html; ss.style.display = 'block'; ss.className = 'visible'; }
+}
+
+function hideServiceScreen() {
+  var ss = document.getElementById('service-screen');
+  if (ss) { ss.style.display = 'none'; ss.innerHTML = ''; ss.className = ''; }
+}
+
+/* ── AIRTIME ─────────────────────────────────────────── */
+function openAirtimeScreen() {
+  _svcState.airtime = { network: 1, networkName: 'MTN' };
+  showServiceScreen(
+    '<div class="svc-card">' +
+    '<div class="svc-title">📞 Buy Airtime</div>' +
+    '<div class="svc-field">' +
+      '<label class="svc-label">Network</label>' +
+      '<div class="svc-network-pills">' +
+        '<div class="svc-net-pill active" onclick="svcAirNet(1,\'MTN\',this)">MTN</div>' +
+        '<div class="svc-net-pill" onclick="svcAirNet(2,\'GLO\',this)">GLO</div>' +
+        '<div class="svc-net-pill" onclick="svcAirNet(3,\'9MOBILE\',this)">9MOBILE</div>' +
+        '<div class="svc-net-pill" onclick="svcAirNet(4,\'AIRTEL\',this)">AIRTEL</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="svc-field">' +
+      '<label class="svc-label">Phone Number</label>' +
+      '<input class="svc-input" id="air-phone" type="tel" placeholder="08012345678" maxlength="11">' +
+    '</div>' +
+    '<div class="svc-field">' +
+      '<label class="svc-label">Amount (₦)</label>' +
+      '<div class="svc-amount-wrap">' +
+        '<span class="svc-amount-prefix">₦</span>' +
+        '<input class="svc-input svc-amount-input" id="air-amount" type="number" placeholder="100" min="50" max="50000">' +
+      '</div>' +
+    '</div>' +
+    '<button class="svc-btn" onclick="submitAirtime()">Recharge Now</button>' +
+    '</div>'
+  );
+}
+
+function svcAirNet(id, name, el) {
+  _svcState.airtime.network = id;
+  _svcState.airtime.networkName = name;
+  document.querySelectorAll('.svc-net-pill').forEach(function(p){ p.className = 'svc-net-pill'; });
+  el.className = 'svc-net-pill active';
+}
+
+function submitAirtime() {
+  var phone  = (document.getElementById('air-phone')  || {}).value || '';
+  var amount = (document.getElementById('air-amount') || {}).value || '';
+  var digits = phone.replace(/\D/g,'');
+  if (digits.length < 11) { toast('Enter a valid 11-digit phone number'); return; }
+  if (!amount || parseInt(amount) < 50) { toast('Minimum airtime amount is ₦50'); return; }
+  var btn = document.querySelector('.svc-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Processing…'; }
+  var h = { 'Content-Type':'application/json', 'apikey': ANON_KEY, 'Authorization':'Bearer '+(gToken||ANON_KEY) };
+  var body = JSON.stringify({
+    user_id: gUser.id,
+    service: 'airtime',
+    network: _svcState.airtime.network,
+    network_name: _svcState.airtime.networkName,
+    phone_number: digits,
+    amount: parseInt(amount),
+  });
+  xhr('POST', FN + '/purchaseService', h, body, function(e, r) {
+    if (btn) { btn.disabled = false; btn.textContent = 'Recharge Now'; }
+    if (e || !r || !r.ok) {
+      toast((r && r.data && r.data.error) || 'Airtime purchase failed. Please try again.');
+      return;
+    }
+    toast('✅ ₦' + amount + ' airtime sent to ' + digits + '!');
+    hideServiceScreen();
+    if (gMarket === 'general') renderGMSegments(); else renderIMSegments();
+  });
+}
+
+/* ── ELECTRICITY ─────────────────────────────────────── */
+var PF_DISCOS = [
+  {id:'aba-electric',name:'Aba Electric',min:100},
+  {id:'portharcourt-electric',name:'Port Harcourt Electric',min:100},
+  {id:'kano-electric',name:'Kano Electric',min:500},
+  {id:'kaduna-electric',name:'Kaduna Electric',min:1100},
+  {id:'jos-electric',name:'Jos Electric',min:1000},
+  {id:'ikeja-electric',name:'Ikeja Electric',min:500},
+  {id:'ibadan-electric',name:'Ibadan Electric',min:2000},
+  {id:'enugu-electric',name:'Enugu Electric',min:500},
+  {id:'eko-electric',name:'Eko Electric',min:1000},
+  {id:'benin-electric',name:'Benin Electric',min:500},
+  {id:'yola-electric',name:'Yola Electric',min:500},
+  {id:'abuja-electric',name:'Abuja Electric (AEDC)',min:900},
+];
+
+function openElectricityScreen() {
+  _svcState.elec = { disco: PF_DISCOS[0], type: 'prepaid', verified: false };
+  var discoOpts = PF_DISCOS.map(function(d,i) {
+    return '<option value="'+i+'"'+( i===0?' selected':'')+'>'+d.name+'</option>';
+  }).join('');
+  showServiceScreen(
+    '<div class="svc-card">' +
+    '<div class="svc-title">⚡ Pay Electricity Bill</div>' +
+    '<div class="svc-field">' +
+      '<label class="svc-label">Distribution Company</label>' +
+      '<select class="svc-select" id="elec-disco" onchange="_elecDisco(this)">' + discoOpts + '</select>' +
+    '</div>' +
+    '<div class="svc-field">' +
+      '<label class="svc-label">Meter Type</label>' +
+      '<div class="svc-network-pills">' +
+        '<div class="svc-net-pill active" onclick="_elecType(\'prepaid\',this)">Prepaid</div>' +
+        '<div class="svc-net-pill" onclick="_elecType(\'postpaid\',this)">Postpaid</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="svc-field">' +
+      '<label class="svc-label">Meter Number</label>' +
+      '<div class="svc-verify-row">' +
+        '<input class="svc-input" id="elec-meter" type="text" placeholder="Enter meter number">' +
+        '<button class="svc-verify-btn" onclick="verifyMeter()">Verify</button>' +
+      '</div>' +
+    '</div>' +
+    '<div class="svc-info-box" id="elec-info"></div>' +
+    '<div class="svc-field">' +
+      '<label class="svc-label">Phone Number</label>' +
+      '<input class="svc-input" id="elec-phone" type="tel" placeholder="08012345678">' +
+    '</div>' +
+    '<div class="svc-field">' +
+      '<label class="svc-label">Amount (₦)</label>' +
+      '<div class="svc-amount-wrap">' +
+        '<span class="svc-amount-prefix">₦</span>' +
+        '<input class="svc-input svc-amount-input" id="elec-amount" type="number" placeholder="1000">' +
+      '</div>' +
+    '</div>' +
+    '<button class="svc-btn" id="elec-btn" onclick="submitElectricity()">Pay Now</button>' +
+    '</div>'
+  );
+}
+
+function _elecDisco(sel) { _svcState.elec.disco = PF_DISCOS[parseInt(sel.value)]; _svcState.elec.verified = false; var ib = document.getElementById('elec-info'); if(ib){ib.className='svc-info-box';ib.textContent='';} }
+function _elecType(type, el) { _svcState.elec.type = type; document.querySelectorAll('#service-screen .svc-net-pill').forEach(function(p){p.className='svc-net-pill';}); el.className='svc-net-pill active'; }
+
+function verifyMeter() {
+  var meter = (document.getElementById('elec-meter')||{}).value||'';
+  if (meter.length < 6) { toast('Enter a valid meter number'); return; }
+  var vbtn = document.querySelector('.svc-verify-btn');
+  if (vbtn) { vbtn.textContent = '…'; vbtn.disabled = true; }
+  var h = { 'Content-Type':'application/json', 'apikey': ANON_KEY, 'Authorization':'Bearer '+(gToken||ANON_KEY) };
+  var body = JSON.stringify({ service:'electricity_verify', disco: _svcState.elec.disco.id, meter: meter, type: _svcState.elec.type });
+  xhr('POST', FN + '/purchaseService', h, body, function(e, r) {
+    if (vbtn) { vbtn.textContent = 'Verify'; vbtn.disabled = false; }
+    if (e || !r || !r.ok || !r.data || r.data.status !== 'SUCCESS') {
+      toast('Meter verification failed. Check the number and try again.'); return;
+    }
+    _svcState.elec.verified = true;
+    _svcState.elec.customerName = r.data.customer_name || '';
+    var ib = document.getElementById('elec-info');
+    if (ib) { ib.className = 'svc-info-box visible'; ib.innerHTML = '✅ <b>' + esc(_svcState.elec.customerName) + '</b> — Meter verified'; }
+  });
+}
+
+function submitElectricity() {
+  if (!_svcState.elec.verified) { toast('Please verify your meter number first'); return; }
+  var meter  = (document.getElementById('elec-meter') ||{}).value||'';
+  var phone  = (document.getElementById('elec-phone') ||{}).value||'';
+  var amount = (document.getElementById('elec-amount')||{}).value||'';
+  var digits = phone.replace(/\D/g,'');
+  if (digits.length < 11) { toast('Enter a valid 11-digit phone number'); return; }
+  var amt = parseInt(amount);
+  if (!amt || amt < _svcState.elec.disco.min) { toast('Minimum amount for '+_svcState.elec.disco.name+' is ₦'+_svcState.elec.disco.min); return; }
+  var btn = document.getElementById('elec-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Processing…'; }
+  var h = { 'Content-Type':'application/json', 'apikey': ANON_KEY, 'Authorization':'Bearer '+(gToken||ANON_KEY) };
+  var body = JSON.stringify({ service:'electricity', disco: _svcState.elec.disco.id, meter: meter, type: _svcState.elec.type, amount: amt, phone: digits });
+  xhr('POST', FN + '/purchaseService', h, body, function(e, r) {
+    if (btn) { btn.disabled = false; btn.textContent = 'Pay Now'; }
+    if (e || !r || !r.ok) { toast((r&&r.data&&r.data.message)||'Payment failed. Try again.'); return; }
+    toast('✅ ₦'+amount+' electricity paid! Token: '+(r.data&&r.data.token||'Check SMS'));
+    hideServiceScreen();
+    if (gMarket === 'general') renderGMSegments(); else renderIMSegments();
+  });
+}
+
+/* ── CABLE TV ─────────────────────────────────────────── */
+var PS_CABLE_PLANS = {
+  GOTV: [
+    {id:34,name:'GOtv Smallie Monthly',amount:800},{id:16,name:'GOtv Jinja',amount:3900},
+    {id:35,name:'GOtv Smallie Quarterly',amount:5100},{id:17,name:'GOtv Jolli',amount:5800},
+    {id:2,name:'GOtv Max',amount:8500},{id:47,name:'GOtv Supa',amount:11400},
+    {id:36,name:'GOtv Smallie Yearly',amount:15000},{id:48,name:'GOtv Supa Plus',amount:16800},
+    {id:18,name:'GOtv Smallie',amount:19000},
+  ],
+  DSTV: [
+    {id:21,name:'DStv Great Wall Standalone',amount:1500},{id:33,name:'ExtraView Access',amount:2500},
+    {id:20,name:'DStv Padi',amount:4400},{id:6,name:'DStv Yanga',amount:6000},
+    {id:19,name:'DStv Confam',amount:11000},{id:9,name:'DStv Premium',amount:18400},
+    {id:7,name:'DStv Compact',amount:19000},{id:8,name:'DStv Compact Plus',amount:54500},
+    {id:24,name:'DStv Premium French',amount:69000},
+  ],
+  STARTIME: [
+    {id:37,name:'Nova 1 Week',amount:700},{id:39,name:'Smart 1 Week',amount:700},
+    {id:38,name:'Basic 1 Week',amount:1400},{id:40,name:'Classic 1 Week',amount:2000},
+    {id:14,name:'Nova 1 Month',amount:2100},{id:13,name:'Smart 1 Month',amount:2200},
+    {id:12,name:'Basic 1 Month',amount:5100},{id:11,name:'Classic 1 Month',amount:6000},
+  ],
+};
+
+function openCableTVScreen() {
+  _svcState.cable = { provider: 'GOTV', plan: null, verified: false };
+  showServiceScreen(_buildCableHTML());
+}
+
+function _buildCableHTML() {
+  var prov = _svcState.cable.provider;
+  var plans = PS_CABLE_PLANS[prov] || [];
+  var tabs = ['GOTV','DSTV','STARTIME'].map(function(p) {
+    return '<div class="svc-cable-tab'+(p===prov?' active':'')+'" onclick="_cableProvider(\''+p+'\')">'+p+'</div>';
+  }).join('');
+  var planGrid = plans.map(function(p) {
+    var sel = _svcState.cable.plan && _svcState.cable.plan.id === p.id ? ' selected' : '';
+    return '<div class="svc-plan-item'+sel+'" onclick="_cablePlan('+p.id+',\''+p.name.replace(/'/g,"\\'")+ '\','+p.amount+',this)">' +
+      '<div class="svc-plan-name">'+esc(p.name)+'</div>' +
+      '<div class="svc-plan-price">₦'+fmtN(p.amount)+'</div></div>';
+  }).join('');
+  return '<div class="svc-card">' +
+    '<div class="svc-title">📺 Pay Cable TV</div>' +
+    '<div class="svc-cable-tabs">' + tabs + '</div>' +
+    '<div class="svc-plan-grid" style="margin-bottom:12px;">' + planGrid + '</div>' +
+    '<div class="svc-field">' +
+      '<label class="svc-label">IUC / Smartcard Number</label>' +
+      '<div class="svc-verify-row">' +
+        '<input class="svc-input" id="cable-iuc" type="text" placeholder="Enter smartcard number">' +
+        '<button class="svc-verify-btn" onclick="verifyIUC()">Verify</button>' +
+      '</div>' +
+    '</div>' +
+    '<div class="svc-info-box" id="cable-info"></div>' +
+    '<div class="svc-field">' +
+      '<label class="svc-label">Phone Number</label>' +
+      '<input class="svc-input" id="cable-phone" type="tel" placeholder="08012345678">' +
+    '</div>' +
+    '<button class="svc-btn" id="cable-btn" onclick="submitCable()">Pay Now</button>' +
+    '</div>';
+}
+
+function _cableProvider(p) { _svcState.cable.provider = p; _svcState.cable.plan = null; _svcState.cable.verified = false; var ss=document.getElementById('service-screen'); if(ss) ss.innerHTML=_buildCableHTML(); }
+function _cablePlan(id,name,amount,el) {
+  _svcState.cable.plan = {id:id,name:name,amount:amount};
+  document.querySelectorAll('.svc-plan-item').forEach(function(e){e.className='svc-plan-item';});
+  el.className='svc-plan-item selected';
+}
+
+function verifyIUC() {
+  if (!_svcState.cable.plan) { toast('Please select a package first'); return; }
+  var iuc = (document.getElementById('cable-iuc')||{}).value||'';
+  if (iuc.length < 5) { toast('Enter a valid smartcard number'); return; }
+  var vbtn = document.querySelector('.svc-verify-btn');
+  if (vbtn) { vbtn.textContent='…'; vbtn.disabled=true; }
+  var h = { 'Content-Type':'application/json', 'apikey': ANON_KEY, 'Authorization':'Bearer '+(gToken||ANON_KEY) };
+  var body = JSON.stringify({ service:'cable_verify', provider: _svcState.cable.provider.toLowerCase(), iuc: iuc, plan_id: _svcState.cable.plan.id });
+  xhr('POST', FN+'/purchaseService', h, body, function(e,r) {
+    if (vbtn) { vbtn.textContent='Verify'; vbtn.disabled=false; }
+    if (e || !r || !r.ok || !r.data || r.data.status !== 'SUCCESS') { toast('Smartcard verification failed'); return; }
+    _svcState.cable.verified = true;
+    _svcState.cable.customerName = r.data.customer_name||'';
+    var ib = document.getElementById('cable-info');
+    if (ib) { ib.className='svc-info-box visible'; ib.innerHTML='✅ <b>'+esc(_svcState.cable.customerName)+'</b> — Card verified'; }
+  });
+}
+
+function submitCable() {
+  if (!_svcState.cable.plan) { toast('Please select a package'); return; }
+  if (!_svcState.cable.verified) { toast('Please verify your smartcard first'); return; }
+  var iuc   = (document.getElementById('cable-iuc')  ||{}).value||'';
+  var phone = (document.getElementById('cable-phone')||{}).value||'';
+  var digits = phone.replace(/\D/g,'');
+  if (digits.length < 11) { toast('Enter a valid 11-digit phone number'); return; }
+  var btn = document.getElementById('cable-btn');
+  if (btn) { btn.disabled=true; btn.textContent='Processing…'; }
+  var h = { 'Content-Type':'application/json', 'apikey': ANON_KEY, 'Authorization':'Bearer '+(gToken||ANON_KEY) };
+  var body = JSON.stringify({ service:'cable', provider: _svcState.cable.provider.toLowerCase(), iuc: iuc, plan_id: _svcState.cable.plan.id, phone: digits, amount: _svcState.cable.plan.amount });
+  xhr('POST', FN+'/purchaseService', h, body, function(e,r) {
+    if (btn) { btn.disabled=false; btn.textContent='Pay Now'; }
+    if (e||!r||!r.ok) { toast((r&&r.data&&r.data.message)||'Payment failed. Try again.'); return; }
+    toast('✅ '+_svcState.cable.provider+' subscription activated for '+_svcState.cable.customerName+'!');
+    hideServiceScreen();
+    if (gMarket==='general') renderGMSegments(); else renderIMSegments();
+  });
+}
+var gSegment = null;   // null = showing segment tiles
+
+var GM_SEGMENTS = [
+  { id:'data',        icon:'📶', label:'Data',          live:true  },
+  { id:'airtime',     icon:'📞', label:'Airtime',       live:true  },
+  { id:'electricity', icon:'⚡', label:'Electricity',   live:true  },
+  { id:'cable',       icon:'📺', label:'Cable TV',      live:true  },
+  { id:'waec',        icon:'🎓', label:'WAEC / NECO',   live:false },
+  { id:'jamb',        icon:'🆔', label:'JAMB',          live:false },
+  { id:'voice',       icon:'📡', label:'Voice / Call',  live:false },
+];
+
+function renderGMSegments() {
+  var box = document.getElementById('gm-segments');
+  if (!box) return;
+  var html = '<div class="gm-seg-grid">';
+  for (var i = 0; i < GM_SEGMENTS.length; i++) {
+    var s = GM_SEGMENTS[i];
+    var cls = 'gm-seg-tile' +
+      (s.id === gSegment ? ' active' : '') +
+      (!s.live ? ' coming-soon' : '');
+    var badge = !s.live ? '<span class="gm-seg-badge">Soon</span>' : '';
+    var click = s.live
+      ? 'onclick="setGMSegment(\'' + s.id + '\')"'
+      : 'onclick="toast(\'' + s.label + ' coming soon!\')"';
+    html += '<div class="' + cls + '" ' + click + '>' +
+      badge +
+      '<span class="gm-seg-icon">' + s.icon + '</span>' +
+      '<span class="gm-seg-label">' + s.label + '</span>' +
+      '</div>';
+  }
+  html += '</div>';
+  box.innerHTML = html;
+  box.className = 'visible' === box.className ? 'visible' : '';
+  box.style.display = 'block';
+}
+
+function setGMSegment(seg) {
+  gSegment = seg;
+  // Show back button
+  var back = document.getElementById('gm-seg-back');
+  if (back) { back.className = 'visible'; back.style.display = 'inline-block'; }
+  // Hide segment tiles, show relevant content
+  var box = document.getElementById('gm-segments');
+  if (box) box.style.display = 'none';
+  // Show pay-toggle for installment market days option — not relevant in general
+  hideServiceScreen();
+  if (seg === 'data') {
+    var pl = document.getElementById('plans-list');
+    if (pl) pl.style.display = '';
+    _plansCache = null;
+    loadPlans();
+  } else if (seg === 'airtime') {
+    openAirtimeScreen();
+  } else if (seg === 'electricity') {
+    openElectricityScreen();
+  } else if (seg === 'cable') {
+    openCableTVScreen();
+  } else {
+    var pl2 = document.getElementById('plans-list');
+    if (pl2) {
+      pl2.style.display = 'block';
+      var seg_obj = (GM_SEGMENTS.find(function(s){return s.id===seg;})||{});
+      pl2.innerHTML = '<div class="empty" style="padding:40px 0;text-align:center;">' +
+        '<div style="font-size:2rem;margin-bottom:10px;">' + (seg_obj.icon||'') + '</div>' +
+        '<div style="font-weight:700;font-size:.95rem;color:#1e293b;margin-bottom:6px;">' + (seg_obj.label||seg) + '</div>' +
+        '<div style="font-size:.8rem;color:#94a3b8;line-height:1.6;">This service is coming soon.<br>We are working on integrating it for you.</div>' +
+        '</div>';
+    }
+  }
+}
+
+function backToGMSegments() {
+  gSegment = null;
+  var back = document.getElementById('gm-seg-back');
+  if (back) back.style.display = 'none';
+  var pl = document.getElementById('plans-list');
+  if (pl) { pl.style.display = 'none'; pl.innerHTML = '<div class="empty">Loading plans\u2026</div>'; }
+  renderGMSegments();
+}
+var gMarket = 'general';
+// Initialise welcome banner once DOM is ready
+(function _initMarketWelcome() {
+  function _setInitBanner() {
+    var _wb = document.getElementById('market-welcome');
+    if (_wb) {
+      _wb.style.background = '#f0f4ff';
+      _wb.style.borderColor = '#c7d4fb';
+      _wb.innerHTML = '<b>&#127914; Welcome to the General Market.</b> Plans here are subject to users\' experiences and feedback. Your funds are safe and secure.';
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', _setInitBanner);
+  } else {
+    setTimeout(function() {
+    _setInitBanner();
+    // General market default: show segments, hide plans list
+    if (gMarket === 'general') {
+      var _pl = document.getElementById('plans-list');
+      if (_pl) _pl.style.display = 'none';
+      renderGMSegments();
+    }
+  }, 150);
+  }
+})();
+function setMarket(m) {
+  gMarket = m;
+  var btnG = document.getElementById('market-btn-general');
+  var btnI = document.getElementById('market-btn-installment');
+  var ptCard = document.getElementById('pay-toggle-card');
+  if (btnG && btnI) {
+    if (m === 'general') {
+      btnG.style.background='#1A56DB';btnG.style.color='#fff';btnG.style.borderColor='#1A56DB';
+      btnI.style.background='#f7f8ff';btnI.style.color='#1A56DB';btnI.style.borderColor='#d0d8ff';
+    } else {
+      btnI.style.background='#1A56DB';btnI.style.color='#fff';btnI.style.borderColor='#1A56DB';
+      btnG.style.background='#f7f8ff';btnG.style.color='#1A56DB';btnG.style.borderColor='#d0d8ff';
+    }
+  }
+  if (ptCard) ptCard.style.display = (m === 'installment') ? '' : 'none';
+  _plansCache = null;
+
+  // Welcome banner
+  var _wb = document.getElementById('market-welcome');
+  if (_wb) {
+    if (m === 'general') {
+      _wb.style.background = '#f0f4ff';
+      _wb.style.borderColor = '#c7d4fb';
+      _wb.innerHTML = '<b>&#127914; Welcome to the General Market.</b> Plans here are subject to users\' experiences and feedback. Your funds are safe and secure.';
+    } else {
+      _wb.style.background = '#f0fdf4';
+      _wb.style.borderColor = '#bbf7d0';
+      _wb.innerHTML = '<b>&#128197; Welcome to the Installment Market.</b> Plans here are subject to DataBulge\'s investigations, as well as users\' experiences and feedback. Your funds are safe and secure.';
+    }
+  }
+  if (m === 'general') {
+    gSegment = null;
+    var _back = document.getElementById('gm-seg-back');
+    if (_back) _back.style.display = 'none';
+    var _pl = document.getElementById('plans-list');
+    if (_pl) _pl.style.display = 'none';
+    renderGMSegments();
+  } else {
+    var _gms = document.getElementById('gm-segments');
+    if (_gms) _gms.style.display = 'none';
+    var _back2 = document.getElementById('gm-seg-back');
+    if (_back2) _back2.style.display = 'none';
+    var _pl2 = document.getElementById('plans-list');
+    if (_pl2) _pl2.style.display = '';
+    loadPlans();
+  }
+}
+function marketDisplayPrice(plan) { return Math.ceil(parseFloat(plan.selling_price) || 0); }
+function marketCheckoutTotal(plan, payOnce) {
+  var base = parseFloat(plan.selling_price) || 0;
+  var mkt  = plan.market || gMarket;
+  if (mkt === 'installment') return Math.ceil(base * 1.05);
+  if (payOnce) return Math.ceil(base);
+  return Math.ceil(base * 1.05);
+}
+/* === BUCKET === */
+function _bucketKey(){return 'db_bucket_'+((gUser&&gUser.id)||'anon');}
+function getBucket(){try{var r=window.localStorage.getItem(_bucketKey());return r?JSON.parse(r):[]}catch(e){return [];}}
+function saveBucket(b){try{window.localStorage.setItem(_bucketKey(),JSON.stringify(b));}catch(e){}}
+function isBucketed(id){var b=getBucket();for(var i=0;i<b.length;i++)if(b[i].id===id)return true;return false;}
+function toggleBucket(planId){
+  var b=getBucket();var idx=-1;
+  for(var i=0;i<b.length;i++)if(b[i].id===planId){idx=i;break;}
+  if(idx>-1){b.splice(idx,1);saveBucket(b);toast('Removed from Bucket');}
+  else{
+    var wrap=document.getElementById('plans-list');
+    var plan=wrap&&wrap._planById&&wrap._planById[planId];
+    if(!plan){toast('Plan not found');return;}
+    b.push({id:plan.id,network:plan.network,data_size:plan.data_size,validity_days:plan.validity_days,selling_price:plan.selling_price,market:plan.market||gMarket,delivery_provider:plan.delivery_provider||''});
+    saveBucket(b);toast('Added to Bucket!');
+  }
+  var btn=document.getElementById('bkt-'+planId);
+  if(btn){var inB=isBucketed(planId);btn.className='plan-bucket-btn'+(inB?' in-bucket':'');}
+  renderBucketSection();
+}
+function removeFromBucket(planId){
+  saveBucket(getBucket().filter(function(x){return x.id!==planId;}));
+  var btn=document.getElementById('bkt-'+planId);if(btn)btn.className='plan-bucket-btn';
+  renderBucketSection();
+}
+function renderBucketSection(){
+  var sec=document.getElementById('bucket-section');if(!sec)return;
+  var b=getBucket();
+  sec.style.display='block';
+  if(!b.length){
+    sec.innerHTML='<div class="bucket-hdr"><span class="bucket-title">My Bucket</span></div>'+
+      '<p class="bucket-empty">No favourite plans yet. Tap the [B] icon on any plan in the market to save it here.</p>';
+    return;
+  }
+  var html='<div class="bucket-hdr"><span class="bucket-title">My Bucket</span>'+
+    '<span style="font-size:.75rem;color:#94a3b8;">'+b.length+' saved</span></div>';
+  for(var i=0;i<b.length;i++){
+    var p=b[i];
+    var nc=p.network==='MTN'?'net-mtn':p.network==='AIRTEL'?'net-airtel':p.network==='GLO'?'net-glo':p.network==='9MOBILE'?'net-9mobile':'net-other';
+    var ml=(p.market==='installment')?'Installment':'General';
+    html+='<div class="bucket-item">'+
+      '<div class="bucket-item-info">'+
+        '<div><span class="plan-net '+nc+'" style="font-size:10px;padding:2px 6px;border-radius:8px;margin-right:4px;">'+(p.network||'')+'</span>'+
+        '<span style="font-size:10px;color:#94a3b8;">'+ml+' Market</span></div>'+
+        '<div class="bucket-item-name">'+(p.data_size||'')+' &mdash; '+(p.validity_days||30)+'-Day Plan</div>'+
+        '<div class="bucket-item-price">\u20a6'+fmtN(Math.ceil(parseFloat(p.selling_price)||0))+'</div>'+
+      '</div>'+
+      '<button class="bucket-sub-btn" onclick="openBucketPlan(''+p.id+'')">Subscribe</button> '+
+      '<button class="bucket-rm-btn" onclick="removeFromBucket(''+p.id+'')" title="Remove">\u00d7</button>'+
+    '</div>';
+  }
+  sec.innerHTML=html;
+}
+function openBucketPlan(planId){
+  var b=getBucket();var entry=null;
+  for(var i=0;i<b.length;i++)if(b[i].id===planId){entry=b[i];break;}
+  var tm=(entry&&entry.market)||'general';
+  if(gMarket!==tm){
+    setMarket(tm);
+    var _t=0;var _p=setInterval(function(){
+      _t++;var w=document.getElementById('plans-list');
+      if(_t>20||(w&&w._planById&&w._planById[planId])){
+        clearInterval(_p);showTab('plans');
+        setTimeout(function(){openSubModal('id_'+planId);},200);
+      }
+    },150);
+  } else {showTab('plans');setTimeout(function(){openSubModal('id_'+planId);},100);}
+}
 var _plansCache    = null;  // cached plan data — static, never changes mid-session
 var _plansCacheTs  = 0;    // timestamp of last fetch
 var PLANS_CACHE_MS = 5 * 60 * 1000; // re-fetch after 5 minutes max
@@ -2817,7 +3440,7 @@ function loadPlans(cb) {
   if (wrap) wrap.innerHTML = '<div class="empty" style="padding:20px 0;">Loading plans\u2026</div>';
 
   restGet('/data_plans',
-    'is_active=eq.true&order=network,sort_order,selling_price&select=id,data_size,network,selling_price,daily_price,validity_days,category',
+    'is_active=eq.true&order=network,sort_order,selling_price&select=id,data_size,network,selling_price,daily_price,validity_days,category,delivery_provider,market',
     function(e, r) {
       if (!r || !r.ok || !r.data || !r.data.length) {
         if (wrap) wrap.innerHTML = '<div class="empty">No plans available right now.</div>';
@@ -2844,7 +3467,14 @@ function _renderPlans(allPlans) {
     wrap._planById[String(p.id)] = p;
   }
 
-      if (!wrap._netFilter) wrap._netFilter = 'ALL';
+      var _allForMarket = [];
+      for (var _mi = 0; _mi < allPlans.length; _mi++) {
+        var _mp = allPlans[_mi];
+        var _pm = _mp.market || (_mp.delivery_provider === 'lenco' ? 'installment' : 'general');
+        if (_pm === gMarket) _allForMarket.push(_mp);
+      }
+      allPlans = _allForMarket; wrap._allPlans = allPlans;
+      if (!wrap._netFilter) wrap._netFilter = 'MTN';
       if (!wrap._typeFilter) wrap._typeFilter = 'ALL';
 
       function esc2(v) { return esc(v == null ? '' : String(v)); }
@@ -2927,10 +3557,11 @@ function _renderPlans(allPlans) {
             '</div>' +
             '<div class="plan-size">' + esc2(nn) + '<br>' + esc2(p.data_size) + '</div>' +
             '<div class="plan-sub" style="margin-top:5px;text-transform:none;letter-spacing:0;">' + (p.validity_days || 30) + '-Day Plan</div>' +
-            '<div class="plan-price">' + fmtN(dbDisplayPrice(p)) + '</div>' +
-            '<div style="margin-top:8px;font-size:1rem;font-weight:900;color:#3d9758;">Pay in ' + gPayDays + ' days</div>' +
+            '<div class="plan-price">' + fmtN(marketDisplayPrice(p)) + '</div>' +
+            '<div style="margin-top:8px;font-size:.8rem;font-weight:700;color:#3d9758;">' + (gMarket === 'general' ? 'Pay once or on installment' : 'Pay in ' + gPayDays + ' days') + '</div>' +
           '</div>' +
           '<button class="plan-btn" onclick="openSubModal(\'id_' + String(p.id) + '\')">Subscribe</button>' +
+          '<button class="plan-bucket-btn' + (isBucketed(String(p.id)) ? ' in-bucket' : '') + '"' + ' id="bkt-' + String(p.id) + '"' + ' onclick="toggleBucket(\'' + String(p.id) + '\')" title="Bucket">[B]</button>' +
         '</div>';
       }
       wrap.innerHTML = html;
@@ -3147,6 +3778,7 @@ window.clearPlanSearch  = clearPlanSearch;
 var _gSubsCache = [];   // most recent loadSubs result — used by openSubModal for progress context
 
 function loadSubs() {
+  try { renderBucketSection(); } catch(e) {}
   ensureToken(function(err) {
     if (err) return;
     restGet('/subscriptions',
@@ -3586,7 +4218,7 @@ window.dbLoyaltyDiscount = dbLoyaltyDiscount;
    rounded UP to whole Naira (matches backend). */
 function dbDisplayPrice(plan) {
   var base = parseFloat(plan && (plan.selling_price !== undefined ? plan.selling_price : plan)) || 0;
-  return Math.ceil(base * 1.02);
+  return Math.ceil(base);
 }
 window.dbDisplayPrice = dbDisplayPrice;
 
@@ -3597,7 +4229,7 @@ function calcPlanDaily(plan, days) {
   var done = (window.dbRewardsCache && parseInt(window.dbRewardsCache.completed_plans)) || 0;
   var discPct = dbLoyaltyDiscount(done);
   var discountedBase = Math.round(price * (1 - discPct / 100) * 100) / 100;
-  var total = Math.ceil(discountedBase * 1.02);   /* round UP to whole Naira (matches backend) */
+  var total = Math.ceil(discountedBase);   /* round UP to whole Naira (matches backend) */
   return {
     total: total,
     daily: days > 0 ? (total / days) : 0,
@@ -3681,20 +4313,33 @@ function dbRenderRewardBreakdown() {
 
 function updateSubInfo() {
   if (!gSelPlan) return;
-  var calc = calcPlanDaily(gSelPlan, gModalPayDays);
-  var shownPrice = dbDisplayPrice(gSelPlan);
-  var discInclusive = Math.round((shownPrice - calc.total) * 100) / 100;
-  var discRow = (calc.discPct > 0 && discInclusive > 0)
-    ? '<div class="row-line"><span class="row-label">Loyalty discount (' + calc.discPct + '%)</span><span class="row-val" style="color:#15803d;font-weight:800;">\u2212' + fmtN(discInclusive) + '</span></div>'
+  var _planMkt = (gSelPlan.market || (gSelPlan.delivery_provider === 'lenco' ? 'installment' : 'general'));
+  var _basePrice = Math.ceil(parseFloat(gSelPlan.selling_price) || 0);
+  var _checkoutTotal = marketCheckoutTotal(gSelPlan, gPayOnce);
+  var _dailyAmt = gPayOnce ? _checkoutTotal : Math.round(_checkoutTotal / (gModalPayDays || 7));
+  var _surgeApplies = (_planMkt === 'installment') || (!gPayOnce && _planMkt === 'general');
+  var _surgeAmt = _surgeApplies ? (_checkoutTotal - _basePrice) : 0;
+  var _surgeRow = _surgeApplies
+    ? '<div class="row-line"><span class="row-label">Service fee (5%)</span><span class="row-val" style="color:#b45309;font-weight:800;">+' + fmtN(_surgeAmt) + '</span></div>'
     : '';
+  var _warnBanner = '';
+  if (_planMkt === 'general' && !gPayOnce) {
+    _warnBanner = '<div style="margin-bottom:10px;padding:10px 12px;background:#f0fdf4;border-radius:10px;border:1.5px solid #86efac;font-size:.78rem;color:#166534;line-height:1.6;">' +
+      '&#128154; <b>You\'re spreading this payment across installments</b> &mdash; ' +
+      'a smart way to ease the burden of paying a large sum all at once. ' +
+      'A small 5% service fee applies, which is a fair trade for the flexibility you get. ' +
+      '<span style="opacity:.75;font-style:italic;">Prefer to pay at the exact listed price? Choose <b>Pay once</b> above.</span>' +
+      '</div>';
+  }
   $('m-sub-info').innerHTML =
-    '<div class="row-line"><span class="row-label">Plan Price</span><span class="row-val">' + fmtN(dbDisplayPrice(gSelPlan)) + '</span></div>' +
-    discRow +
+    _warnBanner +
+    '<div class="row-line"><span class="row-label">Plan Price</span><span class="row-val">' + fmtN(_basePrice) + '</span></div>' +
+    _surgeRow +
     (gPayOnce
       ? '<div class="row-line"><span class="row-label">Payment Option</span><span class="row-val">Pay once (full)</span></div>' +
-        '<div class="row-line"><span class="row-label">You pay now</span><span class="row-val" style="font-weight:800;">' + fmtN(calc.total) + '</span></div>'
+        '<div class="row-line"><span class="row-label">You pay now</span><span class="row-val" style="font-weight:800;">' + fmtN(_checkoutTotal) + '</span></div>'
       : '<div class="row-line"><span class="row-label">Payment Option</span><span class="row-val">' + gModalPayDays + ' days</span></div>' +
-        '<div class="row-line"><span class="row-label">Daily Payment</span><span class="row-val">' + fmtN(calc.daily) + '</span></div>'
+        '<div class="row-line"><span class="row-label">Daily Payment</span><span class="row-val">' + fmtN(_dailyAmt) + '</span></div>'
     ) +
     '<div class="row-line"><span class="row-label">Validity</span><span class="row-val">' + (gSelPlan.validity_days || 30) + ' days</span></div>';
   try { dbRenderRewardBreakdown(); } catch (e) {}
@@ -4055,7 +4700,8 @@ function confirmSub() {
   ensureToken(function(err) {
     if (err) { btnLoad('m-sub-btn', false, 'Subscribe Now'); errShow('m-sub-err', 'Session error. Please sign out and back in.'); return; }
     var h = { 'Authorization': 'Bearer ' + gToken, 'Content-Type': 'application/json', 'apikey': ANON_KEY };
-    var body = JSON.stringify({ user_id: gUser.id, plan_id: gSelPlan.id, phone_number: phone, payment_days: days, auto_renew: autoRenew });
+    var _mktTotal = marketCheckoutTotal(gSelPlan, gPayOnce);
+    var body = JSON.stringify({ user_id: gUser.id, plan_id: gSelPlan.id, phone_number: phone, payment_days: days, auto_renew: autoRenew, override_total: _mktTotal });
     xhr('POST', FN + '/createSubscription', h, body, function(e, r) {
       btnLoad('m-sub-btn', false, 'Subscribe Now');
       if (e || !r || !r.ok || (r.data && r.data.error)) {
@@ -4090,7 +4736,7 @@ function confirmSub() {
 
       closeModal('m-sub');
       if (gPayOnce && r.data && r.data.id) {
-        var fullTotal = calcPlanDaily(gSelPlan, days).total;
+        var fullTotal = marketCheckoutTotal(gSelPlan, true);
         toast('\u2705 Subscribed! Completing your full payment\u2026');
         showTab('subs');
         rpc('pay_installment', { p_user_id: gUser.id, p_subscription_id: r.data.id, p_amount: fullTotal, p_reference: null, p_pin: null }, function(pe, pr) {
@@ -6755,7 +7401,7 @@ function renderDynamicStrip() {
         cheapest = _plansCache[i];
       }
     }
-    var cTotal   = Math.ceil(parseFloat(cheapest.selling_price) * 1.02);
+    var cTotal   = Math.ceil(parseFloat(cheapest.selling_price));
     starterDaily = Math.round(cTotal / 7 * 100) / 100;
     starterSize  = cheapest.data_size || '1GB';
   }
@@ -7002,7 +7648,7 @@ function _buildNuggetPool() {
     for (i = 1; i < _plansCache.length; i++) {
       if (parseFloat(_plansCache[i].selling_price) < parseFloat(cheapest.selling_price)) cheapest = _plansCache[i];
     }
-    var cTotal = Math.ceil(parseFloat(cheapest.selling_price) * 1.02);
+    var cTotal = Math.ceil(parseFloat(cheapest.selling_price));
     starterDaily = Math.round(cTotal / 7 * 100) / 100;
     starterSize  = cheapest.data_size || '1GB';
   }
