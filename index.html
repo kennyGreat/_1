@@ -3,16 +3,16 @@
 <head>
 <!-- ============================================================
      DataBulge WEB VERSION
-     - FCM / Capacitor native push: STRIPPED (no OS notifications)
-     - Notifications surface via the in-app SOUNDING BELL (chime + badge)
-     - push_subscriptions writes: disabled
-     - Native AdMob: falls back to web timer
+     - FCM / Capacitor native push: no-op on web (feature-detected)
+     - Notifications surface via the in-app sounding bell (chime + badge)
+     - Native AdMob: falls back to web behaviour
+     - Native Preferences storage: falls back to localStorage
      This file is for browser / PWA use. The APK uses index.html.
+     Generated from the APK build; all native calls are guarded.
      ============================================================ -->
 <meta charset="UTF-8">
+<script>window.DATABULGE_WEB = true; /* identifies the web build */</script>
 <script>
-window.DATABULGE_WEB = true; /* identifies the web build */
-
 (function(){
   try{
     var ua=navigator.userAgent||'';
@@ -455,54 +455,61 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 
 /* Modals */
 .modal{backdrop-filter:blur(3px);}
-/* ── MODERN PIN MODAL (always above every other modal) ── */
-.modal.pin-modal{z-index:2147483600!important;background:rgba(15,23,42,.62);}
-.modal.pin-modal{backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);}
-.pin-sheet{max-width:340px;margin:0 auto;background:#fff;border-radius:22px;padding:26px 22px 22px;box-shadow:0 24px 60px rgba(0,0,0,.4);position:relative;-webkit-animation:pinPop .26s cubic-bezier(.18,.89,.32,1.28);animation:pinPop .26s cubic-bezier(.18,.89,.32,1.28);}
-@-webkit-keyframes pinPop{0%{opacity:0;-webkit-transform:translateY(18px) scale(.96);}100%{opacity:1;-webkit-transform:translateY(0) scale(1);}}
-@keyframes pinPop{0%{opacity:0;transform:translateY(18px) scale(.96);}100%{opacity:1;transform:translateY(0) scale(1);}}
-.pin-lock-badge{width:52px;height:52px;margin:0 auto 14px;border-radius:50%;background:#eff6ff;background:linear-gradient(135deg,#dbeafe,#eff6ff);display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;font-size:1.5rem;}
-.pin-title{text-align:center;font-size:1.12rem;font-weight:900;color:#0f172a;margin:0 0 4px;}
-.pin-sub{text-align:center;font-size:.82rem;color:#64748b;margin:0 0 20px;line-height:1.45;}
-.pin-dots{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:16px;margin:0 0 8px;}
-.pin-dot{width:15px;height:15px;border-radius:50%;border:2px solid #cbd5e1;background:transparent;-webkit-transition:all .15s;transition:all .15s;}
-.pin-dot.filled{background:#1A56DB;border-color:#1A56DB;-webkit-transform:scale(1.12);transform:scale(1.12);}
-.pin-modal.shake .pin-dots{-webkit-animation:pinShake .4s;animation:pinShake .4s;}
-@-webkit-keyframes pinShake{0%,100%{-webkit-transform:translateX(0);}20%,60%{-webkit-transform:translateX(-8px);}40%,80%{-webkit-transform:translateX(8px);}}
-@keyframes pinShake{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-8px);}40%,80%{transform:translateX(8px);}}
-.pin-hidden-input{position:absolute;opacity:0;height:1px;width:1px;pointer-events:none;}
-.pin-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0 6px;}
-.pin-key{height:54px;border:none;border-radius:14px;background:#f1f5f9;font-size:1.4rem;font-weight:800;color:#0f172a;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;-webkit-transition:background .12s,transform .08s;transition:background .12s,transform .08s;}
-.pin-key:active{background:#dbeafe;-webkit-transform:scale(.94);transform:scale(.94);}
-.pin-key.blank{background:transparent;cursor:default;}
-.pin-key.act{color:#dc2626;font-size:1.1rem;font-weight:800;}
-.pin-forgot{display:block;width:100%;text-align:center;margin-top:14px;background:none;border:none;color:#1A56DB;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;}
-.pin-close-x{position:absolute;top:14px;right:16px;background:none;border:none;font-size:1.5rem;color:#94a3b8;cursor:pointer;line-height:1;}
-/* ── PIN status indicator (OPay-style verifying / success) ── */
+/* ── OPAY-STYLE PIN MODAL (always above every other modal/feature) ── */
+.modal.pin-modal{z-index:2147483600!important;background:rgba(15,23,42,.55);padding:0!important;}
+.modal.pin-modal{backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);}
+#m-pin.modal.pin-modal.on{display:-webkit-box!important;display:-webkit-flex!important;display:flex!important;-webkit-box-align:end;-webkit-align-items:flex-end;align-items:flex-end;}
+.modal.pin-modal#m-forgotpin.on,.modal.pin-modal#m-setpin.on{display:-webkit-box!important;display:-webkit-flex!important;display:flex!important;-webkit-box-align:end;-webkit-align-items:flex-end;align-items:flex-end;}
+.modal.pin-modal .modal-card{width:100%;max-width:480px!important;margin:0 auto;border-radius:26px 26px 0 0;padding-bottom:calc(18px + env(safe-area-inset-bottom,0px));-webkit-animation:pinUp .3s cubic-bezier(.22,.61,.36,1);animation:pinUp .3s cubic-bezier(.22,.61,.36,1);}
+.pin-sheet{width:100%;max-width:480px;margin:0 auto;background:#fff;border-radius:26px 26px 0 0;padding:14px 22px calc(26px + env(safe-area-inset-bottom,0px));box-shadow:0 -10px 50px rgba(0,0,0,.32);position:relative;-webkit-animation:pinUp .3s cubic-bezier(.22,.61,.36,1);animation:pinUp .3s cubic-bezier(.22,.61,.36,1);}
+.pin-sheet:before{content:'';display:block;width:42px;height:5px;border-radius:3px;background:#e2e8f0;margin:0 auto 16px;}
+@-webkit-keyframes pinUp{0%{-webkit-transform:translateY(100%);}100%{-webkit-transform:translateY(0);}}
+@keyframes pinUp{0%{transform:translateY(100%);}100%{transform:translateY(0);}}
+.pin-lock-badge{width:58px;height:58px;margin:0 auto 16px;border-radius:50%;background:#1A56DB;background:linear-gradient(135deg,#1A56DB,#2563eb);display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;font-size:1.6rem;box-shadow:0 8px 20px rgba(26,86,219,.32);}
+.pin-title{text-align:center;font-size:1.18rem;font-weight:900;color:#0f172a;margin:0 0 5px;}
+.pin-sub{text-align:center;font-size:.84rem;color:#64748b;margin:0 0 22px;line-height:1.45;}
+.pin-dots{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:20px;margin:0 0 8px;}
+.pin-dot{width:16px;height:16px;border-radius:50%;border:2px solid #cbd5e1;background:transparent;-webkit-transition:all .15s;transition:all .15s;}
+.pin-dot.filled{background:#1A56DB;border-color:#1A56DB;-webkit-transform:scale(1.18);transform:scale(1.18);box-shadow:0 2px 8px rgba(26,86,219,.35);}
 .pin-status{display:none;align-items:center;justify-content:center;gap:9px;margin:14px auto 2px;min-height:24px;font-size:.9rem;font-weight:700;}
-.pin-status.on{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-box-pack:center;}
+.pin-status.on{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-box-pack:center;align-items:center;justify-content:center;}
 .pin-status.loading{color:#1A56DB;}
 .pin-status.success{color:#16a34a;}
+.pin-status.error{color:#dc2626;}
 .pin-spinner{width:20px;height:20px;border:2.5px solid #dbeafe;border-top-color:#1A56DB;border-radius:50%;-webkit-animation:pinSpin .7s linear infinite;animation:pinSpin .7s linear infinite;}
 @-webkit-keyframes pinSpin{to{-webkit-transform:rotate(360deg);}}
 @keyframes pinSpin{to{transform:rotate(360deg);}}
 .pin-check{width:22px;height:22px;border-radius:50%;background:#16a34a;position:relative;-webkit-animation:pinPop2 .3s ease;animation:pinPop2 .3s ease;flex:0 0 auto;}
 .pin-check:after{content:'';position:absolute;left:7px;top:3.5px;width:5px;height:10px;border:solid #fff;border-width:0 2.5px 2.5px 0;-webkit-transform:rotate(45deg);transform:rotate(45deg);}
-.pin-status.error{color:#dc2626;}
 .pin-cross{width:22px;height:22px;border-radius:50%;background:#dc2626;position:relative;-webkit-animation:pinPop2 .3s ease;animation:pinPop2 .3s ease;flex:0 0 auto;}
 .pin-cross:before,.pin-cross:after{content:'';position:absolute;left:10px;top:5px;width:2.5px;height:12px;background:#fff;border-radius:2px;}
 .pin-cross:before{-webkit-transform:rotate(45deg);transform:rotate(45deg);}
 .pin-cross:after{-webkit-transform:rotate(-45deg);transform:rotate(-45deg);}
 @-webkit-keyframes pinPop2{0%{-webkit-transform:scale(.4);opacity:0;}100%{-webkit-transform:scale(1);opacity:1;}}
 @keyframes pinPop2{0%{transform:scale(.4);opacity:0;}100%{transform:scale(1);opacity:1;}}
-.pin-success-pop{position:fixed;inset:0;z-index:2147483647;display:none;-webkit-box-align:center;-webkit-box-pack:center;align-items:center;justify-content:center;background:rgba(15,23,42,.45);-webkit-backdrop-filter:blur(2px);backdrop-filter:blur(2px);}
-.pin-success-pop.on{display:-webkit-box;display:-webkit-flex;display:flex;}
-.pin-success-card{background:#fff;border-radius:22px;padding:30px 34px;text-align:center;box-shadow:0 18px 50px rgba(0,0,0,.3);-webkit-animation:pinPop2 .32s ease;animation:pinPop2 .32s ease;max-width:300px;}
-.pin-success-ring{width:74px;height:74px;border-radius:50%;background:#dcfce7;margin:0 auto 16px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;}
-.pin-success-ring .pin-check{width:40px;height:40px;}
-.pin-success-ring .pin-check:after{left:13px;top:7px;width:9px;height:18px;border-width:0 4px 4px 0;}
-.pin-success-card h4{margin:0 0 6px;font-size:1.12rem;font-weight:900;color:#0f172a;}
-.pin-success-card p{margin:0;font-size:.86rem;color:#64748b;line-height:1.5;}
+.pin-modal.shake .pin-dots{-webkit-animation:pinShake .4s;animation:pinShake .4s;}
+@-webkit-keyframes pinShake{0%,100%{-webkit-transform:translateX(0);}20%,60%{-webkit-transform:translateX(-8px);}40%,80%{-webkit-transform:translateX(8px);}}
+@keyframes pinShake{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-8px);}40%,80%{transform:translateX(8px);}}
+.pin-hidden-input{position:absolute;opacity:0;height:1px;width:1px;pointer-events:none;}
+.pin-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:6px 8px;margin:22px auto 4px;max-width:330px;}
+.pin-key{height:62px;border:none;border-radius:18px;background:transparent;font-size:1.7rem;font-weight:800;color:#0f172a;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;-webkit-transition:background .12s,transform .08s;transition:background .12s,transform .08s;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;}
+.pin-key:active{background:#eef2ff;-webkit-transform:scale(.92);transform:scale(.92);}
+.pin-key.blank{background:transparent;cursor:default;}
+.pin-key.act{color:#1A56DB;font-size:1.5rem;font-weight:800;}
+.pin-forgot{display:block;width:100%;text-align:center;margin-top:16px;background:none;border:none;color:#1A56DB;font-size:.84rem;font-weight:800;cursor:pointer;font-family:inherit;}
+.pin-close-x{position:absolute;top:14px;right:18px;background:none;border:none;font-size:1.7rem;color:#94a3b8;cursor:pointer;line-height:1;z-index:2;}
+.sec-row{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:14px 0;border-bottom:1px solid #eef1f6;}
+.sec-row:last-of-type{border-bottom:none;}
+.sec-row-txt{flex:1;}
+.sec-row-title{font-size:.92rem;font-weight:800;color:#111;margin-bottom:2px;}
+.sec-row-sub{font-size:.76rem;color:#667085;line-height:1.45;}
+.sec-switch{position:relative;display:inline-block;width:46px;height:27px;flex:0 0 auto;margin-top:2px;}
+.sec-switch input{opacity:0;width:0;height:0;}
+.sec-slider{position:absolute;cursor:pointer;inset:0;background:#cbd5e1;border-radius:27px;transition:.2s;}
+.sec-slider:before{content:'';position:absolute;height:21px;width:21px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 3px rgba(0,0,0,.3);}
+.sec-switch input:checked + .sec-slider{background:#1A56DB;}
+.sec-switch input:checked + .sec-slider:before{transform:translateX(19px);}
+.sec-switch input:disabled + .sec-slider{opacity:.45;cursor:not-allowed;}
 
 .modal-box{overflow:hidden!important;}
 .modal-hdr,.modal-foot{box-shadow:none!important;border-color:#EEF1F6!important;}
@@ -810,6 +817,85 @@ button.tab,button.plan-chip{box-shadow:none!important;}
 @-webkit-keyframes db-ct-fall{to{-webkit-transform:translateY(110vh) rotate(720deg);opacity:0}}
 @keyframes db-ct-fall{to{transform:translateY(110vh) rotate(720deg);opacity:0}}
 .db-bal-glow{color:#00e5be!important;text-shadow:0 0 16px rgba(0,229,190,.5);}
+
+/* BUCKET */
+#bucket-section{margin-bottom:14px;display:none;}
+.bucket-hdr{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;-webkit-box-pack:justify;justify-content:space-between;margin-bottom:8px;}
+.bucket-title{font-size:.95rem;font-weight:900;color:#1A56DB;}
+.bucket-empty{font-size:.8rem;color:#94a3b8;padding:8px 0;}
+.bucket-item{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:10px;background:#fff;border:1.5px solid #e0e9ff;border-radius:12px;padding:10px 12px;margin-bottom:8px;}
+.bucket-item-info{-webkit-box-flex:1;-webkit-flex:1;flex:1;min-width:0;}
+.bucket-item-name{font-size:.88rem;font-weight:800;color:#1e293b;}
+.bucket-item-price{font-size:.92rem;font-weight:900;color:#1A56DB;margin-top:2px;}
+.bucket-sub-btn{font-size:.78rem;font-weight:700;padding:5px 10px;border-radius:8px;border:none;background:#1A56DB;color:#fff;cursor:pointer;white-space:nowrap;font-family:inherit;}
+.bucket-rm-btn{font-size:1rem;background:none;border:none;color:#cbd5e1;cursor:pointer;padding:4px;line-height:1;}
+.plan-bucket-btn{position:absolute;top:8px;right:8px;background:none;border:none;font-size:1.05rem;cursor:pointer;padding:4px;line-height:1;opacity:.4;-webkit-tap-highlight-color:transparent;}
+.plan-bucket-btn.in-bucket{opacity:1;color:#1A56DB;}
+.plan-card{position:relative;}
+
+/* ── GENERAL MARKET SEGMENTS ───────────────────────────── */
+#gm-segments{display:none;margin-bottom:12px;}
+#gm-segments.visible{display:block;}
+.gm-seg-grid{display:-webkit-box;display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;gap:10px;}
+.gm-seg-tile{
+  -webkit-box-flex:1;-webkit-flex:1 1 calc(33% - 8px);flex:1 1 calc(33% - 8px);
+  min-width:90px;max-width:none;
+  background:#fff;border:1.5px solid #e0e9ff;border-radius:14px;
+  padding:14px 8px 12px;text-align:center;cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+  position:relative;transition:border-color .15s,box-shadow .15s;
+}
+.gm-seg-tile:active{background:#f0f4ff;}
+.gm-seg-tile.active{border-color:#1A56DB;box-shadow:0 0 0 2px #1A56DB22;}
+.gm-seg-tile.coming-soon{opacity:.55;cursor:default;}
+.gm-seg-tile.coming-soon:active{background:#fff;}
+.gm-seg-icon{font-size:1.7rem;display:block;margin-bottom:5px;}
+.gm-seg-label{font-size:.72rem;font-weight:800;color:#1e293b;display:block;line-height:1.3;}
+.gm-seg-badge{
+  position:absolute;top:5px;right:6px;
+  font-size:.55rem;font-weight:800;padding:1px 5px;border-radius:6px;
+  background:#fef9c3;color:#854d0e;line-height:1.5;
+  text-transform:uppercase;letter-spacing:.3px;
+}
+/* segment back button */
+#gm-seg-back{
+  display:none;margin-bottom:10px;
+  background:none;border:none;color:#1A56DB;font-size:.82rem;
+  font-weight:700;cursor:pointer;padding:0;font-family:inherit;
+}
+#gm-seg-back.visible{display:inline-block;}
+
+/* ── SERVICE FORMS (Airtime, Electricity, Cable) ───── */
+#service-screen{display:none;margin-bottom:12px;}
+#service-screen.visible{display:block;}
+.svc-card{background:#fff;border-radius:14px;border:1.5px solid #e0e9ff;padding:16px;margin-bottom:12px;}
+.svc-title{font-size:.95rem;font-weight:900;color:#1e293b;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.svc-field{margin-bottom:12px;}
+.svc-label{font-size:.75rem;font-weight:700;color:#64748b;display:block;margin-bottom:5px;text-transform:uppercase;letter-spacing:.3px;}
+.svc-input,.svc-select{width:100%;height:44px;border:1.5px solid #e0e9ff;border-radius:10px;background:#f8fafc;padding:0 12px;font-size:.9rem;color:#1e293b;outline:none;font-family:inherit;box-sizing:border-box;}
+.svc-input:focus,.svc-select:focus{border-color:#1A56DB;background:#fff;}
+.svc-amount-wrap{position:relative;}
+.svc-amount-prefix{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-weight:700;color:#64748b;font-size:.9rem;}
+.svc-amount-input{padding-left:28px!important;}
+.svc-btn{width:100%;height:48px;border:none;border-radius:12px;background:#1A56DB;color:#fff;font-size:.95rem;font-weight:800;cursor:pointer;font-family:inherit;margin-top:4px;}
+.svc-btn:active{opacity:.85;}
+.svc-btn:disabled{opacity:.5;cursor:not-allowed;}
+.svc-verify-row{display:flex;gap:8px;align-items:flex-end;}
+.svc-verify-row .svc-input{flex:1;}
+.svc-verify-btn{height:44px;padding:0 14px;border:1.5px solid #1A56DB;border-radius:10px;background:#f0f4ff;color:#1A56DB;font-size:.8rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;}
+.svc-info-box{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:10px 12px;font-size:.8rem;color:#166534;margin-bottom:12px;display:none;}
+.svc-info-box.visible{display:block;}
+.svc-cable-tabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.svc-cable-tab{padding:6px 14px;border-radius:20px;border:1.5px solid #e0e9ff;background:#fff;font-size:.78rem;font-weight:700;color:#64748b;cursor:pointer;}
+.svc-cable-tab.active{background:#1A56DB;color:#fff;border-color:#1A56DB;}
+.svc-plan-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;max-height:260px;overflow-y:auto;}
+.svc-plan-item{border:1.5px solid #e0e9ff;border-radius:10px;padding:10px;cursor:pointer;background:#fff;}
+.svc-plan-item.selected{border-color:#1A56DB;background:#f0f4ff;}
+.svc-plan-name{font-size:.75rem;font-weight:700;color:#1e293b;line-height:1.3;}
+.svc-plan-price{font-size:.85rem;font-weight:900;color:#1A56DB;margin-top:3px;}
+.svc-network-pills{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px;}
+.svc-net-pill{padding:6px 14px;border-radius:20px;border:1.5px solid #e0e9ff;background:#fff;font-size:.78rem;font-weight:700;color:#64748b;cursor:pointer;}
+.svc-net-pill.active{background:#1A56DB;color:#fff;border-color:#1A56DB;}
 </style>
 </head>
 <body>
@@ -895,6 +981,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         <div class="avatar-menu" id="avatar-menu">
           <div class="wallet-status normal" id="wallet-status">Normal Wallet</div>
           <button class="avatar-signout" type="button" onclick="toggleAvatarMenu();openSetPinModal()" style="margin-bottom:6px;">🔒 Set / Change PIN</button>
+          <button class="avatar-signout" type="button" onclick="toggleAvatarMenu();openSecurityModal()" style="margin-bottom:6px;">🛡️ Security &amp; Fingerprint</button>
           <button class="avatar-signout" type="button" onclick="doLogout()">Sign out</button>
         </div>
       </div>
@@ -1039,20 +1126,37 @@ button.tab,button.plan-chip{box-shadow:none!important;}
     </div>
     <!-- Data mode -->
     <div id="buy-mode-data">
-      <div class="card" style="margin-bottom:12px;">
+
+      <!-- ── MARKET SELECTOR ── -->
+      <div id="market-selector" style="margin-bottom:12px;">
+        <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:10px;">
+          <button id="market-btn-general" type="button" onclick="setMarket('general')"
+            style="flex:1;-webkit-box-flex:1;padding:20px 8px;border-radius:16px;border:2px solid #1A56DB;background:#1A56DB;color:#fff;font-size:1rem;font-weight:900;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;line-height:1.5;text-align:center;">
+            General Market<br><span style="font-size:.72rem;font-weight:500;opacity:.85;">Pay once at listed price · or pay in installments</span>
+          </button>
+          <button id="market-btn-installment" type="button" onclick="setMarket('installment')"
+            style="flex:1;-webkit-box-flex:1;padding:20px 8px;border-radius:16px;border:2px solid #d0d8ff;background:#f7f8ff;color:#1A56DB;font-size:1rem;font-weight:900;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;line-height:1.5;text-align:center;">
+            Installment Market<br><span style="font-size:.72rem;font-weight:500;opacity:.75;color:#555;">Tested plans · Pay daily in small bits</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ── MARKET WELCOME BANNER ── -->
+      <div id="market-welcome" style="margin-bottom:12px;padding:12px 14px;border-radius:12px;background:#f0f4ff;border:1.5px solid #c7d4fb;font-size:.82rem;color:#374151;line-height:1.6;"></div>
+
+      <!-- ── INSTALLMENT DAYS (shown only in installment market) ── -->
+      <div id="pay-toggle-card" style="display:none;margin-bottom:12px;" class="card">
         <div class="sec-title">Payment Option</div>
         <div id="pay-toggle-wrap" style="display:flex;gap:8px;">
           <button class="btn btn-lite" id="pay-days-7" style="margin:0;flex:1;">7 Days</button>
           <button class="btn btn-blue" id="pay-days-28" style="margin:0;flex:1;">28 Days</button>
         </div>
+      </div>
 
-      </div>
-      <!-- Rewards promise banner (attraction, shown before commitment) -->
-      <div id="db-rewards-banner" style="margin-bottom:12px;border-radius:14px;padding:14px 16px;background:-webkit-linear-gradient(135deg,#0b3d2e,#0f5132);background:linear-gradient(135deg,#0b3d2e,#0f5132);color:#fff;box-shadow:0 4px 14px rgba(15,81,50,.25);position:relative;overflow:hidden;">
-        <div style="font-size:.93rem;font-weight:900;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:6px;">&#128176; Earn as you pay</div>
-        <div style="font-size:.8rem;line-height:1.5;margin-top:5px;color:#d8f3e6;">Get <b style="color:#fff;">1% back on every installment</b> you pay. Loyal users unlock up to <b style="color:#fff;">10% off</b> future plans. Your rewards unlock the moment your plan completes.</div>
-      </div>
-      <div id="plans-list"><div class="empty">Loading plans&hellip;</div></div>
+      <button id="gm-seg-back" onclick="backToGMSegments()">&larr; Back to services</button>
+      <div id="gm-segments"></div>
+      <div id="service-screen"></div>
+      <div id="plans-list" style="display:none;"><div class="empty">Loading plans&hellip;</div></div>
     </div>
     <!-- Airtime mode -->
     <div id="buy-mode-airtime" style="display:none!important;">
@@ -1121,7 +1225,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         <div id="air-preview" style="display:none;background:#f5f7ff;border:1px solid #d0d8ff;border-radius:10px;padding:11px 13px;margin-bottom:12px;font-size:.8rem;color:#444;line-height:1.7;"></div>
         <div id="air-err" class="err"></div>
         <button class="btn btn-blue" id="air-buy-btn" onclick="confirmAirtime()" style="margin-top:4px;">Buy Airtime</button>
-        <p style="font-size:.72rem;color:#888;margin-top:8px;line-height:1.5;">3% fee for 7-day cycles. 5% for 28-day cycles. Minimum \u20a6100. If delivery fails, your wallet is automatically refunded.</p>
+        <p style="font-size:.72rem;color:#888;margin-top:8px;line-height:1.5;">A fee applies based on your payment cycle. Minimum \u20a6100. If delivery fails, your wallet is automatically refunded.</p>
       </div>
     </div>
   </div>
@@ -1129,6 +1233,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
   <!-- My Plans -->
   <div id="tc-subs" class="tab-content">
     <button class="btn btn-lite" id="refresh-subs-btn" style="margin-bottom:12px;">&#8635; Refresh</button>
+    <div id="bucket-section"></div>
     <div id="subs-list"><div class="empty">Loading&hellip;</div></div>
   </div>
 
@@ -1329,6 +1434,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
     <div class="modal-body">
       <div id="m-sub-err" class="err"></div>
 
+      <!-- Step progress indicator -->
       <div id="m-sub-steps" style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:6px;margin-bottom:14px;">
         <div class="sub-step-dot" data-step="1" style="-webkit-box-flex:1;-webkit-flex:1;flex:1;height:4px;border-radius:3px;background:#1A56DB;"></div>
         <div class="sub-step-dot" data-step="2" style="-webkit-box-flex:1;-webkit-flex:1;flex:1;height:4px;border-radius:3px;background:#e2e8f0;"></div>
@@ -1336,6 +1442,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       </div>
       <div id="m-sub-step-label" style="font-size:.74rem;font-weight:700;color:#1A56DB;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px;">Step 1 of 3 &middot; Plan &amp; payment</div>
 
+      <!-- ===== STEP 1: Plan & payment ===== -->
       <div class="m-sub-step" data-step="1">
         <div id="m-sub-info" style="font-size:.82rem;color:#444;margin-bottom:12px;"></div>
         <div id="m-sub-rewards" style="display:none;margin-bottom:12px;border-radius:12px;padding:12px 14px;background:#f0fdf4;border:1px solid #bbf7d0;"></div>
@@ -1358,6 +1465,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         </div>
       </div>
 
+      <!-- ===== STEP 2: Delivery ===== -->
       <div class="m-sub-step" data-step="2" style="display:none;">
         <div class="field">
           <label style="font-weight:700;color:#333;margin-bottom:6px;display:block;">Phone Number for Delivery</label>
@@ -1378,6 +1486,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         </div>
       </div>
 
+      <!-- ===== STEP 3: Automation (optional) ===== -->
       <div class="m-sub-step" data-step="3" style="display:none;">
         <div style="font-size:.78rem;color:#888;margin-bottom:10px;">Optional &mdash; set these and we handle the rest for you.</div>
 
@@ -1454,7 +1563,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         <h3>3. HOW IT WORKS</h3>
         <p>Tap the +Fund Account button to fund your account. Once your account reaches the full plan cost, data is automatically delivered to your registered phone number.</p>
         <h3>4. SURCHARGE</h3>
-        <p>A flat 5% service charge applies to every plan, regardless of payment cycle. Non-refundable once subscription is created.</p>
+        <p>A flat 5% service charge applies to every installment plan, regardless of payment cycle. Non-refundable once subscription is created.</p>
         <h3>5. REFUND POLICY</h3>
         <p>If delivery fails, your wallet is automatically refunded within 4 minutes. Successfully delivered data is non-refundable.</p>
         <h3>6. ELIGIBILITY</h3>
@@ -1487,7 +1596,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
 </div>
 <div class="modal pin-modal" id="m-pin">
   <div class="pin-sheet">
-    <button class="pin-close-x" id="pin-close-x" onclick="_pinCloseX()" ontouchstart="">&times;</button>
+    <button class="pin-close-x" onclick="closeModal('m-pin')" ontouchstart="">&times;</button>
     <div class="pin-lock-badge">&#128274;</div>
     <h3 class="pin-title" id="pin-title">Enter your PIN</h3>
     <p class="pin-sub" id="pin-sub">Confirm your 4-digit PIN.</p>
@@ -1498,7 +1607,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <div class="pin-dot" data-i="3"></div>
     </div>
     <div class="err" id="m-pin-err" style="text-align:center;margin-top:6px;"></div>
-    <div class="pin-status" id="pin-status" aria-live="polite"></div>
+    <div class="pin-status" id="pin-status"></div>
     <input id="pin-input" class="pin-hidden-input" type="tel" inputmode="none" readonly maxlength="4" autocomplete="off" />
     <div class="pin-keypad" id="pin-keypad">
       <button type="button" class="pin-key" onclick="_pinKey('1')" ontouchstart="">1</button>
@@ -1514,6 +1623,10 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <button type="button" class="pin-key" onclick="_pinKey('0')" ontouchstart="">0</button>
       <button type="button" class="pin-key act" onclick="_pinKey('del')" ontouchstart="">&#9003;</button>
     </div>
+    <button type="button" id="pin-bio-btn" onclick="_pinTryBio()" ontouchstart="" style="display:none;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:6px;background:none;border:none;color:#1A56DB;font-size:.9rem;font-weight:800;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1A56DB" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M12 11c0 2.5-.3 5-1 7"/><path d="M8 14c.5-2 .5-4 .5-5a3.5 3.5 0 0 1 7 0c0 1 0 2-.2 3.2"/><path d="M5 13c.4-2.5.5-4 .5-5A6.5 6.5 0 0 1 12 1.5c1.7 0 3.3.6 4.6 1.6"/><path d="M19 8c.2 2 .1 5-.5 8"/><path d="M9 20c1-2 1.5-4.5 1.5-7"/></svg>
+      Use fingerprint
+    </button>
     <button type="button" class="pin-forgot" onclick="openForgotPin()" ontouchstart="">Forgot PIN?</button>
   </div>
 </div>
@@ -1548,6 +1661,45 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         style="width:100%;text-align:center;letter-spacing:10px;font-size:1.2rem;font-weight:900;padding:10px;border:1.5px solid #d0d4dd;border-radius:10px;font-family:inherit;" />
       <div class="err" id="m-setpin-err" style="margin-top:10px;"></div>
       <button class="btn btn-blue" id="setpin-submit-btn" onclick="_setPinSubmit()" ontouchstart="" style="margin-top:14px;width:100%;">Save PIN</button>
+    </div>
+  </div>
+</div>
+<div class="modal pin-modal" id="m-security">
+  <div class="modal-card" style="max-width:380px;">
+    <div class="modal-head">
+      <h3 style="margin:0;font-size:1.05rem;font-weight:900;color:#111;">🛡️ Security &amp; Fingerprint</h3>
+      <button class="modal-x" onclick="closeModal('m-security')" ontouchstart="">&times;</button>
+    </div>
+    <div class="modal-body">
+      <div id="sec-no-bio" style="display:none;font-size:.82rem;color:#8a6d3b;background:#fcf8e3;border:1px solid #faebcc;border-radius:10px;padding:10px 12px;margin-bottom:12px;line-height:1.5;">
+        This device has no fingerprint set up, so fingerprint options are unavailable. Add a fingerprint in your phone&rsquo;s settings to use them.
+      </div>
+
+      <div class="sec-row">
+        <div class="sec-row-txt">
+          <div class="sec-row-title">Pay with fingerprint</div>
+          <div class="sec-row-sub">Authorize payments with your fingerprint instead of typing your PIN.</div>
+        </div>
+        <label class="sec-switch"><input type="checkbox" id="sec-pay-toggle"><span class="sec-slider"></span></label>
+      </div>
+
+      <div class="sec-row">
+        <div class="sec-row-txt">
+          <div class="sec-row-title">Fingerprint unlock</div>
+          <div class="sec-row-sub">Use your fingerprint to unlock the app on open.</div>
+        </div>
+        <label class="sec-switch"><input type="checkbox" id="sec-unlock-toggle"><span class="sec-slider"></span></label>
+      </div>
+
+      <div class="sec-row">
+        <div class="sec-row-txt">
+          <div class="sec-row-title">Require unlock code on open</div>
+          <div class="sec-row-sub">Ask for your PIN (or fingerprint) every time the app opens. Turn off to skip the unlock screen.</div>
+        </div>
+        <label class="sec-switch"><input type="checkbox" id="sec-lockgate-toggle"><span class="sec-slider"></span></label>
+      </div>
+
+      <div class="err" id="m-security-err" style="margin-top:6px;"></div>
     </div>
   </div>
 </div>
@@ -1905,6 +2057,56 @@ var _store = (function() {
   };
 })();
 
+/* ── NATIVE PERSISTENT STORAGE (Capacitor Preferences) ──────────
+   Android WebView can wipe localStorage on full app close, which
+   logged users out. Capacitor Preferences persists natively and
+   survives app closure. We mirror the session here and hydrate it
+   back into localStorage before the session check, so users stay
+   logged in until they log out themselves. ───────────────────── */
+function _capPrefs() {
+  try {
+    if (typeof window.Capacitor !== 'undefined' &&
+        window.Capacitor.Plugins &&
+        window.Capacitor.Plugins.Preferences) {
+      return window.Capacitor.Plugins.Preferences;
+    }
+  } catch(e) {}
+  return null;
+}
+var _PERSIST_KEYS = ['db_sess', 'db_remember_me', 'db_remember_email'];
+function _nativeSet(key, value) {
+  var P = _capPrefs(); if (!P) return;
+  try { P.set({ key: key, value: value == null ? '' : String(value) }); } catch(e) {}
+}
+function _nativeDel(key) {
+  var P = _capPrefs(); if (!P) return;
+  try { P.remove({ key: key }); } catch(e) {}
+}
+function _hydrateFromNative(cb) {
+  var P = _capPrefs();
+  if (!P) { cb(); return; }
+  var pending = _PERSIST_KEYS.length, done = false;
+  function finish() { if (!done) { done = true; cb(); } }
+  var guard = setTimeout(finish, 1200);
+  for (var i = 0; i < _PERSIST_KEYS.length; i++) {
+    (function(k) {
+      try {
+        P.get({ key: k }).then(function(res) {
+          try {
+            var v = res && typeof res.value !== 'undefined' ? res.value : null;
+            if (v !== null && v !== '' && !_store.get(k)) { _store.set(k, v); }
+          } catch(e) {}
+          pending--; if (pending <= 0) { clearTimeout(guard); finish(); }
+        }).catch(function() {
+          pending--; if (pending <= 0) { clearTimeout(guard); finish(); }
+        });
+      } catch(e) {
+        pending--; if (pending <= 0) { clearTimeout(guard); finish(); }
+      }
+    })(_PERSIST_KEYS[i]);
+  }
+}
+
 /* ── XHR WRAPPER ────────────────────────────────────────────── */
 // Returns a plain object {ok, status, data}
 // Calls cb(err, result) when done.
@@ -1989,7 +2191,9 @@ function _setSession(d) {
   gRefresh = d.refresh_token || gRefresh;
   gExpiry  = d.expires_at ? d.expires_at * 1000 : (Date.now() + (d.expires_in || 3600) * 1000);
   if (d.user) gUser = d.user;
-  _store.set('db_sess', JSON.stringify({ at: gToken, rt: gRefresh, ex: gExpiry, user: gUser }));
+  var _sessStr = JSON.stringify({ at: gToken, rt: gRefresh, ex: gExpiry, user: gUser });
+  _store.set('db_sess', _sessStr);
+  _nativeSet('db_sess', _sessStr);   // persist to native storage (survives app close)
   // Keep window references in sync so cross-script-block code (notif system, push IIFE) sees the session
   window.gUser    = gUser;
   window.gToken   = gToken;
@@ -2018,6 +2222,7 @@ function _clearSession() {
   window.gUser  = null;
   window.gToken = null;
   _store.del('db_sess');
+  _nativeDel('db_sess');   // clear native storage so logout is permanent
   if (_pollTimer) { clearInterval(_pollTimer); _pollTimer = null; }
 }
 
@@ -2042,9 +2247,11 @@ function openModal(id) {
   if(m){
     var pm = (' '+m.className+' ').indexOf(' pin-modal ')>-1;
     m.className = pm ? 'modal pin-modal on' : 'modal on';
-    // Keep the PIN/unlock modal above every other open modal. Preserving the
-    // pin-modal class keeps its high z-index, and moving it to the last body
-    // child guarantees paint order over an already-open modal (e.g. transfer).
+    // A PIN/unlock modal must ALWAYS paint above every other open modal.
+    // backdrop-filter on .modal creates per-modal stacking contexts, which can
+    // trap z-index and leave the keypad rendering *behind* an already-open
+    // modal (e.g. the transfer modal). Moving it to be the LAST child of <body>
+    // guarantees correct paint order regardless of stacking-context quirks.
     if (pm && m.parentNode === document.body && document.body.lastElementChild !== m) {
       try { document.body.appendChild(m); } catch(e) {}
     }
@@ -2110,7 +2317,10 @@ function dbGoMyPlan(){
 }
 window.dbGoMyPlan = dbGoMyPlan;
 
-/* ── Auto-Pay controls on the My Plan cards ── */
+/* ── Auto-Pay controls on the My Plan cards ─────────────────────────────
+   For each visible active-plan card, reflect whether Auto-Pay is on and how
+   much per day. The Cancel control is ALWAYS shown while a mandate is active
+   (permanent rule: only the user cancelling removes it). */
 function dbLoadAutopayState() {
   if (!window.gUser) return;
   var rows = document.querySelectorAll('[id^="ap-row-"]');
@@ -2127,7 +2337,7 @@ function dbLoadAutopayState() {
       if (!label || !btn) continue;
       if (m && m.status === 'active') {
         label.innerHTML = '\u26A1 Auto-Pay on \u2014 \u20A6' + Number(m.daily_amount).toLocaleString() + '/day from wallet';
-        btn.textContent = 'Cancel';
+        btn.textContent = 'Cancel';                 // ALWAYS available while active
         btn.style.background = '#c0392b';
         btn.setAttribute('data-on', '1');
       } else {
@@ -2145,6 +2355,7 @@ function dbToggleAutopay(subId, suggestedDaily) {
   var btn = document.getElementById('ap-btn-' + subId);
   var isOn = btn && btn.getAttribute('data-on') === '1';
   if (isOn) {
+    // Cancel — only the user can do this (permanent rule).
     window.rpc('cancel_autopay', JSON.stringify({ p_subscription_id: subId }), function(err, res) {
       var d = res && (res.data !== undefined ? res.data : res);
       if (!err && d && d.ok) { toast('Auto-Pay cancelled.'); dbLoadAutopayState(); }
@@ -2152,6 +2363,7 @@ function dbToggleAutopay(subId, suggestedDaily) {
     });
     return;
   }
+  // Turn on — ask for the daily amount.
   var def = suggestedDaily && suggestedDaily > 0 ? String(suggestedDaily) : '';
   var amtStr = window.prompt('How much should we move from your wallet to this plan each day? (\u20A6)', def);
   if (amtStr === null) return;
@@ -2165,7 +2377,10 @@ function dbToggleAutopay(subId, suggestedDaily) {
 }
 window.dbToggleAutopay = dbToggleAutopay;
 
-/* ── Auto-Renew controls on the My Plan cards ── */
+/* ── Auto-Renew controls on the My Plan cards ──────────────────────────
+   Reflect whether Auto-Renew is on for each plan, and let the user turn it
+   on or cancel it any time. The cancel (Turn off) control is always shown
+   while it's on — only the user turning it off cancels auto-renew. */
 function dbLoadAutorenewState() {
   if (!window.gUser) return;
   var rows = document.querySelectorAll('[id^="ar-row-"]');
@@ -2216,8 +2431,9 @@ function dbToggleAutorenew(subId) {
 }
 window.dbToggleAutorenew = dbToggleAutorenew;
 
-/* ── Cancel an ongoing plan (user-initiated) ──
-   Clear forfeiture warning + explicit acceptance. Paid amount is NOT refunded. */
+/* ── Cancel an ongoing plan (user-initiated) ───────────────────────────
+   Shows a clear forfeiture warning and requires explicit acceptance before
+   anything happens. Whatever was paid is NOT refunded. */
 function dbCancelPlan(subId, planLabel, paidAmount) {
   var paidTxt = '\u20A6' + (Number(paidAmount) || 0).toLocaleString();
   var ov = document.getElementById('db-cancel-plan-ov');
@@ -2274,7 +2490,10 @@ function dbCancelPlan(subId, planLabel, paidAmount) {
 }
 window.dbCancelPlan = dbCancelPlan;
 
-/* ── Reusable warning modal with explicit checkbox acceptance ── */
+/* ── Reusable warning modal with explicit checkbox acceptance ──────────
+   Used for serious confirmations (e.g. wrong-network purchase). The proceed
+   button stays disabled until the user ticks the acknowledgement box.
+   opts: { title, bodyHtml, acceptText, proceedText, keepText, onProceed } */
 function dbConfirmWarning(opts) {
   opts = opts || {};
   var ov = document.getElementById('db-warn-ov');
@@ -2324,7 +2543,7 @@ function showTab(t) {
   }
   var now = Date.now();
   if (t === 'dash')   { if (now - _dashLastLoad  > STALE_MS) { _dashLastLoad  = now; loadDashCashflow(); } try { loadAutofundCard(); } catch(e) {} }
-  if (t === 'subs')   { if (now - _subsLastLoad  > STALE_MS) { _subsLastLoad  = now; loadSubs(); } }
+  if (t === 'subs')   { try { renderBucketSection(); } catch(e) {} if (now - _subsLastLoad  > STALE_MS) { _subsLastLoad  = now; loadSubs(); } }
   if (t === 'wallet') loadWalletTab();
   if (t === 'inbox')  { if (now - _inboxLastLoad > STALE_MS) { _inboxLastLoad = now; loadInbox(); } updateInboxBadge(0); }
   /* Ensure the friend-daily nugget is present on the newly-shown tab */
@@ -2503,7 +2722,7 @@ function bootPublicApp() {
   updateWalletLabel();
   showTab('plans');
   updatePayDaysUI();
-  loadPlans();
+  // Plans load only after user selects a market
 }
 
 var _tokenRefreshTimer = null;
@@ -2673,6 +2892,9 @@ function doLogout() {
       null, function() {}
     );
   }
+  // Wipe fingerprint credential + stored PIN BEFORE clearing the session,
+  // so the per-user keys (namespaced by gUser.id) resolve correctly.
+  try { if (typeof bioWipe === 'function') bioWipe(); } catch(e) {}
   _clearSession();
   try { localStorage.removeItem('db_sess'); sessionStorage.removeItem('db_sess'); } catch(e) {}
   window.location.replace('databulge-auth.html?signedout=1');
@@ -2798,6 +3020,569 @@ function netCls(net) {
   return 'net-other';
 }
 
+
+/* ═══════════════════════════════════════════════════════════════
+   MARKET SYSTEM
+   gMarket = 'general' | 'installment'
+   General  → premiumsub / peyflex plans. Pay once = exact price.
+              Pay on installment = exact price + 5% surge (warning shown).
+   Installment → lenco plans (+ future trusted plans).
+              All purchases carry 5% hidden surge (pay-once or install).
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════════
+   GENERAL MARKET — SEGMENT SYSTEM
+   gSegment = 'data' | 'airtime' | 'electricity' | 'cable' |
+              'waec' | 'jamb' | 'voice'
+   Only 'data' is live. Others show coming-soon state.
+   ═══════════════════════════════════════════════════════════ */
+
+/* ═══════════════════════════════════════════════════════
+   SERVICE SCREENS — Airtime, Electricity, Cable TV
+   ═══════════════════════════════════════════════════════ */
+var _svcState = {};   // holds current service form state
+
+function showServiceScreen(html) {
+  var ss = document.getElementById('service-screen');
+  var pl = document.getElementById('plans-list');
+  if (pl) pl.style.display = 'none';
+  if (ss) { ss.innerHTML = html; ss.style.display = 'block'; ss.className = 'visible'; }
+}
+
+function hideServiceScreen() {
+  var ss = document.getElementById('service-screen');
+  if (ss) { ss.style.display = 'none'; ss.innerHTML = ''; ss.className = ''; }
+}
+
+/* ── AIRTIME ─────────────────────────────────────────── */
+function openAirtimeScreen() {
+  _svcState.airtime = { network: 1, networkName: 'MTN' };
+  showServiceScreen(
+    '<div class="svc-card">' +
+    '<div class="svc-title">📞 Buy Airtime</div>' +
+    '<div class="svc-field">' +
+      '<label class="svc-label">Network</label>' +
+      '<div class="svc-network-pills">' +
+        '<div class="svc-net-pill active" onclick="svcAirNet(1,\'MTN\',this)">MTN</div>' +
+        '<div class="svc-net-pill" onclick="svcAirNet(2,\'GLO\',this)">GLO</div>' +
+        '<div class="svc-net-pill" onclick="svcAirNet(3,\'9MOBILE\',this)">9MOBILE</div>' +
+        '<div class="svc-net-pill" onclick="svcAirNet(4,\'AIRTEL\',this)">AIRTEL</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="svc-field">' +
+      '<label class="svc-label">Phone Number</label>' +
+      '<input class="svc-input" id="air-phone" type="tel" placeholder="08012345678" maxlength="11">' +
+    '</div>' +
+    '<div class="svc-field">' +
+      '<label class="svc-label">Amount (₦)</label>' +
+      '<div class="svc-amount-wrap">' +
+        '<span class="svc-amount-prefix">₦</span>' +
+        '<input class="svc-input svc-amount-input" id="air-amount" type="number" placeholder="100" min="50" max="50000">' +
+      '</div>' +
+    '</div>' +
+    '<button class="svc-btn" onclick="submitAirtime()">Recharge Now</button>' +
+    '</div>'
+  );
+}
+
+function svcAirNet(id, name, el) {
+  _svcState.airtime.network = id;
+  _svcState.airtime.networkName = name;
+  document.querySelectorAll('.svc-net-pill').forEach(function(p){ p.className = 'svc-net-pill'; });
+  el.className = 'svc-net-pill active';
+}
+
+function submitAirtime() {
+  var phone  = (document.getElementById('air-phone')  || {}).value || '';
+  var amount = (document.getElementById('air-amount') || {}).value || '';
+  var digits = phone.replace(/\D/g,'');
+  if (digits.length < 11) { toast('Enter a valid 11-digit phone number'); return; }
+  if (!amount || parseInt(amount) < 50) { toast('Minimum airtime amount is ₦50'); return; }
+  var btn = document.querySelector('.svc-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Processing…'; }
+  var h = { 'Content-Type':'application/json', 'apikey': ANON_KEY, 'Authorization':'Bearer '+(gToken||ANON_KEY) };
+  var body = JSON.stringify({
+    user_id: gUser.id,
+    service: 'airtime',
+    network: _svcState.airtime.network,
+    network_name: _svcState.airtime.networkName,
+    phone_number: digits,
+    amount: parseInt(amount),
+  });
+  xhr('POST', FN + '/purchaseService', h, body, function(e, r) {
+    if (btn) { btn.disabled = false; btn.textContent = 'Recharge Now'; }
+    if (e || !r || !r.ok) {
+      toast((r && r.data && r.data.error) || 'Airtime purchase failed. Please try again.');
+      return;
+    }
+    toast('✅ ₦' + amount + ' airtime sent to ' + digits + '!');
+    hideServiceScreen();
+    if (gMarket === 'general') renderGMSegments(); else renderIMSegments();
+  });
+}
+
+/* ── ELECTRICITY ─────────────────────────────────────── */
+var PF_DISCOS = [
+  {id:'aba-electric',name:'Aba Electric',min:100},
+  {id:'portharcourt-electric',name:'Port Harcourt Electric',min:100},
+  {id:'kano-electric',name:'Kano Electric',min:500},
+  {id:'kaduna-electric',name:'Kaduna Electric',min:1100},
+  {id:'jos-electric',name:'Jos Electric',min:1000},
+  {id:'ikeja-electric',name:'Ikeja Electric',min:500},
+  {id:'ibadan-electric',name:'Ibadan Electric',min:2000},
+  {id:'enugu-electric',name:'Enugu Electric',min:500},
+  {id:'eko-electric',name:'Eko Electric',min:1000},
+  {id:'benin-electric',name:'Benin Electric',min:500},
+  {id:'yola-electric',name:'Yola Electric',min:500},
+  {id:'abuja-electric',name:'Abuja Electric (AEDC)',min:900},
+];
+
+function openElectricityScreen() {
+  _svcState.elec = { disco: PF_DISCOS[0], type: 'prepaid', verified: false };
+  var discoOpts = PF_DISCOS.map(function(d,i) {
+    return '<option value="'+i+'"'+( i===0?' selected':'')+'>'+d.name+'</option>';
+  }).join('');
+  showServiceScreen(
+    '<div class="svc-card">' +
+    '<div class="svc-title">⚡ Pay Electricity Bill</div>' +
+    '<div class="svc-field">' +
+      '<label class="svc-label">Distribution Company</label>' +
+      '<select class="svc-select" id="elec-disco" onchange="_elecDisco(this)">' + discoOpts + '</select>' +
+    '</div>' +
+    '<div class="svc-field">' +
+      '<label class="svc-label">Meter Type</label>' +
+      '<div class="svc-network-pills">' +
+        '<div class="svc-net-pill active" onclick="_elecType(\'prepaid\',this)">Prepaid</div>' +
+        '<div class="svc-net-pill" onclick="_elecType(\'postpaid\',this)">Postpaid</div>' +
+      '</div>' +
+    '</div>' +
+    '<div class="svc-field">' +
+      '<label class="svc-label">Meter Number</label>' +
+      '<div class="svc-verify-row">' +
+        '<input class="svc-input" id="elec-meter" type="text" placeholder="Enter meter number">' +
+        '<button class="svc-verify-btn" onclick="verifyMeter()">Verify</button>' +
+      '</div>' +
+    '</div>' +
+    '<div class="svc-info-box" id="elec-info"></div>' +
+    '<div class="svc-field">' +
+      '<label class="svc-label">Phone Number</label>' +
+      '<input class="svc-input" id="elec-phone" type="tel" placeholder="08012345678">' +
+    '</div>' +
+    '<div class="svc-field">' +
+      '<label class="svc-label">Amount (₦)</label>' +
+      '<div class="svc-amount-wrap">' +
+        '<span class="svc-amount-prefix">₦</span>' +
+        '<input class="svc-input svc-amount-input" id="elec-amount" type="number" placeholder="1000">' +
+      '</div>' +
+    '</div>' +
+    '<button class="svc-btn" id="elec-btn" onclick="submitElectricity()">Pay Now</button>' +
+    '</div>'
+  );
+}
+
+function _elecDisco(sel) { _svcState.elec.disco = PF_DISCOS[parseInt(sel.value)]; _svcState.elec.verified = false; var ib = document.getElementById('elec-info'); if(ib){ib.className='svc-info-box';ib.textContent='';} }
+function _elecType(type, el) { _svcState.elec.type = type; document.querySelectorAll('#service-screen .svc-net-pill').forEach(function(p){p.className='svc-net-pill';}); el.className='svc-net-pill active'; }
+
+function verifyMeter() {
+  var meter = (document.getElementById('elec-meter')||{}).value||'';
+  if (meter.length < 6) { toast('Enter a valid meter number'); return; }
+  var vbtn = document.querySelector('.svc-verify-btn');
+  if (vbtn) { vbtn.textContent = '…'; vbtn.disabled = true; }
+  var h = { 'Content-Type':'application/json', 'apikey': ANON_KEY, 'Authorization':'Bearer '+(gToken||ANON_KEY) };
+  var body = JSON.stringify({ service:'electricity_verify', disco: _svcState.elec.disco.id, meter: meter, type: _svcState.elec.type });
+  xhr('POST', FN + '/purchaseService', h, body, function(e, r) {
+    if (vbtn) { vbtn.textContent = 'Verify'; vbtn.disabled = false; }
+    if (e || !r || !r.ok || !r.data || r.data.status !== 'SUCCESS') {
+      toast('Meter verification failed. Check the number and try again.'); return;
+    }
+    _svcState.elec.verified = true;
+    _svcState.elec.customerName = r.data.customer_name || '';
+    var ib = document.getElementById('elec-info');
+    if (ib) { ib.className = 'svc-info-box visible'; ib.innerHTML = '✅ <b>' + esc(_svcState.elec.customerName) + '</b> — Meter verified'; }
+  });
+}
+
+function submitElectricity() {
+  if (!_svcState.elec.verified) { toast('Please verify your meter number first'); return; }
+  var meter  = (document.getElementById('elec-meter') ||{}).value||'';
+  var phone  = (document.getElementById('elec-phone') ||{}).value||'';
+  var amount = (document.getElementById('elec-amount')||{}).value||'';
+  var digits = phone.replace(/\D/g,'');
+  if (digits.length < 11) { toast('Enter a valid 11-digit phone number'); return; }
+  var amt = parseInt(amount);
+  if (!amt || amt < _svcState.elec.disco.min) { toast('Minimum amount for '+_svcState.elec.disco.name+' is ₦'+_svcState.elec.disco.min); return; }
+  var btn = document.getElementById('elec-btn');
+  if (btn) { btn.disabled = true; btn.textContent = 'Processing…'; }
+  var h = { 'Content-Type':'application/json', 'apikey': ANON_KEY, 'Authorization':'Bearer '+(gToken||ANON_KEY) };
+  var body = JSON.stringify({ service:'electricity', disco: _svcState.elec.disco.id, meter: meter, type: _svcState.elec.type, amount: amt, phone: digits });
+  xhr('POST', FN + '/purchaseService', h, body, function(e, r) {
+    if (btn) { btn.disabled = false; btn.textContent = 'Pay Now'; }
+    if (e || !r || !r.ok) { toast((r&&r.data&&r.data.message)||'Payment failed. Try again.'); return; }
+    toast('✅ ₦'+amount+' electricity paid! Token: '+(r.data&&r.data.token||'Check SMS'));
+    hideServiceScreen();
+    if (gMarket === 'general') renderGMSegments(); else renderIMSegments();
+  });
+}
+
+/* ── CABLE TV ─────────────────────────────────────────── */
+var PS_CABLE_PLANS = {
+  GOTV: [
+    {id:34,name:'GOtv Smallie Monthly',amount:800},{id:16,name:'GOtv Jinja',amount:3900},
+    {id:35,name:'GOtv Smallie Quarterly',amount:5100},{id:17,name:'GOtv Jolli',amount:5800},
+    {id:2,name:'GOtv Max',amount:8500},{id:47,name:'GOtv Supa',amount:11400},
+    {id:36,name:'GOtv Smallie Yearly',amount:15000},{id:48,name:'GOtv Supa Plus',amount:16800},
+    {id:18,name:'GOtv Smallie',amount:19000},
+  ],
+  DSTV: [
+    {id:21,name:'DStv Great Wall Standalone',amount:1500},{id:33,name:'ExtraView Access',amount:2500},
+    {id:20,name:'DStv Padi',amount:4400},{id:6,name:'DStv Yanga',amount:6000},
+    {id:19,name:'DStv Confam',amount:11000},{id:9,name:'DStv Premium',amount:18400},
+    {id:7,name:'DStv Compact',amount:19000},{id:8,name:'DStv Compact Plus',amount:54500},
+    {id:24,name:'DStv Premium French',amount:69000},
+  ],
+  STARTIME: [
+    {id:37,name:'Nova 1 Week',amount:700},{id:39,name:'Smart 1 Week',amount:700},
+    {id:38,name:'Basic 1 Week',amount:1400},{id:40,name:'Classic 1 Week',amount:2000},
+    {id:14,name:'Nova 1 Month',amount:2100},{id:13,name:'Smart 1 Month',amount:2200},
+    {id:12,name:'Basic 1 Month',amount:5100},{id:11,name:'Classic 1 Month',amount:6000},
+  ],
+};
+
+function openCableTVScreen() {
+  _svcState.cable = { provider: 'GOTV', plan: null, verified: false };
+  showServiceScreen(_buildCableHTML());
+}
+
+function _buildCableHTML() {
+  var prov = _svcState.cable.provider;
+  var plans = PS_CABLE_PLANS[prov] || [];
+  var tabs = ['GOTV','DSTV','STARTIME'].map(function(p) {
+    return '<div class="svc-cable-tab'+(p===prov?' active':'')+'" onclick="_cableProvider(\''+p+'\')">'+p+'</div>';
+  }).join('');
+  var planGrid = plans.map(function(p) {
+    var sel = _svcState.cable.plan && _svcState.cable.plan.id === p.id ? ' selected' : '';
+    return '<div class="svc-plan-item'+sel+'" onclick="_cablePlan('+p.id+',\''+p.name.replace(/'/g,"\\'")+ '\','+p.amount+',this)">' +
+      '<div class="svc-plan-name">'+esc(p.name)+'</div>' +
+      '<div class="svc-plan-price">₦'+fmtN(p.amount)+'</div></div>';
+  }).join('');
+  return '<div class="svc-card">' +
+    '<div class="svc-title">📺 Pay Cable TV</div>' +
+    '<div class="svc-cable-tabs">' + tabs + '</div>' +
+    '<div class="svc-plan-grid" style="margin-bottom:12px;">' + planGrid + '</div>' +
+    '<div class="svc-field">' +
+      '<label class="svc-label">IUC / Smartcard Number</label>' +
+      '<div class="svc-verify-row">' +
+        '<input class="svc-input" id="cable-iuc" type="text" placeholder="Enter smartcard number">' +
+        '<button class="svc-verify-btn" onclick="verifyIUC()">Verify</button>' +
+      '</div>' +
+    '</div>' +
+    '<div class="svc-info-box" id="cable-info"></div>' +
+    '<div class="svc-field">' +
+      '<label class="svc-label">Phone Number</label>' +
+      '<input class="svc-input" id="cable-phone" type="tel" placeholder="08012345678">' +
+    '</div>' +
+    '<button class="svc-btn" id="cable-btn" onclick="submitCable()">Pay Now</button>' +
+    '</div>';
+}
+
+function _cableProvider(p) { _svcState.cable.provider = p; _svcState.cable.plan = null; _svcState.cable.verified = false; var ss=document.getElementById('service-screen'); if(ss) ss.innerHTML=_buildCableHTML(); }
+function _cablePlan(id,name,amount,el) {
+  _svcState.cable.plan = {id:id,name:name,amount:amount};
+  document.querySelectorAll('.svc-plan-item').forEach(function(e){e.className='svc-plan-item';});
+  el.className='svc-plan-item selected';
+}
+
+function verifyIUC() {
+  if (!_svcState.cable.plan) { toast('Please select a package first'); return; }
+  var iuc = (document.getElementById('cable-iuc')||{}).value||'';
+  if (iuc.length < 5) { toast('Enter a valid smartcard number'); return; }
+  var vbtn = document.querySelector('.svc-verify-btn');
+  if (vbtn) { vbtn.textContent='…'; vbtn.disabled=true; }
+  var h = { 'Content-Type':'application/json', 'apikey': ANON_KEY, 'Authorization':'Bearer '+(gToken||ANON_KEY) };
+  var body = JSON.stringify({ service:'cable_verify', provider: _svcState.cable.provider.toLowerCase(), iuc: iuc, plan_id: _svcState.cable.plan.id });
+  xhr('POST', FN+'/purchaseService', h, body, function(e,r) {
+    if (vbtn) { vbtn.textContent='Verify'; vbtn.disabled=false; }
+    if (e || !r || !r.ok || !r.data || r.data.status !== 'SUCCESS') { toast('Smartcard verification failed'); return; }
+    _svcState.cable.verified = true;
+    _svcState.cable.customerName = r.data.customer_name||'';
+    var ib = document.getElementById('cable-info');
+    if (ib) { ib.className='svc-info-box visible'; ib.innerHTML='✅ <b>'+esc(_svcState.cable.customerName)+'</b> — Card verified'; }
+  });
+}
+
+function submitCable() {
+  if (!_svcState.cable.plan) { toast('Please select a package'); return; }
+  if (!_svcState.cable.verified) { toast('Please verify your smartcard first'); return; }
+  var iuc   = (document.getElementById('cable-iuc')  ||{}).value||'';
+  var phone = (document.getElementById('cable-phone')||{}).value||'';
+  var digits = phone.replace(/\D/g,'');
+  if (digits.length < 11) { toast('Enter a valid 11-digit phone number'); return; }
+  var btn = document.getElementById('cable-btn');
+  if (btn) { btn.disabled=true; btn.textContent='Processing…'; }
+  var h = { 'Content-Type':'application/json', 'apikey': ANON_KEY, 'Authorization':'Bearer '+(gToken||ANON_KEY) };
+  var body = JSON.stringify({ service:'cable', provider: _svcState.cable.provider.toLowerCase(), iuc: iuc, plan_id: _svcState.cable.plan.id, phone: digits, amount: _svcState.cable.plan.amount });
+  xhr('POST', FN+'/purchaseService', h, body, function(e,r) {
+    if (btn) { btn.disabled=false; btn.textContent='Pay Now'; }
+    if (e||!r||!r.ok) { toast((r&&r.data&&r.data.message)||'Payment failed. Try again.'); return; }
+    toast('✅ '+_svcState.cable.provider+' subscription activated for '+_svcState.cable.customerName+'!');
+    hideServiceScreen();
+    if (gMarket==='general') renderGMSegments(); else renderIMSegments();
+  });
+}
+var gSegment = null;   // null = showing segment tiles
+
+var GM_SEGMENTS = [
+  { id:'data',        icon:'📶', label:'Data',          live:true  },
+  { id:'airtime',     icon:'📞', label:'Airtime',       live:true  },
+  { id:'electricity', icon:'⚡', label:'Electricity',   live:true  },
+  { id:'cable',       icon:'📺', label:'Cable TV',      live:true  },
+  { id:'waec',        icon:'🎓', label:'WAEC / NECO',   live:false },
+  { id:'jamb',        icon:'🆔', label:'JAMB',          live:false },
+  { id:'voice',       icon:'📡', label:'Voice / Call',  live:false },
+];
+
+function renderGMSegments() {
+  var box = document.getElementById('gm-segments');
+  if (!box) return;
+  var html = '<div class="gm-seg-grid">';
+  for (var i = 0; i < GM_SEGMENTS.length; i++) {
+    var s = GM_SEGMENTS[i];
+    var cls = 'gm-seg-tile' +
+      (s.id === gSegment ? ' active' : '') +
+      (!s.live ? ' coming-soon' : '');
+    var badge = !s.live ? '<span class="gm-seg-badge">Soon</span>' : '';
+    var click = s.live
+      ? 'onclick="setGMSegment(\'' + s.id + '\')"'
+      : 'onclick="toast(\'' + s.label + ' coming soon!\')"';
+    html += '<div class="' + cls + '" ' + click + '>' +
+      badge +
+      '<span class="gm-seg-icon">' + s.icon + '</span>' +
+      '<span class="gm-seg-label">' + s.label + '</span>' +
+      '</div>';
+  }
+  html += '</div>';
+  box.innerHTML = html;
+  box.className = 'visible' === box.className ? 'visible' : '';
+  box.style.display = 'block';
+}
+
+function setGMSegment(seg) {
+  gSegment = seg;
+  // Show back button
+  var back = document.getElementById('gm-seg-back');
+  if (back) { back.className = 'visible'; back.style.display = 'inline-block'; }
+  // Hide segment tiles, show relevant content
+  var box = document.getElementById('gm-segments');
+  if (box) box.style.display = 'none';
+  // Show pay-toggle for installment market days option — not relevant in general
+  hideServiceScreen();
+  if (seg === 'data') {
+    var pl = document.getElementById('plans-list');
+    if (pl) pl.style.display = '';
+    _plansCache = null;
+    loadPlans();
+  } else if (seg === 'airtime') {
+    openAirtimeScreen();
+  } else if (seg === 'electricity') {
+    openElectricityScreen();
+  } else if (seg === 'cable') {
+    openCableTVScreen();
+  } else {
+    var pl2 = document.getElementById('plans-list');
+    if (pl2) {
+      pl2.style.display = 'block';
+      var seg_obj = (GM_SEGMENTS.find(function(s){return s.id===seg;})||{});
+      pl2.innerHTML = '<div class="empty" style="padding:40px 0;text-align:center;">' +
+        '<div style="font-size:2rem;margin-bottom:10px;">' + (seg_obj.icon||'') + '</div>' +
+        '<div style="font-weight:700;font-size:.95rem;color:#1e293b;margin-bottom:6px;">' + (seg_obj.label||seg) + '</div>' +
+        '<div style="font-size:.8rem;color:#94a3b8;line-height:1.6;">This service is coming soon.<br>We are working on integrating it for you.</div>' +
+        '</div>';
+    }
+  }
+}
+
+function backToGMSegments() {
+  gSegment = null;
+  var back = document.getElementById('gm-seg-back');
+  if (back) back.style.display = 'none';
+  var pl = document.getElementById('plans-list');
+  if (pl) { pl.style.display = 'none'; pl.innerHTML = '<div class="empty">Loading plans\u2026</div>'; }
+  renderGMSegments();
+}
+var gMarket = 'general';
+// Initialise welcome banner once DOM is ready
+(function _initMarketWelcome() {
+  function _setInitBanner() {
+    var _wb = document.getElementById('market-welcome');
+    if (_wb) {
+      _wb.style.background = '#f0f4ff';
+      _wb.style.borderColor = '#c7d4fb';
+      _wb.innerHTML = '<b>&#127914; Welcome to the General Market.</b> Plans here are subject to users\' experiences and feedback. Your funds are safe and secure.';
+    }
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', _setInitBanner);
+  } else {
+    setTimeout(function() {
+    // On first open: hide everything — only show the market selector buttons
+    // No segments, no plans, no welcome banner until user picks a market
+    var _wb  = document.getElementById('market-welcome');
+    var _gms = document.getElementById('gm-segments');
+    var _ims = document.getElementById('im-segments');
+    var _pl  = document.getElementById('plans-list');
+    var _ss  = document.getElementById('service-screen');
+    var _ptc = document.getElementById('pay-toggle-card');
+    if (_wb)  _wb.style.display  = 'none';
+    if (_gms) _gms.style.display = 'none';
+    if (_ims) _ims.style.display = 'none';
+    if (_pl)  _pl.style.display  = 'none';
+    if (_ss)  _ss.style.display  = 'none';
+    if (_ptc) _ptc.style.display = 'none';
+  }, 100);
+  }
+})();
+
+function setMarket(m) {
+  gMarket = m;
+  // Reveal welcome banner on first market selection
+  var _wb = document.getElementById('market-welcome');
+  if (_wb) _wb.style.display = '';
+  var btnG = document.getElementById('market-btn-general');
+  var btnI = document.getElementById('market-btn-installment');
+  var ptCard = document.getElementById('pay-toggle-card');
+  if (btnG && btnI) {
+    if (m === 'general') {
+      btnG.style.background = '#1A56DB'; btnG.style.color = '#fff'; btnG.style.borderColor = '#1A56DB';
+      btnI.style.background = '#f7f8ff'; btnI.style.color = '#1A56DB'; btnI.style.borderColor = '#d0d8ff';
+    } else {
+      btnI.style.background = '#1A56DB'; btnI.style.color = '#fff'; btnI.style.borderColor = '#1A56DB';
+      btnG.style.background = '#f7f8ff'; btnG.style.color = '#1A56DB'; btnG.style.borderColor = '#d0d8ff';
+    }
+  }
+  // Show installment days toggle only in installment market
+  if (ptCard) ptCard.style.display = (m === 'installment') ? '' : 'none';
+  // Invalidate cache so plans re-render for this market
+  _plansCache = null;
+
+  // Welcome banner
+  _wb = document.getElementById('market-welcome');
+  if (_wb) {
+    if (m === 'general') {
+      _wb.style.background = '#f0f4ff';
+      _wb.style.borderColor = '#c7d4fb';
+      _wb.innerHTML = '<b>&#127914; Welcome to the General Market.</b> Plans here are subject to users\' experiences and feedback. Your funds are safe and secure.';
+    } else {
+      _wb.style.background = '#f0fdf4';
+      _wb.style.borderColor = '#bbf7d0';
+      _wb.innerHTML = '<b>&#128197; Welcome to the Installment Market.</b> Plans here are subject to DataBulge\'s investigations, as well as users\' experiences and feedback. Your funds are safe and secure.';
+    }
+  }
+  // General market: show segment tiles. Installment: go straight to plans.
+  if (m === 'general') {
+    gSegment = null;
+    var _back = document.getElementById('gm-seg-back');
+    if (_back) _back.style.display = 'none';
+    var _pl = document.getElementById('plans-list');
+    if (_pl) _pl.style.display = 'none';
+    renderGMSegments();
+  } else {
+    var _gms = document.getElementById('gm-segments');
+    if (_gms) _gms.style.display = 'none';
+    var _back2 = document.getElementById('gm-seg-back');
+    if (_back2) _back2.style.display = 'none';
+    var _pl2 = document.getElementById('plans-list');
+    if (_pl2) _pl2.style.display = '';
+    loadPlans();
+  }
+}
+
+/* Returns the displayed price for a plan card in current market context.
+   General market:     show raw selling_price (no surge on card).
+   Installment market: show raw selling_price (surge is hidden, applied at checkout). */
+function marketDisplayPrice(plan) {
+  return Math.ceil(parseFloat(plan.selling_price) || 0);
+}
+
+/* Returns the actual total user pays at checkout.
+   General  + pay once:        selling_price (no surge)
+   General  + installment:     ceil(selling_price * 1.05)
+   Installment + either:       ceil(selling_price * 1.05)   */
+function marketCheckoutTotal(plan, payOnce) {
+  var base = parseFloat(plan.selling_price) || 0;
+  var mkt  = plan.market || gMarket;
+  if (mkt === 'installment') return Math.ceil(base * 1.05);
+  if (payOnce) return Math.ceil(base);  // general + pay once: no surge
+  return Math.ceil(base * 1.05);        // general + installment: surge applies
+}
+
+/* === BUCKET === */
+function _bucketKey(){return 'db_bucket_'+((gUser&&gUser.id)||'anon');}
+function getBucket(){try{var r=window.localStorage.getItem(_bucketKey());return r?JSON.parse(r):[]}catch(e){return [];}}
+function saveBucket(b){try{window.localStorage.setItem(_bucketKey(),JSON.stringify(b));}catch(e){}}
+function isBucketed(id){var b=getBucket();for(var i=0;i<b.length;i++)if(b[i].id===id)return true;return false;}
+function toggleBucket(planId){
+  var b=getBucket();var idx=-1;
+  for(var i=0;i<b.length;i++)if(b[i].id===planId){idx=i;break;}
+  if(idx>-1){b.splice(idx,1);saveBucket(b);toast('Removed from Bucket');}
+  else{
+    var wrap=document.getElementById('plans-list');
+    var plan=wrap&&wrap._planById&&wrap._planById[planId];
+    if(!plan){toast('Plan not found');return;}
+    b.push({id:plan.id,network:plan.network,data_size:plan.data_size,validity_days:plan.validity_days,selling_price:plan.selling_price,market:plan.market||gMarket,delivery_provider:plan.delivery_provider||''});
+    saveBucket(b);toast('Added to Bucket!');
+  }
+  var btn=document.getElementById('bkt-'+planId);
+  if(btn){var inB=isBucketed(planId);btn.className='plan-bucket-btn'+(inB?' in-bucket':'');}
+  renderBucketSection();
+}
+function removeFromBucket(planId){
+  saveBucket(getBucket().filter(function(x){return x.id!==planId;}));
+  var btn=document.getElementById('bkt-'+planId);if(btn)btn.className='plan-bucket-btn';
+  renderBucketSection();
+}
+function renderBucketSection(){
+  var sec=document.getElementById('bucket-section');if(!sec)return;
+  var b=getBucket();
+  sec.style.display='block';
+  if(!b.length){
+    sec.innerHTML='<div class="bucket-hdr"><span class="bucket-title">My Bucket</span></div>'+
+      '<p class="bucket-empty">No favourite plans yet. Tap the [B] icon on any plan in the market to save it here.</p>';
+    return;
+  }
+  var html='<div class="bucket-hdr"><span class="bucket-title">My Bucket</span>'+
+    '<span style="font-size:.75rem;color:#94a3b8;">'+b.length+' saved</span></div>';
+  for(var i=0;i<b.length;i++){
+    var p=b[i];
+    var nc=p.network==='MTN'?'net-mtn':p.network==='AIRTEL'?'net-airtel':p.network==='GLO'?'net-glo':p.network==='9MOBILE'?'net-9mobile':'net-other';
+    var ml=(p.market==='installment')?'Installment':'General';
+    html+='<div class="bucket-item">'+
+      '<div class="bucket-item-info">'+
+        '<div><span class="plan-net '+nc+'" style="font-size:10px;padding:2px 6px;border-radius:8px;margin-right:4px;">'+(p.network||'')+'</span>'+
+        '<span style="font-size:10px;color:#94a3b8;">'+ml+' Market</span></div>'+
+        '<div class="bucket-item-name">'+(p.data_size||'')+' &mdash; '+(p.validity_days||30)+'-Day Plan</div>'+
+        '<div class="bucket-item-price">\u20a6'+fmtN(Math.ceil(parseFloat(p.selling_price)||0))+'</div>'+
+      '</div>'+
+      '<button class="bucket-sub-btn" onclick="openBucketPlan(\'' + p.id + '\')">Subscribe</button> '+
+      '<button class="bucket-rm-btn" onclick="removeFromBucket(\'' + p.id + '\')" title="Remove">\u00d7</button>'+
+    '</div>';
+  }
+  sec.innerHTML=html;
+}
+function openBucketPlan(planId){
+  var b=getBucket();var entry=null;
+  for(var i=0;i<b.length;i++)if(b[i].id===planId){entry=b[i];break;}
+  var tm=(entry&&entry.market)||'general';
+  if(gMarket!==tm){
+    setMarket(tm);
+    var _t=0;var _p=setInterval(function(){
+      _t++;var w=document.getElementById('plans-list');
+      if(_t>20||(w&&w._planById&&w._planById[planId])){
+        clearInterval(_p);showTab('plans');
+        setTimeout(function(){openSubModal('id_'+planId);},200);
+      }
+    },150);
+  } else {showTab('plans');setTimeout(function(){openSubModal('id_'+planId);},100);}
+}
 var _plansCache    = null;  // cached plan data — static, never changes mid-session
 var _plansCacheTs  = 0;    // timestamp of last fetch
 var PLANS_CACHE_MS = 5 * 60 * 1000; // re-fetch after 5 minutes max
@@ -2817,7 +3602,7 @@ function loadPlans(cb) {
   if (wrap) wrap.innerHTML = '<div class="empty" style="padding:20px 0;">Loading plans\u2026</div>';
 
   restGet('/data_plans',
-    'is_active=eq.true&order=network,sort_order,selling_price&select=id,data_size,network,selling_price,daily_price,validity_days,category',
+    'is_active=eq.true&order=network,sort_order,selling_price&select=id,data_size,network,selling_price,daily_price,validity_days,category,delivery_provider,market',
     function(e, r) {
       if (!r || !r.ok || !r.data || !r.data.length) {
         if (wrap) wrap.innerHTML = '<div class="empty">No plans available right now.</div>';
@@ -2844,7 +3629,17 @@ function _renderPlans(allPlans) {
     wrap._planById[String(p.id)] = p;
   }
 
-      if (!wrap._netFilter) wrap._netFilter = 'ALL';
+      // Filter by current market (general vs installment)
+      var _allForMarket = [];
+      for (var _mi = 0; _mi < allPlans.length; _mi++) {
+        var _mp = allPlans[_mi];
+        var _pm = _mp.market || (_mp.delivery_provider === 'lenco' ? 'installment' : 'general');
+        if (_pm === gMarket) _allForMarket.push(_mp);
+      }
+      allPlans = _allForMarket;
+      wrap._allPlans = allPlans;
+
+      if (!wrap._netFilter) wrap._netFilter = 'MTN';
       if (!wrap._typeFilter) wrap._typeFilter = 'ALL';
 
       function esc2(v) { return esc(v == null ? '' : String(v)); }
@@ -2927,10 +3722,11 @@ function _renderPlans(allPlans) {
             '</div>' +
             '<div class="plan-size">' + esc2(nn) + '<br>' + esc2(p.data_size) + '</div>' +
             '<div class="plan-sub" style="margin-top:5px;text-transform:none;letter-spacing:0;">' + (p.validity_days || 30) + '-Day Plan</div>' +
-            '<div class="plan-price">' + fmtN(dbDisplayPrice(p)) + '</div>' +
-            '<div style="margin-top:8px;font-size:1rem;font-weight:900;color:#3d9758;">Pay in ' + gPayDays + ' days</div>' +
+            '<div class="plan-price">' + fmtN(marketDisplayPrice(p)) + '</div>' +
+            '<div style="margin-top:8px;font-size:.8rem;font-weight:700;color:#3d9758;">' + (gMarket === 'general' ? 'Pay once or on installment' : 'Pay in ' + gPayDays + ' days') + '</div>' +
           '</div>' +
           '<button class="plan-btn" onclick="openSubModal(\'id_' + String(p.id) + '\')">Subscribe</button>' +
+          '<button class="plan-bucket-btn' + (isBucketed(String(p.id)) ? ' in-bucket' : '') + '"' + ' id="bkt-' + String(p.id) + '"' + ' onclick="toggleBucket(\'' + String(p.id) + '\')" title="Bucket">[B]</button>' +
         '</div>';
       }
       wrap.innerHTML = html;
@@ -3147,6 +3943,7 @@ window.clearPlanSearch  = clearPlanSearch;
 var _gSubsCache = [];   // most recent loadSubs result — used by openSubModal for progress context
 
 function loadSubs() {
+  try { renderBucketSection(); } catch(e) {}
   ensureToken(function(err) {
     if (err) return;
     restGet('/subscriptions',
@@ -3160,9 +3957,9 @@ function loadSubs() {
         }
         _gSubsCache = r.data;
         wrap.innerHTML = renderSubsList(r.data, false);
+        _mergeServerPhones(r.data);
         if (typeof dbLoadAutopayState === 'function') setTimeout(dbLoadAutopayState, 100);
         if (typeof dbLoadAutorenewState === 'function') setTimeout(dbLoadAutorenewState, 120);
-        _mergeServerPhones(r.data);
       }
     );
   });
@@ -3289,14 +4086,17 @@ function renderSubsList(subs, compact) {
         /* Report Issue button hidden per product decision — keep markup & handler for easy re-enable */
         '<button style="display:none;padding:8px 10px;background:#fff;border:1px solid #e5e7eb;color:#374151;border-radius:6px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="openRefundModal(\'' + esc(s.id) + '\',\'' + esc(displayName + ' ' + displayNetwork) + '\',\'' + esc(s.phone_number || '') + '\')">&#9888; Report Issue</button>' +
       '</div>';
+      /* Auto-Pay control — populated per-card by dbLoadAutopayState() */
       html += '<div id="ap-row-' + esc(s.id) + '" data-daily="' + (dailyPrice||0) + '" style="margin-top:7px;padding:8px 10px;background:#f3fbf6;border:1px solid #cdedd9;border-radius:6px;font-size:.78rem;color:#0f5132;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;gap:8px;">' +
         '<span id="ap-label-' + esc(s.id) + '">\u26A1 Auto-Pay</span>' +
         '<button id="ap-btn-' + esc(s.id) + '" onclick="dbToggleAutopay(\'' + esc(s.id) + '\',' + (dailyPrice||0) + ')" style="padding:5px 12px;background:#0f5132;color:#fff;border:none;border-radius:5px;font-size:.76rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;">Turn on</button>' +
       '</div>';
+      /* Auto-Renew control — populated per-card by dbLoadAutorenewState() */
       html += '<div id="ar-row-' + esc(s.id) + '" style="margin-top:7px;padding:8px 10px;background:#eef2ff;border:1px solid #c7d2fe;border-radius:6px;font-size:.78rem;color:#3730a3;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;gap:8px;">' +
         '<span id="ar-label-' + esc(s.id) + '">\uD83D\uDD04 Auto-Renew</span>' +
         '<button id="ar-btn-' + esc(s.id) + '" onclick="dbToggleAutorenew(\'' + esc(s.id) + '\')" style="padding:5px 12px;background:#4338ca;color:#fff;border:none;border-radius:5px;font-size:.76rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;">Turn on</button>' +
       '</div>';
+      /* Cancel this plan — understated link; opens a forfeiture warning before doing anything */
       html += '<div style="text-align:center;margin-top:8px;">' +
         '<button onclick="dbCancelPlan(\'' + esc(s.id) + '\',\'' + esc(displayName + ' ' + displayNetwork) + '\',' + paid + ')" style="background:none;border:none;color:#9ca3af;font-size:.74rem;text-decoration:underline;cursor:pointer;font-family:inherit;padding:4px;">Cancel this plan</button>' +
       '</div>';
@@ -3573,8 +4373,12 @@ function _pickAutocomplete(phone) {
 window._phoneAutocomplete = _phoneAutocomplete;
 window._pickAutocomplete = _pickAutocomplete;
 
-/* Milestone loyalty discount — mirrors backend get_loyalty_discount():
-   multiple of 10 -> 5%, multiple of 5 -> 2.5% (10-multiples are 5% only), else 0. */
+/* Loyalty discount as a repeating MILESTONE reward — mirrors the backend
+   get_loyalty_discount() EXACTLY:
+     completed count multiple of 10 (10,20,30...) -> 5%  on the next plan
+     completed count multiple of 5  (5,15,25...)  -> 2.5% on the next plan
+     (10-multiples are 5% only, never 2.5%); everything else -> 0%
+   The reward lands on the purchase AFTER each milestone, then resets. */
 function dbLoyaltyDiscount(done) {
   /* Loyalty discounts SUSPENDED (matches backend get_loyalty_discount=0).
      Restore milestone logic: 10th->5, 5th->2.5. */
@@ -3582,22 +4386,24 @@ function dbLoyaltyDiscount(done) {
 }
 window.dbLoyaltyDiscount = dbLoyaltyDiscount;
 
-/* Displayed price = Premiumsub original (selling_price) + flat 5% surge,
-   rounded UP to whole Naira (matches backend). */
+/* The price shown to users = Premiumsub original (selling_price) + flat 5%
+   surge, rounded UP to the next whole Naira (no kobo). Matches the backend
+   enforce_plan_markup() so displayed == charged. */
 function dbDisplayPrice(plan) {
   var base = parseFloat(plan && (plan.selling_price !== undefined ? plan.selling_price : plan)) || 0;
-  return Math.ceil(base * 1.02);
+  return Math.ceil(base);
 }
 window.dbDisplayPrice = dbDisplayPrice;
 
 function calcPlanDaily(plan, days) {
   var price = parseFloat(plan && plan.selling_price) || 0;
-  /* Mirror backend exactly: milestone loyalty discount off the card price
-     BEFORE a flat 5% surge, so displayed total == charged total. */
+  /* Mirror the backend EXACTLY so the displayed total equals what is charged:
+       1) milestone loyalty discount off the card price (selling_price) BEFORE surge
+       2) flat 5% surge on the discounted base (all terms). */
   var done = (window.dbRewardsCache && parseInt(window.dbRewardsCache.completed_plans)) || 0;
   var discPct = dbLoyaltyDiscount(done);
   var discountedBase = Math.round(price * (1 - discPct / 100) * 100) / 100;
-  var total = Math.ceil(discountedBase * 1.02);   /* round UP to whole Naira (matches backend) */
+  var total = Math.ceil(discountedBase);   /* round UP to whole Naira (matches backend) */
   return {
     total: total,
     daily: days > 0 ? (total / days) : 0,
@@ -3663,6 +4469,7 @@ function dbRenderRewardBreakdown() {
     rows += '<div class="row-line"><span class="row-label">&#127881; Milestone reward applied</span>' +
             '<span class="row-val" style="color:#15803d;font-weight:800;">' + discPct + '% off</span></div>';
   } else {
+    /* plans remaining until the next 5th-milestone (which gives 2.5%, or 5% if it's also a 10th) */
     var toNext = 5 - (done % 5);
     if (toNext === 5) toNext = 5;
     var nextIsTen = ((done + toNext) % 10 === 0);
@@ -3681,20 +4488,36 @@ function dbRenderRewardBreakdown() {
 
 function updateSubInfo() {
   if (!gSelPlan) return;
-  var calc = calcPlanDaily(gSelPlan, gModalPayDays);
-  var shownPrice = dbDisplayPrice(gSelPlan);
-  var discInclusive = Math.round((shownPrice - calc.total) * 100) / 100;
-  var discRow = (calc.discPct > 0 && discInclusive > 0)
-    ? '<div class="row-line"><span class="row-label">Loyalty discount (' + calc.discPct + '%)</span><span class="row-val" style="color:#15803d;font-weight:800;">\u2212' + fmtN(discInclusive) + '</span></div>'
+  var _planMkt = (gSelPlan.market || (gSelPlan.delivery_provider === 'lenco' ? 'installment' : 'general'));
+  var _basePrice = Math.ceil(parseFloat(gSelPlan.selling_price) || 0);
+  // Checkout total depends on market + pay mode
+  var _checkoutTotal = marketCheckoutTotal(gSelPlan, gPayOnce);
+  var _dailyAmt = gPayOnce ? _checkoutTotal : Math.round(_checkoutTotal / (gModalPayDays || 7));
+  // Surge row: shown when installment applies
+  var _surgeApplies = (_planMkt === 'installment') || (!gPayOnce && _planMkt === 'general');
+  var _surgeAmt = _surgeApplies ? (_checkoutTotal - _basePrice) : 0;
+  var _surgeRow = _surgeApplies
+    ? '<div class="row-line"><span class="row-label">Service fee</span><span class="row-val" style="color:#b45309;font-weight:800;">+' + fmtN(_surgeAmt) + '</span></div>'
     : '';
+  // Warning banner for general market on installment
+  var _warnBanner = '';
+  if (_planMkt === 'general' && !gPayOnce) {
+    _warnBanner = '<div style="margin-bottom:10px;padding:10px 12px;background:#f0fdf4;border-radius:10px;border:1.5px solid #86efac;font-size:.78rem;color:#166534;line-height:1.6;">' +
+      '&#128154; <b>You\'re spreading this payment across installments</b> &mdash; ' +
+      'a smart way to ease the burden of paying a large sum all at once. ' +
+      'A small fee applies, which is a fair trade for the flexibility you get. ' +
+      '<span style="opacity:.75;font-style:italic;">Prefer to pay at the exact listed price? Choose <b>Pay once</b> above.</span>' +
+      '</div>';
+  }
   $('m-sub-info').innerHTML =
-    '<div class="row-line"><span class="row-label">Plan Price</span><span class="row-val">' + fmtN(dbDisplayPrice(gSelPlan)) + '</span></div>' +
-    discRow +
+    _warnBanner +
+    '<div class="row-line"><span class="row-label">Plan Price</span><span class="row-val">' + fmtN(_basePrice) + '</span></div>' +
+    _surgeRow +
     (gPayOnce
       ? '<div class="row-line"><span class="row-label">Payment Option</span><span class="row-val">Pay once (full)</span></div>' +
-        '<div class="row-line"><span class="row-label">You pay now</span><span class="row-val" style="font-weight:800;">' + fmtN(calc.total) + '</span></div>'
+        '<div class="row-line"><span class="row-label">You pay now</span><span class="row-val" style="font-weight:800;">' + fmtN(_checkoutTotal) + '</span></div>'
       : '<div class="row-line"><span class="row-label">Payment Option</span><span class="row-val">' + gModalPayDays + ' days</span></div>' +
-        '<div class="row-line"><span class="row-label">Daily Payment</span><span class="row-val">' + fmtN(calc.daily) + '</span></div>'
+        '<div class="row-line"><span class="row-label">Daily Payment</span><span class="row-val">' + fmtN(_dailyAmt) + '</span></div>'
     ) +
     '<div class="row-line"><span class="row-label">Validity</span><span class="row-val">' + (gSelPlan.validity_days || 30) + ' days</span></div>';
   try { dbRenderRewardBreakdown(); } catch (e) {}
@@ -3864,25 +4687,31 @@ var _subStepLabels = ['', 'Plan & payment', 'Delivery details', 'Automation (opt
 function subStepShow(n) {
   if (n < 1) n = 1; if (n > _subStepMax) n = _subStepMax;
   _subStepCur = n;
+  // show only the active step
   var steps = document.querySelectorAll('#m-sub .m-sub-step');
   for (var i = 0; i < steps.length; i++) {
     steps[i].style.display = (steps[i].getAttribute('data-step') == String(n)) ? 'block' : 'none';
   }
+  // progress dots
   var dots = document.querySelectorAll('#m-sub-steps .sub-step-dot');
   for (var d = 0; d < dots.length; d++) {
     dots[d].style.background = (Number(dots[d].getAttribute('data-step')) <= n) ? '#1A56DB' : '#e2e8f0';
   }
+  // label
   var lbl = $('m-sub-step-label');
   if (lbl) lbl.innerHTML = 'Step ' + n + ' of ' + _subStepMax + ' &middot; ' + _subStepLabels[n];
+  // footer buttons
   var back = $('m-sub-back-btn'), next = $('m-sub-next-btn'), sub = $('m-sub-btn');
   if (back) back.style.display = (n > 1) ? 'inline-block' : 'none';
   if (next) next.style.display = (n < _subStepMax) ? 'inline-block' : 'none';
   if (sub)  sub.style.display  = (n === _subStepMax) ? 'inline-block' : 'none';
+  // scroll modal body to top on step change
   var body = document.querySelector('#m-sub .modal-body');
   if (body) { try { body.scrollTop = 0; } catch(e) {} }
 }
 function subStep(dir) {
   errHide('m-sub-err');
+  // Validate before leaving step 2 (delivery) forward.
   if (dir > 0 && _subStepCur === 2) {
     var phone = ($('m-sub-phone') && $('m-sub-phone').value || '').replace(/\D/g,'');
     if (!(phone.length === 11 && phone.charAt(0) === '0')) {
@@ -4055,7 +4884,8 @@ function confirmSub() {
   ensureToken(function(err) {
     if (err) { btnLoad('m-sub-btn', false, 'Subscribe Now'); errShow('m-sub-err', 'Session error. Please sign out and back in.'); return; }
     var h = { 'Authorization': 'Bearer ' + gToken, 'Content-Type': 'application/json', 'apikey': ANON_KEY };
-    var body = JSON.stringify({ user_id: gUser.id, plan_id: gSelPlan.id, phone_number: phone, payment_days: days, auto_renew: autoRenew });
+    var _mktTotal = marketCheckoutTotal(gSelPlan, gPayOnce);
+    var body = JSON.stringify({ user_id: gUser.id, plan_id: gSelPlan.id, phone_number: phone, payment_days: days, auto_renew: autoRenew, override_total: _mktTotal });
     xhr('POST', FN + '/createSubscription', h, body, function(e, r) {
       btnLoad('m-sub-btn', false, 'Subscribe Now');
       if (e || !r || !r.ok || (r.data && r.data.error)) {
@@ -4090,7 +4920,9 @@ function confirmSub() {
 
       closeModal('m-sub');
       if (gPayOnce && r.data && r.data.id) {
-        var fullTotal = calcPlanDaily(gSelPlan, days).total;
+        // Pay-once: charge the full total now from the wallet; this completes
+        // the plan and triggers delivery via the existing pay_installment flow.
+        var fullTotal = marketCheckoutTotal(gSelPlan, true);  // pay-once: no surge for general market
         toast('\u2705 Subscribed! Completing your full payment\u2026');
         showTab('subs');
         rpc('pay_installment', { p_user_id: gUser.id, p_subscription_id: r.data.id, p_amount: fullTotal, p_reference: null, p_pin: null }, function(pe, pr) {
@@ -4247,6 +5079,7 @@ var gPayOnce = false;
 function updateSubPayModeUI() {
   if ($('m-sub-mode-install')) $('m-sub-mode-install').className = 'btn ' + (gPayOnce ? 'btn-lite' : 'btn-blue');
   if ($('m-sub-mode-once'))    $('m-sub-mode-once').className    = 'btn ' + (gPayOnce ? 'btn-blue' : 'btn-lite');
+  // When paying once, the installment duration is irrelevant — hide it.
   var dur = $('m-sub-dur-field'); if (dur) dur.style.display = gPayOnce ? 'none' : '';
   var note = $('m-sub-once-note'); if (note) note.style.display = gPayOnce ? 'block' : 'none';
   try { updateSubInfo(); } catch (e) {}
@@ -4994,6 +5827,9 @@ function wire() {
   // Bottom nav buttons are wired via onclick= attributes directly
   // No additional wiring needed
 
+  // Security & fingerprint toggles
+  if (typeof _wireSecurityToggles === 'function') { try { _wireSecurityToggles(); } catch(e) {} }
+
   // Subscribe modal
   $('m-sub-x').onclick  = function() { closeModal('m-sub'); };
   $('m-sub-btn').onclick = confirmSub;
@@ -5187,10 +6023,15 @@ if (document.readyState === 'loading') {
     bindToggle('m-sub-autorenew','m-sub-autorenew-sl',null);
   }
 
+  function _bootWithHydration() {
+    // Pull persisted session from native storage into localStorage BEFORE the
+    // session check, so a WebView localStorage wipe doesn't log the user out.
+    _hydrateFromNative(function() { init(); });
+  }
   if (document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', init);
+    document.addEventListener('DOMContentLoaded', _bootWithHydration);
   } else {
-    init();
+    _bootWithHydration();
   }
 
   var oldOpenSubModal = window.openSubModal;
@@ -5273,6 +6114,7 @@ function subAutoDetectNetwork(val) {
   var badge    = document.getElementById('m-sub-net-detect');
   var grp      = document.getElementById('m-sub-net-btns');
   var isManual = grp && grp.dataset.manual === '1';
+  // A changed number invalidates any prior mismatch acknowledgement.
   if (grp) grp.dataset.netWarnAck = '';
   window._numWarnAck = '';
 
@@ -5311,7 +6153,8 @@ function subAutoDetectNetwork(val) {
     var planNet = (window.gSelPlan && window.gSelPlan.network) ? window.gSelPlan.network.toUpperCase() : '';
     var netErr  = document.getElementById('m-sub-net-err');
 
-    // Sanity-check the number format — a wrong/short number is a common mistake.
+    // Sanity-check the number format. A wrong/short number is a common mistake
+    // and would send data to the wrong place — warn with explicit acceptance.
     var digits = phone.replace(/\D/g, '');
     var looksValid = (digits.length === 11 && digits.charAt(0) === '0') ||
                      (digits.length === 13 && digits.indexOf('234') === 0) ||
@@ -5369,9 +6212,10 @@ function subAutoDetectNetwork(val) {
               origConfirmSub();
             }
           });
-          return;
+          return;  // wait for explicit acceptance in the modal
         }
       }
+      // Manual selection vs plan: still a hard block (genuine selection error).
       if (selNet !== planNet) {
         if (netErr) {
           netErr.textContent = '\u26A0\uFE0F You selected ' + selNet + ' but this is a ' + planNet + ' plan. They must match.';
@@ -5603,7 +6447,6 @@ function earnShowWebTimer() {
 }
 
 function earnShowNativeAd() {
-  /* WEB VERSION: no native AdMob plugin. Always use the web timer fallback. */
   var AdMob = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.AdMob;
   if (!AdMob) { earnShowWebTimer(); return; }
 
@@ -6188,35 +7031,81 @@ function notifTimeAgo(iso) {
    Synthesised via Web Audio API — no external file needed.
    Two-tone "ding" exactly like the Messenger notification.
 ────────────────────────────────────────────────────────── */
+/* ── PERSISTENT AUDIO CONTEXT (unlocked on first user gesture) ──
+   A single shared AudioContext is created lazily and "unlocked" on the
+   first tap/click/keypress. Browsers (esp. mobile Safari/Chrome) start
+   audio in a suspended state and only allow playback after a user
+   gesture; creating a fresh context per notification therefore stayed
+   silent. We keep one context alive and resume() it before each play. */
+var _dbAudioCtx = null;
+function dbGetAudioCtx() {
+  try {
+    var AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return null;
+    if (!_dbAudioCtx) _dbAudioCtx = new AC();
+    return _dbAudioCtx;
+  } catch(e) { return null; }
+}
+function dbUnlockAudio() {
+  try {
+    var ctx = dbGetAudioCtx();
+    if (!ctx) return;
+    if (ctx.state === 'suspended' && ctx.resume) { try { ctx.resume(); } catch(e) {} }
+    // Play a near-silent blip so the context is fully primed for later sounds
+    var osc = ctx.createOscillator();
+    var g   = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, ctx.currentTime);
+    osc.connect(g); g.connect(ctx.destination);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.02);
+  } catch(e) {}
+}
+(function _dbBindAudioUnlock() {
+  function once() {
+    dbUnlockAudio();
+    document.removeEventListener('touchend', once, true);
+    document.removeEventListener('mousedown', once, true);
+    document.removeEventListener('click', once, true);
+    document.removeEventListener('keydown', once, true);
+  }
+  try {
+    document.addEventListener('touchend', once, true);
+    document.addEventListener('mousedown', once, true);
+    document.addEventListener('click', once, true);
+    document.addEventListener('keydown', once, true);
+  } catch(e) {}
+})();
+
 function dbPlayNotifSound() {
   try {
-    var AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (!AudioCtx) return;
-    var ctx = new AudioCtx();
+    var ctx = dbGetAudioCtx();
+    if (!ctx) return;
+    // Resume in case the browser parked the context (autoplay policy)
+    if (ctx.state === 'suspended' && ctx.resume) { try { ctx.resume(); } catch(e) {} }
 
-    function tone(freq, startT, dur, vol) {
+    function strike(freq, startT, dur, vol) {
       var osc  = ctx.createOscillator();
       var gain = ctx.createGain();
       osc.connect(gain);
       gain.connect(ctx.destination);
-      osc.type = 'sine';
+      osc.type = 'triangle';                 // brighter, bell-like timbre
       osc.frequency.setValueAtTime(freq, startT);
-      gain.gain.setValueAtTime(0, startT);
-      gain.gain.linearRampToValueAtTime(vol, startT + 0.01);
-      gain.gain.exponentialRampToValueAtTime(0.001, startT + dur);
+      gain.gain.setValueAtTime(0.0001, startT);
+      gain.gain.linearRampToValueAtTime(vol, startT + 0.008);
+      gain.gain.exponentialRampToValueAtTime(0.0001, startT + dur);
       osc.start(startT);
-      osc.stop(startT + dur + 0.01);
+      osc.stop(startT + dur + 0.02);
     }
 
     var now = ctx.currentTime;
-    // Messenger-style: two rising tones (E5 → G5)
-    tone(659.25, now,        0.18, 0.28);  // E5
-    tone(783.99, now + 0.14, 0.24, 0.22);  // G5
-    // Subtle harmonic shimmer on second tone
-    tone(1046.5, now + 0.14, 0.18, 0.06);  // C6 shimmer
-
-    // Auto-close context after sound
-    setTimeout(function() { try { ctx.close(); } catch(e) {} }, 800);
+    // Alarm bell: three quick ringing strikes with a metallic overtone
+    var bell = [880.0, 1108.73];             // A5 fundamental + C#6 overtone
+    var strikes = [0, 0.16, 0.32];
+    for (var i = 0; i < strikes.length; i++) {
+      var t = now + strikes[i];
+      strike(bell[0], t, 0.42, 0.30);        // ringing body
+      strike(bell[1], t, 0.42, 0.14);        // metallic shimmer
+    }
   } catch(e) {}
 }
 
@@ -6497,8 +7386,6 @@ function notifMarkAllRead() {
 }
 
 /* ── Fetch notifications from backend ────────────────── */
-var _webNotifLastUnread = null;   // tracks unread count to detect new arrivals (web sounding bell)
-var _webNotifPrimed     = false;  // skip sound on the very first load after login
 function notifLoad() {
   if (!window.gUser || !window.gToken) {
     /* No session yet — still show seeds so drawer is never blank */
@@ -6518,26 +7405,7 @@ function notifLoad() {
     }
     var d = res.data;
     _notifAll = d.notifications || [];
-    var unread = d.unread_count || 0;
-
-    /* WEB SOUNDING BELL: this web build has no FCM OS notifications, so the
-       in-app bell is the only signal. When the unread count goes UP between
-       polls, play the chime + briefly pulse the bell so the user notices. */
-    if (_webNotifPrimed && _webNotifLastUnread !== null && unread > _webNotifLastUnread) {
-      try { dbPlayNotifSound(); } catch(e) {}
-      try {
-        var bell = document.getElementById('notif-bell') || document.getElementById('bell-btn');
-        if (bell) {
-          bell.style.transition = 'transform .15s';
-          bell.style.transform  = 'scale(1.25)';
-          setTimeout(function(){ bell.style.transform = 'scale(1)'; }, 200);
-        }
-      } catch(e) {}
-    }
-    _webNotifLastUnread = unread;
-    _webNotifPrimed     = true;
-
-    notifUpdateBadge(unread);
+    notifUpdateBadge(d.unread_count || 0);
     notifRender();
   });
 }
@@ -6675,9 +7543,15 @@ window.checkDataUsage = checkDataUsage;
    the sendPushNotification edge function can reach this device.
    Real native implementation — required for APK push to work.
 ──────────────────────────────────────────────────────── */
-function registerPushToken() {
-  /* WEB VERSION: FCM/native push is stripped. No token, no push_subscriptions write.
-     Notifications surface via the in-app sounding bell (see notifLoad). */
+function registerPushToken(fcmToken) {
+  if (!fcmToken || !window.gUser || !window.gToken) return;
+  var isNative = (typeof window.Capacitor !== 'undefined' && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+  var hint     = isNative ? (window.Capacitor.getPlatform ? window.Capacitor.getPlatform() : 'android') : 'web';
+  var h = { 'Authorization': 'Bearer ' + window.gToken, 'Content-Type': 'application/json', 'apikey': window.ANON_KEY, 'Prefer': 'resolution=merge-duplicates' };
+  window.xhr('POST', window.REST + '/push_subscriptions', h,
+    JSON.stringify({ user_id: window.gUser.id, endpoint: fcmToken, device_hint: hint, p256dh: '', auth: '' }),
+    function(e) { if (!e) console.log('[Push] FCM token registered'); }
+  );
 }
 window.registerPushToken = registerPushToken;
 
@@ -6755,7 +7629,7 @@ function renderDynamicStrip() {
         cheapest = _plansCache[i];
       }
     }
-    var cTotal   = Math.ceil(parseFloat(cheapest.selling_price) * 1.02);
+    var cTotal   = Math.ceil(parseFloat(cheapest.selling_price));
     starterDaily = Math.round(cTotal / 7 * 100) / 100;
     starterSize  = cheapest.data_size || '1GB';
   }
@@ -7002,7 +7876,7 @@ function _buildNuggetPool() {
     for (i = 1; i < _plansCache.length; i++) {
       if (parseFloat(_plansCache[i].selling_price) < parseFloat(cheapest.selling_price)) cheapest = _plansCache[i];
     }
-    var cTotal = Math.ceil(parseFloat(cheapest.selling_price) * 1.02);
+    var cTotal = Math.ceil(parseFloat(cheapest.selling_price));
     starterDaily = Math.round(cTotal / 7 * 100) / 100;
     starterSize  = cheapest.data_size || '1GB';
   }
@@ -7439,7 +8313,41 @@ window.confirmAirtime = confirmAirtime;
    tap-to-open deep linking. Real native implementation.
 ──────────────────────────────────────────────────────── */
 function requestCapacitorPushToken() {
-  /* WEB VERSION: no Capacitor, no native push registration. Intentional no-op. */
+  var isNative = (typeof window.Capacitor !== 'undefined' && window.Capacitor.isNativePlatform && window.Capacitor.isNativePlatform());
+  if (!isNative) return;
+
+  var Push = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.PushNotifications;
+  if (!Push) return;
+
+  Push.requestPermissions().then(function(result) {
+    if (result.receive === 'granted') {
+      Push.register();
+      Push.addListener('registration', function(token) {
+        registerPushToken(token.value);
+      });
+      Push.addListener('registrationError', function(err) {
+        console.warn('[Push] Registration error:', err);
+      });
+      // FCM already shows the OS notification drop — just refresh the bell
+      Push.addListener('pushNotificationReceived', function(notification) {
+        if (typeof notifLoad === 'function') notifLoad();
+      });
+      // Tap on a push: store deep-link target then navigate
+      Push.addListener('pushNotificationActionPerformed', function(action) {
+        try {
+          var data     = (action && action.notification && action.notification.data) ? action.notification.data : {};
+          var category = data.category || data.type || 'dash';
+          var meta     = data.metadata ? (typeof data.metadata === 'string' ? data.metadata : JSON.stringify(data.metadata)) : null;
+          localStorage.setItem('db_push_target', JSON.stringify({ target: (data.target || category), metadata: meta }));
+        } catch(e) {}
+        if (window.gUser && typeof handlePushDeepLink === 'function') {
+          handlePushDeepLink();
+        } else if (typeof openNotifDrawer === 'function') {
+          openNotifDrawer();
+        }
+      });
+    }
+  }).catch(function(e) { console.warn('[Push] Permission error:', e); });
 }
 window.requestCapacitorPushToken = requestCapacitorPushToken;
 
@@ -7670,6 +8578,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
     /* Remove any stray/duplicate momentum grids before deciding to inject. */
     var existing=dash.querySelectorAll?dash.querySelectorAll('.momentum-grid'):[];
     if(existing.length){
+      /* keep the first, drop the rest; then bail so we don't add another. */
       for(var _g=1;_g<existing.length;_g++){ if(existing[_g].parentNode) existing[_g].parentNode.removeChild(existing[_g]); }
       if(existing[0]&&!existing[0].id) existing[0].id='momentum-grid';
       return;
@@ -7774,7 +8683,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
   /* Populate the two reward momentum cards from get_rewards_summary. */
   function dbUpdateRewardCards(){
     var elE=$('db-m-earned'), elU=$('db-m-unlocked');
-    if(!elE && !elU) return;
+    if(!elE && !elU) return;   /* cards not on screen */
     function paint(c){
       if(!c) return;
       var earned   = parseFloat(c.total_earned_cashback)   || 0;
@@ -8191,6 +9100,7 @@ window.doUpgrade = doUpgrade;
    ============================================================ */
 var _pinCb = null;           // callback waiting for a verified pin
 var _pinActionLabel = '';
+var _appLocked = false;      // true while the app-open unlock gate is active
 
 function _pinDigits() { return ($('pin-input') ? ($('pin-input').value || '').replace(/\D/g,'').slice(0,4) : ''); }
 function _pinRenderDots() {
@@ -8201,6 +9111,217 @@ function _pinRenderDots() {
 }
 
 // Show the PIN entry modal to AUTHORIZE an action. cb receives the 4-digit pin string.
+/* ════════════════════════════════════════════════════════════════
+   FINGERPRINT / BIOMETRIC  (WebAuthn platform authenticator)
+   ----------------------------------------------------------------
+   The PIN is verified SERVER-SIDE (verify_user_pin). A fingerprint
+   cannot replace that check, so the standard bank-app pattern is:
+   the user verifies their PIN once when enabling fingerprint, and we
+   store that verified PIN on-device behind a WebAuthn credential. A
+   successful fingerprint then releases the stored PIN, which is fed
+   to verify_user_pin exactly as if it were typed. The server check
+   is unchanged. Keys are namespaced per-user. ─────────────────────
+   Two independent switches:
+     • db_bio_pay_on   — use fingerprint to authorize payments
+     • db_bio_unlock_on— use fingerprint for the app-open unlock gate
+   "Disable unlock code" simply turns the unlock gate off on-device
+   (the server PIN still exists for payments unless also changed).
+   ════════════════════════════════════════════════════════════════ */
+function _bioUid() { return (gUser && gUser.id) ? String(gUser.id) : 'anon'; }
+function _bioK(base) { return base + ':' + _bioUid(); }   // per-user key
+var BIO_CRED   = 'db_bio_cred_id';   // WebAuthn credential id (base64url)
+var BIO_PIN    = 'db_bio_pin';       // verified PIN, gated by the biometric
+var BIO_PAY_ON = 'db_bio_pay_on';    // '1' = fingerprint authorizes payments
+var BIO_UNL_ON = 'db_bio_unlock_on'; // '1' = fingerprint used for unlock gate
+
+(function(){ try {
+  [BIO_CRED, BIO_PIN, BIO_PAY_ON, BIO_UNL_ON].forEach(function(b){
+    // persist per-user keys to native storage so they survive app close
+    var k = b + ':' ; // prefix; actual per-user keys pushed lazily on write
+  });
+} catch(e){} })();
+
+function _bioPersist(key, val) {
+  _store.set(key, val);
+  if (_PERSIST_KEYS.indexOf(key) < 0) _PERSIST_KEYS.push(key);
+  _nativeSet(key, val);
+}
+function _bioForget(key) {
+  _store.del(key);
+  _nativeDel(key);
+}
+
+function _b64uToBuf(b64u){var b64=b64u.replace(/-/g,'+').replace(/_/g,'/');while(b64.length%4)b64+='=';var bin=atob(b64);var a=new Uint8Array(bin.length);for(var i=0;i<bin.length;i++)a[i]=bin.charCodeAt(i);return a.buffer;}
+function _bufToB64u(buf){var b=new Uint8Array(buf),s='';for(var i=0;i<b.length;i++)s+=String.fromCharCode(b[i]);return btoa(s).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
+function _randBuf(n){var a=new Uint8Array(n);(window.crypto||window.msCrypto).getRandomValues(a);return a;}
+
+// Is a real platform authenticator (fingerprint/face) available?
+function bioSupported(cb) {
+  try {
+    if (!window.PublicKeyCredential || !navigator.credentials || !navigator.credentials.create) { cb(false); return; }
+    if (!PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) { cb(false); return; }
+    PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable()
+      .then(function(y){ cb(!!y); }).catch(function(){ cb(false); });
+  } catch(e) { cb(false); }
+}
+
+function bioHasCredential() { return !!_store.get(_bioK(BIO_CRED)) && !!_store.get(_bioK(BIO_PIN)); }
+function bioPayEnabled()    { return _store.get(_bioK(BIO_PAY_ON)) === '1' && bioHasCredential(); }
+function bioUnlockEnabled() { return _store.get(_bioK(BIO_UNL_ON)) === '1' && bioHasCredential(); }
+
+// Register a device credential and store the verified PIN behind it.
+// cb(true) / cb(false, message)
+function bioEnroll(verifiedPin, cb) {
+  if (!verifiedPin || verifiedPin.length !== 4) { cb(false, 'A valid PIN is required.'); return; }
+  bioSupported(function(yes) {
+    if (!yes) { cb(false, 'No fingerprint is set up on this device.'); return; }
+    var rpId = window.location.hostname || 'databulge.com';
+    var email = (gUser && gUser.email) || 'user';
+    var opts = { publicKey: {
+      challenge: _randBuf(32),
+      rp: { name: 'DataBulge', id: rpId },
+      user: { id: _randBuf(16), name: email, displayName: email },
+      pubKeyCredParams: [ { type:'public-key', alg:-7 }, { type:'public-key', alg:-257 } ],
+      authenticatorSelection: { authenticatorAttachment:'platform', userVerification:'required', residentKey:'preferred' },
+      timeout: 60000, attestation: 'none'
+    }};
+    navigator.credentials.create(opts).then(function(cred){
+      if (!cred || !cred.rawId) { cb(false, 'Could not set up fingerprint.'); return; }
+      try {
+        _bioPersist(_bioK(BIO_CRED), _bufToB64u(cred.rawId));
+        _bioPersist(_bioK(BIO_PIN),  verifiedPin);
+      } catch(e) {}
+      cb(true);
+    }).catch(function(e){
+      cb(false, (e && e.name === 'NotAllowedError') ? 'Fingerprint setup cancelled.' : 'Could not set up fingerprint.');
+    });
+  });
+}
+
+// Prompt the device fingerprint; cb(true, pin) on success.
+function bioVerify(cb) {
+  var credId = _store.get(_bioK(BIO_CRED));
+  if (!credId) { cb(false, 'Fingerprint not set up.'); return; }
+  var rpId = window.location.hostname || 'databulge.com';
+  var opts = { publicKey: {
+    challenge: _randBuf(32), timeout: 60000, rpId: rpId, userVerification: 'required',
+    allowCredentials: [ { type:'public-key', id:_b64uToBuf(credId), transports:['internal'] } ]
+  }};
+  navigator.credentials.get(opts).then(function(a){
+    if (!a) { cb(false, 'Fingerprint not recognised.'); return; }
+    cb(true, _store.get(_bioK(BIO_PIN)));
+  }).catch(function(e){
+    cb(false, (e && e.name === 'NotAllowedError') ? 'Fingerprint cancelled.' : 'Fingerprint failed.');
+  });
+}
+
+// Forget the device credential + stored PIN and both switches (this user).
+function bioWipe() {
+  [BIO_CRED, BIO_PIN, BIO_PAY_ON, BIO_UNL_ON].forEach(function(b){ _bioForget(_bioK(b)); });
+}
+
+window.bioSupported = bioSupported;
+window.bioPayEnabled = bioPayEnabled;
+window.bioUnlockEnabled = bioUnlockEnabled;
+
+/* ── SECURITY MODAL CONTROLLER ──────────────────────────────────
+   Three switches, all toggled the same way (tap on/off):
+     • Pay with fingerprint   (sec-pay-toggle    -> db_bio_pay_on)
+     • Fingerprint unlock      (sec-unlock-toggle -> db_bio_unlock_on)
+     • Require unlock code      (sec-lockgate-toggle -> db_lockgate_off)
+   Turning a fingerprint switch ON the first time verifies the PIN
+   once and stores it behind the device biometric. Turning the last
+   fingerprint switch OFF wipes the stored credential + PIN. ──── */
+var LOCKGATE_OFF = 'db_lockgate_off';   // '1' = skip the app-open unlock screen
+function lockGateDisabled() { return _store.get(_bioK(LOCKGATE_OFF)) === '1'; }
+
+function openSecurityModal() {
+  if (!gUser) { toast('Please sign in first.'); return; }
+  errHide('m-security-err');
+  // Default states from storage
+  $('sec-pay-toggle').checked    = bioPayEnabled();
+  $('sec-unlock-toggle').checked = bioUnlockEnabled();
+  $('sec-lockgate-toggle').checked = !lockGateDisabled();  // ON = require unlock
+  openModal('m-security');
+  // Enable/disable fingerprint switches based on hardware availability
+  bioSupported(function(yes) {
+    var warn = $('sec-no-bio');
+    if (warn) warn.style.display = yes ? 'none' : 'block';
+    $('sec-pay-toggle').disabled    = !yes;
+    $('sec-unlock-toggle').disabled = !yes;
+  });
+}
+window.openSecurityModal = openSecurityModal;
+
+// Ensure a device credential + stored PIN exist. If not, verify the PIN
+// once (server-side) and enroll. cb(true) when ready, cb(false) on abort.
+function _ensureBioCredential(cb) {
+  if (bioHasCredential()) { cb(true); return; }
+  // Need the user's PIN to store behind the fingerprint. Ask for it once.
+  toast('Confirm your PIN to set up fingerprint.');
+  // Reuse the PIN keypad: a verified PIN is handed to our callback.
+  rpc('get_pin_status', { p_user_id: gUser.id }, function(e, r) {
+    var d = (r && r.data !== undefined) ? r.data : r;
+    if (!e && d && d.pin_set === false) {
+      // No PIN yet — set one first, then enroll.
+      openSetPinModal(function() {
+        // After setting, ask them to confirm it once for enrollment.
+        _verifyPinThenEnroll(cb);
+      });
+      return;
+    }
+    _verifyPinThenEnroll(cb);
+  });
+}
+function _verifyPinThenEnroll(cb) {
+  // Open the keypad purely to capture a verified PIN for enrollment.
+  closeModal('m-security');
+  _showPinKeypad('set up fingerprint', function(verifiedPin) {
+    bioEnroll(verifiedPin, function(ok, msg) {
+      if (ok) { toast('Fingerprint set up \u2705'); cb(true); }
+      else { toast(msg || 'Could not set up fingerprint.'); cb(false); }
+      openSecurityModal();   // reopen to reflect new state
+    });
+  });
+}
+
+function _wireSecurityToggles() {
+  var pay = $('sec-pay-toggle'), unl = $('sec-unlock-toggle'), lg = $('sec-lockgate-toggle');
+  if (pay) pay.onchange = function() {
+    if (pay.checked) {
+      _ensureBioCredential(function(ok) {
+        if (ok) { _bioPersist(_bioK(BIO_PAY_ON), '1'); }
+        else { pay.checked = false; }
+      });
+    } else {
+      _bioForget(_bioK(BIO_PAY_ON));
+      _maybeWipeCredential();
+    }
+  };
+  if (unl) unl.onchange = function() {
+    if (unl.checked) {
+      _ensureBioCredential(function(ok) {
+        if (ok) { _bioPersist(_bioK(BIO_UNL_ON), '1'); }
+        else { unl.checked = false; }
+      });
+    } else {
+      _bioForget(_bioK(BIO_UNL_ON));
+      _maybeWipeCredential();
+    }
+  };
+  if (lg) lg.onchange = function() {
+    if (lg.checked) { _bioForget(_bioK(LOCKGATE_OFF)); toast('Unlock screen on app open is ON.'); }
+    else { _bioPersist(_bioK(LOCKGATE_OFF), '1'); toast('Unlock screen on app open is OFF.'); }
+  };
+}
+// If neither fingerprint switch is on, drop the stored credential + PIN.
+function _maybeWipeCredential() {
+  if (!bioPayEnabled() && !bioUnlockEnabled()) {
+    _bioForget(_bioK(BIO_CRED));
+    _bioForget(_bioK(BIO_PIN));
+  }
+}
+
 function requirePin(actionLabel, cb) {
   // If the user has no PIN yet, send them to set one first, then continue.
   rpc('get_pin_status', { p_user_id: gUser.id }, function(e, r) {
@@ -8209,15 +9330,53 @@ function requirePin(actionLabel, cb) {
       openSetPinModal(function() { requirePin(actionLabel, cb); });
       return;
     }
-    _pinCb = cb; _pinActionLabel = actionLabel || 'continue';
-    _pinUnlockMode = false;   // payment PIN is dismissable, unlike the unlock gate
-    if ($('pin-title')) $('pin-title').textContent = 'Enter your PIN';
-    if ($('pin-sub'))   $('pin-sub').textContent   = 'Confirm your 4-digit PIN to ' + _pinActionLabel + '.';
-    if ($('pin-input')) $('pin-input').value = '';
-    errHide('m-pin-err'); _pinRenderDots();
-    openModal('m-pin');
-    /* No focus() on pin-input — entry is via the in-app keypad; focusing it would summon the device keyboard (double keypad). */
+    // ── Fingerprint shortcut (if enabled for payments) ──
+    // A successful fingerprint releases the stored PIN, which we verify
+    // server-side just like a typed PIN. Any cancel/failure falls back
+    // to the normal keypad below.
+    if (bioPayEnabled()) {
+      bioVerify(function(ok, pin) {
+        if (ok && pin && pin.length === 4) {
+          rpc('verify_user_pin', { p_user_id: gUser.id, p_pin: pin }, function(e2, r2) {
+            var d2 = (r2 && r2.data !== undefined) ? r2.data : r2;
+            if (!e2 && d2 && d2.ok) {
+              if (typeof cb === 'function') cb(pin);   // authorized via fingerprint
+            } else if (_pinIsNetworkError(e2, r2)) {
+              // Network/server problem — stored PIN is probably fine. Don't wipe
+              // the credential or blame a PIN change; just fall back to the keypad.
+              _showPinKeypad(actionLabel, cb);
+            } else {
+              // Stored PIN behind the fingerprint was rejected. Do NOT assume the
+              // user changed their PIN or suggest anything — silently fall back to
+              // the keypad so they can simply type it.
+              _showPinKeypad(actionLabel, cb);
+            }
+          });
+        } else {
+          // Cancelled or failed — let them type the PIN instead.
+          _showPinKeypad(actionLabel, cb);
+        }
+      });
+      return;
+    }
+    _showPinKeypad(actionLabel, cb);
   });
+}
+
+// Render the PIN keypad modal (the classic typed-PIN path).
+function _showPinKeypad(actionLabel, cb) {
+  _pinCb = cb; _pinActionLabel = actionLabel || 'continue';
+  // Payment/authorize PIN modal IS dismissable — restore the close X
+  // (it may have been hidden by a prior unlock-gate use of the same modal).
+  var x = document.querySelector('#m-pin .pin-close-x');
+  if (x) x.style.display = '';
+  if ($('pin-title')) $('pin-title').textContent = 'Enter your PIN';
+  if ($('pin-sub'))   $('pin-sub').textContent   = 'Confirm your 4-digit PIN to ' + _pinActionLabel + '.';
+  if ($('pin-input')) $('pin-input').value = '';
+  errHide('m-pin-err'); _pinRenderDots();
+  _pinUpdateBioButton();   // show/hide the in-modal fingerprint button
+  openModal('m-pin');
+  /* No focus() on pin-input — entry is via the in-app keypad; focusing it would summon the device keyboard (double keypad). */
 }
 
 function _pinKeypadEnabled(on) {
@@ -8239,17 +9398,8 @@ function _pinStatus(state, msg) {
     el.innerHTML = '<span class="pin-cross"></span><span>' + (msg || 'Incorrect PIN') + '</span>';
   }
 }
-function _pinSuccessPop(title, msg, cb) {
-  var pop = $('pin-success-pop');
-  if (!pop) { if (typeof cb === 'function') cb(); return; }
-  if (title && $('pin-success-title')) $('pin-success-title').textContent = title;
-  if (msg && $('pin-success-msg')) $('pin-success-msg').textContent = msg;
-  pop.className = 'pin-success-pop on';
-  setTimeout(function() {
-    pop.className = 'pin-success-pop';
-    if (typeof cb === 'function') cb();
-  }, 1600);
-}
+window._pinStatus = _pinStatus;
+window._pinKeypadEnabled = _pinKeypadEnabled;
 
 // Distinguish a transport/server failure from a genuine wrong-PIN rejection.
 // xhr() reports 'Network error'/'Timeout' as the first arg; a missing response,
@@ -8277,8 +9427,7 @@ function _pinSubmit() {
     var d = (r && r.data !== undefined) ? r.data : r;
     if (!e && d && d.ok) {
       _pinStatus('success', 'Verified');
-      _pinUnlockMode = false; _unlockActive = false;
-      setTimeout(function() {
+      setTimeout(function(){
         _pinStatus(null);
         closeModal('m-pin');
         var cb = _pinCb; _pinCb = null;
@@ -8303,6 +9452,57 @@ function _pinSubmit() {
   });
 }
 
+// Show/hide the "Use fingerprint" button inside the PIN modal.
+function _pinUpdateBioButton() {
+  var btn = $('pin-bio-btn');
+  if (!btn) return;
+  btn.style.display = bioPayEnabled() ? 'flex' : 'none';
+  // Sub text makes the PIN keypad the obvious 'instead' fallback.
+  if ($('pin-sub') && bioPayEnabled()) {
+    $('pin-sub').textContent = 'Use your fingerprint, or enter your PIN below.';
+  }
+}
+
+// Triggered by the in-modal fingerprint button: verify via biometric,
+// then run the server PIN check and complete the pending action.
+function _pinTryBio() {
+  if (!bioPayEnabled()) return;
+  errHide('m-pin-err');
+  bioVerify(function(ok, pin) {
+    if (!ok || !pin || pin.length !== 4) {
+      if (ok === false) errShow('m-pin-err', 'Fingerprint failed. Enter your PIN.');
+      return;
+    }
+    _pinStatus('loading', 'Verifying fingerprint\u2026');
+    btnLoad('pin-submit-btn', true, 'Verifying\u2026');
+    rpc('verify_user_pin', { p_user_id: gUser.id, p_pin: pin }, function(e, r) {
+      btnLoad('pin-submit-btn', false, 'Confirm');
+      var d = (r && r.data !== undefined) ? r.data : r;
+      if (!e && d && d.ok) {
+        _pinStatus('success', 'Verified');
+        setTimeout(function(){
+          _pinStatus(null);
+          closeModal('m-pin');
+          var cb = _pinCb; _pinCb = null;
+          if (typeof cb === 'function') cb(pin);
+        }, 450);
+      } else if (_pinIsNetworkError(e, r)) {
+        // Network/server problem — the stored PIN is probably fine. Do NOT wipe
+        // the fingerprint credential; just tell the truth and let them retry.
+        _pinStatus('error', 'Connection problem');
+        errShow('m-pin-err', 'Connection problem. Check your internet and try again.');
+        setTimeout(function(){ _pinStatus(null); }, 1300);
+      } else {
+        // Stored PIN behind the fingerprint was rejected. Don't wipe the
+        // credential or imply anything is wrong — just ask for the PIN neutrally.
+        _pinStatus(null);
+        errShow('m-pin-err', 'Please enter your PIN.');
+      }
+    });
+  });
+}
+window._pinTryBio = _pinTryBio;
+
 // ---- Set / change PIN ----
 var _setPinCb = null;
 function openSetPinModal(cb) {
@@ -8311,8 +9511,9 @@ function openSetPinModal(cb) {
   if ($('setpin-confirm')) $('setpin-confirm').value = '';
   if ($('setpin-old')) $('setpin-old').value = '';
   errHide('m-setpin-err');
+  // Within the lock chain, set-PIN must not be dismissable into the app.
   var sx = document.querySelector('#m-setpin .modal-x');
-  if (sx) sx.style.display = _unlockActive ? 'none' : '';
+  if (sx) sx.style.display = _appLocked ? 'none' : '';
   openModal('m-setpin');
   // If the user already has a PIN, require the current one to change it.
   if (gUser) {
@@ -8346,14 +9547,13 @@ function _setPinSubmit() {
     btnLoad('setpin-submit-btn', false, 'Save PIN');
     var d = (r && r.data !== undefined) ? r.data : r;
     if (!e && d && d.ok) {
-      var wasChange = oldVisible;
       closeModal('m-setpin');
+      // The stored fingerprint PIN is now stale — drop it so the user
+      // re-enrolls with the new PIN next time they open Security.
+      try { if (typeof bioWipe === 'function' && (bioPayEnabled() || bioUnlockEnabled() || bioHasCredential())) bioWipe(); } catch(e3) {}
+      if (typeof toast === 'function') toast('\uD83D\uDD12 PIN set. You\u2019ll use it to authorize payments.');
       var cb = _setPinCb; _setPinCb = null;
-      _pinSuccessPop(
-        wasChange ? 'PIN changed successfully' : 'PIN created successfully',
-        'You\u2019ll use this PIN to sign in and authorize payments.',
-        function() { if (typeof cb === 'function') cb(); }
-      );
+      if (typeof cb === 'function') cb();
     } else if (_pinIsNetworkError(e, r)) {
       errShow('m-setpin-err', 'Connection problem. Check your internet and try again.');
       btnLoad('setpin-submit-btn', false, 'Save PIN');
@@ -8364,80 +9564,63 @@ function _setPinSubmit() {
   });
 }
 // Device unlock on app open (only if a PIN is set).
-var _unlockActive = false;
-function _isNativeApp() {
-  try {
-    if (window.__DATABULGE_NATIVE_APP__) return true;
-    if (window.DataBulgeNative && window.DataBulgeNative.isNativeApp) return true;
-  } catch(e) {}
-  return false;
-}
-function _bioAvailable() { return false; }   // web build: no native fingerprint
 function maybeRequireUnlock() {
-  if (!gUser || _unlockActive) return;
+  if (!gUser) return;
+  if (lockGateDisabled()) return;   // user turned the app-open unlock screen off
   rpc('get_pin_status', { p_user_id: gUser.id }, function(e, r) {
     var d = (r && r.data !== undefined) ? r.data : r;
     if (e || !d || d.pin_set !== true) return;   // no PIN -> no unlock gate
-    _showPinUnlock();
+    // If fingerprint unlock is enabled, try it first.
+    if (bioUnlockEnabled()) {
+      bioVerify(function(ok) {
+        if (ok) return;                            // unlocked, nothing more to do
+        _showUnlockKeypad();                       // cancelled/failed -> ask for PIN
+      });
+      return;
+    }
+    _showUnlockKeypad();
   });
 }
-function _showPinUnlock() {
-  _unlockActive = true;
-  _pinCb = function() { _unlockActive = false; };
+function _showUnlockKeypad() {
+  // Show a BLOCKING, non-dismissable unlock prompt. The app stays locked until
+  // a correct PIN is entered or a full forgot-PIN reset completes.
+  _appLocked = true;
+  _pinCb = function() { _appLocked = false; /* unlocked */ };
   _pinActionLabel = 'unlock';
-  _pinUnlockMode = true;
+  // Non-dismissable: hide the close X so the gate can't be tapped away.
+  var x = document.querySelector('#m-pin .pin-close-x');
+  if (x) x.style.display = 'none';
   if ($('pin-title')) $('pin-title').textContent = 'Welcome back';
   if ($('pin-sub'))   $('pin-sub').textContent   = 'Enter your 4-digit PIN to unlock.';
   if ($('pin-input')) $('pin-input').value = '';
   errHide('m-pin-err'); _pinRenderDots();
+  _pinUpdateBioButton();
   openModal('m-pin');
   /* No focus() on pin-input — in-app keypad only, avoids the device keyboard. */
 }
+window._showUnlockKeypad = _showUnlockKeypad;
 window.maybeRequireUnlock = maybeRequireUnlock;
-
-var _pinUnlockMode = false;
-function _pinCloseX() {
-  if (_pinUnlockMode) { if (typeof toast === 'function') toast('Enter your PIN to continue.'); return; }
-  closeModal('m-pin');
-}
-
-/* ── RE-LOCK ON RESUME (web) ── */
-var _bgAt = 0;
-var _RELOCK_AFTER_MS = 30 * 1000;
-function _onAppBackground() { _bgAt = Date.now(); }
-function _onAppForeground() {
-  if (!gUser || _unlockActive) return;
-  if (_bgAt && (Date.now() - _bgAt) > _RELOCK_AFTER_MS) {
-    _bgAt = 0;
-    try { maybeRequireUnlock(); } catch(e) {}
-  }
-}
-(function _bindRelock() {
-  try {
-    document.addEventListener('visibilitychange', function() {
-      if (document.hidden) _onAppBackground(); else _onAppForeground();
-    }, false);
-    window.addEventListener('blur',  _onAppBackground, false);
-    window.addEventListener('focus', _onAppForeground, false);
-  } catch(e) {}
-})();
 
 /* ── FORGOT PIN: re-auth with account password, then set a new PIN ── */
 function openForgotPin() {
   closeModal('m-pin');
   if ($('forgotpin-pw')) $('forgotpin-pw').value = '';
   errHide('m-forgotpin-err');
-  // If the app is locked, forgot-PIN is part of the lock chain — not dismissable.
+  // If the app is locked (unlock gate), the forgot-PIN flow is part of the
+  // lock chain: it must NOT be dismissable into the app.
   var fx = document.querySelector('#m-forgotpin .modal-x');
-  if (fx) fx.style.display = _unlockActive ? 'none' : '';
+  if (fx) fx.style.display = _appLocked ? 'none' : '';
   openModal('m-forgotpin');
   setTimeout(function(){ if ($('forgotpin-pw')) $('forgotpin-pw').focus(); }, 250);
 }
-/* If still locked and the user backs out of the reset flow, return to the gate
-   instead of exposing the app. */
+window.openForgotPin = openForgotPin;
+
+/* Guarded close for the lock-chain modals. If the app is still locked and the
+   user backs out of forgot-PIN / set-PIN without completing it, do NOT expose
+   the app — return them to the unlock gate. */
 function lockSafeClose(modalId) {
   closeModal(modalId);
-  if (_unlockActive) { _showPinUnlock(); }
+  if (_appLocked) { _showUnlockKeypad(); }
 }
 window.lockSafeClose = lockSafeClose;
 function _doForgotPin() {
@@ -8465,8 +9648,12 @@ function _doForgotPin() {
           return;
         }
         closeModal('m-forgotpin');
-        // 3) Let them set a new PIN now. Completing this satisfies the lock.
-        openSetPinModal(function() { _unlockActive = false; _pinUnlockMode = false; });
+        // 3) Let them set a new PIN now. Completing this satisfies the lock:
+        //    they proved the account password AND set a fresh PIN.
+        openSetPinModal(function() {
+          _appLocked = false;
+          if (typeof toast === 'function') toast('\uD83D\uDD12 New PIN set.');
+        });
       });
     }
   );
@@ -8741,19 +9928,6 @@ window.openSetPinModal = openSetPinModal;
   });
 })();
 </script>
-
-<script>
-/* Web version: native bridge removed */
-window.isDataBulgeNativeApp = function() { return false; };
-</script>
-
-<div class="pin-success-pop" id="pin-success-pop">
-  <div class="pin-success-card">
-    <div class="pin-success-ring"><span class="pin-check"></span></div>
-    <h4 id="pin-success-title">PIN created successfully</h4>
-    <p id="pin-success-msg">You'll use this PIN to sign in and authorize payments.</p>
-  </div>
-</div>
 
 </body>
 </html>
