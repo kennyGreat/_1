@@ -1144,6 +1144,12 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <!-- ── MARKET WELCOME BANNER ── -->
       <div id="market-welcome" style="margin-bottom:12px;padding:12px 14px;border-radius:12px;background:#f0f4ff;border:1.5px solid #c7d4fb;font-size:.82rem;color:#374151;line-height:1.6;"></div>
 
+      <!-- ── EARN AS YOU PAY (installment market only) ── -->
+      <div id="earn-banner" style="display:none;margin-bottom:12px;padding:14px 16px;border-radius:12px;background:#16a34a;color:#ffffff;line-height:1.55;">
+        <div style="font-size:.95rem;font-weight:900;margin-bottom:4px;color:#ffffff;">Earn as you pay</div>
+        <div style="font-size:.8rem;font-weight:500;color:#ffffff;opacity:.97;">Get 1% back on every installment you pay. Loyal users unlock up to 10% off future plans. Your rewards unlock the moment your plan completes.</div>
+      </div>
+
       <!-- ── INSTALLMENT DAYS (shown only in installment market) ── -->
       <div id="pay-toggle-card" style="display:none;margin-bottom:12px;" class="card">
         <div class="sec-title">Payment Option</div>
@@ -1233,7 +1239,6 @@ button.tab,button.plan-chip{box-shadow:none!important;}
   <!-- My Plans -->
   <div id="tc-subs" class="tab-content">
     <button class="btn btn-lite" id="refresh-subs-btn" style="margin-bottom:12px;">&#8635; Refresh</button>
-    <div id="bucket-section"></div>
     <div id="subs-list"><div class="empty">Loading&hellip;</div></div>
   </div>
 
@@ -3056,10 +3061,10 @@ function hideServiceScreen() {
 
 /* ── AIRTIME ─────────────────────────────────────────── */
 function openAirtimeScreen() {
-  _svcState.airtime = { network: 1, networkName: 'MTN' };
+  _svcState.airtime = { network: 1, networkName: 'MTN', mode: 'once', payDays: 7 };
   showServiceScreen(
     '<div class="svc-card">' +
-    '<div class="svc-title">📞 Buy Airtime</div>' +
+    '<div class="svc-title">\U0001F4DE Buy Airtime</div>' +
     '<div class="svc-field">' +
       '<label class="svc-label">Network</label>' +
       '<div class="svc-network-pills">' +
@@ -3074,13 +3079,30 @@ function openAirtimeScreen() {
       '<input class="svc-input" id="air-phone" type="tel" placeholder="08012345678" maxlength="11">' +
     '</div>' +
     '<div class="svc-field">' +
-      '<label class="svc-label">Amount (₦)</label>' +
+      '<label class="svc-label">Airtime Amount (\u20A6)</label>' +
       '<div class="svc-amount-wrap">' +
-        '<span class="svc-amount-prefix">₦</span>' +
-        '<input class="svc-input svc-amount-input" id="air-amount" type="number" placeholder="100" min="50" max="50000">' +
+        '<span class="svc-amount-prefix">\u20A6</span>' +
+        '<input class="svc-input svc-amount-input" id="air-amount" type="number" placeholder="100" min="50" max="50000" oninput="airUpdateInstallPreview()">' +
       '</div>' +
     '</div>' +
-    '<button class="svc-btn" onclick="submitAirtime()">Recharge Now</button>' +
+    '<div class="svc-field">' +
+      '<label class="svc-label">How do you want to pay?</label>' +
+      '<div class="svc-network-pills">' +
+        '<div class="svc-net-pill active" id="air-mode-once" onclick="svcAirMode(\'once\')">Pay once</div>' +
+        '<div class="svc-net-pill" id="air-mode-install" onclick="svcAirMode(\'install\')">Installment</div>' +
+      '</div>' +
+    '</div>' +
+    '<div id="air-install-opts" style="display:none;">' +
+      '<div class="svc-field">' +
+        '<label class="svc-label">Payment period</label>' +
+        '<div class="svc-network-pills">' +
+          '<div class="svc-net-pill active" id="air-days-7" onclick="svcAirDays(7)">7 days</div>' +
+          '<div class="svc-net-pill" id="air-days-28" onclick="svcAirDays(28)">28 days</div>' +
+        '</div>' +
+      '</div>' +
+      '<div id="air-install-preview" style="margin-bottom:12px;padding:10px 12px;background:#f0fdf4;border-radius:10px;border:1.5px solid #86efac;font-size:.78rem;color:#166534;line-height:1.6;"></div>' +
+    '</div>' +
+    '<button class="svc-btn" id="air-submit-btn" onclick="submitAirtime()">Recharge Now</button>' +
     '</div>'
   );
 }
@@ -3088,26 +3110,102 @@ function openAirtimeScreen() {
 function svcAirNet(id, name, el) {
   _svcState.airtime.network = id;
   _svcState.airtime.networkName = name;
-  document.querySelectorAll('.svc-net-pill').forEach(function(p){ p.className = 'svc-net-pill'; });
+  var pills = el.parentNode.querySelectorAll('.svc-net-pill');
+  for (var i = 0; i < pills.length; i++) pills[i].className = 'svc-net-pill';
   el.className = 'svc-net-pill active';
+}
+
+function svcAirMode(mode) {
+  _svcState.airtime.mode = mode;
+  var once = document.getElementById('air-mode-once');
+  var inst = document.getElementById('air-mode-install');
+  var opts = document.getElementById('air-install-opts');
+  var btn  = document.getElementById('air-submit-btn');
+  if (mode === 'install') {
+    if (inst) inst.className = 'svc-net-pill active';
+    if (once) once.className = 'svc-net-pill';
+    if (opts) opts.style.display = 'block';
+    if (btn)  btn.textContent = 'Start Installment';
+    airUpdateInstallPreview();
+  } else {
+    if (once) once.className = 'svc-net-pill active';
+    if (inst) inst.className = 'svc-net-pill';
+    if (opts) opts.style.display = 'none';
+    if (btn)  btn.textContent = 'Recharge Now';
+  }
+}
+
+function svcAirDays(d) {
+  _svcState.airtime.payDays = d;
+  var d7  = document.getElementById('air-days-7');
+  var d28 = document.getElementById('air-days-28');
+  if (d7)  d7.className  = (d === 7)  ? 'svc-net-pill active' : 'svc-net-pill';
+  if (d28) d28.className = (d === 28) ? 'svc-net-pill active' : 'svc-net-pill';
+  airUpdateInstallPreview();
+}
+
+function airUpdateInstallPreview() {
+  if (_svcState.airtime.mode !== 'install') return;
+  var amt = parseInt((document.getElementById('air-amount') || {}).value || '0', 10);
+  var box = document.getElementById('air-install-preview');
+  if (!box) return;
+  if (!amt || amt < 100) {
+    box.innerHTML = 'Enter an amount of at least \u20A6100 to see your daily payment.';
+    return;
+  }
+  var days  = _svcState.airtime.payDays || 7;
+  var total = Math.ceil(amt * 1.05);
+  var daily = Math.round((total / days) * 100) / 100;
+  box.innerHTML = '\U0001F49A Spread it out and ease the burden of paying at once. ' +
+    'Pay <b>\u20A6' + fmtN(daily) + '/day</b> for <b>' + days + ' days</b>. ' +
+    'Your airtime is sent the moment your plan is fully paid. A small fee applies for the flexibility.';
 }
 
 function submitAirtime() {
   var phone  = (document.getElementById('air-phone')  || {}).value || '';
   var amount = (document.getElementById('air-amount') || {}).value || '';
   var digits = phone.replace(/\D/g,'');
+  var amt = parseInt(amount, 10);
   if (digits.length < 11) { toast('Enter a valid 11-digit phone number'); return; }
-  if (!amount || parseInt(amount) < 50) { toast('Minimum airtime amount is ₦50'); return; }
-  var btn = document.querySelector('.svc-btn');
-  if (btn) { btn.disabled = true; btn.textContent = 'Processing…'; }
+  var btn = document.getElementById('air-submit-btn');
   var h = { 'Content-Type':'application/json', 'apikey': ANON_KEY, 'Authorization':'Bearer '+(gToken||ANON_KEY) };
+
+  if (_svcState.airtime.mode === 'install') {
+    if (!amt || amt < 100) { toast('Minimum airtime on installment is \u20A6100'); return; }
+    if (btn) { btn.disabled = true; btn.textContent = 'Starting\u2026'; }
+    var ibody = JSON.stringify({
+      user_id: gUser.id,
+      service: 'airtime_installment',
+      network: _svcState.airtime.network,
+      network_name: _svcState.airtime.networkName,
+      phone_number: digits,
+      amount: amt,
+      payment_days: _svcState.airtime.payDays || 7
+    });
+    xhr('POST', FN + '/purchaseService', h, ibody, function(e, r) {
+      if (btn) { btn.disabled = false; btn.textContent = 'Start Installment'; }
+      if (e || !r || !r.ok) {
+        toast((r && r.data && r.data.error) || 'Could not start installment. Please try again.');
+        return;
+      }
+      var d = (r.data || {});
+      toast('\u2705 Installment started! \u20A6' + (d.daily_price || '') + '/day for ' + (d.payment_days || '') + ' days.');
+      hideServiceScreen();
+      if (gMarket === 'general') renderGMSegments();
+    });
+    return;
+  }
+
+  // Pay once
+  if (!amt || amt < 50) { toast('Minimum airtime amount is \u20A650'); return; }
+  if (btn) { btn.disabled = true; btn.textContent = 'Processing\u2026'; }
   var body = JSON.stringify({
     user_id: gUser.id,
     service: 'airtime',
     network: _svcState.airtime.network,
     network_name: _svcState.airtime.networkName,
     phone_number: digits,
-    amount: parseInt(amount),
+    amount: amt
   });
   xhr('POST', FN + '/purchaseService', h, body, function(e, r) {
     if (btn) { btn.disabled = false; btn.textContent = 'Recharge Now'; }
@@ -3115,9 +3213,9 @@ function submitAirtime() {
       toast((r && r.data && r.data.error) || 'Airtime purchase failed. Please try again.');
       return;
     }
-    toast('✅ ₦' + amount + ' airtime sent to ' + digits + '!');
+    toast('\u2705 \u20A6' + amt + ' airtime sent to ' + digits + '!');
     hideServiceScreen();
-    if (gMarket === 'general') renderGMSegments(); else renderIMSegments();
+    if (gMarket === 'general') renderGMSegments();
   });
 }
 
@@ -3332,13 +3430,8 @@ function submitCable() {
 var gSegment = null;   // null = showing segment tiles
 
 var GM_SEGMENTS = [
-  { id:'data',        icon:'📶', label:'Data',          live:true  },
-  { id:'airtime',     icon:'📞', label:'Airtime',       live:true  },
-  { id:'electricity', icon:'⚡', label:'Electricity',   live:true  },
-  { id:'cable',       icon:'📺', label:'Cable TV',      live:true  },
-  { id:'waec',        icon:'🎓', label:'WAEC / NECO',   live:false },
-  { id:'jamb',        icon:'🆔', label:'JAMB',          live:false },
-  { id:'voice',       icon:'📡', label:'Voice / Call',  live:false },
+  { id:'data',    icon:'📶', label:'Data',    live:true },
+  { id:'airtime', icon:'📞', label:'Airtime', live:true },
 ];
 
 function renderGMSegments() {
@@ -3417,7 +3510,7 @@ var gMarket = 'general';
     if (_wb) {
       _wb.style.background = '#f0f4ff';
       _wb.style.borderColor = '#c7d4fb';
-      _wb.innerHTML = '<b>&#127914; Welcome to the General Market.</b> Plans here are subject to users\' experiences and feedback. Your funds are safe and secure.';
+      _wb.innerHTML = '<b>&#127914; Welcome to the General Market.</b> Plans here are product of users\' experiences and feedback. Your funds are safe and secure.';
     }
   }
   if (document.readyState === 'loading') {
@@ -3427,6 +3520,8 @@ var gMarket = 'general';
     // On first open: hide everything — only show the market selector buttons
     // No segments, no plans, no welcome banner until user picks a market
     var _wb  = document.getElementById('market-welcome');
+    var _eb  = document.getElementById('earn-banner');
+    if (_eb) _eb.style.display = 'none';
     var _gms = document.getElementById('gm-segments');
     var _ims = document.getElementById('im-segments');
     var _pl  = document.getElementById('plans-list');
@@ -3461,6 +3556,8 @@ function setMarket(m) {
   }
   // Show installment days toggle only in installment market
   if (ptCard) ptCard.style.display = (m === 'installment') ? '' : 'none';
+  var _earn = document.getElementById('earn-banner');
+  if (_earn) _earn.style.display = (m === 'installment') ? 'block' : 'none';
   // Invalidate cache so plans re-render for this market
   _plansCache = null;
 
@@ -3470,11 +3567,11 @@ function setMarket(m) {
     if (m === 'general') {
       _wb.style.background = '#f0f4ff';
       _wb.style.borderColor = '#c7d4fb';
-      _wb.innerHTML = '<b>&#127914; Welcome to the General Market.</b> Plans here are subject to users\' experiences and feedback. Your funds are safe and secure.';
+      _wb.innerHTML = '<b>&#127914; Welcome to the General Market.</b> Plans here are product of users\' experiences and feedback. Your funds are safe and secure.';
     } else {
       _wb.style.background = '#f0fdf4';
       _wb.style.borderColor = '#bbf7d0';
-      _wb.innerHTML = '<b>&#128197; Welcome to the Installment Market.</b> Plans here are subject to DataBulge\'s investigations, as well as users\' experiences and feedback. Your funds are safe and secure.';
+      _wb.innerHTML = '<b>&#128197; Welcome to the Installment Market.</b> Plans here are product of DataBulge\'s investigations, as well as users\' experiences and feedback. Your funds are safe and secure.';
     }
   }
   // General market: show segment tiles. Installment: go straight to plans.
@@ -3515,74 +3612,15 @@ function marketCheckoutTotal(plan, payOnce) {
   return Math.ceil(base * 1.05);        // general + installment: surge applies
 }
 
-/* === BUCKET === */
-function _bucketKey(){return 'db_bucket_'+((gUser&&gUser.id)||'anon');}
-function getBucket(){try{var r=window.localStorage.getItem(_bucketKey());return r?JSON.parse(r):[]}catch(e){return [];}}
-function saveBucket(b){try{window.localStorage.setItem(_bucketKey(),JSON.stringify(b));}catch(e){}}
-function isBucketed(id){var b=getBucket();for(var i=0;i<b.length;i++)if(b[i].id===id)return true;return false;}
-function toggleBucket(planId){
-  var b=getBucket();var idx=-1;
-  for(var i=0;i<b.length;i++)if(b[i].id===planId){idx=i;break;}
-  if(idx>-1){b.splice(idx,1);saveBucket(b);toast('Removed from Bucket');}
-  else{
-    var wrap=document.getElementById('plans-list');
-    var plan=wrap&&wrap._planById&&wrap._planById[planId];
-    if(!plan){toast('Plan not found');return;}
-    b.push({id:plan.id,network:plan.network,data_size:plan.data_size,validity_days:plan.validity_days,selling_price:plan.selling_price,market:plan.market||gMarket,delivery_provider:plan.delivery_provider||''});
-    saveBucket(b);toast('Added to Bucket!');
-  }
-  var btn=document.getElementById('bkt-'+planId);
-  if(btn){var inB=isBucketed(planId);btn.className='plan-bucket-btn'+(inB?' in-bucket':'');}
-  renderBucketSection();
-}
-function removeFromBucket(planId){
-  saveBucket(getBucket().filter(function(x){return x.id!==planId;}));
-  var btn=document.getElementById('bkt-'+planId);if(btn)btn.className='plan-bucket-btn';
-  renderBucketSection();
-}
-function renderBucketSection(){
-  var sec=document.getElementById('bucket-section');if(!sec)return;
-  var b=getBucket();
-  sec.style.display='block';
-  if(!b.length){
-    sec.innerHTML='<div class="bucket-hdr"><span class="bucket-title">My Bucket</span></div>'+
-      '<p class="bucket-empty">No favourite plans yet. Tap the [B] icon on any plan in the market to save it here.</p>';
-    return;
-  }
-  var html='<div class="bucket-hdr"><span class="bucket-title">My Bucket</span>'+
-    '<span style="font-size:.75rem;color:#94a3b8;">'+b.length+' saved</span></div>';
-  for(var i=0;i<b.length;i++){
-    var p=b[i];
-    var nc=p.network==='MTN'?'net-mtn':p.network==='AIRTEL'?'net-airtel':p.network==='GLO'?'net-glo':p.network==='9MOBILE'?'net-9mobile':'net-other';
-    var ml=(p.market==='installment')?'Installment':'General';
-    html+='<div class="bucket-item">'+
-      '<div class="bucket-item-info">'+
-        '<div><span class="plan-net '+nc+'" style="font-size:10px;padding:2px 6px;border-radius:8px;margin-right:4px;">'+(p.network||'')+'</span>'+
-        '<span style="font-size:10px;color:#94a3b8;">'+ml+' Market</span></div>'+
-        '<div class="bucket-item-name">'+(p.data_size||'')+' &mdash; '+(p.validity_days||30)+'-Day Plan</div>'+
-        '<div class="bucket-item-price">\u20a6'+fmtN(Math.ceil(parseFloat(p.selling_price)||0))+'</div>'+
-      '</div>'+
-      '<button class="bucket-sub-btn" onclick="openBucketPlan(\'' + p.id + '\')">Subscribe</button> '+
-      '<button class="bucket-rm-btn" onclick="removeFromBucket(\'' + p.id + '\')" title="Remove">\u00d7</button>'+
-    '</div>';
-  }
-  sec.innerHTML=html;
-}
-function openBucketPlan(planId){
-  var b=getBucket();var entry=null;
-  for(var i=0;i<b.length;i++)if(b[i].id===planId){entry=b[i];break;}
-  var tm=(entry&&entry.market)||'general';
-  if(gMarket!==tm){
-    setMarket(tm);
-    var _t=0;var _p=setInterval(function(){
-      _t++;var w=document.getElementById('plans-list');
-      if(_t>20||(w&&w._planById&&w._planById[planId])){
-        clearInterval(_p);showTab('plans');
-        setTimeout(function(){openSubModal('id_'+planId);},200);
-      }
-    },150);
-  } else {showTab('plans');setTimeout(function(){openSubModal('id_'+planId);},100);}
-}
+/* === BUCKET REMOVED === */
+function isBucketed(){return false;}
+function toggleBucket(){}
+function removeFromBucket(){}
+function renderBucketSection(){var s=document.getElementById('bucket-section');if(s){s.style.display='none';s.innerHTML='';}}
+function openBucketPlan(){}
+function getBucket(){return [];}
+function saveBucket(){}
+
 var _plansCache    = null;  // cached plan data — static, never changes mid-session
 var _plansCacheTs  = 0;    // timestamp of last fetch
 var PLANS_CACHE_MS = 5 * 60 * 1000; // re-fetch after 5 minutes max
@@ -3726,7 +3764,6 @@ function _renderPlans(allPlans) {
             '<div style="margin-top:8px;font-size:.8rem;font-weight:700;color:#3d9758;">' + (gMarket === 'general' ? 'Pay once or on installment' : 'Pay in ' + gPayDays + ' days') + '</div>' +
           '</div>' +
           '<button class="plan-btn" onclick="openSubModal(\'id_' + String(p.id) + '\')">Subscribe</button>' +
-          '<button class="plan-bucket-btn' + (isBucketed(String(p.id)) ? ' in-bucket' : '') + '"' + ' id="bkt-' + String(p.id) + '"' + ' onclick="toggleBucket(\'' + String(p.id) + '\')" title="Bucket">[B]</button>' +
         '</div>';
       }
       wrap.innerHTML = html;
@@ -4503,9 +4540,9 @@ function updateSubInfo() {
   var _warnBanner = '';
   if (_planMkt === 'general' && !gPayOnce) {
     _warnBanner = '<div style="margin-bottom:10px;padding:10px 12px;background:#f0fdf4;border-radius:10px;border:1.5px solid #86efac;font-size:.78rem;color:#166534;line-height:1.6;">' +
-      '&#128154; <b>You\'re spreading this payment across installments</b> &mdash; ' +
+      '&#128154; <b>You are spreading this payment across installments</b> &mdash; ' +
       'a smart way to ease the burden of paying a large sum all at once. ' +
-      'A small fee applies, which is a fair trade for the flexibility you get. ' +
+      'A small 5% service fee applies, which is a fair trade for the flexibility you get. ' +
       '<span style="opacity:.75;font-style:italic;">Prefer to pay at the exact listed price? Choose <b>Pay once</b> above.</span>' +
       '</div>';
   }
