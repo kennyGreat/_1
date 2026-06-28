@@ -1,8 +1,6 @@
 <!DOCTYPE html>
-<!-- DataBulge WEB build (index-web.html). Mirror of the APK index.html.
-     Native Capacitor plugins (Contacts, Preferences, Push, AdMob) are absent on web;
-     all such calls already branch on `typeof window.Capacitor` and fall back to
-     web behaviour (localStorage persistence, web Contact Picker API, no-op push). -->
+<!-- DataBulge WEB build (index-web.html). Mirror of APK index.html. Native Capacitor
+     plugins absent on web; calls branch on typeof window.Capacitor with web fallbacks. -->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -1058,7 +1056,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         <div style="font-size:.93rem;font-weight:900;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:6px;">&#128176; Earn as you pay</div>
         <div style="font-size:.8rem;line-height:1.5;margin-top:5px;color:#d8f3e6;">Get <b style="color:#fff;">1% back on every installment</b> you pay. Loyal users unlock up to <b style="color:#fff;">10% off</b> future plans. Your rewards unlock the moment your plan completes.</div>
       </div>
-      <div id="plans-list"><div class="empty">Loading plans&hellip;</div></div>
+      <div id="plans-list"></div>
     </div>
     <!-- Airtime mode -->
     <div id="buy-mode-airtime" style="display:none!important;">
@@ -1187,6 +1185,9 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <p style="font-size:.72rem;color:#888;margin-top:8px;line-height:1.5;">Pay once at 0% fee, or spread it over 7/28 days at a flat 3% fee. Minimum &#8358;100. If delivery fails, your wallet is automatically refunded.</p>
     </div>
   </div>
+
+  <!-- My Plan -->
+  <div id="tc-subs" class="tab-content">
     <button class="btn btn-lite" id="refresh-subs-btn" style="margin-bottom:12px;">&#8635; Refresh</button>
     <div id="subs-list"><div class="empty">Loading&hellip;</div></div>
   </div>
@@ -1225,99 +1226,11 @@ button.tab,button.plan-chip{box-shadow:none!important;}
 
   <!-- ── EARN TAB ─────────────────────────────────────────────── -->
   <div id="tc-earn" class="tab-content">
-
-    <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:10px;margin-bottom:14px;">
-      <div class="card" style="margin-bottom:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:14px!important;">
-        <div class="card-title">Wallet Balance</div>
-        <div class="card-val" id="earn-wallet-bal" style="font-size:1.3rem!important;">&#8358;&#8212;</div>
-        <div class="card-sub">Available</div>
-      </div>
-      <div class="card" style="margin-bottom:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:14px!important;border-color:#FDE047!important;">
-        <div class="card-title" style="color:#854d0e!important;">Ad Discount</div>
-        <div class="card-val" id="earn-discount-bal" style="font-size:1.3rem!important;color:#854d0e!important;">&#8358;&#8212;</div>
-        <div class="card-sub">On installments · never expires</div>
-      </div>
+    <div class="card" style="margin-bottom:12px;text-align:center;padding:28px 18px;">
+      <div style="font-size:2rem;margin-bottom:8px;">&#128173;</div>
+      <div style="font-size:1rem;font-weight:800;color:#111;margin-bottom:6px;">Nothing here yet</div>
+      <div style="font-size:.82rem;color:#6b7280;line-height:1.55;">This space is being reworked. Check back soon.</div>
     </div>
-
-    <div id="earn-cooldown-bar" style="display:none;background:#FEF9C3;border:1px solid #FDE047;border-radius:10px;padding:10px 14px;margin-bottom:12px;font-size:.8rem;color:#713F12;">
-      &#9203; Next ad available in <strong id="earn-cooldown-time">&#8212;</strong>
-    </div>
-
-    <div class="card" style="margin-bottom:12px;padding:0!important;overflow:hidden;">
-      <div style="height:3px;background:linear-gradient(90deg,#1A56DB,#3d9758);"></div>
-      <div style="padding:16px;">
-        <div id="earn-ad-slot" onclick="earnStartAd()" style="background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:12px;height:148px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:8px;margin-bottom:14px;cursor:pointer;position:relative;-webkit-tap-highlight-color:rgba(0,0,0,0);">
-          <div style="position:absolute;top:7px;right:9px;font-size:.68rem;background:#e5e7eb;color:#9ca3af;padding:2px 6px;border-radius:4px;text-transform:uppercase;letter-spacing:.05em;">Ad</div>
-          <div style="font-size:2.2rem;">&#9654;&#65039;</div>
-          <div style="font-size:.8rem;color:#9ca3af;text-align:center;">Tap to watch a short ad<br/>and earn your reward</div>
-        </div>
-
-        <div id="earn-timer-wrap" style="display:none;margin-bottom:14px;">
-          <div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;font-size:.75rem;color:#6b7280;margin-bottom:5px;">
-            <span>Watching ad&#8230; do not close this tab</span>
-            <span id="earn-timer-count" style="color:#1A56DB;font-weight:800;">30s</span>
-          </div>
-          <div style="height:5px;background:#e5e7eb;border-radius:4px;overflow:hidden;">
-            <div id="earn-timer-fill" style="height:100%;background:linear-gradient(90deg,#1A56DB,#3d9758);border-radius:4px;width:0%;-webkit-transition:width 30s linear;transition:width 30s linear;"></div>
-          </div>
-        </div>
-
-        <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;margin-bottom:14px;">
-          <div style="background:#eaf5ee;border:1px solid #c8e6d2;border-radius:10px;-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:10px;text-align:center;">
-            <div style="font-size:1.3rem;margin-bottom:2px;">&#128176;</div>
-            <div style="font-size:.95rem;font-weight:900;color:#3d9758;">+&#8358;15</div>
-            <div style="font-size:.72rem;color:#6b7280;margin-top:1px;">Wallet credit</div>
-          </div>
-          <div id="earn-discount-chip" style="background:#fefce8;border:1px solid #fde047;border-radius:10px;-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:10px;text-align:center;">
-            <div style="font-size:1.3rem;margin-bottom:2px;">&#127991;&#65039;</div>
-            <div style="font-size:.95rem;font-weight:900;color:#854d0e;">+&#8358;10</div>
-            <div style="font-size:.72rem;color:#6b7280;margin-top:1px;" id="earn-discount-lbl">Installment discount</div>
-          </div>
-        </div>
-
-        <button id="earn-watch-btn" onclick="earnStartAd()" class="btn btn-blue" style="width:100%;margin:0;font-size:.92rem;">Watch Ad &amp; Earn</button>
-      </div>
-    </div>
-
-    <div style="margin-bottom:14px;">
-      <div class="sec-title" style="margin-bottom:10px;">Today&#8217;s Progress</div>
-      <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">
-        <div id="earn-slot-0" style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:10px 6px;text-align:center;">
-          <div style="font-size:1.3rem;margin-bottom:3px;">&#128250;</div>
-          <div style="font-size:.72rem;color:#9ca3af;">Ad 1</div>
-        </div>
-        <div id="earn-slot-1" style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:10px 6px;text-align:center;">
-          <div style="font-size:1.3rem;margin-bottom:3px;">&#128250;</div>
-          <div style="font-size:.72rem;color:#9ca3af;">Ad 2</div>
-        </div>
-        <div id="earn-slot-2" style="background:#fff;border:1px solid #e5e7eb;border-radius:10px;-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:10px 6px;text-align:center;">
-          <div style="font-size:1.3rem;margin-bottom:3px;">&#128250;</div>
-          <div style="font-size:.72rem;color:#9ca3af;">Ad 3</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card" style="margin-bottom:12px;">
-      <div class="sec-title" style="margin-bottom:12px;">How It Works</div>
-      <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:10px;-webkit-box-align:flex-start;-webkit-align-items:flex-start;align-items:flex-start;margin-bottom:10px;">
-        <div style="width:22px;height:22px;min-width:22px;background:#eef2ff;border:1px solid #1A56DB;border-radius:50%;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;font-size:.7rem;font-weight:900;color:#1A56DB;">1</div>
-        <div style="font-size:.8rem;color:#6b7280;line-height:1.55;">Watch a short ad (30 seconds). <strong style="color:#111;">Up to 3 ads per day.</strong> You must watch the full ad to earn.</div>
-      </div>
-      <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:10px;-webkit-box-align:flex-start;-webkit-align-items:flex-start;align-items:flex-start;margin-bottom:10px;">
-        <div style="width:22px;height:22px;min-width:22px;background:#eef2ff;border:1px solid #1A56DB;border-radius:50%;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;font-size:.7rem;font-weight:900;color:#1A56DB;">2</div>
-        <div style="font-size:.8rem;color:#6b7280;line-height:1.55;">Earn <strong style="color:#111;">&#8358;15 wallet credit</strong> instantly after each completed ad.</div>
-      </div>
-      <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:10px;-webkit-box-align:flex-start;-webkit-align-items:flex-start;align-items:flex-start;margin-bottom:10px;">
-        <div style="width:22px;height:22px;min-width:22px;background:#eef2ff;border:1px solid #1A56DB;border-radius:50%;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;font-size:.7rem;font-weight:900;color:#1A56DB;">3</div>
-        <div style="font-size:.8rem;color:#6b7280;line-height:1.55;">On an installment plan? Also earn <strong style="color:#111;">&#8358;10 off your next payment</strong> &#8212; discounts never expire.</div>
-      </div>
-      <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:10px;-webkit-box-align:flex-start;-webkit-align-items:flex-start;align-items:flex-start;">
-        <div style="width:22px;height:22px;min-width:22px;background:#eef2ff;border:1px solid #1A56DB;border-radius:50%;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;font-size:.7rem;font-weight:900;color:#1A56DB;">4</div>
-        <div style="font-size:.8rem;color:#6b7280;line-height:1.55;">Discount auto-applies at payment &#8212; <strong style="color:#111;">up to 50% off per installment.</strong></div>
-      </div>
-    </div>
-
-    <div style="text-align:center;padding:6px 0 8px;font-size:.73rem;color:#bbb;">Ads are strictly optional. You choose when to watch.</div>
   </div>
 
 </div><!-- /#pg-app -->
@@ -1388,29 +1301,13 @@ button.tab,button.plan-chip{box-shadow:none!important;}
     <div class="modal-body">
       <div id="m-sub-err" class="err"></div>
       <div id="m-sub-info" style="font-size:.82rem;color:#444;margin-bottom:12px;"></div>
-      <div id="m-sub-rewards" style="display:none;margin-bottom:12px;border-radius:12px;padding:12px 14px;background:#f0fdf4;border:1px solid #bbf7d0;"></div>
+      <div id="m-sub-rewards" style="display:none;"></div>
 
       <div class="field" id="m-sub-dur-field">
         <label style="font-weight:700;color:#333;margin-bottom:7px;display:block;">Payment Duration</label>
         <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">
           <button class="btn btn-blue" id="m-sub-days-7" type="button" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;">7 Days</button>
           <button class="btn btn-lite" id="m-sub-days-28" type="button" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;">28 Days</button>
-        </div>
-      </div>
-
-      <div class="field" id="m-sub-autofund-field" style="border:1px solid #d0d8ff;border-radius:8px;padding:12px;background:#f5f6ff;margin-bottom:12px;">
-        <div style="font-size:.87rem;font-weight:800;color:#1A56DB;margin-bottom:6px;">&#128179; Auto-Fund</div>
-        <p style="font-size:.76rem;color:#555;margin-bottom:10px;line-height:1.5;">This takes the stress off you &#8212; enter an amount, pay with your card, your account is debited on your behalf daily with that amount and your wallet is credited instantly. you can cancel anytime.</p>
-        <div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;gap:8px;margin-bottom:0;">
-          <span style="font-size:.82rem;color:#333;font-weight:600;">Enable Auto-Fund</span>
-          <label style="position:relative;display:inline-block;width:40px;height:22px;-webkit-flex-shrink:0;flex-shrink:0;">
-            <input type="checkbox" id="m-sub-autofund" style="opacity:0;width:0;height:0;position:absolute;">
-            <span id="m-sub-autofund-sl" style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:22px;-webkit-transition:.25s;transition:.25s;"></span>
-          </label>
-        </div>
-        <div id="m-autofund-fields" style="display:none;margin-top:10px;">
-          <label style="font-size:.77rem;color:#555;margin-bottom:4px;display:block;">Amount to auto-debit each time (&#8358;)</label>
-          <input type="number" id="m-autofund-amt" placeholder="e.g. 500" style="display:block;width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:6px;font-size:.93rem;color:#111;background:#fff;outline:none;-webkit-appearance:none;">
         </div>
       </div>
 
@@ -2227,6 +2124,118 @@ function dbGoMyPlan(){
 }
 window.dbGoMyPlan = dbGoMyPlan;
 
+/* ── Auto-Pay controls on the My Plan cards ─────────────────────────────
+   For each visible active-plan card, reflect whether Auto-Pay is on and how
+   much per day. The Cancel control is ALWAYS shown while a mandate is active
+   (permanent rule: only the user cancelling removes it). */
+function dbLoadAutopayState() {
+  if (!window.gUser) return;
+  var rows = document.querySelectorAll('[id^="ap-row-"]');
+  if (!rows || !rows.length) return;
+  window.rpc('list_my_autopay', JSON.stringify({}), function(err, res) {
+    var data = (res && (res.data !== undefined ? res.data : res)) || [];
+    var bySub = {};
+    if (data && data.length) { for (var i = 0; i < data.length; i++) bySub[data[i].subscription_id] = data[i]; }
+    for (var r = 0; r < rows.length; r++) {
+      var subId = rows[r].id.replace('ap-row-', '');
+      var m = bySub[subId];
+      var label = document.getElementById('ap-label-' + subId);
+      var btn = document.getElementById('ap-btn-' + subId);
+      if (!label || !btn) continue;
+      if (m && m.status === 'active') {
+        label.innerHTML = '\u26A1 Auto-Pay on \u2014 \u20A6' + Number(m.daily_amount).toLocaleString() + '/day from wallet';
+        btn.textContent = 'Cancel';                 // ALWAYS available while active
+        btn.style.background = '#c0392b';
+        btn.setAttribute('data-on', '1');
+      } else {
+        label.innerHTML = '\u26A1 Auto-Pay';
+        btn.textContent = 'Turn on';
+        btn.style.background = '#0f5132';
+        btn.setAttribute('data-on', '0');
+      }
+    }
+  });
+}
+window.dbLoadAutopayState = dbLoadAutopayState;
+
+function dbToggleAutopay(subId, suggestedDaily) {
+  var btn = document.getElementById('ap-btn-' + subId);
+  var isOn = btn && btn.getAttribute('data-on') === '1';
+  if (isOn) {
+    // Cancel — only the user can do this (permanent rule).
+    window.rpc('cancel_autopay', JSON.stringify({ p_subscription_id: subId }), function(err, res) {
+      var d = res && (res.data !== undefined ? res.data : res);
+      if (!err && d && d.ok) { toast('Auto-Pay cancelled.'); dbLoadAutopayState(); }
+      else toast('Could not cancel. Please try again.');
+    });
+    return;
+  }
+  // Turn on — ask for the daily amount.
+  var def = suggestedDaily && suggestedDaily > 0 ? String(suggestedDaily) : '';
+  var amtStr = window.prompt('How much should we move from your wallet to this plan each day? (\u20A6)', def);
+  if (amtStr === null) return;
+  var amt = parseFloat(amtStr) || 0;
+  if (amt <= 0) { toast('Enter a valid daily amount.'); return; }
+  window.rpc('set_autopay', JSON.stringify({ p_subscription_id: subId, p_daily_amount: amt }), function(err, res) {
+    var d = res && (res.data !== undefined ? res.data : res);
+    if (!err && d && d.ok) { toast('\u26A1 Auto-Pay on \u2014 \u20A6' + amt + '/day until this plan is paid.'); dbLoadAutopayState(); }
+    else toast((d && d.error) || 'Could not enable Auto-Pay.');
+  });
+}
+window.dbToggleAutopay = dbToggleAutopay;
+
+/* ── Auto-Renew controls on the My Plan cards ──────────────────────────
+   Reflect whether Auto-Renew is on for each plan, and let the user turn it
+   on or cancel it any time. The cancel (Turn off) control is always shown
+   while it's on — only the user turning it off cancels auto-renew. */
+function dbLoadAutorenewState() {
+  if (!window.gUser) return;
+  var rows = document.querySelectorAll('[id^="ar-row-"]');
+  if (!rows || !rows.length) return;
+  window.rpc('list_my_auto_renew', JSON.stringify({}), function(err, res) {
+    var data = (res && (res.data !== undefined ? res.data : res)) || [];
+    var on = {};
+    if (data && data.length) { for (var i = 0; i < data.length; i++) on[data[i].subscription_id] = true; }
+    for (var r = 0; r < rows.length; r++) {
+      var subId = rows[r].id.replace('ar-row-', '');
+      var label = document.getElementById('ar-label-' + subId);
+      var btn = document.getElementById('ar-btn-' + subId);
+      if (!label || !btn) continue;
+      if (on[subId]) {
+        label.innerHTML = '\uD83D\uDD04 Auto-Renew is on';
+        btn.textContent = 'Cancel';
+        btn.style.background = '#c0392b';
+        btn.setAttribute('data-on', '1');
+      } else {
+        label.innerHTML = '\uD83D\uDD04 Auto-Renew';
+        btn.textContent = 'Turn on';
+        btn.style.background = '#4338ca';
+        btn.setAttribute('data-on', '0');
+      }
+    }
+  });
+}
+window.dbLoadAutorenewState = dbLoadAutorenewState;
+
+function dbToggleAutorenew(subId) {
+  var btn = document.getElementById('ar-btn-' + subId);
+  var isOn = btn && btn.getAttribute('data-on') === '1';
+  if (isOn) {
+    window.rpc('set_auto_renew', JSON.stringify({ p_subscription_id: subId, p_on: false }), function(err, res) {
+      var d = res && (res.data !== undefined ? res.data : res);
+      if (!err && d && d.ok) { toast('Auto-Renew cancelled.'); dbLoadAutorenewState(); }
+      else toast('Could not cancel. Please try again.');
+    });
+    return;
+  }
+  window.rpc('set_auto_renew', JSON.stringify({ p_subscription_id: subId, p_on: true }), function(err, res) {
+    var d = res && (res.data !== undefined ? res.data : res);
+    if (!err && d && d.ok) { toast('\uD83D\uDD04 Auto-Renew on \u2014 this plan will renew automatically when it completes.'); dbLoadAutorenewState(); }
+    else toast((d && d.error) || 'Could not enable Auto-Renew.');
+  });
+}
+window.dbToggleAutorenew = dbToggleAutorenew;
+
 function showTab(t) {
   var tabs = ['dash','plans','airtime','subs','wallet','inbox','earn'];
   var i;
@@ -2732,13 +2741,13 @@ function loadPlans(cb) {
     return;
   }
 
-  if (wrap) wrap.innerHTML = '<div class="empty" style="padding:20px 0;">Loading plans\u2026</div>';
+  if (wrap) wrap.innerHTML = '';
 
   restGet('/data_plans',
     'is_active=eq.true&order=network,sort_order,selling_price&select=id,data_size,network,selling_price,daily_price,validity_days,category',
     function(e, r) {
       if (!r || !r.ok || !r.data || !r.data.length) {
-        if (wrap) wrap.innerHTML = '<div class="empty">No plans available right now.</div>';
+        if (wrap) wrap.innerHTML = '';
         _done();   // still mark ready so the splash never hangs
         return;
       }
@@ -3079,6 +3088,8 @@ function loadSubs() {
         _gSubsCache = r.data;
         wrap.innerHTML = renderSubsList(r.data, false);
         _mergeServerPhones(r.data);
+        try { dbLoadAutopayState(); } catch(e) {}
+        try { dbLoadAutorenewState(); } catch(e) {}
       }
     );
   });
@@ -3204,6 +3215,16 @@ function renderSubsList(subs, compact) {
         '<button style="padding:8px 12px;background:#fff;border:1.5px solid #2A3FA3;color:#2A3FA3;border-radius:6px;font-size:.78rem;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="openUpgradeModal(\'' + esc(s.id) + '\')" ontouchstart="">\u2B06\uFE0F Upgrade</button>' +
         /* Report Issue button hidden per product decision — keep markup & handler for easy re-enable */
         '<button style="display:none;padding:8px 10px;background:#fff;border:1px solid #e5e7eb;color:#374151;border-radius:6px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="openRefundModal(\'' + esc(s.id) + '\',\'' + esc(displayName + ' ' + displayNetwork) + '\',\'' + esc(s.phone_number || '') + '\')">&#9888; Report Issue</button>' +
+      '</div>';
+      /* Auto-Pay control — populated per-card by dbLoadAutopayState() */
+      html += '<div id="ap-row-' + esc(s.id) + '" data-daily="' + (dailyPrice||0) + '" style="margin-top:7px;padding:8px 10px;background:#f3fbf6;border:1px solid #cdedd9;border-radius:6px;font-size:.78rem;color:#0f5132;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;gap:8px;">' +
+        '<span id="ap-label-' + esc(s.id) + '">\u26A1 Auto-Pay</span>' +
+        '<button id="ap-btn-' + esc(s.id) + '" onclick="dbToggleAutopay(\'' + esc(s.id) + '\',' + (dailyPrice||0) + ')" style="padding:5px 12px;background:#0f5132;color:#fff;border:none;border-radius:5px;font-size:.76rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;">Turn on</button>' +
+      '</div>';
+      /* Auto-Renew control — populated per-card by dbLoadAutorenewState() */
+      html += '<div id="ar-row-' + esc(s.id) + '" style="margin-top:7px;padding:8px 10px;background:#eef2ff;border:1px solid #c7d2fe;border-radius:6px;font-size:.78rem;color:#3730a3;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;gap:8px;">' +
+        '<span id="ar-label-' + esc(s.id) + '">\uD83D\uDD04 Auto-Renew</span>' +
+        '<button id="ar-btn-' + esc(s.id) + '" onclick="dbToggleAutorenew(\'' + esc(s.id) + '\')" style="padding:5px 12px;background:#4338ca;color:#fff;border:none;border-radius:5px;font-size:.76rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;">Turn on</button>' +
       '</div>';
     }
 
@@ -3650,7 +3671,8 @@ function atConfirm() {
 
   if (!network)       { atErr('Please select a network.'); return; }
   if (!phone)         { atErr('Please enter a phone number.'); return; }
-  if (amount < 100)   { atErr('Minimum airtime amount is \u20a6100.'); return; }
+  var minAmt = (gAtDays === 1) ? 50 : 100;
+  if (amount < minAmt)   { atErr('Minimum airtime amount is \u20a6' + minAmt + '.'); return; }
   if (amount > 50000) { atErr('Maximum airtime amount is \u20a650,000.'); return; }
 
   var btn = $('at-buy-btn');
@@ -3690,7 +3712,10 @@ function atConfirm() {
         ? '\u20a6' + fmtN(amount) + ' airtime sent to ' + phone + '!'
         : '\u20a6' + fmtN(amount) + ' airtime started for ' + phone + ' on ' + gAtDays + '-day installment.';
       if (typeof toast === 'function') toast(okMsg); else alert(okMsg);
-      if (typeof refreshBalance === 'function') { try { refreshBalance(); } catch(_) {} }
+      // Refresh wallet balance + any visible balance UI after the debit.
+      if (typeof loadWalletBalance === 'function') {
+        try { loadWalletBalance(function() { atUpdatePreview(); }); } catch(_) {}
+      }
     });
   });
 }
@@ -3709,21 +3734,15 @@ window.atConfirm = atConfirm;
 
 function calcPlanDaily(plan, days) {
   var price = parseFloat(plan && plan.selling_price) || 0;
-  /* Mirror the backend createSubscription EXACTLY so the displayed total equals
-     what is actually charged:
-       1) loyalty discount comes off the card price (selling_price), BEFORE surge
-          tiers: >=10 completed plans -> 10%, >=3 -> 3%, else 0
-       2) a flat 3% surge applies to the discounted base (single market). */
-  var done = (window.dbRewardsCache && parseInt(window.dbRewardsCache.completed_plans)) || 0;
-  var discPct = done >= 10 ? 10 : (done >= 3 ? 3 : 0);
-  var discountedBase = Math.round(price * (1 - discPct / 100) * 100) / 100;
+  /* Single market: flat 3% surge on the card price. No loyalty discount, no cashback. */
+  var discountedBase = Math.round(price * 100) / 100;
   var total = Math.round(discountedBase * 1.03 * 100) / 100;
   return {
     total: total,
     daily: days > 0 ? (total / days) : 0,
     base: price,
-    discPct: discPct,
-    discountAmount: Math.round((price - discountedBase) * 100) / 100,
+    discPct: 0,
+    discountAmount: 0,
     discountedBase: discountedBase
   };
 }
@@ -3745,67 +3764,24 @@ function updateSubDaysUI() {
   _refreshSubInfo();
 }
 
-/* ── Rewards promise: live personalized breakdown in the subscribe modal ── */
-var dbRewardsCache = null;   /* { pending_cashback, spendable_balance, completed_plans, next_plan_discount_percent } */
+/* ── Loyalty/cashback removed. Stubs kept so existing callers don't error. ── */
+var dbRewardsCache = null;
 
-function dbLoadRewards(cb) {
-  try {
-    if (!window.gUser || !window.gUser.id) { if (cb) cb(); return; }
-    window.rpc('get_rewards_summary', JSON.stringify({ p_user_id: window.gUser.id }), function(err, res) {
-      if (!err && res && res.data) { dbRewardsCache = res.data; }
-      try { dbRenderRewardBreakdown(); } catch (e) {}
-      if (cb) cb();
-    });
-  } catch (e) { if (cb) cb(); }
-}
+function dbLoadRewards(cb) { if (cb) cb(); }
 
 function dbRenderRewardBreakdown() {
   var box = document.getElementById('m-sub-rewards');
-  if (!box || !gSelPlan) return;
-
-  var calc = calcPlanDaily(gSelPlan, gModalPayDays);
-  var total = (calc && calc.total) || 0;
-  var cashback = Math.round(total * 0.01 * 100) / 100;   /* 1% of full plan = sum of all installment rewards */
-
-  var done = (dbRewardsCache && parseInt(dbRewardsCache.completed_plans)) || 0;
-  /* next-plan discount: recurring 15% from 10, 5% from 3 (mirrors backend) */
-  var discPct = done >= 10 ? 10 : (done >= 3 ? 3 : 0);
-
-  var rows = '';
-  rows += '<div class="row-line"><span class="row-label">&#128176; You\'ll earn</span>' +
-          '<span class="row-val" style="color:#15803d;font-weight:800;">' + fmtN(cashback) + '</span></div>';
-
-  if (discPct > 0) {
-    rows += '<div class="row-line"><span class="row-label">&#127881; Loyalty discount applied</span>' +
-            '<span class="row-val" style="color:#15803d;font-weight:800;">' + discPct + '% off</span></div>';
-  } else {
-    var left = 3 - done;
-    if (left < 1) left = 1;
-    rows += '<div class="row-line"><span class="row-label">&#11088; Loyalty discount</span>' +
-            '<span class="row-val" style="color:#64748b;font-weight:700;">' +
-            (done >= 3 ? '3% off' : ('Finish ' + left + ' more to unlock 3%')) + '</span></div>';
-  }
-
-  box.innerHTML =
-    '<div style="font-size:.82rem;font-weight:900;color:#166534;margin-bottom:8px;">What you get with this plan</div>' +
-    rows +
-    '<div style="font-size:.72rem;color:#3f6e52;margin-top:8px;line-height:1.45;">Your rewards add up as you pay each installment and unlock the moment your plan completes.</div>';
-  box.style.display = 'block';
+  if (box) { box.style.display = 'none'; box.innerHTML = ''; }
 }
 
 function updateSubInfo() {
   if (!gSelPlan) return;
   var calc = calcPlanDaily(gSelPlan, gModalPayDays);
-  var discRow = (calc.discPct > 0)
-    ? '<div class="row-line"><span class="row-label">Loyalty discount (' + calc.discPct + '%)</span><span class="row-val" style="color:#15803d;font-weight:800;">\u2212' + fmtN(calc.discountAmount) + '</span></div>'
-    : '';
   $('m-sub-info').innerHTML =
     '<div class="row-line"><span class="row-label">Plan Price</span><span class="row-val">' + fmtN(gSelPlan.selling_price) + '</span></div>' +
-    discRow +
     '<div class="row-line"><span class="row-label">Payment Option</span><span class="row-val">' + gModalPayDays + ' days</span></div>' +
     '<div class="row-line"><span class="row-label">Daily Payment</span><span class="row-val">' + fmtN(calc.daily) + '</span></div>' +
     '<div class="row-line"><span class="row-label">Validity</span><span class="row-val">' + (gSelPlan.validity_days || 30) + ' days</span></div>';
-  try { dbRenderRewardBreakdown(); } catch (e) {}
 }
 
 function openSubModal(planIdx) {
@@ -5052,7 +5028,7 @@ function wire() {
   $('m-sub-days-7').onclick  = function() { gModalPayDays = 7;  updateSubDaysUI(); };
   $('m-sub-days-28').onclick = function() { gModalPayDays = 28; updateSubDaysUI(); };
   // Subscribe modal toggles
-  $('m-sub-autofund').onchange = function() {
+  if ($('m-sub-autofund')) $('m-sub-autofund').onchange = function() {
     _syncSl('m-sub-autofund-sl', $('m-sub-autofund').checked);
     var f = $('m-autofund-fields');
     if (f) f.style.display = $('m-sub-autofund').checked ? 'block' : 'none';
