@@ -168,7 +168,7 @@ body{overscroll-behavior-y:none;}
 .prog-bar{background:#e5e7eb;border-radius:4px;height:6px;margin:8px 0 4px;overflow:hidden;}
 .prog-fill{background:#1A56DB;height:100%;border-radius:4px;}
 .sub-meta{font-size:.75rem;color:#888;}
-.pay-btn{margin-top:8px;padding:8px;background:#3d9758;color:#fff;border:none;border-radius:6px;font-size:.82rem;font-weight:700;cursor:pointer;width:100%;font-family:inherit;-webkit-appearance:none;}
+.pay-btn{margin-top:8px;padding:8px;background:#0f5132;color:#fff;border:none;border-radius:6px;font-size:.82rem;font-weight:700;cursor:pointer;width:100%;font-family:inherit;-webkit-appearance:none;}
 
 /* Notification rows */
 .notif-row{padding:12px;box-shadow:0 1px 0 #f0f0f0;font-size:.83rem;}
@@ -204,7 +204,7 @@ body{overscroll-behavior-y:none;}
 .tx-desc{font-size:.85rem;font-weight:700;color:#111;}
 .tx-date{font-size:.74rem;color:#888;margin-top:3px;}
 .tx-amt{font-size:.86rem;font-weight:900;white-space:nowrap;}
-.tx-amt.credit,.tx-amt.refund{color:#3d9758;}
+.tx-amt.credit,.tx-amt.refund{color:#0f5132;}
 .tx-amt.debit{color:#dc2626;}
 .va-box{border:1px solid #d0d8ff;background:#f5f6ff;border-radius:8px;padding:14px;margin-bottom:12px;}
 .va-bank{font-size:.76rem;color:#1A56DB;font-weight:700;text-transform:uppercase;letter-spacing:.05em;}
@@ -440,15 +440,15 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 @media(min-width:900px){.hero-bal-card{padding:28px 24px 22px;}}
 @media(hover:hover){.plan-card:hover{-webkit-box-shadow:0 4px 16px rgba(26,86,219,.12);box-shadow:0 4px 16px rgba(26,86,219,.12);-webkit-transform:translateY(-1px);transform:translateY(-1px);-webkit-transition:all .2s;transition:all .2s;}}
 /* Plan filter chips — frontend-only list arrangement */
-.plan-filter-card{grid-column:1/-1!important;background:#f0fdf4!important;border:2px solid #3d9758!important;border-radius:22px!important;box-shadow:0 10px 22px rgba(61,151,88,.10)!important;padding:14px!important;margin-bottom:2px!important;}
+.plan-filter-card{grid-column:1/-1!important;background:#f0fdf4!important;border:2px solid #0f5132!important;border-radius:22px!important;box-shadow:0 10px 22px rgba(15,81,50,.10)!important;padding:14px!important;margin-bottom:2px!important;}
 .plan-filter-title{font-size:.76rem!important;color:#166534!important;font-weight:900!important;text-transform:uppercase!important;letter-spacing:.07em!important;margin:2px 0 8px!important;}
 .plan-chip-row{display:-webkit-box!important;display:-webkit-flex!important;display:flex!important;gap:8px!important;overflow-x:auto!important;-webkit-overflow-scrolling:touch!important;padding:2px 0 10px!important;}
 .plan-chip{border:1.5px solid #a7f3d0!important;background:#fff!important;color:#166534!important;border-radius:999px!important;padding:9px 14px!important;font-size:.78rem!important;font-weight:900!important;white-space:nowrap!important;font-family:Arial,Helvetica,sans-serif!important;cursor:pointer!important;-webkit-appearance:none!important;-webkit-tap-highlight-color:transparent!important;}
 .plan-search-wrap{grid-column:1/-1;margin-bottom:8px;position:relative;display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;-webkit-box-align:center;-webkit-align-items:center;align-items:center;}
 .plan-search-input{-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:11px 14px 11px 38px;border:1.5px solid #a7f3d0;border-radius:14px;font-size:.84rem;font-weight:700;font-family:Arial,Helvetica,sans-serif;background:#fff;color:#111827;outline:none;-webkit-appearance:none;box-sizing:border-box;min-width:0;}
-.plan-search-input:focus{border-color:#3d9758;box-shadow:0 0 0 3px rgba(61,151,88,.15);}
+.plan-search-input:focus{border-color:#0f5132;box-shadow:0 0 0 3px rgba(15,81,50,.15);}
 .plan-search-icon{position:absolute;left:12px;top:50%;-webkit-transform:translateY(-50%);transform:translateY(-50%);font-size:15px;pointer-events:none;opacity:.6;z-index:1;}
-.plan-search-btn{background:#3d9758;color:#fff;border:none;border-radius:12px;padding:11px 16px;font-size:.82rem;font-weight:900;font-family:Arial,Helvetica,sans-serif;cursor:pointer;white-space:nowrap;-webkit-flex-shrink:0;flex-shrink:0;touch-action:manipulation;-webkit-appearance:none;}
+.plan-search-btn{background:#0f5132;color:#fff;border:none;border-radius:12px;padding:11px 16px;font-size:.82rem;font-weight:900;font-family:Arial,Helvetica,sans-serif;cursor:pointer;white-space:nowrap;-webkit-flex-shrink:0;flex-shrink:0;touch-action:manipulation;-webkit-appearance:none;}
 .plan-search-btn:active{opacity:.85;}
 .plan-search-clear{background:#fee2e2;color:#b91c1c;border:none;border-radius:10px;padding:9px 11px;font-size:.82rem;font-weight:900;font-family:Arial,Helvetica,sans-serif;cursor:pointer;-webkit-flex-shrink:0;flex-shrink:0;touch-action:manipulation;-webkit-appearance:none;}
 .plan-no-results{grid-column:1/-1;text-align:center;padding:32px 16px;color:#6B7280;font-size:.88rem;font-weight:700;}
@@ -481,7 +481,7 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 .pin-spinner{width:20px;height:20px;border:2.5px solid #dbeafe;border-top-color:#1A56DB;border-radius:50%;-webkit-animation:pinSpin .7s linear infinite;animation:pinSpin .7s linear infinite;}
 @-webkit-keyframes pinSpin{to{-webkit-transform:rotate(360deg);}}
 @keyframes pinSpin{to{transform:rotate(360deg);}}
-.pin-check{width:22px;height:22px;border-radius:50%;background:#16a34a;position:relative;-webkit-animation:pinPop2 .3s ease;animation:pinPop2 .3s ease;flex:0 0 auto;}
+.pin-check{width:22px;height:22px;border-radius:50%;background:#0f5132;position:relative;-webkit-animation:pinPop2 .3s ease;animation:pinPop2 .3s ease;flex:0 0 auto;}
 .pin-check:after{content:'';position:absolute;left:7px;top:3.5px;width:5px;height:10px;border:solid #fff;border-width:0 2.5px 2.5px 0;-webkit-transform:rotate(45deg);transform:rotate(45deg);}
 .pin-cross{width:22px;height:22px;border-radius:50%;background:#dc2626;position:relative;-webkit-animation:pinPop2 .3s ease;animation:pinPop2 .3s ease;flex:0 0 auto;}
 .pin-cross:before,.pin-cross:after{content:'';position:absolute;left:10px;top:5px;width:2.5px;height:12px;background:#fff;border-radius:2px;}
@@ -735,23 +735,23 @@ button,.btn,.plan-btn,.tab,.logout-btn,.plan-chip,.avatar,.avatar-menu button{
 
 
 /* ── NUGGET HIGHLIGHT — green ring that pulses then fades ── */
-@-webkit-keyframes nuggetPulse{0%{box-shadow:0 0 0 0 rgba(61,151,88,.55);}60%{box-shadow:0 0 0 8px rgba(61,151,88,.0);}100%{box-shadow:0 0 0 0 rgba(61,151,88,0);}}
-@keyframes nuggetPulse{0%{box-shadow:0 0 0 0 rgba(61,151,88,.55);}60%{box-shadow:0 0 0 8px rgba(61,151,88,.0);}100%{box-shadow:0 0 0 0 rgba(61,151,88,0);}}
-.nugget-highlight{outline:3px solid #3d9758!important;outline-offset:3px!important;border-radius:10px!important;-webkit-animation:nuggetPulse 1s ease-out 3;animation:nuggetPulse 1s ease-out 3;-webkit-transition:outline .2s;transition:outline .2s;}
+@-webkit-keyframes nuggetPulse{0%{box-shadow:0 0 0 0 rgba(15,81,50,.55);}60%{box-shadow:0 0 0 8px rgba(15,81,50,.0);}100%{box-shadow:0 0 0 0 rgba(15,81,50,0);}}
+@keyframes nuggetPulse{0%{box-shadow:0 0 0 0 rgba(15,81,50,.55);}60%{box-shadow:0 0 0 8px rgba(15,81,50,.0);}100%{box-shadow:0 0 0 0 rgba(15,81,50,0);}}
+.nugget-highlight{outline:3px solid #0f5132!important;outline-offset:3px!important;border-radius:10px!important;-webkit-animation:nuggetPulse 1s ease-out 3;animation:nuggetPulse 1s ease-out 3;-webkit-transition:outline .2s;transition:outline .2s;}
 
 /* ── AUTHORITATIVE THEME: green actions, blue brand, one source of truth ── */
 /* All previous !important blocks for .tab.act and .btn-blue are superseded here */
-.tabs .tab.act{background:#3d9758!important;color:#fff!important;border-color:#3d9758!important;font-weight:900!important;box-shadow:none!important;}
+.tabs .tab.act{background:#0f5132!important;color:#fff!important;border-color:#0f5132!important;font-weight:900!important;box-shadow:none!important;}
 .tabs .tab.act::after{display:none!important;}
 .tabs .tab:not(.act){background:#F5F7FB!important;color:#727B8C!important;border-color:#E3E7EF!important;box-shadow:none!important;}
-.bnav-btn.act{color:#3d9758!important;}
-.bnav-btn.act svg{stroke:#3d9758!important;}
+.bnav-btn.act{color:#0f5132!important;}
+.bnav-btn.act svg{stroke:#0f5132!important;}
 .bnav-btn{color:#6b7280!important;}
-#d-fund-btn,.plan-btn,.pay-btn,#m-sub-btn,#m-pay-btn,#plans-fund-btn,#fg-send-btn,#compose-btn-open,#l-btn,#s-btn,#r-btn,#w-login-btn,#air-buy-btn,#m-terms-agree,.btn-blue{background:#3d9758!important;color:#fff!important;border:none!important;box-shadow:none!important;}
+#d-fund-btn,.plan-btn,.pay-btn,#m-sub-btn,#m-pay-btn,#plans-fund-btn,#fg-send-btn,#compose-btn-open,#l-btn,#s-btn,#r-btn,#w-login-btn,#air-buy-btn,#m-terms-agree,.btn-blue{background:#0f5132!important;color:#fff!important;border:none!important;box-shadow:none!important;}
 .btn-lite{background:#E9EEFF!important;color:#1A56DB!important;border:1px solid #D6DFFF!important;}
-#pay-days-7.btn-blue,#pay-days-28.btn-blue,#m-sub-days-7.btn-blue,#m-sub-days-28.btn-blue{background:#3d9758!important;color:#fff!important;border:none!important;}
+#pay-days-7.btn-blue,#pay-days-28.btn-blue,#m-sub-days-7.btn-blue,#m-sub-days-28.btn-blue{background:#0f5132!important;color:#fff!important;border:none!important;}
 #pay-days-7.btn-lite,#pay-days-28.btn-lite,#m-sub-days-7.btn-lite,#m-sub-days-28.btn-lite{background:#E9EEFF!important;color:#1A56DB!important;border:1px solid #D6DFFF!important;}
-.plan-chip.act{background:#3d9758!important;color:#fff!important;border-color:#3d9758!important;font-weight:900!important;box-shadow:0 4px 12px rgba(61,151,88,.25)!important;}
+.plan-chip.act{background:#0f5132!important;color:#fff!important;border-color:#0f5132!important;font-weight:900!important;box-shadow:0 4px 12px rgba(15,81,50,.25)!important;}
 .plan-chip:not(.act){background:#fff!important;color:#166534!important;border-color:#a7f3d0!important;}
 .avatar-signout,#logout-btn{background:#F8FAFC!important;color:#667085!important;border:1px solid #E5E7EB!important;box-shadow:none!important;}
 .modal-x{background:none!important;border:none!important;box-shadow:none!important;color:#888!important;padding:0!important;line-height:1!important;-webkit-appearance:none!important;appearance:none!important;}
@@ -975,7 +975,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <div style="position:relative;-webkit-flex-shrink:0;flex-shrink:0;">
         <button id="notif-bell" onclick="toggleNotifDrawer()" aria-label="Notifications" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:10px;width:36px;height:36px;display:-webkit-box!important;display:-webkit-flex!important;display:flex!important;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;cursor:pointer;position:relative;padding:0;-webkit-flex-shrink:0;flex-shrink:0;visibility:visible!important;opacity:1!important;">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-          <span id="notif-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:#3d9758;color:#fff;border-radius:10px;font-size:.6rem;font-weight:900;padding:1px 5px;min-width:16px;text-align:center;border:1.5px solid #fff;"></span>
+          <span id="notif-badge" style="display:none;position:absolute;top:-4px;right:-4px;background:#0f5132;color:#fff;border-radius:10px;font-size:.6rem;font-weight:900;padding:1px 5px;min-width:16px;text-align:center;border:1.5px solid #fff;"></span>
         </button>
       </div>
       <div class="avatar-wrap">
@@ -1036,7 +1036,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
     </button>
     <button class="bnav-btn" id="tab-inbox" data-t="inbox" onclick="showTab('inbox')" style="display:none!important;flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;position:relative;">
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      <span id="inbox-badge" style="display:none;position:absolute;top:4px;right:10px;background:#3d9758;color:#fff;border-radius:10px;font-size:.55rem;font-weight:800;padding:1px 4px;min-width:14px;text-align:center;"></span>
+      <span id="inbox-badge" style="display:none;position:absolute;top:4px;right:10px;background:#0f5132;color:#fff;border-radius:10px;font-size:.55rem;font-weight:800;padding:1px 4px;min-width:14px;text-align:center;"></span>
       <span style="font-size:.62rem;font-weight:700;font-family:inherit;">Messages</span>
     </button>
     <button class="bnav-btn" id="tab-earn" data-t="earn" onclick="showTab('earn')" style="display:none!important;" style="flex:1;-webkit-box-flex:1;background:none;border:none;cursor:pointer;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:3px;padding:6px 2px;-webkit-tap-highlight-color:transparent;outline:none;">
@@ -1266,7 +1266,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;gap:9px;margin-bottom:12px;">
       <div style="-webkit-box-flex:1;-webkit-flex:1 1 80px;flex:1 1 80px;border:1px solid #e5e7eb;border-radius:8px;padding:11px;background:#fff;min-width:0;">
         <div style="font-size:.66rem;font-weight:700;color:#888;text-transform:uppercase;margin-bottom:3px;">Today Funded</div>
-        <div style="font-size:1.05rem;font-weight:900;color:#3d9758;" id="cf-in-d">&#8358;0.00</div>
+        <div style="font-size:1.05rem;font-weight:900;color:#0f5132;" id="cf-in-d">&#8358;0.00</div>
       </div>
       <div style="-webkit-box-flex:1;-webkit-flex:1 1 80px;flex:1 1 80px;border:1px solid #e5e7eb;border-radius:8px;padding:11px;background:#fff;min-width:0;">
         <div style="font-size:.66rem;font-weight:700;color:#888;text-transform:uppercase;margin-bottom:3px;">Today Spent</div>
@@ -1313,7 +1313,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
     </div>
 
     <div class="card" style="margin-bottom:12px;padding:0!important;overflow:hidden;">
-      <div style="height:3px;background:linear-gradient(90deg,#1A56DB,#3d9758);"></div>
+      <div style="height:3px;background:linear-gradient(90deg,#1A56DB,#0f5132);"></div>
       <div style="padding:16px;">
         <div id="earn-ad-slot" onclick="earnStartAd()" style="background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:12px;height:148px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;gap:8px;margin-bottom:14px;cursor:pointer;position:relative;-webkit-tap-highlight-color:rgba(0,0,0,0);">
           <div style="position:absolute;top:7px;right:9px;font-size:.68rem;background:#e5e7eb;color:#9ca3af;padding:2px 6px;border-radius:4px;text-transform:uppercase;letter-spacing:.05em;">Ad</div>
@@ -1327,14 +1327,14 @@ button.tab,button.plan-chip{box-shadow:none!important;}
             <span id="earn-timer-count" style="color:#1A56DB;font-weight:800;">30s</span>
           </div>
           <div style="height:5px;background:#e5e7eb;border-radius:4px;overflow:hidden;">
-            <div id="earn-timer-fill" style="height:100%;background:linear-gradient(90deg,#1A56DB,#3d9758);border-radius:4px;width:0%;-webkit-transition:width 30s linear;transition:width 30s linear;"></div>
+            <div id="earn-timer-fill" style="height:100%;background:linear-gradient(90deg,#1A56DB,#0f5132);border-radius:4px;width:0%;-webkit-transition:width 30s linear;transition:width 30s linear;"></div>
           </div>
         </div>
 
         <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;margin-bottom:14px;">
           <div style="background:#eaf5ee;border:1px solid #c8e6d2;border-radius:10px;-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:10px;text-align:center;">
             <div style="font-size:1.3rem;margin-bottom:2px;">&#128176;</div>
-            <div style="font-size:.95rem;font-weight:900;color:#3d9758;">+&#8358;15</div>
+            <div style="font-size:.95rem;font-weight:900;color:#0f5132;">+&#8358;15</div>
             <div style="font-size:.72rem;color:#6b7280;margin-top:1px;">Wallet credit</div>
           </div>
           <div id="earn-discount-chip" style="background:#fefce8;border:1px solid #fde047;border-radius:10px;-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:10px;text-align:center;">
@@ -1468,6 +1468,11 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <!-- ===== STEP 1: Plan & payment ===== -->
       <div class="m-sub-step" data-step="1">
         <div id="m-sub-info" style="font-size:.82rem;color:#444;margin-bottom:12px;"></div>
+        <!-- Premium inscription (Premium market only) -->
+        <div id="m-sub-premium-note" style="display:none;margin-bottom:12px;border-radius:12px;padding:13px 15px;background:-webkit-linear-gradient(135deg,#f0fdf4,#ecfdf5);background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border:1px solid #bbf7d0;font-size:.8rem;color:#14532d;line-height:1.6;">
+          <div style="font-weight:900;margin-bottom:5px;">&#128154; This is a premium plan</div>
+          You are entitled to <b>pay on installments</b> &mdash; a smart way to ease the burden of paying a large sum all at once. <b>Auto-Pay</b> lets the system pay for data on your behalf and credit it to your phone whenever and however you want it. <b>Auto-Renew</b> repeats the plans you love. Plus <b>1% earnings on every installment</b> you pay, and loyal users unlock up to <b>10% off</b> future plans &mdash; rewards unlock the moment your plan completes. A small <b>3% service fee</b> applies, a fair trade for the flexibility and benefits you get.
+        </div>
         <div id="m-sub-rewards" style="display:none;margin-bottom:12px;border-radius:12px;padding:12px 14px;background:#f0fdf4;border:1px solid #bbf7d0;"></div>
 
         <div class="field" id="m-sub-paymode-field">
@@ -1476,7 +1481,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
             <button class="btn btn-blue" id="m-sub-mode-install" type="button" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;">Pay in installments</button>
             <button class="btn btn-lite" id="m-sub-mode-once" type="button" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;">Pay once</button>
           </div>
-          <div id="m-sub-once-note" style="display:none;font-size:.74rem;color:#3d9758;margin-top:6px;line-height:1.4;">You will pay the full amount now from your wallet and your data is delivered immediately.</div>
+          <div id="m-sub-once-note" style="display:none;font-size:.74rem;color:#0f5132;margin-top:6px;line-height:1.4;">You will pay the full amount now from your wallet and your data is delivered immediately.</div>
         </div>
 
         <div class="field" id="m-sub-dur-field">
@@ -1565,7 +1570,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <div class="field"><label>Amount to Pay (&#8358;)</label><input id="m-pay-amt" type="number" placeholder="0"></div>
     </div>
     <div class="modal-foot">
-      <button class="btn btn-blue" id="m-pay-btn" style="width:auto;display:inline-block;padding:10px 22px;margin:0;background:#3d9758;">Pay from Wallet</button>
+      <button class="btn btn-blue" id="m-pay-btn" style="width:auto;display:inline-block;padding:10px 22px;margin:0;background:#0f5132;">Pay from Wallet</button>
     </div>
   </div>
 </div>
@@ -1744,7 +1749,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <div id="fund-panel-af" style="display:none;">
         <!-- Active mandate — shown when recurring auto-fund is already running -->
         <div id="af-active-banner" style="display:none;background:#eaf5ee;border:1px solid #b2dfdb;border-radius:8px;padding:12px;margin-bottom:10px;">
-          <div style="font-size:.85rem;font-weight:800;color:#3d9758;margin-bottom:4px;">&#9989; Auto-Fund Active</div>
+          <div style="font-size:.85rem;font-weight:800;color:#0f5132;margin-bottom:4px;">&#9989; Auto-Fund Active</div>
           <div id="af-active-detail" style="font-size:.77rem;color:#444;margin-bottom:10px;">Your card is being charged daily automatically.</div>
           <button class="btn" id="af-cancel-btn" style="background:#fff2f2;color:#c0392b;border:1.5px solid #f5c6cb;width:100%;margin:0;padding:10px;font-family:inherit;">&#9209; Cancel Auto-Fund</button>
         </div>
@@ -1804,7 +1809,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <!-- Step 3: success -->
       <div id="transfer-step-done" style="display:none;text-align:center;padding:8px 0;">
         <div style="font-size:2.6rem;margin-bottom:6px;">&#9989;</div>
-        <div style="font-size:1.05rem;font-weight:900;color:#3d9758;margin-bottom:4px;" id="transfer-done-title">Sent!</div>
+        <div style="font-size:1.05rem;font-weight:900;color:#0f5132;margin-bottom:4px;" id="transfer-done-title">Sent!</div>
         <div style="font-size:.82rem;color:#555;line-height:1.5;margin-bottom:14px;" id="transfer-done-msg">&mdash;</div>
         <button class="btn btn-blue" id="transfer-done-btn" style="width:100%;margin:0;">Done</button>
       </div>
@@ -1924,7 +1929,7 @@ function dbCountUpBalance(el, to, ms) {
 }
 
 function dbBurstConfetti(n) {
-  var colors = ['#00e5be','#1A56DB','#ff6b6b','#ffd93d','#a29bfe','#3d9758'];
+  var colors = ['#00e5be','#1A56DB','#ff6b6b','#ffd93d','#a29bfe','#0f5132'];
   n = n || 28;
   for (var i = 0; i < n; i++) {
     (function() {
@@ -2567,7 +2572,7 @@ function showTab(t) {
   }
   var now = Date.now();
   if (t === 'dash')   { if (now - _dashLastLoad  > STALE_MS) { _dashLastLoad  = now; loadDashCashflow(); } try { loadAutofundCard(); } catch(e) {} }
-  if (t === 'subs')   { try { renderBucketSection(); } catch(e) {} if (now - _subsLastLoad  > STALE_MS) { _subsLastLoad  = now; loadSubs(); } }
+  if (t === 'subs')   { if (now - _subsLastLoad  > STALE_MS) { _subsLastLoad  = now; loadSubs(); } }
   if (t === 'wallet') loadWalletTab();
   if (t === 'airtime') { try { if (typeof airRenderSavedPhones === 'function') airRenderSavedPhones(); airUpdatePreview(); } catch(e) {} }
   if (t === 'inbox')  { if (now - _inboxLastLoad > STALE_MS) { _inboxLastLoad = now; loadInbox(); } updateInboxBadge(0); }
@@ -3006,7 +3011,7 @@ function loadPromos() {
     for (var i = 0; i < res.promos.length; i++) {
       var p = res.promos[i];
       var isPromo = p.type === 'promo';
-      var bg = isPromo ? 'linear-gradient(135deg,#3d9758,#2d7a44)' : 'linear-gradient(135deg,#1A56DB,#1244a8)';
+      var bg = isPromo ? 'linear-gradient(135deg,#0f5132,#2d7a44)' : 'linear-gradient(135deg,#1A56DB,#1244a8)';
       html += '<div style="background:' + bg + ';border-radius:14px;padding:14px 16px;margin-bottom:8px;color:#fff;position:relative;overflow:hidden;">' +
         '<div style="position:absolute;top:-20px;right:-20px;font-size:5rem;opacity:.08;">' + (p.icon || '\uD83D\uDCE2') + '</div>' +
         '<div style="font-size:.78rem;font-weight:700;opacity:.8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:4px;">' + (isPromo ? '\uD83C\uDF89 Special Offer' : '\uD83D\uDCA1 Daily Nugget') + '</div>' +
@@ -3366,28 +3371,14 @@ var GM_SEGMENTS = [
 ];
 
 function renderGMSegments() {
+  // Services grid (Data/Airtime/Electricity/Cable/WAEC/JAMB) removed from General market.
+  // General now shows data plans directly.
   var box = document.getElementById('gm-segments');
-  if (!box) return;
-  var html = '<div class="gm-seg-grid">';
-  for (var i = 0; i < GM_SEGMENTS.length; i++) {
-    var s = GM_SEGMENTS[i];
-    var cls = 'gm-seg-tile' +
-      (s.id === gSegment ? ' active' : '') +
-      (!s.live ? ' coming-soon' : '');
-    var badge = !s.live ? '<span class="gm-seg-badge">Soon</span>' : '';
-    var click = s.live
-      ? 'onclick="setGMSegment(\'' + s.id + '\')"'
-      : 'onclick="toast(\'' + s.label + ' coming soon!\')"';
-    html += '<div class="' + cls + '" ' + click + '>' +
-      badge +
-      '<span class="gm-seg-icon">' + s.icon + '</span>' +
-      '<span class="gm-seg-label">' + s.label + '</span>' +
-      '</div>';
-  }
-  html += '</div>';
-  box.innerHTML = html;
-  box.className = 'visible' === box.className ? 'visible' : '';
-  box.style.display = 'block';
+  if (box) { box.style.display = 'none'; box.innerHTML = ''; }
+  gSegment = 'data';
+  var pl = document.getElementById('plans-list');
+  if (pl) pl.style.display = '';
+  loadPlans();
 }
 
 function setGMSegment(seg) {
@@ -3441,7 +3432,7 @@ var gMarket = 'general';
     if (_wb) {
       _wb.style.background = '#f0f4ff';
       _wb.style.borderColor = '#c7d4fb';
-      _wb.innerHTML = '<b>&#127914; Welcome to the General Market.</b> Plans here are subject to users\' experiences and feedback. Your funds are safe and secure.';
+      _wb.innerHTML = '<b>&#127914; Welcome to the General Market.</b> Your funds are safe and secure. Plans here are subject to users\' experiences and feedback. Your funds are safe and secure.';
     }
   }
   if (document.readyState === 'loading') {
@@ -3518,7 +3509,7 @@ function setMarket(m) {
     if (m === 'general') {
       _wb.style.background = '#f0f4ff';
       _wb.style.borderColor = '#c7d4fb';
-      _wb.innerHTML = '<b>&#127914; Welcome to the General Market.</b> Plans here are subject to users\' experiences and feedback. Your funds are safe and secure.';
+      _wb.innerHTML = '<b>&#127914; Welcome to the General Market.</b> Your funds are safe and secure. Plans here are subject to users\' experiences and feedback. Your funds are safe and secure.';
     } else {
       _wb.style.background = '#f0fdf4';
       _wb.style.borderColor = '#bbf7d0';
@@ -3552,16 +3543,13 @@ function marketDisplayPrice(plan) {
 }
 
 /* Returns the actual total user pays at checkout.
-   Surge: pay-once = 0%; any installment = flat 3% (both markets).
-   General  + pay once:        selling_price (no surge)
-   General  + installment:     ceil(selling_price * 1.03)
-   Installment + either:       ceil(selling_price * 1.03) */
+   PREMIUM (installment market): 3% surge on EVERYTHING (pay-once and installment).
+   GENERAL market: pay-once only, 0% surge (exact price). */
 function marketCheckoutTotal(plan, payOnce) {
   var base = parseFloat(plan.selling_price) || 0;
   var mkt  = plan.market || gMarket;
-  if (mkt === 'installment') return Math.ceil(base * 1.03);
-  if (payOnce) return Math.ceil(base);  // general + pay once: no surge
-  return Math.ceil(base * 1.03);        // general + installment: 3% surge
+  if (mkt === 'installment') return Math.ceil(base * 1.03);  // premium: 3% always
+  return Math.ceil(base);                                     // general: 0%, pay-once only
 }
 
 /* === BUCKET === */
@@ -3590,6 +3578,10 @@ function removeFromBucket(planId){
   renderBucketSection();
 }
 function renderBucketSection(){
+  var sec=document.getElementById('bucket-section');if(!sec)return;
+  sec.style.display='none'; sec.innerHTML='';
+}
+function _bucketRenderDISABLED(){
   var sec=document.getElementById('bucket-section');if(!sec)return;
   var b=getBucket();
   sec.style.display='block';
@@ -3641,6 +3633,13 @@ function loadPlans(cb) {
   var now  = Date.now();
   var _done = function() { if (typeof cb === 'function') { try { cb(); } catch(e) {} } };
 
+  // No market chosen yet -> show nothing (the market chooser is displayed instead).
+  if (!gMarket) {
+    if (wrap) { wrap.innerHTML = ''; wrap.style.display = 'none'; }
+    _done();
+    return;
+  }
+  if (wrap) wrap.style.display = '';
   // Serve from cache instantly if fresh — avoids redundant network round trips
   if (_plansCache && (now - _plansCacheTs) < PLANS_CACHE_MS) {
     _renderPlans(_plansCache);
@@ -3648,14 +3647,14 @@ function loadPlans(cb) {
     return;
   }
 
-  if (wrap) wrap.innerHTML = '<div class="empty" style="padding:20px 0;">Loading plans\u2026</div>';
+  if (wrap) wrap.innerHTML = '';
 
   restGet('/data_plans',
     'is_active=eq.true&order=network,sort_order,selling_price&select=id,data_size,network,selling_price,daily_price,validity_days,category,delivery_provider,market',
     function(e, r) {
       if (!r || !r.ok || !r.data || !r.data.length) {
-        if (wrap) wrap.innerHTML = '<div class="empty">No plans available right now.</div>';
-        _done();   // still mark ready so the splash never hangs
+        if (wrap) wrap.innerHTML = '';
+        _done();
         return;
       }
       // Cache for this session
@@ -3772,10 +3771,10 @@ function _renderPlans(allPlans) {
             '<div class="plan-size">' + esc2(nn) + '<br>' + esc2(p.data_size) + '</div>' +
             '<div class="plan-sub" style="margin-top:5px;text-transform:none;letter-spacing:0;">' + (p.validity_days || 30) + '-Day Plan</div>' +
             '<div class="plan-price">' + fmtN(marketDisplayPrice(p)) + '</div>' +
-            '<div style="margin-top:8px;font-size:.8rem;font-weight:700;color:#3d9758;">' + (gMarket === 'general' ? 'Pay once or on installment' : 'Pay in ' + gPayDays + ' days') + '</div>' +
+            '<div style="margin-top:8px;font-size:.8rem;font-weight:700;color:#0f5132;">' + (gMarket === 'general' ? 'Pay once or on installment' : 'Pay in ' + gPayDays + ' days') + '</div>' +
           '</div>' +
           '<button class="plan-btn" onclick="openSubModal(\'id_' + String(p.id) + '\')">Subscribe</button>' +
-          '<button class="plan-bucket-btn' + (isBucketed(String(p.id)) ? ' in-bucket' : '') + '"' + ' id="bkt-' + String(p.id) + '"' + ' onclick="toggleBucket(\'' + String(p.id) + '\')" title="Bucket">[B]</button>' +
+          '' +
         '</div>';
       }
       wrap.innerHTML = html;
@@ -4081,7 +4080,7 @@ function renderSubsList(subs, compact) {
 
     html += '<div style="min-width:100px;">' +
       '<div style="font-size:.67rem;color:#aaa;text-transform:uppercase;font-weight:700;">Total Paid</div>' +
-      '<div style="font-size:.88rem;font-weight:900;color:#3d9758;">' + fmtN(paid) + '</div>' +
+      '<div style="font-size:.88rem;font-weight:900;color:#0f5132;">' + fmtN(paid) + '</div>' +
     '</div>';
 
     if (isCompleted) {
@@ -4570,6 +4569,49 @@ function updateSubInfo() {
   try { dbRenderRewardBreakdown(); } catch (e) {}
 }
 
+/* Configure the subscribe modal for the plan's market.
+   PREMIUM (installment): full benefits — installments, auto-pay, auto-renew,
+     premium inscription, 3% fee. GENERAL: pay-once only, none of the extras. */
+function _configSubModalForMarket(plan) {
+  var mkt = (plan && plan.market) || gMarket || 'general';
+  var isPremium = (mkt === 'installment');
+
+  var prem   = document.getElementById('m-sub-premium-note');
+  var payF   = document.getElementById('m-sub-paymode-field');
+  var durF   = document.getElementById('m-sub-dur-field');
+  var arF    = document.getElementById('m-sub-autorenew-field');
+  var apF    = document.getElementById('m-sub-autopay-field');
+  var step3  = document.querySelector('.m-sub-step[data-step="3"]');
+  var onceNote = document.getElementById('m-sub-once-note');
+
+  if (prem) prem.style.display = isPremium ? 'block' : 'none';
+
+  if (isPremium) {
+    // Full premium experience
+    if (payF)  payF.style.display  = '';
+    if (durF)  durF.style.display  = '';
+    if (arF)   arF.style.display   = '';
+    if (apF)   apF.style.display   = '';
+    if (step3) step3.style.display = '';
+    gPayOnce = false;
+    _subStepMax = 3;
+  } else {
+    // General: pay-once ONLY — hide installment chooser, duration, automation.
+    if (payF)  payF.style.display  = 'none';
+    if (durF)  durF.style.display  = 'none';
+    if (arF)   arF.style.display   = 'none';
+    if (apF)   apF.style.display   = 'none';
+    if (step3) step3.style.display = 'none';
+    if (onceNote) onceNote.style.display = 'block';
+    gPayOnce = true;
+    gModalPayDays = 1;
+    _subStepMax = 2;
+    if ($('m-sub-autorenew')) $('m-sub-autorenew').checked = false;
+    if ($('m-sub-autopay'))   $('m-sub-autopay').checked = false;
+  }
+}
+window._configSubModalForMarket = _configSubModalForMarket;
+
 function openSubModal(planIdx) {
   /* Always clear any stale error from a previous attempt — first thing, before any other logic. */
   var _errEl = $('m-sub-err');
@@ -4598,11 +4640,13 @@ function openSubModal(planIdx) {
 
   if (!plan) { toast('Plan not found. Please refresh and try again.'); return; }
   gSelPlan = plan;
-  gModalPayDays = gPayDays;
-  gPayOnce = false;
+  _configSubModalForMarket(plan);
+  var _isPrem = ((plan.market || gMarket) === 'installment');
+  if (_isPrem) { gModalPayDays = gPayDays; gPayOnce = false; }
+  else         { gModalPayDays = 1;        gPayOnce = true;  }
   if (typeof updateSubPayModeUI === 'function') updateSubPayModeUI();
   try { var _rb = document.getElementById('m-sub-rewards'); if (_rb) _rb.style.display = 'none'; } catch (e) {}
-  dbLoadRewards();
+  if (_isPrem) dbLoadRewards();
 
   /* ── Check if user has an active/pending sub for this exact plan ── */
   var existingSub = null;
@@ -4788,7 +4832,7 @@ function _refreshSubInfo() {
     discRow +
     '<div class="row-line"><span class="row-label">Duration</span><span class="row-val">' + gModalPayDays + ' days</span></div>' +
     '<div class="row-line"><span class="row-label">Daily Payment</span><span class="row-val">' + fmtN(calc.daily) + '</span></div>' +
-    '<div class="row-line"><span class="row-label">Account Balance</span><span class="row-val" style="color:' + (gBal >= calc.daily ? '#3d9758' : '#dc2626') + ';">' + fmtN(gBal) + '</span></div>';
+    '<div class="row-line"><span class="row-label">Account Balance</span><span class="row-val" style="color:' + (gBal >= calc.daily ? '#0f5132' : '#dc2626') + ';">' + fmtN(gBal) + '</span></div>';
   try { dbRenderRewardBreakdown(); } catch (e) {}
 }
 
@@ -4920,9 +4964,10 @@ function confirmSub() {
     return;
   }
   var phone = ($('m-sub-phone').value || '').replace(/^\s+|\s+$/g, '');
-  var days  = gModalPayDays || 7;
-  var autoRenew = $('m-sub-autorenew') ? $('m-sub-autorenew').checked : false;
-  var autoPayOn = $('m-sub-autopay') ? $('m-sub-autopay').checked : false;
+  var _isPremMkt = ((gSelPlan && gSelPlan.market || gMarket) === 'installment');
+  var days  = (gPayOnce || !_isPremMkt) ? 1 : (gModalPayDays || 7);
+  var autoRenew  = (_isPremMkt && $('m-sub-autorenew')) ? $('m-sub-autorenew').checked : false;
+  var autoPayOn  = (_isPremMkt && $('m-sub-autopay'))   ? $('m-sub-autopay').checked   : false;
   var autoPayAmt = autoPayOn ? (parseFloat($('m-autopay-amt') && $('m-autopay-amt').value) || 0) : 0;
   errHide('m-sub-err');
   if (!phone) { errShow('m-sub-err', 'Enter your phone number for data delivery.'); return; }
@@ -6033,7 +6078,7 @@ if (document.readyState === 'loading') {
     var sl = $(slId);
     if (!sl) return;
     ensureKnob(sl);
-    sl.style.background = on ? '#3d9758' : '#CBD5E1';
+    sl.style.background = on ? '#0f5132' : '#CBD5E1';
     var knob = sl.getElementsByTagName('span')[0];
     if (knob){
       knob.style.webkitTransform = on ? 'translateX(20px)' : 'translateX(0)';
@@ -6384,7 +6429,7 @@ function earnRenderUI() {
     if (i < watched) {
       slot.style.background  = '#eaf5ee'; slot.style.borderColor = '#c8e6d2';
       if (icon) icon.textContent = '\u2705';
-      if (lbl)  { lbl.textContent = 'Earned'; lbl.style.color = '#3d9758'; }
+      if (lbl)  { lbl.textContent = 'Earned'; lbl.style.color = '#0f5132'; }
     } else if (i === watched && s.can_watch) {
       slot.style.background  = '#eef2ff'; slot.style.borderColor = '#1A56DB';
       if (icon) icon.textContent = '\uD83D\uDCFA';
@@ -6823,7 +6868,7 @@ function earnResetAdSlot() {
 }
 .db-push-progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #1A56DB, #3d9758);
+  background: linear-gradient(90deg, #1A56DB, #0f5132);
   width: 100%;
   -webkit-transform-origin: left;
   transform-origin: left;
@@ -6868,7 +6913,7 @@ function earnResetAdSlot() {
 }
 .notif-toast.error-toast { background: #dc2626; color: #fff; border-color: #dc2626; box-shadow: 0 8px 24px rgba(220,38,38,.3); }
 .notif-toast.warn-toast  { background: #d97706; color: #fff; border-color: #d97706; box-shadow: 0 8px 24px rgba(217,119,6,.3); }
-.notif-toast.success-toast { background: #3d9758; color: #fff; border-color: #3d9758; }
+.notif-toast.success-toast { background: #0f5132; color: #fff; border-color: #0f5132; }
 
 
 /* ═══════════════════════════════════════════════════════
@@ -6882,7 +6927,7 @@ function earnResetAdSlot() {
   --friend-bg:#F6F8FC!important;
   --friend-card:#FFFFFF!important;
   --friend-blue:#1A56DB!important;
-  --friend-green:#3d9758!important;
+  --friend-green:#0f5132!important;
   --friend-mint:#EFFFF6!important;
   --friend-sun:#FFF7D6!important;
   --friend-rose:#FFF1F3!important;
@@ -6896,7 +6941,7 @@ html,body{background:radial-gradient(circle at top left,#EEF6FF 0,#F6F8FC 34%,#F
 .user-greeting{color:#111827!important;font-weight:950!important;letter-spacing:-.04em!important;}
 .tabs{background:rgba(255,255,255,.82)!important;backdrop-filter:blur(10px)!important;-webkit-backdrop-filter:blur(10px)!important;border-bottom:0!important;box-shadow:0 10px 25px rgba(15,23,42,.05)!important;}
 .tabs .tab{border-radius:18px!important;border:1px solid rgba(226,232,240,.9)!important;background:#fff!important;color:#667085!important;box-shadow:0 5px 12px rgba(15,23,42,.04)!important;}
-.tabs .tab.act{background:linear-gradient(135deg,#1A56DB,#3d9758)!important;color:#fff!important;border-color:transparent!important;box-shadow:0 12px 24px rgba(26,86,219,.20)!important;}
+.tabs .tab.act{background:linear-gradient(135deg,#1A56DB,#0f5132)!important;color:#fff!important;border-color:transparent!important;box-shadow:0 12px 24px rgba(26,86,219,.20)!important;}
 .card,.sub-row,.tx-row,.va-box,.msg-row,.plan-filter-card{border:0!important;background:rgba(255,255,255,.94)!important;border-radius:26px!important;box-shadow:var(--friend-shadow)!important;}
 .card-title,.sec-title{font-size:.72rem!important;letter-spacing:.10em!important;color:#667085!important;}
 .card-val{font-size:2rem!important;letter-spacing:-.06em!important;}
@@ -6925,7 +6970,7 @@ html,body{background:radial-gradient(circle at top left,#EEF6FF 0,#F6F8FC 34%,#F
 .friend-sticky-cta{position:fixed;left:12px;right:12px;bottom:78px;z-index:120;display:none;max-width:940px;margin:0 auto;}
 .friend-sticky-inner{display:-webkit-box;display:-webkit-flex;display:flex;gap:10px;background:rgba(255,255,255,.92);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(226,232,240,.9);border-radius:24px;padding:10px;box-shadow:0 18px 45px rgba(15,23,42,.18);}
 .friend-sticky-inner button{border:0;border-radius:16px;padding:12px 12px;font-size:.82rem;font-weight:950;font-family:Arial,Helvetica,sans-serif;-webkit-box-flex:1;-webkit-flex:1;flex:1;}
-.friend-sticky-inner .fund{background:linear-gradient(135deg,#3d9758,#2F7D49);color:#fff;}
+.friend-sticky-inner .fund{background:linear-gradient(135deg,#0f5132,#2F7D49);color:#fff;}
 .friend-sticky-inner .plans{background:#EFF4FF;color:#1A56DB;}
 body.friend-show-sticky .friend-sticky-cta{display:block;}
 @-webkit-keyframes friendFloat{0%,100%{-webkit-transform:translateY(0)}50%{-webkit-transform:translateY(-4px)}}
@@ -6968,8 +7013,8 @@ body,.card-sub,.plan-sub,.sub-meta,.msg-body,.notif-row,.row-label,.field label,
 /* #tc-dash display is controlled by showTab adding/removing .on class — do NOT force hide here */
 .bnav-btn span{font-size:.68rem!important;font-weight:900!important;color:inherit!important;}
 .bnav-btn{color:#6b7280!important;}
-.bnav-btn.act{color:#3d9758!important;}
-.bnav-btn.act svg{stroke:#3d9758!important;}
+.bnav-btn.act{color:#0f5132!important;}
+.bnav-btn.act svg{stroke:#0f5132!important;}
 #bottom-nav{height:68px!important;box-shadow:0 -8px 26px rgba(15,23,42,.10)!important;border-top:1px solid #dbe3ef!important;}
 #pg-app{padding-bottom:76px!important;}
 
@@ -6979,7 +7024,7 @@ body,.card-sub,.plan-sub,.sub-meta,.msg-body,.notif-row,.row-label,.field label,
 .hero-bal-label{color:rgba(255,255,255,.76)!important;}
 .hero-bal-amount{font-size:2.45rem!important;color:#fff!important;text-shadow:0 2px 10px rgba(0,0,0,.13)!important;}
 .hero-bal-va{color:rgba(255,255,255,.86)!important;font-weight:700!important;}
-.hero-fund-btn{background:#3d9758!important;color:#fff!important;border:1px solid rgba(255,255,255,.28)!important;box-shadow:0 9px 22px rgba(0,0,0,.16)!important;}
+.hero-fund-btn{background:#0f5132!important;color:#fff!important;border:1px solid rgba(255,255,255,.28)!important;box-shadow:0 9px 22px rgba(0,0,0,.16)!important;}
 
 .momentum-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
 .momentum-card{background:#fff;border:1px solid #dbe3ef;border-radius:20px;padding:14px;box-shadow:0 10px 23px rgba(15,23,42,.07);}
@@ -7007,7 +7052,7 @@ html{scroll-padding-top:70px;}
 .plan-size{font-size:1.12rem!important;line-height:1.24!important;}
 .plan-price{font-size:1.48rem!important;color:#07111f!important;border-top-color:rgba(15,23,42,.10)!important;}
 .plan-sub{font-size:.76rem!important;text-transform:none!important;letter-spacing:0!important;color:#374151!important;font-weight:700!important;}
-.plan-btn{min-height:46px!important;border-radius:15px!important;background:#3d9758!important;color:#fff!important;}
+.plan-btn{min-height:46px!important;border-radius:15px!important;background:#0f5132!important;color:#fff!important;}
 .plan-card.net-mtn-accent,.plan-card:has(.net-MTN){background:linear-gradient(145deg,#fffbeb,#ffffff)!important;border-left:6px solid #facc15!important;}
 .plan-card.net-airtel-accent,.plan-card:has(.net-AIRTEL){background:linear-gradient(145deg,#fff1f2,#ffffff)!important;border-left:6px solid #ef4444!important;}
 .plan-card.net-glo-accent,.plan-card:has(.net-GLO){background:linear-gradient(145deg,#f0fdf4,#ffffff)!important;border-left:6px solid #16a34a!important;}
@@ -8202,7 +8247,7 @@ function airUpdatePreview() {
     (gAirDays === 1
       ? '<div style="display:flex;justify-content:space-between;"><span>Payment</span><strong>Pay once</strong></div>'
       : '<div style="display:flex;justify-content:space-between;"><span>Daily payment</span><strong>&#8358;' + fmtN(daily) + ' &times; ' + gAirDays + ' days</strong></div>') +
-    '<div style="display:flex;justify-content:space-between;color:' + (gBal >= daily ? '#3d9758' : '#dc2626') + ';"><span>Your balance</span><strong>&#8358;' + fmtN(gBal) + '</strong></div>';
+    '<div style="display:flex;justify-content:space-between;color:' + (gBal >= daily ? '#0f5132' : '#dc2626') + ';"><span>Your balance</span><strong>&#8358;' + fmtN(gBal) + '</strong></div>';
   prev.style.display = 'block';
 }
 
@@ -8590,7 +8635,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
       c.className='conf-piece';
       c.style.left=(50+(Math.random()*30-15))+'%';
       c.style.bottom='92px';
-      c.style.background=['#1A56DB','#3d9758','#F59E0B','#A855F7'][i%4];
+      c.style.background=['#1A56DB','#0f5132','#F59E0B','#A855F7'][i%4];
       c.style.animationDelay=(Math.random()*.18)+'s';
       c.style.webkitAnimationDelay=c.style.animationDelay;
       document.body.appendChild(c);
@@ -8814,7 +8859,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
     var txt=(document.body.textContent||'').toLowerCase();
     if(txt.indexOf('completed')<0 && txt.indexOf('delivered')<0) return;
     body.setAttribute('data-db-celebrated','1');
-    var colors=['#3d9758','#1A56DB','#facc15','#ef4444','#14b8a6'];
+    var colors=['#0f5132','#1A56DB','#facc15','#ef4444','#14b8a6'];
     for(var i=0;i<18;i++){
       var c=make('span','db-confetti','');
       c.style.left=(45+Math.random()*12)+'%'; c.style.bottom='82px'; c.style.background=colors[i%colors.length];
