@@ -3424,7 +3424,7 @@ function backToGMSegments() {
   if (pl) { pl.style.display = 'none'; pl.innerHTML = '<div class="empty">Loading plans\u2026</div>'; }
   renderGMSegments();
 }
-var gMarket = 'general';
+var gMarket = null;   // no market chosen until user taps a market card
 // Initialise welcome banner once DOM is ready
 (function _initMarketWelcome() {
   function _setInitBanner() {
@@ -3771,7 +3771,7 @@ function _renderPlans(allPlans) {
             '<div class="plan-size">' + esc2(nn) + '<br>' + esc2(p.data_size) + '</div>' +
             '<div class="plan-sub" style="margin-top:5px;text-transform:none;letter-spacing:0;">' + (p.validity_days || 30) + '-Day Plan</div>' +
             '<div class="plan-price">' + fmtN(marketDisplayPrice(p)) + '</div>' +
-            '<div style="margin-top:8px;font-size:.8rem;font-weight:700;color:#0f5132;">' + (gMarket === 'general' ? 'Pay once or on installment' : 'Pay in ' + gPayDays + ' days') + '</div>' +
+            '<div style="margin-top:8px;font-size:.8rem;font-weight:700;color:#0f5132;">' + (gMarket === 'general' ? 'Pay once' : 'Pay in ' + gPayDays + ' days') + '</div>' +
           '</div>' +
           '<button class="plan-btn" onclick="openSubModal(\'id_' + String(p.id) + '\')">Subscribe</button>' +
           '' +
@@ -3998,16 +3998,52 @@ function loadSubs() {
       'user_id=eq.' + gUser.id + '&select=id,status,total_price,amount_paid,daily_price,phone_number,payment_days,created_at,data_plans(data_size,network,daily_price,selling_price,category)&order=created_at.desc&limit=20',
       function(e, r) {
         var wrap = $('subs-list');
-        if (!r || !r.ok || !r.data || !r.data.length) {
-          _gSubsCache = [];
-          wrap.innerHTML = '<div class="empty">No plans yet.</div>';
-          return;
-        }
-        _gSubsCache = r.data;
-        wrap.innerHTML = renderSubsList(r.data, false);
-        _mergeServerPhones(r.data);
-        if (typeof dbLoadAutopayState === 'function') setTimeout(dbLoadAutopayState, 100);
-        if (typeof dbLoadAutorenewState === 'function') setTimeout(dbLoadAutorenewState, 120);
+        var dataSubs = (r && r.ok && r.data) ? r.data : [];
+        // Also pull airtime installment plans and present them like data installments.
+        restGet('/airtime_installments',
+          'user_id=eq.' + gUser.id + '&select=id,status,total_price,amount_paid,daily_price,phone_number,payment_days,network_name,airtime_amount,created_at&order=created_at.desc&limit=20',
+          function(e2, r2) {
+            var airRows = (r2 && r2.ok && r2.data) ? r2.data : [];
+            var airSubs = [];
+            for (var a = 0; a < airRows.length; a++) {
+              var ar = airRows[a];
+              // Normalise an airtime installment into the same shape renderSubsList expects.
+              airSubs.push({
+                id: ar.id,
+                status: ar.status,
+                total_price: ar.total_price,
+                amount_paid: ar.amount_paid,
+                daily_price: ar.daily_price,
+                phone_number: ar.phone_number,
+                payment_days: ar.payment_days,
+                created_at: ar.created_at,
+                _isAirtime: true,
+                network: ar.network_name,
+                data_plans: {
+                  data_size: 'Airtime',
+                  network: ar.network_name,
+                  daily_price: ar.daily_price,
+                  selling_price: ar.airtime_amount,
+                  category: 'airtime'
+                }
+              });
+            }
+            var all = dataSubs.concat(airSubs);
+            // Sort newest first by created_at
+            all.sort(function(x, y){ return (new Date(y.created_at)) - (new Date(x.created_at)); });
+
+            if (!all.length) {
+              _gSubsCache = [];
+              wrap.innerHTML = '<div class="empty">No plans yet.</div>';
+              return;
+            }
+            _gSubsCache = all;
+            wrap.innerHTML = renderSubsList(all, false);
+            _mergeServerPhones(dataSubs);
+            if (typeof dbLoadAutopayState === 'function') setTimeout(dbLoadAutopayState, 100);
+            if (typeof dbLoadAutorenewState === 'function') setTimeout(dbLoadAutorenewState, 120);
+          }
+        );
       }
     );
   });
@@ -4129,8 +4165,8 @@ function renderSubsList(subs, compact) {
       '</div>';
     } else if ((isActive || isPending) && remaining > 0) {
       html += '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:7px;margin-top:4px;">' +
-        '<button class="pay-btn" style="flex:1;" onclick="openPayModal(\'' + esc(s.id) + '\',' + (dailyPrice||0) + ',' + remaining + ')">Pay Now</button>' +
-        '<button style="padding:8px 12px;background:#fff;border:1.5px solid #2A3FA3;color:#2A3FA3;border-radius:6px;font-size:.78rem;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="openUpgradeModal(\'' + esc(s.id) + '\')" ontouchstart="">\u2B06\uFE0F Upgrade</button>' +
+        '<button class="pay-btn" style="flex:1;" onclick="openPayModal(\'' + esc(s.id) + '\',' + (dailyPrice||0) + ',' + remaining + ',' + (s._isAirtime ? 'true' : 'false') + ')">Pay Now</button>' +
+        (s._isAirtime ? '' : '<button style="padding:8px 12px;background:#fff;border:1.5px solid #2A3FA3;color:#2A3FA3;border-radius:6px;font-size:.78rem;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="openUpgradeModal(\'' + esc(s.id) + '\')" ontouchstart="">\u2B06\uFE0F Upgrade</button>') +
         /* Report Issue button hidden per product decision — keep markup & handler for easy re-enable */
         '<button style="display:none;padding:8px 10px;background:#fff;border:1px solid #e5e7eb;color:#374151;border-radius:6px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="openRefundModal(\'' + esc(s.id) + '\',\'' + esc(displayName + ' ' + displayNetwork) + '\',\'' + esc(s.phone_number || '') + '\')">&#9888; Report Issue</button>' +
       '</div>';
@@ -4596,9 +4632,11 @@ function _configSubModalForMarket(plan) {
     gPayOnce = false;
     _subStepMax = 3;
   } else {
-    // General: pay-once ONLY — hide installment chooser, duration, automation.
-    if (payF)  payF.style.display  = 'none';
-    if (durF)  durF.style.display  = 'none';
+    // General: SHOW pay-once / pay-in-installment buttons.
+    // Pay-once is functional; Pay-in-installment is a placeholder ad (Premium only).
+    // Hide duration (7/28) and automation.
+    if (payF)  payF.style.display  = '';      // show the two buttons
+    if (durF)  durF.style.display  = 'none';  // no 7/28 in general
     if (arF)   arF.style.display   = 'none';
     if (apF)   apF.style.display   = 'none';
     if (step3) step3.style.display = 'none';
@@ -4608,6 +4646,9 @@ function _configSubModalForMarket(plan) {
     _subStepMax = 2;
     if ($('m-sub-autorenew')) $('m-sub-autorenew').checked = false;
     if ($('m-sub-autopay'))   $('m-sub-autopay').checked = false;
+    // Relabel: install button becomes the ad placeholder, once button active
+    if ($('m-sub-mode-install')) { $('m-sub-mode-install').className = 'btn btn-lite'; $('m-sub-mode-install').textContent = 'Pay in installments'; }
+    if ($('m-sub-mode-once'))    { $('m-sub-mode-once').className = 'btn btn-blue'; }
   }
 }
 window._configSubModalForMarket = _configSubModalForMarket;
@@ -5047,8 +5088,8 @@ function confirmSub() {
 }
 
 /* ── PAY INSTALLMENT ────────────────────────────────────────── */
-function openPayModal(subId, dailyAmt, remaining) {
-  gSelSub = { id: subId, daily: dailyAmt, remaining: remaining };
+function openPayModal(subId, dailyAmt, remaining, isAirtime) {
+  gSelSub = { id: subId, daily: dailyAmt, remaining: remaining, _isAirtime: !!isAirtime };
   var sugAmt = dailyAmt > 0 ? Math.min(dailyAmt, remaining) : remaining;
   // Only the amount actually DUE matters — never demand more than what's left to finish.
   var dueNow = sugAmt;
@@ -5109,7 +5150,11 @@ function confirmPay() {
   btnLoad('m-pay-btn', true, 'Paying\u2026');
   ensureToken(function(err) {
     if (err) { btnLoad('m-pay-btn', false, 'Pay from Wallet'); errShow('m-pay-err', 'Session error.'); return; }
-    rpc('pay_installment', { p_user_id: gUser.id, p_subscription_id: gSelSub.id, p_amount: amt, p_reference: null, p_pin: _pin },
+    var _payRpc = (gSelSub && gSelSub._isAirtime) ? 'pay_airtime_installment' : 'pay_installment';
+    var _payArgs = (gSelSub && gSelSub._isAirtime)
+      ? { p_airtime_installment_id: gSelSub.id, p_user_id: gUser.id, p_amount: amt, p_reference: null, p_pin: _pin }
+      : { p_user_id: gUser.id, p_subscription_id: gSelSub.id, p_amount: amt, p_reference: null, p_pin: _pin };
+    rpc(_payRpc, _payArgs,
       function(e, r) {
         btnLoad('m-pay-btn', false, 'Pay from Wallet');
         if (e || !r || !r.ok || (r.data && !r.data.success)) {
@@ -5939,7 +5984,19 @@ function wire() {
   // Subscribe modal day buttons
   $('m-sub-days-7').onclick  = function() { gModalPayDays = 7;  updateSubDaysUI(); };
   $('m-sub-days-28').onclick = function() { gModalPayDays = 28; updateSubDaysUI(); };
-  if ($('m-sub-mode-install')) $('m-sub-mode-install').onclick = function() { gPayOnce = false; updateSubPayModeUI(); };
+  if ($('m-sub-mode-install')) $('m-sub-mode-install').onclick = function() {
+    var mkt = (gSelPlan && gSelPlan.market) || gMarket || 'general';
+    if (mkt !== 'installment') {
+      // General market: installment is a Premium-only feature — advertise it.
+      toast('Installment plans are available in the Premium market only');
+      gPayOnce = true;
+      updateSubPayModeUI();
+      if ($('m-sub-mode-once'))    $('m-sub-mode-once').className = 'btn btn-blue';
+      if ($('m-sub-mode-install')) $('m-sub-mode-install').className = 'btn btn-lite';
+      return;
+    }
+    gPayOnce = false; updateSubPayModeUI();
+  };
   if ($('m-sub-mode-once'))    $('m-sub-mode-once').onclick    = function() { gPayOnce = true;  updateSubPayModeUI(); };
   // Subscribe modal toggles
   $('m-sub-autorenew').onchange = function() {
@@ -8241,13 +8298,13 @@ function airUpdatePreview() {
   var total = Math.round(amt * (1 + rate) * 100) / 100;
   var daily = Math.round((total / gAirDays) * 100) / 100;
   prev.innerHTML =
-    '<div style="display:flex;justify-content:space-between;"><span>Airtime</span><strong>&#8358;' + fmtN(amt) + '</strong></div>' +
-    '<div style="display:flex;justify-content:space-between;"><span>Fee (' + label + ')</span><strong>&#8358;' + fmtN(total - amt) + '</strong></div>' +
-    '<div style="display:flex;justify-content:space-between;"><span>Total</span><strong>&#8358;' + fmtN(total) + '</strong></div>' +
+    '<div style="display:flex;justify-content:space-between;"><span>Airtime</span><strong>' + fmtN(amt) + '</strong></div>' +
+    '<div style="display:flex;justify-content:space-between;"><span>Fee (' + label + ')</span><strong>' + fmtN(total - amt) + '</strong></div>' +
+    '<div style="display:flex;justify-content:space-between;"><span>Total</span><strong>' + fmtN(total) + '</strong></div>' +
     (gAirDays === 1
       ? '<div style="display:flex;justify-content:space-between;"><span>Payment</span><strong>Pay once</strong></div>'
-      : '<div style="display:flex;justify-content:space-between;"><span>Daily payment</span><strong>&#8358;' + fmtN(daily) + ' &times; ' + gAirDays + ' days</strong></div>') +
-    '<div style="display:flex;justify-content:space-between;color:' + (gBal >= daily ? '#0f5132' : '#dc2626') + ';"><span>Your balance</span><strong>&#8358;' + fmtN(gBal) + '</strong></div>';
+      : '<div style="display:flex;justify-content:space-between;"><span>Daily payment</span><strong>' + fmtN(daily) + ' &times; ' + gAirDays + ' days</strong></div>') +
+    '<div style="display:flex;justify-content:space-between;color:' + (gBal >= daily ? '#0f5132' : '#dc2626') + ';"><span>Your balance</span><strong>' + fmtN(gBal) + '</strong></div>';
   prev.style.display = 'block';
 }
 
@@ -8356,7 +8413,7 @@ function confirmAirtime() {
       if ($('air-preview'))       { $('air-preview').style.display = 'none'; }
       var d = r.data || {};
       var successMsg = d.message || ((gAirDays === 1)
-        ? ('\u2705 \u20a6' + fmtN(amount) + ' airtime sent to ' + phone + '!')
+        ? ('\u2705 ' + fmtN(amount) + ' airtime sent to ' + phone + '!')
         : ('\u2705 Airtime installment started for ' + phone + '.'));
       toast(successMsg);
       if (typeof loadWalletBalance === 'function') { try { loadWalletBalance(function(){}); } catch(_) {} }
