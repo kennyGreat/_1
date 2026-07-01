@@ -1167,9 +1167,17 @@ button.tab,button.plan-chip{box-shadow:none!important;}
             <div style="margin-top:13px;display:-webkit-inline-box;display:inline-flex;-webkit-box-align:center;align-items:center;gap:6px;font-size:.82rem;font-weight:800;position:relative;z-index:1;">Enter General <span style="font-size:1rem;">&rarr;</span></div>
           </div>
         </button>
-      </div>
 
-      <!-- ── In-market header (shown after a market is picked) ── -->
+        <!-- Auto-Pay Data entry -->
+        <button type="button" onclick="openAutoPayRecur()" style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #cdedd9;background:#f7fdf9;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-top:2px;">
+          <span style="font-size:1.4rem;">&#9889;</span>
+          <span style="-webkit-box-flex:1;-webkit-flex:1;flex:1;">
+            <span style="display:block;font-size:.9rem;font-weight:900;color:#0f5132;">Auto-Pay Data</span>
+            <span style="display:block;font-size:.76rem;color:#4b7a5f;margin-top:1px;">Set an amount &amp; how often &mdash; we buy &amp; deliver it from your wallet.</span>
+          </span>
+          <span style="font-size:1.1rem;color:#0f5132;">&rarr;</span>
+        </button>
+      </div>
       <div id="market-selector" style="display:none;margin-bottom:12px;">
         <button id="market-back-btn" type="button" onclick="backToMarkets()" style="display:-webkit-inline-box;display:inline-flex;-webkit-box-align:center;align-items:center;gap:5px;background:none;border:none;color:#1A56DB;font-size:.84rem;font-weight:800;cursor:pointer;font-family:inherit;padding:2px 0;margin-bottom:8px;-webkit-tap-highlight-color:transparent;"><span style="font-size:1.05rem;">&larr;</span> Markets</button>
         <div id="market-current-pill" style="font-size:1.05rem;font-weight:900;color:#0f172a;"></div>
@@ -1236,14 +1244,6 @@ button.tab,button.plan-chip{box-shadow:none!important;}
             <button class="btn btn-lite" id="air-days-7"  onclick="airSetDays(7)"  style="margin:0;flex:1;font-size:.82rem;">7 Days</button>
             <button class="btn btn-lite" id="air-days-28" onclick="airSetDays(28)" style="margin:0;flex:1;font-size:.82rem;">28 Days</button>
           </div>
-        </div>
-        <!-- Auto-renew toggle -->
-        <div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;margin-bottom:10px;">
-          <span style="font-size:.82rem;color:#333;font-weight:600;">&#128260; Auto-renew</span>
-          <label style="position:relative;display:inline-block;width:40px;height:22px;">
-            <input type="checkbox" id="air-autorenew" style="opacity:0;width:0;height:0;position:absolute;">
-            <span id="air-autorenew-sl" style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:22px;-webkit-transition:.25s;transition:.25s;"></span>
-          </label>
         </div>
         <!-- Preview -->
         <div id="air-preview" style="display:none;background:#f5f7ff;border:1px solid #d0d8ff;border-radius:10px;padding:11px 13px;margin-bottom:12px;font-size:.8rem;color:#444;line-height:1.7;"></div>
@@ -1553,6 +1553,72 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <div style="-webkit-box-flex:1;-webkit-flex:1;flex:1;"></div>
       <button class="btn btn-blue" id="m-sub-next-btn" type="button" onclick="subStep(1)" style="width:auto;display:inline-block;padding:10px 26px;margin:0;">Next &#8594;</button>
       <button class="btn btn-blue" id="m-sub-btn" style="width:auto;display:none;padding:10px 26px;margin:0;">Subscribe Now</button>
+    </div>
+  </div>
+</div>
+
+<!-- AUTO-PAY (recurring data) MODAL — mirrors the subscribe modal UI -->
+<div class="modal" id="m-autopay-recur">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <div class="modal-title">&#9889; Auto-Pay Data</div>
+      <button class="modal-x" id="m-apr-x">&#215;</button>
+    </div>
+    <div class="modal-body">
+      <div id="m-apr-err" class="err"></div>
+
+      <div style="margin-bottom:12px;border-radius:12px;padding:13px 15px;background:-webkit-linear-gradient(135deg,#f0fdf4,#ecfdf5);background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border:1px solid #bbf7d0;font-size:.8rem;color:#14532d;line-height:1.6;">
+        <div style="font-weight:900;margin-bottom:5px;">&#128241; Data on autopilot</div>
+        Set an amount and how often you want it. We&rsquo;ll buy the best-matching data for your number and credit it automatically from your DataBulge wallet &mdash; whenever and however you want it. Cancel anytime.
+      </div>
+
+      <!-- Phone -->
+      <div class="field" style="margin-bottom:12px;">
+        <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Phone Number</label>
+        <input id="m-apr-phone" type="tel" placeholder="08012345678" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;-webkit-appearance:none;" oninput="aprDetectNet(this.value)">
+        <button type="button" onclick="aprPickContact()" style="margin-top:7px;display:-webkit-inline-box;display:inline-flex;-webkit-box-align:center;align-items:center;gap:6px;padding:6px 13px;font-size:.78rem;font-weight:800;border-radius:8px;border:1.5px solid #cdedd9;background:#f0fdf4;color:#0f5132;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;">&#128100; Pick from Contacts</button>
+      </div>
+
+      <!-- Network -->
+      <div class="field" style="margin-bottom:12px;">
+        <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Network</label>
+        <select id="m-apr-network" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;-webkit-appearance:none;appearance:none;">
+          <option value="">&mdash; Select network &mdash;</option>
+          <option value="MTN">MTN</option>
+          <option value="AIRTEL">Airtel</option>
+          <option value="GLO">Glo</option>
+          <option value="9MOBILE">9mobile</option>
+        </select>
+      </div>
+
+      <!-- Amount -->
+      <div class="field" style="margin-bottom:12px;">
+        <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Amount to spend each time (&#8358;)</label>
+        <input id="m-apr-amount" type="number" placeholder="e.g. 500" min="50" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;-webkit-appearance:none;" oninput="aprPreview()">
+        <div style="font-size:.72rem;color:#888;margin-top:5px;">We&rsquo;ll buy the largest data bundle for your network at or below this amount.</div>
+      </div>
+
+      <!-- Frequency -->
+      <div class="field" style="margin-bottom:12px;">
+        <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">How often?</label>
+        <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;-webkit-flex-wrap:wrap;flex-wrap:wrap;">
+          <button class="btn btn-lite" id="m-apr-f-1"  onclick="aprSetFreq(1)"  style="margin:0;flex:1;min-width:64px;font-size:.8rem;">Daily</button>
+          <button class="btn btn-lite" id="m-apr-f-7"  onclick="aprSetFreq(7)"  style="margin:0;flex:1;min-width:64px;font-size:.8rem;">Weekly</button>
+          <button class="btn btn-blue" id="m-apr-f-30" onclick="aprSetFreq(30)" style="margin:0;flex:1;min-width:64px;font-size:.8rem;">Monthly</button>
+        </div>
+        <div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:8px;margin-top:8px;">
+          <span style="font-size:.76rem;color:#666;">Or every</span>
+          <input id="m-apr-f-custom" type="number" min="1" max="365" placeholder="#" style="width:64px;height:38px;border:1.5px solid #E1E5EF;border-radius:8px;background:#FBFCFF;padding:0 8px;font-size:.9rem;color:#111;outline:none;-webkit-appearance:none;" oninput="aprSetFreqCustom(this.value)">
+          <span style="font-size:.76rem;color:#666;">days</span>
+        </div>
+      </div>
+
+      <div id="m-apr-summary" style="display:none;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:11px 13px;margin-bottom:12px;font-size:.8rem;color:#14532d;line-height:1.7;"></div>
+
+      <button class="btn btn-blue" id="m-apr-save" onclick="aprSave()" style="margin-top:2px;">Turn on Auto-Pay</button>
+
+      <!-- Active mandates list -->
+      <div id="m-apr-list" style="margin-top:16px;"></div>
     </div>
   </div>
 </div>
@@ -3428,12 +3494,10 @@ var gMarket = null;   // no market chosen until user taps a market card
 // Initialise welcome banner once DOM is ready
 (function _initMarketWelcome() {
   function _setInitBanner() {
+    // Leave the welcome banner EMPTY on the market-chooser screen (both markets shown).
+    // It is populated by setMarket() only after the user enters a specific market.
     var _wb = document.getElementById('market-welcome');
-    if (_wb) {
-      _wb.style.background = '#f0f4ff';
-      _wb.style.borderColor = '#c7d4fb';
-      _wb.innerHTML = '<b>&#127914; Welcome to the General Market.</b> Your funds are safe and secure. Plans here are subject to users\' experiences and feedback. Your funds are safe and secure.';
-    }
+    if (_wb) { _wb.innerHTML = ''; _wb.style.display = 'none'; }
   }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', _setInitBanner);
@@ -8491,6 +8555,154 @@ function subPickContact() {
   });
 }
 window.subPickContact = subPickContact;
+
+/* ════════ AUTO-PAY (recurring data purchase) MODAL ════════ */
+var gAprFreq = 30;   // default monthly
+
+function openAutoPayRecur() {
+  aprSetFreq(30);
+  if ($('m-apr-amount')) $('m-apr-amount').value = '';
+  if ($('m-apr-summary')) $('m-apr-summary').style.display = 'none';
+  if ($('m-apr-err')) { $('m-apr-err').style.display = 'none'; $('m-apr-err').textContent = ''; }
+  aprLoadList();
+  openModal('m-autopay-recur');
+}
+window.openAutoPayRecur = openAutoPayRecur;
+
+function aprSetFreq(d) {
+  gAprFreq = d;
+  ['1','7','30'].forEach(function(k){
+    var b = $('m-apr-f-' + k);
+    if (b) b.className = 'btn ' + (String(d) === k ? 'btn-blue' : 'btn-lite');
+  });
+  if ($('m-apr-f-custom') && (d === 1 || d === 7 || d === 30)) $('m-apr-f-custom').value = '';
+  aprPreview();
+}
+window.aprSetFreq = aprSetFreq;
+
+function aprSetFreqCustom(v) {
+  var n = parseInt(v) || 0;
+  if (n >= 1 && n <= 365) {
+    gAprFreq = n;
+    ['1','7','30'].forEach(function(k){ var b=$('m-apr-f-'+k); if(b) b.className='btn btn-lite'; });
+    aprPreview();
+  }
+}
+window.aprSetFreqCustom = aprSetFreqCustom;
+
+function aprDetectNet(val) {
+  var d = String(val||'').replace(/\D/g,'');
+  if (d.length < 4) return;
+  var pfx = d.slice(0,4), net = '';
+  var MTN=['0803','0806','0813','0814','0816','0903','0906','0913','0916','0703','0706','0810','0704'];
+  var AIR=['0802','0808','0812','0708','0701','0902','0901','0904','0907','0912','0911'];
+  var GLO=['0805','0807','0811','0815','0905','0915'];
+  var NINE=['0809','0817','0818','0908','0909','0819'];
+  if (MTN.indexOf(pfx)>-1) net='MTN'; else if (AIR.indexOf(pfx)>-1) net='AIRTEL';
+  else if (GLO.indexOf(pfx)>-1) net='GLO'; else if (NINE.indexOf(pfx)>-1) net='9MOBILE';
+  if (net && $('m-apr-network') && !$('m-apr-network').value) $('m-apr-network').value = net;
+}
+window.aprDetectNet = aprDetectNet;
+
+function aprPickContact() {
+  dbPickContact(function(num) {
+    if ($('m-apr-phone')) { $('m-apr-phone').value = num; aprDetectNet(num); }
+  });
+}
+window.aprPickContact = aprPickContact;
+
+function aprFreqLabel(d) {
+  if (d === 1) return 'every day';
+  if (d === 7) return 'every week';
+  if (d === 30) return 'every month';
+  return 'every ' + d + ' days';
+}
+
+function aprPreview() {
+  var amt = parseFloat($('m-apr-amount') ? $('m-apr-amount').value : '0') || 0;
+  var box = $('m-apr-summary');
+  if (!box) return;
+  if (amt < 50) { box.style.display = 'none'; return; }
+  box.innerHTML =
+    '<div style="display:flex;justify-content:space-between;"><span>Spend</span><strong>' + fmtN(amt) + ' each time</strong></div>' +
+    '<div style="display:flex;justify-content:space-between;"><span>Frequency</span><strong>' + aprFreqLabel(gAprFreq) + '</strong></div>' +
+    '<div style="display:flex;justify-content:space-between;"><span>Paid from</span><strong>Your wallet</strong></div>' +
+    '<div style="font-size:.72rem;color:#3f6e52;margin-top:6px;">We buy the largest bundle at or under ' + fmtN(amt) + ' for the network, and send it automatically.</div>';
+  box.style.display = 'block';
+}
+window.aprPreview = aprPreview;
+
+function aprSave() {
+  var phone   = ($('m-apr-phone') ? $('m-apr-phone').value : '').replace(/^\s+|\s+$/g,'');
+  var network = $('m-apr-network') ? $('m-apr-network').value : '';
+  var amount  = parseFloat($('m-apr-amount') ? $('m-apr-amount').value : '0') || 0;
+  var errEl   = $('m-apr-err');
+  function e(m){ if(errEl){ errEl.textContent=m; errEl.style.display='block'; } }
+  if (errEl){ errEl.style.display='none'; errEl.textContent=''; }
+  if (!phone)        { e('Please enter a phone number.'); return; }
+  if (!network)      { e('Please select a network.'); return; }
+  if (amount < 50)   { e('Minimum amount is \u20a650.'); return; }
+  if (!gAprFreq || gAprFreq < 1) { e('Please choose how often.'); return; }
+
+  var btn = $('m-apr-save');
+  if (btn){ btn.disabled=true; btn.textContent='Saving\u2026'; }
+  rpc('set_recurring_data', {
+    p_phone_number: phone, p_network: network,
+    p_budget_amount: amount, p_frequency_days: gAprFreq, p_plan_id: null
+  }, function(err, res) {
+    if (btn){ btn.disabled=false; btn.textContent='Turn on Auto-Pay'; }
+    var d = res && (res.data !== undefined ? res.data : res);
+    if (err || !d || d.success === false) { e((d && d.error) || 'Could not set Auto-Pay. Please try again.'); return; }
+    toast('\u2705 Auto-Pay is on. We\u2019ll buy ' + network + ' data for ' + phone + ' ' + aprFreqLabel(gAprFreq) + '.');
+    if ($('m-apr-amount')) $('m-apr-amount').value = '';
+    if ($('m-apr-summary')) $('m-apr-summary').style.display = 'none';
+    aprLoadList();
+  });
+}
+window.aprSave = aprSave;
+
+function aprLoadList() {
+  var wrap = $('m-apr-list');
+  if (!wrap) return;
+  rpc('list_my_recurring_data', {}, function(err, res) {
+    var rows = (res && (res.data !== undefined ? res.data : res)) || [];
+    if (err || !rows || !rows.length) { wrap.innerHTML = ''; return; }
+    var html = '<div style="font-size:.74rem;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Your Auto-Pays</div>';
+    for (var i = 0; i < rows.length; i++) {
+      var r = rows[i];
+      var paused = (r.status === 'paused');
+      html += '<div style="border:1px solid #e2e8f0;border-radius:10px;padding:11px 13px;margin-bottom:8px;">' +
+        '<div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;justify-content:space-between;-webkit-box-align:center;align-items:center;gap:8px;">' +
+          '<div style="font-size:.86rem;font-weight:800;color:#0f172a;">' + esc(r.network) + ' &middot; ' + fmtN(r.budget_amount) + '</div>' +
+          '<span style="font-size:.7rem;font-weight:800;padding:3px 8px;border-radius:20px;background:' + (paused?'#fef9c3':'#dcfce7') + ';color:' + (paused?'#854d0e':'#166534') + ';">' + (paused?'Paused':'Active') + '</span>' +
+        '</div>' +
+        '<div style="font-size:.76rem;color:#64748b;margin-top:3px;">' + esc(r.phone_number) + ' &middot; ' + aprFreqLabel(r.frequency_days) + '</div>' +
+        '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:7px;margin-top:9px;">' +
+          '<button onclick="aprSetStatus(\'' + esc(r.id) + '\',\'' + (paused?'active':'paused') + '\')" style="flex:1;padding:7px;border-radius:6px;border:1.5px solid #cbd5e1;background:#fff;color:#334155;font-size:.76rem;font-weight:800;cursor:pointer;font-family:inherit;">' + (paused?'Resume':'Pause') + '</button>' +
+          '<button onclick="aprSetStatus(\'' + esc(r.id) + '\',\'cancelled\')" style="flex:1;padding:7px;border-radius:6px;border:none;background:#c0392b;color:#fff;font-size:.76rem;font-weight:800;cursor:pointer;font-family:inherit;">Cancel</button>' +
+        '</div>' +
+      '</div>';
+    }
+    wrap.innerHTML = html;
+  });
+}
+window.aprLoadList = aprLoadList;
+
+function aprSetStatus(id, status) {
+  if (status === 'cancelled' && !confirm('Cancel this Auto-Pay? It will stop buying data.')) return;
+  rpc('set_recurring_data_status', { p_id: id, p_status: status }, function(err, res) {
+    var d = res && (res.data !== undefined ? res.data : res);
+    if (err || !d || d.success === false) { toast('Could not update. Please try again.'); return; }
+    toast(status === 'cancelled' ? 'Auto-Pay cancelled.' : (status === 'paused' ? 'Auto-Pay paused.' : 'Auto-Pay resumed.'));
+    aprLoadList();
+  });
+}
+window.aprSetStatus = aprSetStatus;
+
+(function(){
+  function w(){ if ($('m-apr-x')) $('m-apr-x').onclick = function(){ closeModal('m-autopay-recur'); }; }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', w); else w();
+})();
 window.airSetAmt      = airSetAmt;
 window.airUpdatePreview = airUpdatePreview;
 window.airAmountSuggest = airAmountSuggest;
