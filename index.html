@@ -1619,6 +1619,25 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         </select>
       </div>
 
+      <!-- SMART AUTO PURCHASE (Premium market only) -->
+      <div class="field" id="m-apr-smart-wrap" style="display:none;border:1px solid #bbf7d0;border-radius:10px;padding:12px;background:#f0fdf4;margin-bottom:12px;">
+        <div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;-webkit-box-pack:justify;justify-content:space-between;gap:8px;">
+          <span style="font-size:.84rem;font-weight:800;color:#0f5132;">&#128640; Smart Auto Purchase</span>
+          <label style="position:relative;display:inline-block;width:44px;height:24px;">
+            <input type="checkbox" id="m-apr-smart" onchange="aprToggleSmart()" style="opacity:0;width:0;height:0;position:absolute;">
+            <span id="m-apr-smart-sl" style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:24px;-webkit-transition:.25s;transition:.25s;"><span style="position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.25s;"></span></span>
+          </label>
+        </div>
+        <div style="font-size:.74rem;color:#3f6e52;margin-top:6px;line-height:1.5;">Search any market for the best plan within your budget. A flat 3% service fee applies to plans bought this way.</div>
+        <div id="m-apr-market-field" style="display:none;margin-top:10px;">
+          <label style="font-size:.76rem;font-weight:700;color:#0f5132;display:block;margin-bottom:5px;">Buy from which market?</label>
+          <select id="m-apr-market" onchange="aprLoadPlans()" style="display:block;width:100%;height:42px;border:1.5px solid #bbf7d0;border-radius:10px;background:#fff;padding:0 12px;font-size:.9rem;color:#111;outline:none;-webkit-appearance:none;appearance:none;">
+            <option value="installment">&#128737;&#65039; Premium Market</option>
+            <option value="general">&#127914; General Market</option>
+          </select>
+        </div>
+      </div>
+
       <!-- Plan (optional — pick a specific plan or auto-match by budget) -->
       <div class="field" style="margin-bottom:12px;">
         <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Plan</label>
@@ -3079,8 +3098,9 @@ function bootApp(onReady) {
   // Primary gate: wallet balance loaded → show the dashboard immediately.
   loadWalletBalance(function() { _fireReady(); });
 
-  // Plans load in the background — does NOT gate the splash.
-  try { loadPlans(function() {}); } catch (e) {}
+  // Warm the plan cache in the background (no market chosen yet, so loadPlans
+  // would no-op). This makes entering a market render plans INSTANTLY from cache.
+  try { prefetchPlans(); } catch (e) {}
 
   // My Plan tab — defer 200ms (not visible, low priority)
   setTimeout(function() { loadSubs(); }, 200);
@@ -3669,7 +3689,6 @@ function setGMSegment(seg) {
   if (seg === 'data') {
     var pl = document.getElementById('plans-list');
     if (pl) pl.style.display = '';
-    _plansCache = null;
     loadPlans();
   } else if (seg === 'airtime') {
     openAirtimeScreen();
@@ -3773,8 +3792,9 @@ function setMarket(m) {
   var ptCard = document.getElementById('pay-toggle-card');
   // Show installment days toggle only in Premium market
   if (ptCard) ptCard.style.display = (m === 'installment') ? '' : 'none';
-  // Invalidate cache so plans re-render for this market
-  _plansCache = null;
+  // NOTE: do NOT clear _plansCache here. The plan data is a single fetch of all
+  // plans; only the market filter changes. Keeping the cache lets plans render
+  // instantly when switching markets instead of re-hitting the network.
 
   // Welcome banner
   _wb = document.getElementById('market-welcome');
@@ -3900,6 +3920,22 @@ function openBucketPlan(planId){
 var _plansCache    = null;  // cached plan data — static, never changes mid-session
 var _plansCacheTs  = 0;    // timestamp of last fetch
 var PLANS_CACHE_MS = 5 * 60 * 1000; // re-fetch after 5 minutes max
+
+/* Warm the plan cache in the background at startup, before the user picks a
+   market. Fetches all plans once and caches them so that entering a market
+   renders instantly from cache instead of waiting on the network. */
+function prefetchPlans() {
+  if (_plansCache && (Date.now() - _plansCacheTs) < PLANS_CACHE_MS) return;
+  restGet('/data_plans',
+    'is_active=eq.true&order=network,sort_order,selling_price&select=id,data_size,network,selling_price,daily_price,validity_days,category,delivery_provider,market',
+    function(e, r) {
+      if (r && r.ok && r.data && r.data.length) {
+        _plansCache   = r.data;
+        _plansCacheTs = Date.now();
+      }
+    });
+}
+window.prefetchPlans = prefetchPlans;
 
 function loadPlans(cb) {
   var wrap = $('plans-list');
@@ -4444,6 +4480,11 @@ function renderSubsList(subs, compact) {
         /* Report Issue button hidden per product decision — keep markup & handler for easy re-enable */
         '<button style="display:none;padding:8px 10px;background:#fff;border:1px solid #e5e7eb;color:#374151;border-radius:6px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="openRefundModal(\'' + esc(s.id) + '\',\'' + esc(displayName + ' ' + displayNetwork) + '\',\'' + esc(s.phone_number || '') + '\')">&#9888; Report Issue</button>' +
       '</div>';
+      // Automation controls (Auto-Pay / Auto-Renew / Auto Purchase) apply ONLY to
+      // installment plans (payment_days > 1) or airtime installments — never to
+      // General-market pay-once plans.
+      var _isInstall = (parseInt(s.payment_days) > 1) || s._isAirtime;
+      if (_isInstall) {
       /* Auto-Pay control — populated per-card by dbLoadAutopayState() */
       html += '<div id="ap-row-' + esc(s.id) + '" data-daily="' + (dailyPrice||0) + '" style="margin-top:7px;padding:8px 10px;background:#f3fbf6;border:1px solid #cdedd9;border-radius:6px;font-size:.78rem;color:#0f5132;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;gap:8px;">' +
         '<span id="ap-label-' + esc(s.id) + '">\u26A1 Auto-Pay</span>' +
@@ -4463,6 +4504,7 @@ function renderSubsList(subs, compact) {
         '<span id="apx-label-' + esc(s.id) + '">\uD83D\uDECD\uFE0F Auto Purchase</span>' +
         '<button id="apx-btn-' + esc(s.id) + '" onclick="dbToggleAutoPurchase(\'' + esc(s.id) + '\')" style="padding:5px 12px;background:#c2410c;color:#fff;border:none;border-radius:5px;font-size:.76rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;">Turn on</button>' +
       '</div>';
+      } /* end _isInstall automation block */
       /* Cancel this plan — understated link; opens a forfeiture warning before doing anything */
       html += '<div style="text-align:center;margin-top:8px;">' +
         '<button onclick="dbCancelPlan(\'' + esc(s.id) + '\',\'' + esc(displayName + ' ' + displayNetwork) + '\',' + paid + ')" style="background:none;border:none;color:#9ca3af;font-size:.74rem;text-decoration:underline;cursor:pointer;font-family:inherit;padding:4px;">Cancel this plan</button>' +
@@ -4900,6 +4942,7 @@ function _configSubModalForMarket(plan) {
   var durF   = document.getElementById('m-sub-dur-field');
   var arF    = document.getElementById('m-sub-autorenew-field');
   var apF    = document.getElementById('m-sub-autopay-field');
+  var axF    = document.getElementById('m-sub-autopurchase-field');
   var step3  = document.querySelector('.m-sub-step[data-step="3"]');
   var onceNote = document.getElementById('m-sub-once-note');
 
@@ -4911,24 +4954,27 @@ function _configSubModalForMarket(plan) {
     if (durF)  durF.style.display  = '';
     if (arF)   arF.style.display   = '';
     if (apF)   apF.style.display   = '';
+    if (axF)   axF.style.display   = '';
     if (step3) step3.style.display = '';
     gPayOnce = false;
     _subStepMax = 3;
   } else {
     // General: SHOW pay-once / pay-in-installment buttons.
     // Pay-once is functional; Pay-in-installment is a placeholder ad (Premium only).
-    // Hide duration (7/28) and automation.
+    // Hide duration (7/28) and ALL automation (auto-renew, auto-pay, auto-purchase).
     if (payF)  payF.style.display  = '';      // show the two buttons
     if (durF)  durF.style.display  = 'none';  // no 7/28 in general
     if (arF)   arF.style.display   = 'none';
     if (apF)   apF.style.display   = 'none';
+    if (axF)   axF.style.display   = 'none';
     if (step3) step3.style.display = 'none';
     if (onceNote) onceNote.style.display = 'block';
     gPayOnce = true;
     gModalPayDays = 1;
     _subStepMax = 2;
-    if ($('m-sub-autorenew')) $('m-sub-autorenew').checked = false;
-    if ($('m-sub-autopay'))   $('m-sub-autopay').checked = false;
+    if ($('m-sub-autorenew'))    $('m-sub-autorenew').checked = false;
+    if ($('m-sub-autopay'))      $('m-sub-autopay').checked = false;
+    if ($('m-sub-autopurchase')) $('m-sub-autopurchase').checked = false;
     // Relabel: install button becomes the ad placeholder, once button active
     if ($('m-sub-mode-install')) { $('m-sub-mode-install').className = 'btn btn-lite'; $('m-sub-mode-install').textContent = 'Pay in installments'; }
     if ($('m-sub-mode-once'))    { $('m-sub-mode-once').className = 'btn btn-blue'; }
@@ -8803,10 +8849,27 @@ function openAutoPayRecur() {
   if ($('m-apr-plan')) $('m-apr-plan').innerHTML = '<option value="">\uD83C\uDFAF Auto-match my budget</option>';
   if ($('m-apr-summary')) $('m-apr-summary').style.display = 'none';
   if ($('m-apr-err')) { $('m-apr-err').style.display = 'none'; $('m-apr-err').textContent = ''; }
+  // Smart Auto Purchase is a PREMIUM-market feature: only offer it when the user
+  // is currently inside the Premium market.
+  var smartWrap = $('m-apr-smart-wrap');
+  if (smartWrap) smartWrap.style.display = (gMarket === 'installment') ? 'block' : 'none';
+  if ($('m-apr-smart')) $('m-apr-smart').checked = false;
+  if ($('m-apr-smart-sl')) $('m-apr-smart-sl').style.background = '#ccc';
+  if ($('m-apr-market-field')) $('m-apr-market-field').style.display = 'none';
   aprLoadList();
   openModal('m-autopay-recur');
 }
 window.openAutoPayRecur = openAutoPayRecur;
+
+function aprToggleSmart() {
+  var on = $('m-apr-smart') && $('m-apr-smart').checked;
+  if (typeof _syncSl === 'function') _syncSl('m-apr-smart-sl', on);
+  if ($('m-apr-smart-sl')) $('m-apr-smart-sl').style.background = on ? '#0f5132' : '#ccc';
+  if ($('m-apr-market-field')) $('m-apr-market-field').style.display = on ? 'block' : 'none';
+  aprLoadPlans();
+  aprPreview();
+}
+window.aprToggleSmart = aprToggleSmart;
 
 function aprSetFreq(d) {
   gAprFreq = d;
@@ -8859,8 +8922,12 @@ function aprLoadPlans() {
   sel.innerHTML = '<option value="">\uD83C\uDFAF Auto-match my budget</option>';
   _aprPlans = [];
   if (!net) return;
-  restGet('/data_plans',
-    'is_active=eq.true&network=eq.' + encodeURIComponent(net) + '&order=selling_price&select=id,data_size,network,selling_price,validity_days,market',
+  var smartOn = !!($('m-apr-smart') && $('m-apr-smart').checked && gMarket === 'installment');
+  var tMkt = (smartOn && $('m-apr-market')) ? $('m-apr-market').value : '';
+  var q = 'is_active=eq.true&network=eq.' + encodeURIComponent(net);
+  if (tMkt) q += '&market=eq.' + encodeURIComponent(tMkt);
+  q += '&order=selling_price&select=id,data_size,network,selling_price,validity_days,market';
+  restGet('/data_plans', q,
     function(e, r) {
       if (!r || !r.ok || !r.data) return;
       _aprPlans = r.data;
@@ -8908,12 +8975,21 @@ function aprPreview() {
   var whatRow = planName
     ? '<div style="display:flex;justify-content:space-between;"><span>Plan</span><strong>' + esc(planName) + '</strong></div>'
     : '<div style="display:flex;justify-content:space-between;"><span>Spend</span><strong>' + fmtN(amt) + ' each time</strong></div>';
+  var isSmart = !!($('m-apr-smart') && $('m-apr-smart').checked && gMarket === 'installment');
+  var mktName = '';
+  if (isSmart && $('m-apr-market')) {
+    mktName = ($('m-apr-market').value === 'general') ? 'General Market' : 'Premium Market';
+  }
   box.innerHTML =
     whatRow +
+    (isSmart ? '<div style="display:flex;justify-content:space-between;"><span>Search in</span><strong>' + esc(mktName) + '</strong></div>' : '') +
     '<div style="display:flex;justify-content:space-between;"><span>Frequency</span><strong>' + aprFreqLabel(gAprFreq) + '</strong></div>' +
+    (isSmart ? '<div style="display:flex;justify-content:space-between;color:#0f5132;"><span>Service fee</span><strong>3% (included)</strong></div>' : '') +
     '<div style="display:flex;justify-content:space-between;"><span>Paid from</span><strong>Your wallet</strong></div>' +
     '<div style="font-size:.72rem;color:#3f6e52;margin-top:6px;">' +
-      (planName ? 'We buy this exact plan and send it automatically.' : 'We buy the largest bundle at or under ' + fmtN(amt) + ' for the network, and send it automatically.') +
+      (isSmart
+        ? ('We buy the best ' + esc(mktName) + ' plan at or under ' + fmtN(amt) + ' (fee included) and send it automatically.')
+        : (planName ? 'We buy this exact plan and send it automatically.' : 'We buy the largest bundle at or under ' + fmtN(amt) + ' for the network, and send it automatically.')) +
     '</div>';
   box.style.display = 'block';
 }
@@ -8934,16 +9010,22 @@ function aprSave() {
   var btn = $('m-apr-save');
   if (btn){ btn.disabled=true; btn.textContent='Saving\u2026'; }
   var planId = ($('m-apr-plan') && $('m-apr-plan').value) ? $('m-apr-plan').value : null;
+  var isSmart = !!($('m-apr-smart') && $('m-apr-smart').checked && gMarket === 'installment');
+  var targetMarket = isSmart && $('m-apr-market') ? $('m-apr-market').value : null;
   rpc('set_recurring_data', {
     p_phone_number: phone, p_network: network,
-    p_budget_amount: amount, p_frequency_days: gAprFreq, p_plan_id: planId
+    p_budget_amount: amount, p_frequency_days: gAprFreq, p_plan_id: planId,
+    p_target_market: targetMarket, p_is_smart: isSmart
   }, function(err, res) {
     if (btn){ btn.disabled=false; btn.textContent='Turn on Auto Purchase'; }
     var d = res && (res.data !== undefined ? res.data : res);
-    if (err || !d || d.success === false) { e((d && d.error) || 'Could not set Auto-Pay. Please try again.'); return; }
-    toast('\u2705 Auto Purchase is on. We\u2019ll buy ' + network + ' data for ' + phone + ' ' + aprFreqLabel(gAprFreq) + '.');
+    if (err || !d || d.success === false) { e((d && d.error) || 'Could not set Auto Purchase. Please try again.'); return; }
+    toast(isSmart
+      ? ('\u2705 Smart Auto Purchase is on. Best ' + network + ' plan up to \u20a6' + amount + ' (incl. 3%) ' + aprFreqLabel(gAprFreq) + '.')
+      : ('\u2705 Auto Purchase is on. We\u2019ll buy ' + network + ' data for ' + phone + ' ' + aprFreqLabel(gAprFreq) + '.'));
     if ($('m-apr-amount')) $('m-apr-amount').value = '';
     if ($('m-apr-summary')) $('m-apr-summary').style.display = 'none';
+    if ($('m-apr-smart')) { $('m-apr-smart').checked = false; aprToggleSmart(); }
     aprLoadList();
   });
 }
