@@ -1049,8 +1049,6 @@ button.tab,button.plan-chip{box-shadow:none!important;}
   <div id="tc-dash" class="tab-content">
     <div id="promo-banner" style="display:none;margin-bottom:12px;"></div>
     <div class="hero-bal-card" id="hero-bal-card">
-      <button class="hero-love-btn" id="d-love-btn" onclick="openBoost()" ontouchstart="">&#128157; Boost</button>
-      <button class="hero-love-btn" id="d-gift-btn" onclick="openGift()" ontouchstart="" style="right:auto;left:12px;">&#127873; Gift</button>
       <div class="hero-bal-label">Wallet Balance</div>
       <div class="hero-bal-amount" id="d-bal-dash">&#8358;0.00</div>
       <div class="hero-bal-va" id="d-va-dash">Loading&#8230;</div>
@@ -1181,12 +1179,33 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <!-- Goal Lock entry (Premium market only) -->
       <button type="button" id="study-lock-card" onclick="openStudyLock()" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #c7b8f0;background:#f7f5ff;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
         <span style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:10px;">
-          <span style="font-size:1.4rem;">&#127891;</span>
           <span style="-webkit-box-flex:1;-webkit-flex:1;flex:1;">
             <span style="display:block;font-size:.9rem;font-weight:900;color:#5b21b6;">Goal Lock</span>
-            <span style="display:block;font-size:.76rem;color:#6d5b9c;margin-top:1px;">Pledge data to a goal. It unlocks in steps as you hit milestones.</span>
+            <span style="display:block;font-size:.76rem;color:#6d5b9c;margin-top:1px;">Pledge data or airtime to a goal. It unlocks in steps as you hit milestones.</span>
           </span>
           <span style="font-size:1.1rem;color:#5b21b6;">&rarr;</span>
+        </span>
+      </button>
+
+      <!-- Sponsored Boost card (Premium market only) -->
+      <button type="button" id="boost-card" onclick="openBoost()" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #fbcfe8;background:#fdf2f8;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
+        <span style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:10px;">
+          <span style="-webkit-box-flex:1;-webkit-flex:1;flex:1;">
+            <span style="display:block;font-size:.9rem;font-weight:900;color:#9d174d;">Sponsored Boost</span>
+            <span style="display:block;font-size:.76rem;color:#b3477a;margin-top:1px;">Let a trusted person help complete your plan, or help someone else.</span>
+          </span>
+          <span style="font-size:1.1rem;color:#9d174d;">&rarr;</span>
+        </span>
+      </button>
+
+      <!-- Gift with Strings card (Premium market only) -->
+      <button type="button" id="gift-card" onclick="openGift()" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #fde68a;background:#fffbeb;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
+        <span style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:10px;">
+          <span style="-webkit-box-flex:1;-webkit-flex:1;flex:1;">
+            <span style="display:block;font-size:.9rem;font-weight:900;color:#92400e;">Gift with Strings</span>
+            <span style="display:block;font-size:.76rem;color:#b45309;margin-top:1px;">Gift data or airtime that unlocks on a date or after an action.</span>
+          </span>
+          <span style="font-size:1.1rem;color:#92400e;">&rarr;</span>
         </span>
       </button>
 
@@ -1697,14 +1716,14 @@ button.tab,button.plan-chip{box-shadow:none!important;}
 <div class="modal" id="m-study">
   <div class="modal-box">
     <div class="modal-hdr">
-      <div class="modal-title">&#127891; Goal Lock</div>
+      <div class="modal-title">Goal Lock</div>
       <button class="modal-x" id="m-study-x">&#215;</button>
     </div>
     <div class="modal-body">
       <div id="m-study-err" class="err"></div>
 
       <div style="margin-bottom:12px;border-radius:12px;padding:13px 15px;background:#f7f5ff;border:1px solid #ddd6fe;font-size:.8rem;color:#5b21b6;line-height:1.6;">
-        <div style="font-weight:900;margin-bottom:5px;">&#127919; Commit data to a goal</div>
+        <div style="font-weight:900;margin-bottom:5px;">Commit data or airtime to a goal</div>
         Pay for a plan now; it unlocks in equal steps as you hit your milestones. Verify each step with a <b>photo</b>, or let a trusted <b>umpire</b> confirm it for you.
       </div>
 
@@ -1724,8 +1743,8 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <div class="field" style="margin-bottom:12px;">
         <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Reward</label>
         <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">
-          <button type="button" class="btn btn-blue" id="m-study-rt-data"    onclick="studySetReward('data')"    style="margin:0;flex:1;font-size:.8rem;">&#128241; Data</button>
-          <button type="button" class="btn btn-lite" id="m-study-rt-airtime" onclick="studySetReward('airtime')" style="margin:0;flex:1;font-size:.8rem;">&#128222; Airtime</button>
+          <button type="button" class="btn btn-blue" id="m-study-rt-data"    onclick="studySetReward('data')"    style="margin:0;flex:1;font-size:.8rem;">Data</button>
+          <button type="button" class="btn btn-lite" id="m-study-rt-airtime" onclick="studySetReward('airtime')" style="margin:0;flex:1;font-size:.8rem;">Airtime</button>
           <button type="button" class="btn btn-lite" id="m-study-rt-both"    onclick="studySetReward('both')"    style="margin:0;flex:1;font-size:.8rem;">Both</button>
         </div>
       </div>
@@ -1765,8 +1784,8 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <div class="field" style="margin-bottom:12px;">
         <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">How will you verify each step?</label>
         <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">
-          <button type="button" class="btn btn-blue" id="m-study-vm-photo" onclick="studySetMethod('photo')" style="margin:0;flex:1;font-size:.82rem;">&#128247; Photo proof</button>
-          <button type="button" class="btn btn-lite" id="m-study-vm-umpire" onclick="studySetMethod('umpire')" style="margin:0;flex:1;font-size:.82rem;">&#129406; Umpire</button>
+          <button type="button" class="btn btn-blue" id="m-study-vm-photo" onclick="studySetMethod('photo')" style="margin:0;flex:1;font-size:.82rem;">Photo proof</button>
+          <button type="button" class="btn btn-lite" id="m-study-vm-umpire" onclick="studySetMethod('umpire')" style="margin:0;flex:1;font-size:.82rem;">Umpire</button>
         </div>
       </div>
       <div class="field" id="m-study-umpire-field" style="display:none;margin-bottom:12px;">
@@ -1788,7 +1807,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
 <div class="modal" id="m-gift">
   <div class="modal-box">
     <div class="modal-hdr">
-      <div class="modal-title">&#127873; Gift with Strings</div>
+      <div class="modal-title">Gift with Strings</div>
       <button class="modal-x" id="m-gift-x">&#215;</button>
     </div>
     <div class="modal-body">
@@ -1815,8 +1834,8 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         <div class="field" style="margin-bottom:12px;">
           <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Gift</label>
           <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">
-            <button type="button" class="btn btn-blue" id="m-gift-rt-data" onclick="giftSetReward('data')" style="margin:0;flex:1;font-size:.8rem;">&#128241; Data</button>
-            <button type="button" class="btn btn-lite" id="m-gift-rt-airtime" onclick="giftSetReward('airtime')" style="margin:0;flex:1;font-size:.8rem;">&#128222; Airtime</button>
+            <button type="button" class="btn btn-blue" id="m-gift-rt-data" onclick="giftSetReward('data')" style="margin:0;flex:1;font-size:.8rem;">Data</button>
+            <button type="button" class="btn btn-lite" id="m-gift-rt-airtime" onclick="giftSetReward('airtime')" style="margin:0;flex:1;font-size:.8rem;">Airtime</button>
           </div>
         </div>
         <div class="field" style="margin-bottom:12px;">
@@ -1841,8 +1860,8 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         <div class="field" style="margin-bottom:12px;">
           <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Unlock condition</label>
           <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">
-            <button type="button" class="btn btn-blue" id="m-gift-ct-date" onclick="giftSetCond('date')" style="margin:0;flex:1;font-size:.8rem;">&#128197; On a date</button>
-            <button type="button" class="btn btn-lite" id="m-gift-ct-action" onclick="giftSetCond('action')" style="margin:0;flex:1;font-size:.8rem;">&#9989; After an action</button>
+            <button type="button" class="btn btn-blue" id="m-gift-ct-date" onclick="giftSetCond('date')" style="margin:0;flex:1;font-size:.8rem;">On a date</button>
+            <button type="button" class="btn btn-lite" id="m-gift-ct-action" onclick="giftSetCond('action')" style="margin:0;flex:1;font-size:.8rem;">After an action</button>
           </div>
         </div>
         <div class="field" id="m-gift-date-field" style="margin-bottom:12px;">
@@ -1857,7 +1876,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
 
         <div class="field" style="margin-bottom:12px;">
           <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Message (optional)</label>
-          <input id="m-gift-message" type="text" maxlength="120" placeholder="Happy birthday! \uD83C\uDF89" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;">
+          <input id="m-gift-message" type="text" maxlength="120" placeholder="Happy birthday!" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;">
         </div>
 
         <div id="m-gift-summary" style="display:none;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:11px 13px;margin-bottom:12px;font-size:.8rem;color:#92400e;line-height:1.7;"></div>
@@ -1873,7 +1892,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
 <div class="modal" id="m-boost">
   <div class="modal-box">
     <div class="modal-hdr">
-      <div class="modal-title">&#128157; Sponsored Boost</div>
+      <div class="modal-title">Sponsored Boost</div>
       <button class="modal-x" id="m-boost-x">&#215;</button>
     </div>
     <div class="modal-body">
@@ -4105,6 +4124,10 @@ function setMarket(m) {
   if (ptCard) ptCard.style.display = (m === 'installment') ? '' : 'none';
   var slCard = document.getElementById('study-lock-card');
   if (slCard) slCard.style.display = (m === 'installment') ? 'block' : 'none';
+  var bCard = document.getElementById('boost-card');
+  if (bCard) bCard.style.display = (m === 'installment') ? 'block' : 'none';
+  var gCard = document.getElementById('gift-card');
+  if (gCard) gCard.style.display = (m === 'installment') ? 'block' : 'none';
   // NOTE: do NOT clear _plansCache here. The plan data is a single fetch of all
   // plans; only the market filter changes. Keeping the cache lets plans render
   // instantly when switching markets instead of re-hitting the network.
@@ -4119,7 +4142,7 @@ function setMarket(m) {
     } else {
       _wb.style.background = '#f0fdf4';
       _wb.style.borderColor = '#bbf7d0';
-      _wb.innerHTML = '<b>&#128737;&#65039; Welcome to the Premium Market.</b> Plans here are vetted through DataBulge\'s investigations and users\' experiences. Your funds are safe and secure.';
+      _wb.innerHTML = '<b>&#128737;&#65039; Welcome to the Premium Market.</b> Plans here are vetted through DataBulge\'s investigations and users\' experiences. A small 3% service fee applies for the activities here, a fair trade for the flexibility and benefits you get. Your funds are safe and secure.';
     }
   }
   // General market: show segment tiles. Installment: go straight to plans.
@@ -4789,7 +4812,7 @@ function renderSubsList(subs, compact) {
     } else if ((isActive || isPending) && remaining > 0) {
       html += '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:7px;margin-top:4px;">' +
         '<button class="pay-btn" style="flex:1;" onclick="openPayModal(\'' + esc(s.id) + '\',' + (dailyPrice||0) + ',' + remaining + ',' + (s._isAirtime ? 'true' : 'false') + ')">Pay Now</button>' +
-        ((parseInt(s.payment_days) > 1 || s._isAirtime) ? '<button style="padding:8px 12px;background:#fdf2f8;border:1.5px solid #fbcfe8;color:#db2777;border-radius:6px;font-size:.78rem;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="requestBoostForSub(\'' + esc(s.id) + '\',' + remaining + ',\'' + esc(displayName + ' ' + displayNetwork) + '\')">\uD83D\uDC9D Ask for a boost</button>' : '') +
+        ((parseInt(s.payment_days) > 1 || s._isAirtime) ? '<button style="padding:8px 12px;background:#fdf2f8;border:1.5px solid #fbcfe8;color:#db2777;border-radius:6px;font-size:.78rem;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="requestBoostForSub(\'' + esc(s.id) + '\',' + remaining + ',\'' + esc(displayName + ' ' + displayNetwork) + '\')">Ask for a boost</button>' : '') +
         (s._isAirtime ? '' : '<button style="padding:8px 12px;background:#fff;border:1.5px solid #2A3FA3;color:#2A3FA3;border-radius:6px;font-size:.78rem;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="openUpgradeModal(\'' + esc(s.id) + '\')" ontouchstart="">\u2B06\uFE0F Upgrade</button>') +
         /* Report Issue button hidden per product decision — keep markup & handler for easy re-enable */
         '<button style="display:none;padding:8px 10px;background:#fff;border:1px solid #e5e7eb;color:#374151;border-radius:6px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="openRefundModal(\'' + esc(s.id) + '\',\'' + esc(displayName + ' ' + displayNetwork) + '\',\'' + esc(s.phone_number || '') + '\')">&#9888; Report Issue</button>' +
@@ -9433,7 +9456,7 @@ function studyLoadUmpireTasks() {
     var rows = (res && (res.data !== undefined ? res.data : res)) || [];
     if (typeof rows === 'string') { try { rows = JSON.parse(rows); } catch(_) { rows = []; } }
     if (err || !rows || !rows.length) return;  // nothing to referee
-    var html = '<div style="font-size:.74rem;font-weight:800;color:#5b21b6;text-transform:uppercase;letter-spacing:.04em;margin:14px 0 8px;">&#129406; You\u2019re refereeing</div>';
+    var html = '<div style="font-size:.74rem;font-weight:800;color:#5b21b6;text-transform:uppercase;letter-spacing:.04em;margin:14px 0 8px;">You\u2019re refereeing</div>';
     for (var i=0;i<rows.length;i++){
       var t = rows[i];
       html += '<div style="border:1px solid #ddd6fe;border-radius:12px;padding:12px;margin-bottom:10px;background:#faf5ff;">' +
@@ -9512,7 +9535,7 @@ function boostGive(reqId, maxLeft) {
   rpc('sponsor_boost', { p_request_id: reqId, p_amount: amt }, function(err, res) {
     var d = res && (res.data !== undefined ? res.data : res);
     if (err || !d || d.success === false) { toast((d && d.error) || 'Could not complete the gift.'); return; }
-    toast('\uD83D\uDC9D You gifted ' + fmtN(d.gifted) + '! Thank you for helping.');
+    toast('You gifted ' + fmtN(d.gifted) + '! Thank you for helping.');
     try { loadWalletBalance(function(){}); } catch(_){}
     boostLoadFeed();
   });
@@ -9551,12 +9574,12 @@ window.boostLoadMine = boostLoadMine;
 
 // Short, warm, pre-written thank-you messages.
 var BOOST_THANKS = [
-  'Thank you so much! \uD83D\uDE4F',
-  'You\u2019re a lifesaver! \u2764\uFE0F',
-  'God bless you! \uD83D\uDE4C',
-  'I really appreciate this \uD83D\uDE4A',
-  'You made my day \uD83D\uDE4C\u2728',
-  'Forever grateful \uD83D\uDC96'
+  'Thank you so much!',
+  'You\u2019re a lifesaver!',
+  'God bless you!',
+  'I really appreciate this',
+  'You made my day',
+  'Forever grateful'
 ];
 
 function boostLoadSponsors() {
@@ -9565,7 +9588,7 @@ function boostLoadSponsors() {
     var rows = (res && (res.data !== undefined ? res.data : res)) || [];
     if (typeof rows === 'string') { try { rows = JSON.parse(rows); } catch(_) { rows = []; } }
     if (err || !rows || !rows.length) return;
-    var html = '<div style="font-size:.74rem;font-weight:800;color:#9d174d;text-transform:uppercase;letter-spacing:.04em;margin:16px 0 8px;">\uD83D\uDC9D People who helped you</div>';
+    var html = '<div style="font-size:.74rem;font-weight:800;color:#9d174d;text-transform:uppercase;letter-spacing:.04em;margin:16px 0 8px;">People who helped you</div>';
     for (var i=0;i<rows.length;i++){
       var c = rows[i];
       html += '<div style="border:1px solid #fbcfe8;border-radius:12px;padding:12px;margin-bottom:10px;background:#fffafc;">' +
@@ -9593,7 +9616,7 @@ function thankSponsor(contribId, msg) {
   rpc('thank_sponsor', { p_contribution_id: contribId, p_message: msg }, function(err, res) {
     var d = res && (res.data !== undefined ? res.data : res);
     if (err || !d || d.success === false) { toast((d && d.error) || 'Could not send thank-you.'); return; }
-    toast('\uD83D\uDC9D Thank-you sent!');
+    toast('Thank-you sent!');
     boostLoadMine();
   });
 }
@@ -9646,8 +9669,8 @@ function giftLoadPlans() {
       if (!r || !r.ok || !r.data) return;
       var html = '<option value="">\u2014 Select a plan \u2014</option>';
       for (var i=0;i<r.data.length;i++){
-        var p = r.data[i]; var prem = Math.ceil(parseFloat(p.selling_price)*1.03);
-        html += '<option value="' + esc(p.id) + '" data-price="' + prem + '">' + esc(p.data_size) + ' \u00b7 ' + (p.validity_days||30) + 'd \u00b7 ' + fmtN(prem) + '</option>';
+        var p = r.data[i]; var base = Math.ceil(parseFloat(p.selling_price));
+        html += '<option value="' + esc(p.id) + '" data-price="' + base + '">' + esc(p.data_size) + ' \u00b7 ' + (p.validity_days||30) + 'd \u00b7 ' + fmtN(base) + '</option>';
       }
       sel.innerHTML = html;
     });
@@ -9662,12 +9685,12 @@ function giftPreview() {
     price = (ps && ps.options[ps.selectedIndex]) ? parseFloat(ps.options[ps.selectedIndex].getAttribute('data-price'))||0 : 0;
   } else {
     var a = parseFloat($('m-gift-airtime') ? $('m-gift-airtime').value : '0')||0;
-    price = a>0 ? Math.ceil(a*1.03) : 0;
+    price = a>0 ? Math.ceil(a) : 0;   // base (surge added at payment)
   }
   if (!price) { box.style.display='none'; return; }
-  box.innerHTML = '<div style="display:flex;justify-content:space-between;"><span>You pay now</span><strong>' + fmtN(price) + '</strong></div>' +
+  box.innerHTML = '<div style="display:flex;justify-content:space-between;"><span>Price</span><strong>' + fmtN(price) + '</strong></div>' +
     '<div style="display:flex;justify-content:space-between;"><span>Unlocks</span><strong>' + (gGiftCond==='date'?'on your chosen date':'after they complete the action') + '</strong></div>' +
-    '<div style="font-size:.72rem;color:#a16207;margin-top:5px;">Charged now. It stays locked for them until the condition is met, then delivers.</div>';
+    '<div style="font-size:.72rem;color:#a16207;margin-top:5px;">A 3% service fee is added at payment, like all installment plans. It stays locked until the condition is met, then delivers.</div>';
   box.style.display='block';
 }
 window.giftPreview = giftPreview;
@@ -9706,7 +9729,7 @@ function giftSend() {
     if (btn){ btn.disabled=false; btn.textContent='Send gift'; }
     var d = res && (res.data !== undefined ? res.data : res);
     if (err || !d || d.success === false) { e((d && d.error) || 'Could not send gift.'); return; }
-    toast('\uD83C\uDF81 Gift sent! It\u2019s locked for them until the condition is met.');
+    toast('Gift sent! It\u2019s locked for them until the condition is met.');
     if ($('m-gift-email')) $('m-gift-email').value='';
     if ($('m-gift-message')) $('m-gift-message').value='';
     if ($('m-gift-summary')) $('m-gift-summary').style.display='none';
@@ -9721,7 +9744,7 @@ function giftLoadReceived() {
   rpc('list_gifts_received', {}, function(err, res) {
     var rows = (res && (res.data !== undefined ? res.data : res)) || [];
     if (typeof rows === 'string') { try { rows = JSON.parse(rows); } catch(_) { rows = []; } }
-    if (err || !rows || !rows.length) { wrap.innerHTML = '<div style="color:#94a3b8;font-size:.82rem;padding:12px 0;text-align:center;">No gifts yet. \uD83C\uDF81</div>'; return; }
+    if (err || !rows || !rows.length) { wrap.innerHTML = '<div style="color:#94a3b8;font-size:.82rem;padding:12px 0;text-align:center;">No gifts yet.</div>'; return; }
     var html = '';
     for (var i=0;i<rows.length;i++){
       var g = rows[i];
@@ -9778,7 +9801,7 @@ function requestBoostForSub(subId, remaining, label) {
   }, function(err, res) {
     var d = res && (res.data !== undefined ? res.data : res);
     if (err || !d || d.success === false) { toast((d && d.error) || 'Could not create request.'); return; }
-    toast('\uD83D\uDC9D Boost request posted! Sponsors on DataBulge can now help complete your ' + (label||'plan') + '.');
+    toast('Boost request posted! Sponsors on DataBulge can now help complete your ' + (label||'plan') + '.');
     openBoost(); boostTab('mine');
   });
 }
@@ -9814,9 +9837,9 @@ function studyLoadPlans() {
       var html = '<option value="">\u2014 Select a plan \u2014</option>';
       for (var i=0;i<r.data.length;i++){
         var p = r.data[i];
-        var prem = Math.ceil(parseFloat(p.selling_price) * 1.03);
-        html += '<option value="' + esc(p.id) + '" data-price="' + prem + '">' +
-          esc(p.data_size) + ' \u00b7 ' + (p.validity_days||30) + 'd \u00b7 ' + fmtN(prem) + '</option>';
+        var base = Math.ceil(parseFloat(p.selling_price));
+        html += '<option value="' + esc(p.id) + '" data-price="' + base + '">' +
+          esc(p.data_size) + ' \u00b7 ' + (p.validity_days||30) + 'd \u00b7 ' + fmtN(base) + '</option>';
       }
       sel.innerHTML = html;
     });
@@ -9829,18 +9852,19 @@ function studyPreview() {
   var planSel = $('m-study-plan');
   var dataPrice = (gStudyReward!=='airtime' && planSel && planSel.options[planSel.selectedIndex]) ? parseFloat(planSel.options[planSel.selectedIndex].getAttribute('data-price')) || 0 : 0;
   var airAmt = (gStudyReward!=='data') ? (parseFloat($('m-study-airtime') ? $('m-study-airtime').value : '0') || 0) : 0;
-  var airPrice = airAmt > 0 ? Math.ceil(airAmt * 1.03) : 0;
-  var total = dataPrice + airPrice;
+  var airBase = airAmt > 0 ? Math.ceil(airAmt) : 0;
+  var total = dataPrice + airBase;   // base (surge added at payment)
   var ms = parseInt($('m-study-milestones') ? $('m-study-milestones').value : '3') || 3;
   if (!total) { box.style.display='none'; return; }
   var rewardTxt = (gStudyReward==='both') ? 'data + airtime' : (gStudyReward==='airtime' ? 'airtime' : 'data');
   box.innerHTML =
-    '<div style="display:flex;justify-content:space-between;"><span>Charged now</span><strong>' + fmtN(total) + '</strong></div>' +
+    '<div style="display:flex;justify-content:space-between;"><span>Price</span><strong>' + fmtN(total) + '</strong></div>' +
     (dataPrice ? '<div style="display:flex;justify-content:space-between;"><span>Data</span><strong>' + fmtN(dataPrice) + '</strong></div>' : '') +
-    (airPrice ? '<div style="display:flex;justify-content:space-between;"><span>Airtime (incl. 3%)</span><strong>' + fmtN(airPrice) + '</strong></div>' : '') +
+    (airBase ? '<div style="display:flex;justify-content:space-between;"><span>Airtime</span><strong>' + fmtN(airBase) + '</strong></div>' : '') +
     '<div style="display:flex;justify-content:space-between;"><span>Unlocks in</span><strong>' + ms + ' steps</strong></div>' +
     '<div style="display:flex;justify-content:space-between;"><span>Each step delivers</span><strong>~' + fmtN(Math.round((total/ms)*100)/100) + ' of ' + rewardTxt + '</strong></div>' +
-    '<div style="display:flex;justify-content:space-between;"><span>Verify by</span><strong>' + (gStudyMethod==='umpire'?'Umpire':'Photo proof') + '</strong></div>';
+    '<div style="display:flex;justify-content:space-between;"><span>Verify by</span><strong>' + (gStudyMethod==='umpire'?'Umpire':'Photo proof') + '</strong></div>' +
+    '<div style="font-size:.72rem;color:#6d5b9c;margin-top:6px;">A 3% service fee is added at payment, like all installment plans.</div>';
   box.style.display = 'block';
 }
 window.studyPreview = studyPreview;
@@ -9878,7 +9902,7 @@ function studyCreate() {
     if (btn){ btn.disabled=false; btn.textContent='Start Goal Lock'; }
     var d = res && (res.data !== undefined ? res.data : res);
     if (err || !d || d.success === false) { e((d && d.error) || 'Could not start Goal Lock.'); return; }
-    toast('\uD83C\uDFAF Goal Lock started! Hit your milestones to unlock your reward.');
+    toast('Goal Lock started! Hit your milestones to unlock your reward.');
     if ($('m-study-goal')) $('m-study-goal').value = '';
     if ($('m-study-airtime')) $('m-study-airtime').value = '';
     if ($('m-study-summary')) $('m-study-summary').style.display = 'none';
@@ -9911,7 +9935,7 @@ function studyLoadList() {
         if (l.verify_method === 'photo') {
           html += '<div style="margin-top:10px;">' +
             '<input type="file" accept="image/*" id="study-file-' + esc(l.id) + '" style="display:none;" onchange="studyUploadProof(\'' + esc(l.id) + '\', this)">' +
-            '<button onclick="document.getElementById(\'study-file-' + esc(l.id) + '\').click()" style="width:100%;padding:9px;border-radius:8px;border:none;background:#7c3aed;color:#fff;font-size:.8rem;font-weight:800;cursor:pointer;font-family:inherit;">&#128247; Upload proof to unlock next step</button>' +
+            '<button onclick="document.getElementById(\'study-file-' + esc(l.id) + '\').click()" style="width:100%;padding:9px;border-radius:8px;border:none;background:#7c3aed;color:#fff;font-size:.8rem;font-weight:800;cursor:pointer;font-family:inherit;">Upload proof to unlock next step</button>' +
           '</div>';
         } else {
           // umpire path: show the next milestone's code for the student to share
