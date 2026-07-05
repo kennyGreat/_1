@@ -1209,7 +1209,50 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         </span>
       </button>
 
-      <!-- ── INSTALLMENT DAYS (shown only in installment market) ── -->
+      <!-- Auto-Pay card (Premium market only) -->
+      <button type="button" id="autopay-card" onclick="openAutoPaySetup()" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #cdedd9;background:#f3fbf6;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
+        <span style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:10px;">
+          <span style="-webkit-box-flex:1;-webkit-flex:1;flex:1;">
+            <span style="display:block;font-size:.9rem;font-weight:900;color:#0f5132;">Auto-Pay</span>
+            <span style="display:block;font-size:.76rem;color:#4b7a5f;margin-top:1px;">Let the system pay your installments from your wallet, whenever and however you want.</span>
+          </span>
+          <span style="font-size:1.1rem;color:#0f5132;">&rarr;</span>
+        </span>
+      </button>
+
+      <!-- Auto-Renew card (Premium market only) -->
+      <button type="button" id="autorenew-card" onclick="openAutoRenewSetup()" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #c7d2fe;background:#eef2ff;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
+        <span style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:10px;">
+          <span style="-webkit-box-flex:1;-webkit-flex:1;flex:1;">
+            <span style="display:block;font-size:.9rem;font-weight:900;color:#3730a3;">Auto-Renew</span>
+            <span style="display:block;font-size:.76rem;color:#4f46b5;margin-top:1px;">Repeat the plans you love &mdash; they restart automatically when they finish.</span>
+          </span>
+          <span style="font-size:1.1rem;color:#3730a3;">&rarr;</span>
+        </span>
+      </button>
+
+      <!-- Auto Purchase card (Premium market only) -->
+      <button type="button" id="autopurchase-card" onclick="openAutoPayRecur()" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #fed7aa;background:#fff7ed;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
+        <span style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:10px;">
+          <span style="-webkit-box-flex:1;-webkit-flex:1;flex:1;">
+            <span style="display:block;font-size:.9rem;font-weight:900;color:#9a3412;">Auto Purchase</span>
+            <span style="display:block;font-size:.76rem;color:#c2410c;margin-top:1px;">Set an amount and how often &mdash; we buy the best plan and send it automatically.</span>
+          </span>
+          <span style="font-size:1.1rem;color:#9a3412;">&rarr;</span>
+        </span>
+      </button>
+
+      <!-- Installments + rewards info card (Premium market only) -->
+      <button type="button" id="benefits-card" onclick="openPremiumBenefits()" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #bbf7d0;background:#f0fdf4;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
+        <span style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:10px;">
+          <span style="-webkit-box-flex:1;-webkit-flex:1;flex:1;">
+            <span style="display:block;font-size:.9rem;font-weight:900;color:#15803d;">Installments &amp; Rewards</span>
+            <span style="display:block;font-size:.76rem;color:#3f8f5f;margin-top:1px;">Pay big plans in small bits, earn 1% per installment, unlock up to 10% off.</span>
+          </span>
+          <span style="font-size:1.1rem;color:#15803d;">&rarr;</span>
+        </span>
+      </button>
+
       <div id="pay-toggle-card" style="display:none;margin-bottom:12px;" class="card">
         <div class="sec-title">Payment Option</div>
         <div id="pay-toggle-wrap" style="display:flex;gap:8px;">
@@ -1272,7 +1315,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         <div id="air-preview" style="display:none;background:#f5f7ff;border:1px solid #d0d8ff;border-radius:10px;padding:11px 13px;margin-bottom:12px;font-size:.8rem;color:#444;line-height:1.7;"></div>
         <div id="air-err" class="err"></div>
         <button class="btn btn-blue" id="air-buy-btn" onclick="confirmAirtime()" style="margin-top:4px;">Buy Airtime</button>
-        <p style="font-size:.72rem;color:#888;margin-top:8px;line-height:1.5;">A fee applies based on your payment cycle. Minimum \u20a6100. If delivery fails, your wallet is automatically refunded.</p>
+        <p style="font-size:.72rem;color:#888;margin-top:8px;line-height:1.5;">A fee applies based on your payment cycle. Minimum &#8358;100. If delivery fails, your wallet is automatically refunded.</p>
       </div>
   </div>
 
@@ -1491,11 +1534,8 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <!-- ===== STEP 1: Plan & payment ===== -->
       <div class="m-sub-step" data-step="1">
         <div id="m-sub-info" style="font-size:.82rem;color:#444;margin-bottom:12px;"></div>
-        <!-- Premium inscription (Premium market only) -->
-        <div id="m-sub-premium-note" style="display:none;margin-bottom:12px;border-radius:12px;padding:13px 15px;background:-webkit-linear-gradient(135deg,#f0fdf4,#ecfdf5);background:linear-gradient(135deg,#f0fdf4,#ecfdf5);border:1px solid #bbf7d0;font-size:.8rem;color:#14532d;line-height:1.6;">
-          <div style="font-weight:900;margin-bottom:5px;">&#128154; This is a premium plan</div>
-          You are entitled to <b>pay on installments</b> &mdash; a smart way to ease the burden of paying a large sum all at once. <b>Auto-Pay</b> lets the system pay for data on your behalf and credit it to your phone whenever and however you want it. <b>Auto-Renew</b> repeats the plans you love. Plus <b>1% earnings on every installment</b> you pay, and loyal users unlock up to <b>10% off</b> future plans &mdash; rewards unlock the moment your plan completes. A small <b>3% service fee</b> applies, a fair trade for the flexibility and benefits you get.
-        </div>
+        <!-- Premium inscription removed per request; element kept hidden for JS refs -->
+        <div id="m-sub-premium-note" style="display:none;"></div>
         <div id="m-sub-rewards" style="display:none;margin-bottom:12px;border-radius:12px;padding:12px 14px;background:#f0fdf4;border:1px solid #bbf7d0;"></div>
 
         <div class="field" id="m-sub-paymode-field">
@@ -1777,7 +1817,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
           <option value="4">4 steps</option><option value="5">5 steps</option>
           <option value="6">6 steps</option><option value="8">8 steps</option>
         </select>
-        <div style="font-size:.72rem;color:#888;margin-top:5px;">Your data unlocks in equal portions \u2014 one per verified milestone.</div>
+        <div style="font-size:.72rem;color:#888;margin-top:5px;">Your data unlocks in equal portions &mdash; one per verified milestone.</div>
       </div>
 
       <!-- Verify method -->
@@ -1789,9 +1829,9 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         </div>
       </div>
       <div class="field" id="m-study-umpire-field" style="display:none;margin-bottom:12px;">
-        <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Umpire\u2019s DataBulge email</label>
+        <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Umpire&rsquo;s DataBulge email</label>
         <input id="m-study-umpire-email" type="email" placeholder="umpire@email.com" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;">
-        <div style="font-size:.72rem;color:#888;margin-top:5px;">They must have a DataBulge account. They\u2019ll confirm each step with a code you show them.</div>
+        <div style="font-size:.72rem;color:#888;margin-top:5px;">They must have a DataBulge account. They&rsquo;ll confirm each step with a code you show them.</div>
       </div>
 
       <div id="m-study-summary" style="display:none;background:#f7f5ff;border:1px solid #ddd6fe;border-radius:10px;padding:11px 13px;margin-bottom:12px;font-size:.8rem;color:#5b21b6;line-height:1.7;"></div>
@@ -1823,7 +1863,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         </div>
 
         <div class="field" style="margin-bottom:12px;">
-          <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Recipient\u2019s DataBulge email</label>
+          <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Recipient&rsquo;s DataBulge email</label>
           <input id="m-gift-email" type="email" placeholder="friend@email.com" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;">
         </div>
         <div class="field" style="margin-bottom:12px;">
@@ -1871,7 +1911,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         <div class="field" id="m-gift-action-field" style="display:none;margin-bottom:12px;">
           <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">What must they do?</label>
           <input id="m-gift-action" type="text" maxlength="100" placeholder="e.g. Finish your exam" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;">
-          <div style="font-size:.72rem;color:#888;margin-top:5px;">They\u2019ll mark it done; you confirm to release the gift.</div>
+          <div style="font-size:.72rem;color:#888;margin-top:5px;">They&rsquo;ll mark it done; you confirm to release the gift.</div>
         </div>
 
         <div class="field" style="margin-bottom:12px;">
@@ -1888,6 +1928,76 @@ button.tab,button.plan-chip{box-shadow:none!important;}
   </div>
 </div>
 
+<!-- AUTO-PAY SETUP MODAL -->
+<div class="modal" id="m-autopay-set">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <div class="modal-title">Auto-Pay</div>
+      <button class="modal-x" id="m-aps-x">&#215;</button>
+    </div>
+    <div class="modal-body">
+      <div id="m-aps-err" class="err"></div>
+      <div style="margin-bottom:12px;border-radius:12px;padding:12px 14px;background:#f3fbf6;border:1px solid #cdedd9;font-size:.8rem;color:#0f5132;line-height:1.6;">
+        Auto-Pay lets the system pay your installments from your wallet automatically &mdash; whenever and however you want it. Choose a plan and how much to pay each day.
+      </div>
+      <div class="field" style="margin-bottom:12px;">
+        <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Which plan?</label>
+        <select id="m-aps-plan" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;-webkit-appearance:none;appearance:none;">
+          <option value="">&mdash; Select an installment plan &mdash;</option>
+        </select>
+      </div>
+      <div class="field" style="margin-bottom:12px;">
+        <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Amount to pay each day (&#8358;)</label>
+        <input id="m-aps-amt" type="number" min="1" placeholder="e.g. 100" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;">
+      </div>
+      <button class="btn btn-blue" id="m-aps-save" onclick="autoPaySetupSave()" style="margin-top:2px;">Turn on Auto-Pay</button>
+    </div>
+  </div>
+</div>
+
+<!-- AUTO-RENEW SETUP MODAL -->
+<div class="modal" id="m-autorenew-set">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <div class="modal-title">Auto-Renew</div>
+      <button class="modal-x" id="m-ars-x">&#215;</button>
+    </div>
+    <div class="modal-body">
+      <div id="m-ars-err" class="err"></div>
+      <div style="margin-bottom:12px;border-radius:12px;padding:12px 14px;background:#eef2ff;border:1px solid #c7d2fe;font-size:.8rem;color:#3730a3;line-height:1.6;">
+        Auto-Renew repeats the plans you love &mdash; when a plan finishes, we start it again automatically so you never run out. Cancel anytime.
+      </div>
+      <div class="field" style="margin-bottom:12px;">
+        <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Which plan?</label>
+        <select id="m-ars-plan" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;-webkit-appearance:none;appearance:none;">
+          <option value="">&mdash; Select an installment plan &mdash;</option>
+        </select>
+      </div>
+      <button class="btn btn-blue" id="m-ars-save" onclick="autoRenewSetupSave()" style="margin-top:2px;">Turn on Auto-Renew</button>
+    </div>
+  </div>
+</div>
+
+<!-- PREMIUM BENEFITS INFO MODAL -->
+<div class="modal" id="m-benefits">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <div class="modal-title">Installments &amp; Rewards</div>
+      <button class="modal-x" id="m-benefits-x">&#215;</button>
+    </div>
+    <div class="modal-body">
+      <div style="font-size:.86rem;color:#333;line-height:1.7;">
+        <p style="margin:0 0 12px;">You are entitled to <b>pay on installments</b> &mdash; a smart way to ease the burden of paying a large sum all at once.</p>
+        <p style="margin:0 0 12px;"><b>Auto-Pay</b> lets the system pay for data on your behalf and credit it to your phone whenever and however you want it.</p>
+        <p style="margin:0 0 12px;"><b>Auto-Renew</b> repeats the plans you love.</p>
+        <p style="margin:0 0 12px;"><b>Auto Purchase</b> buys the best plan within your budget on a schedule you set.</p>
+        <p style="margin:0 0 12px;">Plus <b>1% earnings on every installment</b> you pay, and loyal users unlock up to <b>10% off</b> future plans &mdash; rewards unlock the moment your plan completes.</p>
+        <p style="margin:0;color:#555;">A small <b>3% service fee</b> applies, a fair trade for the flexibility and benefits you get.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- SPONSORED BOOST MODAL -->
 <div class="modal" id="m-boost">
   <div class="modal-box">
@@ -1897,7 +2007,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
     </div>
     <div class="modal-body">
       <div style="margin-bottom:12px;border-radius:12px;padding:12px 14px;background:#fdf2f8;border:1px solid #fbcfe8;font-size:.8rem;color:#9d174d;line-height:1.6;">
-        A trusted person can help you complete a plan or installment \u2014 they gift it, you never owe anything. Or you can help someone else on DataBulge.
+        A trusted person can help you complete a plan or installment &mdash; they gift it, you never owe anything. Or you can help someone else on DataBulge.
       </div>
       <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;margin-bottom:14px;">
         <button class="btn btn-blue" id="boost-tab-help" onclick="boostTab('help')" style="margin:0;flex:1;font-size:.82rem;">Help others</button>
@@ -1969,7 +2079,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <button class="modal-x" onclick="closeModal('m-upgrade')" ontouchstart="">&times;</button>
     </div>
     <div class="modal-body" id="upgrade-body">
-      <p style="font-size:.8rem;color:#555;line-height:1.55;margin-bottom:10px;" id="upgrade-intro">Choose a higher plan. Everything you\u2019ve already paid carries over \u2014 you just continue paying the difference.</p>
+      <p style="font-size:.8rem;color:#555;line-height:1.55;margin-bottom:10px;" id="upgrade-intro">Choose a higher plan. Everything you&rsquo;ve already paid carries over &mdash; you just continue paying the difference.</p>
       <div id="upgrade-list" style="max-height:50vh;overflow-y:auto;"></div>
       <div class="err" id="m-upgrade-err" style="margin-top:8px;"></div>
     </div>
@@ -4128,6 +4238,10 @@ function setMarket(m) {
   if (bCard) bCard.style.display = (m === 'installment') ? 'block' : 'none';
   var gCard = document.getElementById('gift-card');
   if (gCard) gCard.style.display = (m === 'installment') ? 'block' : 'none';
+  ['autopay-card','autorenew-card','autopurchase-card','benefits-card'].forEach(function(id){
+    var c = document.getElementById(id);
+    if (c) c.style.display = (m === 'installment') ? 'block' : 'none';
+  });
   // NOTE: do NOT clear _plansCache here. The plan data is a single fetch of all
   // plans; only the market filter changes. Keeping the cache lets plans render
   // instantly when switching markets instead of re-hitting the network.
@@ -9776,6 +9890,98 @@ function giftMarkDone(id) {
   });
 }
 window.giftMarkDone = giftMarkDone;
+
+/* ════════ AUTO-PAY / AUTO-RENEW STANDALONE SETUP + BENEFITS INFO ════════ */
+// Load the caller's active INSTALLMENT plans (payment_days>1, not complete) into a select.
+function _loadInstallmentPlansInto(selId, cb) {
+  var sel = $(selId); if (!sel) return;
+  sel.innerHTML = '<option value="">Loading\u2026</option>';
+  ensureToken(function(err){
+    if (err) { sel.innerHTML = '<option value="">Session error</option>'; return; }
+    restGet('/subscriptions',
+      'user_id=eq.' + gUser.id + '&status=in.(pending,active)&payment_days=gt.1&select=id,phone_number,payment_days,total_price,amount_paid,daily_price,data_plans(data_size,network)&order=created_at.desc&limit=30',
+      function(e, r){
+        var rows = (r && r.ok && r.data) ? r.data : [];
+        if (!rows.length) { sel.innerHTML = '<option value="">No active installment plans</option>'; if(cb)cb(0); return; }
+        var html = '<option value="">\u2014 Select an installment plan \u2014</option>';
+        for (var i=0;i<rows.length;i++){
+          var s = rows[i]; var pl = s.data_plans || {};
+          var remaining = Math.max(0, (parseFloat(s.total_price)||0) - (parseFloat(s.amount_paid)||0));
+          html += '<option value="' + esc(s.id) + '" data-daily="' + (s.daily_price||0) + '">' +
+            esc(pl.data_size||'Plan') + ' ' + esc(pl.network||'') + ' \u00b7 ' + esc(s.phone_number||'') +
+            ' \u00b7 ' + fmtN(remaining) + ' left</option>';
+        }
+        sel.innerHTML = html; if(cb)cb(rows.length);
+      });
+  });
+}
+
+function openAutoPaySetup() {
+  if ($('m-aps-err')) { $('m-aps-err').style.display='none'; }
+  if ($('m-aps-amt')) $('m-aps-amt').value = '';
+  _loadInstallmentPlansInto('m-aps-plan');
+  openModal('m-autopay-set');
+}
+window.openAutoPaySetup = openAutoPaySetup;
+
+function autoPaySetupSave() {
+  var sel = $('m-aps-plan');
+  var subId = sel ? sel.value : '';
+  var amt = parseFloat($('m-aps-amt') ? $('m-aps-amt').value : '0') || 0;
+  var errEl = $('m-aps-err');
+  function e(m){ if(errEl){ errEl.textContent=m; errEl.style.display='block'; } }
+  if (errEl){ errEl.style.display='none'; }
+  if (!subId) { e('Select one of your installment plans.'); return; }
+  if (amt <= 0) { e('Enter how much to pay each day.'); return; }
+  var btn = $('m-aps-save'); if (btn){ btn.disabled=true; btn.textContent='Saving\u2026'; }
+  rpc('set_autopay', { p_subscription_id: subId, p_daily_amount: amt }, function(err, res){
+    if (btn){ btn.disabled=false; btn.textContent='Turn on Auto-Pay'; }
+    var d = res && (res.data !== undefined ? res.data : res);
+    if (err || (d && d.success === false)) { e((d && (d.error||d.message)) || 'Could not enable Auto-Pay.'); return; }
+    toast('Auto-Pay is on for this plan.');
+    closeModal('m-autopay-set');
+    try { loadSubs(); } catch(_){}
+  });
+}
+window.autoPaySetupSave = autoPaySetupSave;
+
+function openAutoRenewSetup() {
+  if ($('m-ars-err')) { $('m-ars-err').style.display='none'; }
+  _loadInstallmentPlansInto('m-ars-plan');
+  openModal('m-autorenew-set');
+}
+window.openAutoRenewSetup = openAutoRenewSetup;
+
+function autoRenewSetupSave() {
+  var sel = $('m-ars-plan');
+  var subId = sel ? sel.value : '';
+  var errEl = $('m-ars-err');
+  function e(m){ if(errEl){ errEl.textContent=m; errEl.style.display='block'; } }
+  if (errEl){ errEl.style.display='none'; }
+  if (!subId) { e('Select one of your installment plans.'); return; }
+  var btn = $('m-ars-save'); if (btn){ btn.disabled=true; btn.textContent='Saving\u2026'; }
+  rpc('set_auto_renew', { p_subscription_id: subId, p_on: true }, function(err, res){
+    if (btn){ btn.disabled=false; btn.textContent='Turn on Auto-Renew'; }
+    var d = res && (res.data !== undefined ? res.data : res);
+    if (err || (d && d.success === false)) { e((d && (d.error||d.message)) || 'Could not enable Auto-Renew.'); return; }
+    toast('Auto-Renew is on for this plan.');
+    closeModal('m-autorenew-set');
+    try { loadSubs(); } catch(_){}
+  });
+}
+window.autoRenewSetupSave = autoRenewSetupSave;
+
+function openPremiumBenefits() { openModal('m-benefits'); }
+window.openPremiumBenefits = openPremiumBenefits;
+
+(function(){
+  function w(){
+    if ($('m-aps-x')) $('m-aps-x').onclick = function(){ closeModal('m-autopay-set'); };
+    if ($('m-ars-x')) $('m-ars-x').onclick = function(){ closeModal('m-autorenew-set'); };
+    if ($('m-benefits-x')) $('m-benefits-x').onclick = function(){ closeModal('m-benefits'); };
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', w); else w();
+})();
 
 (function(){
   function w(){ if ($('m-gift-x')) $('m-gift-x').onclick = function(){ closeModal('m-gift'); }; }
