@@ -1049,7 +1049,8 @@ button.tab,button.plan-chip{box-shadow:none!important;}
   <div id="tc-dash" class="tab-content">
     <div id="promo-banner" style="display:none;margin-bottom:12px;"></div>
     <div class="hero-bal-card" id="hero-bal-card">
-      <button class="hero-love-btn" id="d-love-btn" onclick="openTransferModal()" ontouchstart="">❤️ Show love</button>
+      <button class="hero-love-btn" id="d-love-btn" onclick="openBoost()" ontouchstart="">&#128157; Boost</button>
+      <button class="hero-love-btn" id="d-gift-btn" onclick="openGift()" ontouchstart="" style="right:auto;left:12px;">&#127873; Gift</button>
       <div class="hero-bal-label">Wallet Balance</div>
       <div class="hero-bal-amount" id="d-bal-dash">&#8358;0.00</div>
       <div class="hero-bal-va" id="d-va-dash">Loading&#8230;</div>
@@ -1135,6 +1136,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
 
       <!-- ── MARKET CHOOSER (the only thing shown until a market is picked) ── -->
       <div id="market-chooser" style="margin-bottom:4px;">
+        <div id="oq-badge" style="display:none;background:#fef9c3;border:1px solid #fde68a;color:#854d0e;border-radius:10px;padding:9px 12px;font-size:.78rem;font-weight:700;margin-bottom:12px;line-height:1.4;"></div>
         <div style="font-size:1.05rem;font-weight:900;color:#0f172a;margin:2px 2px 4px;">Choose your market</div>
         <div style="font-size:.8rem;color:#64748b;margin:0 2px 14px;line-height:1.5;">Pick where you want to buy. You can switch anytime.</div>
 
@@ -1163,7 +1165,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
               <span style="font-size:1.3rem;">&#127914;</span>
             </div>
             <div style="font-size:1.25rem;font-weight:900;line-height:1.15;position:relative;z-index:1;">General Market</div>
-            <div style="font-size:.82rem;line-height:1.5;margin-top:6px;color:#dbe5ff;position:relative;z-index:1;">Lowest prices, more options. Pay once at the listed price, or in installments. Subject to user feedback.</div>
+            <div style="font-size:.82rem;line-height:1.5;margin-top:6px;color:#dbe5ff;position:relative;z-index:1;">Lowest prices, more options. Pay once at the listed price. Subject to user feedback.</div>
             <div style="margin-top:13px;display:-webkit-inline-box;display:inline-flex;-webkit-box-align:center;align-items:center;gap:6px;font-size:.82rem;font-weight:800;position:relative;z-index:1;">Enter General <span style="font-size:1rem;">&rarr;</span></div>
           </div>
         </button>
@@ -1175,6 +1177,18 @@ button.tab,button.plan-chip{box-shadow:none!important;}
 
       <!-- ── MARKET WELCOME BANNER ── -->
       <div id="market-welcome" style="margin-bottom:12px;padding:12px 14px;border-radius:12px;background:#f0f4ff;border:1.5px solid #c7d4fb;font-size:.82rem;color:#374151;line-height:1.6;"></div>
+
+      <!-- Goal Lock entry (Premium market only) -->
+      <button type="button" id="study-lock-card" onclick="openStudyLock()" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #c7b8f0;background:#f7f5ff;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
+        <span style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:10px;">
+          <span style="font-size:1.4rem;">&#127891;</span>
+          <span style="-webkit-box-flex:1;-webkit-flex:1;flex:1;">
+            <span style="display:block;font-size:.9rem;font-weight:900;color:#5b21b6;">Goal Lock</span>
+            <span style="display:block;font-size:.76rem;color:#6d5b9c;margin-top:1px;">Pledge data to a goal. It unlocks in steps as you hit milestones.</span>
+          </span>
+          <span style="font-size:1.1rem;color:#5b21b6;">&rarr;</span>
+        </span>
+      </button>
 
       <!-- ── INSTALLMENT DAYS (shown only in installment market) ── -->
       <div id="pay-toggle-card" style="display:none;margin-bottom:12px;" class="card">
@@ -1675,6 +1689,203 @@ button.tab,button.plan-chip{box-shadow:none!important;}
 
       <!-- Active mandates list -->
       <div id="m-apr-list" style="margin-top:16px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- STUDY LOCK MODAL -->
+<div class="modal" id="m-study">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <div class="modal-title">&#127891; Goal Lock</div>
+      <button class="modal-x" id="m-study-x">&#215;</button>
+    </div>
+    <div class="modal-body">
+      <div id="m-study-err" class="err"></div>
+
+      <div style="margin-bottom:12px;border-radius:12px;padding:13px 15px;background:#f7f5ff;border:1px solid #ddd6fe;font-size:.8rem;color:#5b21b6;line-height:1.6;">
+        <div style="font-weight:900;margin-bottom:5px;">&#127919; Commit data to a goal</div>
+        Pay for a plan now; it unlocks in equal steps as you hit your milestones. Verify each step with a <b>photo</b>, or let a trusted <b>umpire</b> confirm it for you.
+      </div>
+
+      <!-- Goal -->
+      <div class="field" style="margin-bottom:12px;">
+        <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Your goal</label>
+        <input id="m-study-goal" type="text" maxlength="80" placeholder="e.g. Finish my Python course" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;">
+      </div>
+
+      <!-- Phone -->
+      <div class="field" style="margin-bottom:12px;">
+        <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Deliver data to</label>
+        <input id="m-study-phone" type="tel" placeholder="08012345678" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;">
+      </div>
+
+      <!-- Reward type -->
+      <div class="field" style="margin-bottom:12px;">
+        <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Reward</label>
+        <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">
+          <button type="button" class="btn btn-blue" id="m-study-rt-data"    onclick="studySetReward('data')"    style="margin:0;flex:1;font-size:.8rem;">&#128241; Data</button>
+          <button type="button" class="btn btn-lite" id="m-study-rt-airtime" onclick="studySetReward('airtime')" style="margin:0;flex:1;font-size:.8rem;">&#128222; Airtime</button>
+          <button type="button" class="btn btn-lite" id="m-study-rt-both"    onclick="studySetReward('both')"    style="margin:0;flex:1;font-size:.8rem;">Both</button>
+        </div>
+      </div>
+
+      <!-- Network + Plan -->
+      <div class="field" style="margin-bottom:12px;">
+        <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Network</label>
+        <select id="m-study-network" onchange="studyLoadPlans()" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;-webkit-appearance:none;appearance:none;">
+          <option value="">&mdash; Select network &mdash;</option>
+          <option value="MTN">MTN</option><option value="AIRTEL">Airtel</option>
+          <option value="GLO">Glo</option><option value="9MOBILE">9mobile</option>
+        </select>
+      </div>
+      <div class="field" id="m-study-plan-field" style="margin-bottom:12px;">
+        <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Data plan (Premium)</label>
+        <select id="m-study-plan" onchange="studyPreview()" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;-webkit-appearance:none;appearance:none;">
+          <option value="">&mdash; Select a plan &mdash;</option>
+        </select>
+      </div>
+      <div class="field" id="m-study-airtime-field" style="display:none;margin-bottom:12px;">
+        <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Airtime amount (&#8358;)</label>
+        <input id="m-study-airtime" type="number" min="50" placeholder="e.g. 500" oninput="studyPreview()" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;">
+      </div>
+
+      <!-- Milestones -->
+      <div class="field" style="margin-bottom:12px;">
+        <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">How many milestones?</label>
+        <select id="m-study-milestones" onchange="studyPreview()" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;-webkit-appearance:none;appearance:none;">
+          <option value="2">2 steps</option><option value="3" selected>3 steps</option>
+          <option value="4">4 steps</option><option value="5">5 steps</option>
+          <option value="6">6 steps</option><option value="8">8 steps</option>
+        </select>
+        <div style="font-size:.72rem;color:#888;margin-top:5px;">Your data unlocks in equal portions \u2014 one per verified milestone.</div>
+      </div>
+
+      <!-- Verify method -->
+      <div class="field" style="margin-bottom:12px;">
+        <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">How will you verify each step?</label>
+        <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">
+          <button type="button" class="btn btn-blue" id="m-study-vm-photo" onclick="studySetMethod('photo')" style="margin:0;flex:1;font-size:.82rem;">&#128247; Photo proof</button>
+          <button type="button" class="btn btn-lite" id="m-study-vm-umpire" onclick="studySetMethod('umpire')" style="margin:0;flex:1;font-size:.82rem;">&#129406; Umpire</button>
+        </div>
+      </div>
+      <div class="field" id="m-study-umpire-field" style="display:none;margin-bottom:12px;">
+        <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Umpire\u2019s DataBulge email</label>
+        <input id="m-study-umpire-email" type="email" placeholder="umpire@email.com" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;">
+        <div style="font-size:.72rem;color:#888;margin-top:5px;">They must have a DataBulge account. They\u2019ll confirm each step with a code you show them.</div>
+      </div>
+
+      <div id="m-study-summary" style="display:none;background:#f7f5ff;border:1px solid #ddd6fe;border-radius:10px;padding:11px 13px;margin-bottom:12px;font-size:.8rem;color:#5b21b6;line-height:1.7;"></div>
+
+      <button class="btn btn-blue" id="m-study-save" onclick="studyCreate()" style="margin-top:2px;">Start Goal Lock</button>
+
+      <div id="m-study-list" style="margin-top:18px;"></div>
+    </div>
+  </div>
+</div>
+
+<!-- GIFT WITH STRINGS MODAL -->
+<div class="modal" id="m-gift">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <div class="modal-title">&#127873; Gift with Strings</div>
+      <button class="modal-x" id="m-gift-x">&#215;</button>
+    </div>
+    <div class="modal-body">
+      <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;margin-bottom:14px;">
+        <button class="btn btn-blue" id="gift-tab-send" onclick="giftTab('send')" style="margin:0;flex:1;font-size:.82rem;">Send a gift</button>
+        <button class="btn btn-lite" id="gift-tab-recv" onclick="giftTab('recv')" style="margin:0;flex:1;font-size:.82rem;">My gifts</button>
+      </div>
+
+      <div id="gift-send-pane">
+        <div id="m-gift-err" class="err"></div>
+        <div style="margin-bottom:12px;border-radius:12px;padding:12px 14px;background:#fffbeb;border:1px solid #fde68a;font-size:.8rem;color:#92400e;line-height:1.6;">
+          Send data or airtime to another DataBulge user. It stays locked and unlocks on a <b>date</b> (like a birthday) or when they <b>complete an action</b> you set.
+        </div>
+
+        <div class="field" style="margin-bottom:12px;">
+          <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Recipient\u2019s DataBulge email</label>
+          <input id="m-gift-email" type="email" placeholder="friend@email.com" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;">
+        </div>
+        <div class="field" style="margin-bottom:12px;">
+          <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Deliver to phone</label>
+          <input id="m-gift-phone" type="tel" placeholder="08012345678" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;">
+        </div>
+
+        <div class="field" style="margin-bottom:12px;">
+          <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Gift</label>
+          <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">
+            <button type="button" class="btn btn-blue" id="m-gift-rt-data" onclick="giftSetReward('data')" style="margin:0;flex:1;font-size:.8rem;">&#128241; Data</button>
+            <button type="button" class="btn btn-lite" id="m-gift-rt-airtime" onclick="giftSetReward('airtime')" style="margin:0;flex:1;font-size:.8rem;">&#128222; Airtime</button>
+          </div>
+        </div>
+        <div class="field" style="margin-bottom:12px;">
+          <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Network</label>
+          <select id="m-gift-network" onchange="giftLoadPlans()" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;-webkit-appearance:none;appearance:none;">
+            <option value="">&mdash; Select network &mdash;</option>
+            <option value="MTN">MTN</option><option value="AIRTEL">Airtel</option>
+            <option value="GLO">Glo</option><option value="9MOBILE">9mobile</option>
+          </select>
+        </div>
+        <div class="field" id="m-gift-plan-field" style="margin-bottom:12px;">
+          <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Data plan</label>
+          <select id="m-gift-plan" onchange="giftPreview()" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;-webkit-appearance:none;appearance:none;">
+            <option value="">&mdash; Select a plan &mdash;</option>
+          </select>
+        </div>
+        <div class="field" id="m-gift-airtime-field" style="display:none;margin-bottom:12px;">
+          <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Airtime amount (&#8358;)</label>
+          <input id="m-gift-airtime" type="number" min="50" placeholder="e.g. 500" oninput="giftPreview()" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;">
+        </div>
+
+        <div class="field" style="margin-bottom:12px;">
+          <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Unlock condition</label>
+          <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">
+            <button type="button" class="btn btn-blue" id="m-gift-ct-date" onclick="giftSetCond('date')" style="margin:0;flex:1;font-size:.8rem;">&#128197; On a date</button>
+            <button type="button" class="btn btn-lite" id="m-gift-ct-action" onclick="giftSetCond('action')" style="margin:0;flex:1;font-size:.8rem;">&#9989; After an action</button>
+          </div>
+        </div>
+        <div class="field" id="m-gift-date-field" style="margin-bottom:12px;">
+          <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Unlock date</label>
+          <input id="m-gift-date" type="date" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;">
+        </div>
+        <div class="field" id="m-gift-action-field" style="display:none;margin-bottom:12px;">
+          <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">What must they do?</label>
+          <input id="m-gift-action" type="text" maxlength="100" placeholder="e.g. Finish your exam" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;">
+          <div style="font-size:.72rem;color:#888;margin-top:5px;">They\u2019ll mark it done; you confirm to release the gift.</div>
+        </div>
+
+        <div class="field" style="margin-bottom:12px;">
+          <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Message (optional)</label>
+          <input id="m-gift-message" type="text" maxlength="120" placeholder="Happy birthday! \uD83C\uDF89" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;">
+        </div>
+
+        <div id="m-gift-summary" style="display:none;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:11px 13px;margin-bottom:12px;font-size:.8rem;color:#92400e;line-height:1.7;"></div>
+        <button class="btn btn-blue" id="m-gift-save" onclick="giftSend()" style="margin-top:2px;">Send gift</button>
+      </div>
+
+      <div id="gift-recv-pane" style="display:none;"><div id="gift-recv-list" style="min-height:40px;"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- SPONSORED BOOST MODAL -->
+<div class="modal" id="m-boost">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <div class="modal-title">&#128157; Sponsored Boost</div>
+      <button class="modal-x" id="m-boost-x">&#215;</button>
+    </div>
+    <div class="modal-body">
+      <div style="margin-bottom:12px;border-radius:12px;padding:12px 14px;background:#fdf2f8;border:1px solid #fbcfe8;font-size:.8rem;color:#9d174d;line-height:1.6;">
+        A trusted person can help you complete a plan or installment \u2014 they gift it, you never owe anything. Or you can help someone else on DataBulge.
+      </div>
+      <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;margin-bottom:14px;">
+        <button class="btn btn-blue" id="boost-tab-help" onclick="boostTab('help')" style="margin:0;flex:1;font-size:.82rem;">Help others</button>
+        <button class="btn btn-lite" id="boost-tab-mine" onclick="boostTab('mine')" style="margin:0;flex:1;font-size:.82rem;">My requests</button>
+      </div>
+      <div id="boost-help-pane"><div id="boost-feed" style="min-height:40px;"></div></div>
+      <div id="boost-mine-pane" style="display:none;"><div id="boost-mine-list" style="min-height:40px;"></div></div>
     </div>
   </div>
 </div>
@@ -2195,6 +2406,100 @@ function dbStopWalletRealtime() {
     _dbRtWs = null;
   }
 }
+
+/* ── OFFLINE-FIRST PURCHASE QUEUE ──────────────────────────────
+   When a data purchase can't reach the server (no connectivity or a
+   network-level failure), we save the INTENT locally and fire it the
+   moment connectivity returns. No money moves until it actually runs
+   online, so there is never a double-charge. */
+var _OQ_KEY = 'db_offline_queue';
+function oqGet() { try { var r=_store.get(_OQ_KEY); return r?JSON.parse(r):[]; } catch(e){ return []; } }
+function oqSave(a){ try { _store.set(_OQ_KEY, JSON.stringify(a||[])); } catch(e){} }
+function oqCount(){ return oqGet().length; }
+
+function oqAdd(item) {
+  var q = oqGet();
+  // De-dupe: same plan+phone+days not already queued
+  for (var i=0;i<q.length;i++){
+    if (q[i].plan_id===item.plan_id && q[i].phone===item.phone && q[i].days===item.days) return;
+  }
+  item.queued_at = new Date().toISOString();
+  q.push(item);
+  oqSave(q);
+  oqRenderBadge();
+}
+
+function oqRemove(idx){ var q=oqGet(); q.splice(idx,1); oqSave(q); oqRenderBadge(); }
+
+function oqRenderBadge() {
+  var n = oqCount();
+  var el = document.getElementById('oq-badge');
+  if (!el) return;
+  if (n > 0) {
+    el.style.display = 'block';
+    el.textContent = '\u23F3 ' + n + ' purchase' + (n>1?'s':'') + ' queued \u2014 will complete when you\u2019re back online';
+  } else {
+    el.style.display = 'none';
+  }
+}
+
+// Is this failure a connectivity problem (vs a real server rejection)?
+function oqIsNetworkError(e, r) {
+  if (!navigator.onLine) return true;
+  // xhr error with no response object = network/timeout/DNS failure
+  if (e && !r) return true;
+  if (r && (r.status === 0 || r.status === 502 || r.status === 503 || r.status === 504)) return true;
+  return false;
+}
+
+var _oqDraining = false;
+function oqDrain() {
+  if (_oqDraining) return;
+  if (!navigator.onLine) return;
+  var q = oqGet();
+  if (!q.length) return;
+  if (!gUser || !gUser.id) return;   // must be logged in
+  _oqDraining = true;
+
+  var idx = 0;
+  function next() {
+    var cur = oqGet();
+    if (idx >= cur.length) { _oqDraining = false; oqRenderBadge(); return; }
+    var item = cur[idx];
+    ensureToken(function(err) {
+      if (err) { _oqDraining = false; return; }  // try again next online event
+      var h = { 'Authorization': 'Bearer ' + gToken, 'Content-Type': 'application/json', 'apikey': ANON_KEY };
+      var body = JSON.stringify({
+        user_id: gUser.id, plan_id: item.plan_id, phone_number: item.phone,
+        payment_days: item.days, auto_renew: !!item.auto_renew, override_total: item.total
+      });
+      xhr('POST', FN + '/createSubscription', h, body, function(e, r) {
+        if (oqIsNetworkError(e, r)) {
+          // Still offline — stop draining, keep the item, retry later.
+          _oqDraining = false; return;
+        }
+        // Any definitive server response (success OR rejection) removes the item:
+        // success = bought; rejection = won't succeed on retry either.
+        oqRemove(idx);
+        var d = r && r.data;
+        if (d && d.id && !d.error) {
+          toast('\u2705 Queued purchase completed: ' + (item.label || 'data') + ' for ' + item.phone + '.');
+          try { loadWalletBalance(function(){}); } catch(_){}
+          try { loadSubs(); } catch(_){}
+        } else {
+          toast('\u26A0\uFE0F A queued purchase for ' + item.phone + ' could not complete: ' + ((d && d.error) || 'please try again') + '.');
+        }
+        next();  // idx stays (item removed shifts list), process the new item at idx
+      });
+    });
+  }
+  next();
+}
+window.oqDrain = oqDrain;
+
+// Fire the queue whenever connectivity returns.
+window.addEventListener('online', function(){ setTimeout(oqDrain, 800); oqRenderBadge(); });
+window.addEventListener('offline', function(){ oqRenderBadge(); });
 
 /* ── SAFE STORAGE ──────────────────────────────────────────── */
 var _store = (function() {
@@ -2766,23 +3071,22 @@ function dbCancelPlan(subId, planLabel, paidAmount) {
   ov.style.cssText = 'position:fixed;inset:0;z-index:2147483000;background:rgba(15,23,42,.6);display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-box-pack:center;-webkit-align-items:center;align-items:center;-webkit-justify-content:center;justify-content:center;padding:20px;';
   ov.innerHTML =
     '<div style="background:#fff;border-radius:14px;max-width:380px;width:100%;padding:20px;box-shadow:0 20px 60px rgba(0,0,0,.3);">' +
-      '<div style="font-size:1.05rem;font-weight:800;color:#b91c1c;margin-bottom:10px;">\u26A0\uFE0F Cancel this plan?</div>' +
+      '<div style="font-size:1.05rem;font-weight:800;color:#0f5132;margin-bottom:10px;">Cancel this plan?</div>' +
       '<div style="font-size:.84rem;color:#333;line-height:1.6;margin-bottom:14px;">' +
-        'You\u2019re about to cancel <b>' + planLabel + '</b>. Please read carefully:' +
+        'You\u2019re about to cancel <b>' + planLabel + '</b>. Here\u2019s what happens:' +
         '<ul style="margin:10px 0 0 0;padding-left:18px;color:#444;">' +
-          '<li style="margin-bottom:6px;">The <b>' + paidTxt + '</b> you have already paid will <b>NOT be refunded</b>.</li>' +
-          '<li style="margin-bottom:6px;">Your data will <b>not</b> be delivered.</li>' +
-          '<li style="margin-bottom:6px;">Any Auto-Pay or Auto-Renew on this plan will be turned off.</li>' +
-          '<li>This <b>cannot be undone</b>.</li>' +
+          '<li style="margin-bottom:6px;">The <b>' + paidTxt + '</b> you have already paid is <b>rolled back into your wallet</b> \u2014 you can spend it on any plan.</li>' +
+          '<li style="margin-bottom:6px;">This plan will stop, and its data won\u2019t be delivered.</li>' +
+          '<li>Any Auto-Pay or Auto-Renew on this plan will be turned off.</li>' +
         '</ul>' +
       '</div>' +
       '<label style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:start;-webkit-align-items:flex-start;align-items:flex-start;gap:8px;font-size:.8rem;color:#333;margin-bottom:16px;cursor:pointer;">' +
         '<input type="checkbox" id="db-cancel-accept" style="margin-top:2px;width:16px;height:16px;-webkit-flex-shrink:0;flex-shrink:0;">' +
-        '<span>I understand I will lose the ' + paidTxt + ' I already paid, and I still want to cancel.</span>' +
+        '<span>Cancel this plan and return the ' + paidTxt + ' to my wallet.</span>' +
       '</label>' +
       '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">' +
         '<button id="db-cancel-keep" style="-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:11px;background:#f1f5f9;color:#334155;border:none;border-radius:8px;font-size:.85rem;font-weight:700;cursor:pointer;font-family:inherit;">Keep my plan</button>' +
-        '<button id="db-cancel-go" disabled style="-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:11px;background:#fca5a5;color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:700;cursor:not-allowed;font-family:inherit;">Cancel plan</button>' +
+        '<button id="db-cancel-go" disabled style="-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:11px;background:#cbd5e1;color:#fff;border:none;border-radius:8px;font-size:.85rem;font-weight:700;cursor:not-allowed;font-family:inherit;">Cancel & refund</button>' +
       '</div>' +
     '</div>';
   document.body.appendChild(ov);
@@ -2792,8 +3096,8 @@ function dbCancelPlan(subId, planLabel, paidAmount) {
   var keepBtn = document.getElementById('db-cancel-keep');
   function close() { if (ov && ov.parentNode) ov.parentNode.removeChild(ov); }
   accept.onchange = function() {
-    if (accept.checked) { goBtn.disabled = false; goBtn.style.background = '#dc2626'; goBtn.style.cursor = 'pointer'; }
-    else { goBtn.disabled = true; goBtn.style.background = '#fca5a5'; goBtn.style.cursor = 'not-allowed'; }
+    if (accept.checked) { goBtn.disabled = false; goBtn.style.background = '#0f5132'; goBtn.style.cursor = 'pointer'; }
+    else { goBtn.disabled = true; goBtn.style.background = '#cbd5e1'; goBtn.style.cursor = 'not-allowed'; }
   };
   keepBtn.onclick = close;
   goBtn.onclick = function() {
@@ -2803,8 +3107,12 @@ function dbCancelPlan(subId, planLabel, paidAmount) {
       var d = res && (res.data !== undefined ? res.data : res);
       close();
       if (!err && d && d.ok) {
-        toast('Your plan has been cancelled.');
+        var rolled = parseFloat(d.rolled_over) || 0;
+        toast(rolled > 0
+          ? ('Plan cancelled \u2014 ' + fmtN(rolled) + ' returned to your wallet.')
+          : 'Your plan has been cancelled.');
         if (typeof loadSubs === 'function') loadSubs();
+        try { loadWalletBalance(function(){}); } catch(_){}
       } else {
         toast((d && d.error) || 'Could not cancel the plan. Please try again.');
       }
@@ -3101,6 +3409,9 @@ function bootApp(onReady) {
   // Warm the plan cache in the background (no market chosen yet, so loadPlans
   // would no-op). This makes entering a market render plans INSTANTLY from cache.
   try { prefetchPlans(); } catch (e) {}
+
+  // Offline queue: show any pending queued purchases, and fire them if we're online.
+  try { oqRenderBadge(); if (navigator.onLine) setTimeout(oqDrain, 1500); } catch (e) {}
 
   // My Plan tab — defer 200ms (not visible, low priority)
   setTimeout(function() { loadSubs(); }, 200);
@@ -3792,6 +4103,8 @@ function setMarket(m) {
   var ptCard = document.getElementById('pay-toggle-card');
   // Show installment days toggle only in Premium market
   if (ptCard) ptCard.style.display = (m === 'installment') ? '' : 'none';
+  var slCard = document.getElementById('study-lock-card');
+  if (slCard) slCard.style.display = (m === 'installment') ? 'block' : 'none';
   // NOTE: do NOT clear _plansCache here. The plan data is a single fetch of all
   // plans; only the market filter changes. Keeping the cache lets plans render
   // instantly when switching markets instead of re-hitting the network.
@@ -4476,6 +4789,7 @@ function renderSubsList(subs, compact) {
     } else if ((isActive || isPending) && remaining > 0) {
       html += '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:7px;margin-top:4px;">' +
         '<button class="pay-btn" style="flex:1;" onclick="openPayModal(\'' + esc(s.id) + '\',' + (dailyPrice||0) + ',' + remaining + ',' + (s._isAirtime ? 'true' : 'false') + ')">Pay Now</button>' +
+        ((parseInt(s.payment_days) > 1 || s._isAirtime) ? '<button style="padding:8px 12px;background:#fdf2f8;border:1.5px solid #fbcfe8;color:#db2777;border-radius:6px;font-size:.78rem;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="requestBoostForSub(\'' + esc(s.id) + '\',' + remaining + ',\'' + esc(displayName + ' ' + displayNetwork) + '\')">\uD83D\uDC9D Ask for a boost</button>' : '') +
         (s._isAirtime ? '' : '<button style="padding:8px 12px;background:#fff;border:1.5px solid #2A3FA3;color:#2A3FA3;border-radius:6px;font-size:.78rem;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="openUpgradeModal(\'' + esc(s.id) + '\')" ontouchstart="">\u2B06\uFE0F Upgrade</button>') +
         /* Report Issue button hidden per product decision — keep markup & handler for easy re-enable */
         '<button style="display:none;padding:8px 10px;background:#fff;border:1px solid #e5e7eb;color:#374151;border-radius:6px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="openRefundModal(\'' + esc(s.id) + '\',\'' + esc(displayName + ' ' + displayNetwork) + '\',\'' + esc(s.phone_number || '') + '\')">&#9888; Report Issue</button>' +
@@ -5346,15 +5660,31 @@ function confirmSub() {
   errHide('m-sub-err');
   if (!phone) { errShow('m-sub-err', 'Enter your phone number for data delivery.'); return; }
   if (autoPayOn && autoPayAmt <= 0) { errShow('m-sub-err', 'Enter how much to pay from your wallet each day for Auto-Pay.'); return; }
+  if (window._subBusy) return;   // guard against rapid double-fire
+  window._subBusy = true;
+  var _subRef = 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
   btnLoad('m-sub-btn', true, 'Subscribing\u2026');
   ensureToken(function(err) {
-    if (err) { btnLoad('m-sub-btn', false, 'Subscribe Now'); errShow('m-sub-err', 'Session error. Please sign out and back in.'); return; }
+    if (err) { window._subBusy = false; btnLoad('m-sub-btn', false, 'Subscribe Now'); errShow('m-sub-err', 'Session error. Please sign out and back in.'); return; }
     var h = { 'Authorization': 'Bearer ' + gToken, 'Content-Type': 'application/json', 'apikey': ANON_KEY };
     var _mktTotal = marketCheckoutTotal(gSelPlan, gPayOnce);
-    var body = JSON.stringify({ user_id: gUser.id, plan_id: gSelPlan.id, phone_number: phone, payment_days: days, auto_renew: autoRenew, override_total: _mktTotal });
+    var body = JSON.stringify({ user_id: gUser.id, plan_id: gSelPlan.id, phone_number: phone, payment_days: days, auto_renew: autoRenew, override_total: _mktTotal, client_ref: _subRef });
     xhr('POST', FN + '/createSubscription', h, body, function(e, r) {
+      window._subBusy = false;
       btnLoad('m-sub-btn', false, 'Subscribe Now');
       if (e || !r || !r.ok || (r.data && r.data.error)) {
+        // If this is a CONNECTIVITY failure (not a real rejection), queue it
+        // so it fires automatically when the user is back online.
+        if (typeof oqIsNetworkError === 'function' && oqIsNetworkError(e, r)) {
+          oqAdd({
+            plan_id: gSelPlan.id, phone: phone, days: days,
+            auto_renew: autoRenew, total: _mktTotal,
+            label: gSelPlan.data_size + ' ' + gSelPlan.network
+          });
+          closeModal('m-sub');
+          toast('\uD83D\uDCF6 You\u2019re offline. We saved this purchase \u2014 it\u2019ll complete automatically once you\u2019re back online.');
+          return;
+        }
         errShow('m-sub-err', _friendlySubError(e, r));
         return;
       }
@@ -5386,21 +5716,14 @@ function confirmSub() {
 
       closeModal('m-sub');
       if (gPayOnce && r.data && r.data.id) {
-        // Pay-once: charge the full total now from the wallet; this completes
-        // the plan and triggers delivery via the existing pay_installment flow.
-        var fullTotal = marketCheckoutTotal(gSelPlan, true);  // pay-once: no surge for general market
-        toast('\u2705 Subscribed! Completing your full payment\u2026');
+        // Pay-once is now completed by createSubscription itself (v47+): it debits
+        // the full amount, marks the subscription 'completed', and fires delivery.
+        // No extra pay_installment call needed (and it would be rejected for general).
+        toast('\uD83C\uDF89 Paid in full \u2014 your data is on the way!');
         showTab('subs');
-        rpc('pay_installment', { p_user_id: gUser.id, p_subscription_id: r.data.id, p_amount: fullTotal, p_reference: null, p_pin: null }, function(pe, pr) {
-          var pd = pr && (pr.data !== undefined ? pr.data : pr);
-          if (!pe && pd && (pd.success || pd.ok || pd.completed)) {
-            toast('\uD83C\uDF89 Paid in full \u2014 your data is on the way!');
-          } else {
-            toast((pd && (pd.error || pd.message)) || 'Subscribed, but full payment didn\u2019t go through. Fund your wallet and tap Pay Now.');
-          }
-          loadSubs();
-          setTimeout(function() { loadDashboard(); loadDashCashflow(); }, 1500);
-        });
+        loadSubs();
+        try { loadWalletBalance(function(){}); } catch(_){}
+        setTimeout(function() { loadDashboard(); loadDashCashflow(); }, 1500);
         return;
       }
       toast('\u2705 Subscribed to ' + gSelPlan.data_size + '! Fund your wallet and tap Pay Now to continue.');
@@ -8711,6 +9034,7 @@ function airPickPhone(phone) {
 
 /* ── confirmAirtime ── */
 function confirmAirtime() {
+  if (window._airtimeBusy) return;   // guard against rapid double-fire
   var network    = $('air-network')    ? $('air-network').value    : '';
   var phone      = $('air-phone')      ? $('air-phone').value.replace(/^\s+|\s+$/g, '') : '';
   var amtStr     = $('air-amount-input') ? $('air-amount-input').value : '';
@@ -8730,10 +9054,14 @@ function confirmAirtime() {
 
   var btn = $('air-buy-btn');
   if (btn) { btn.disabled = true; btn.textContent = 'Processing\u2026'; }
+  window._airtimeBusy = true;
+  // Stable idempotency key for THIS click, so a retry/double-tap can't double-charge.
+  var _clientRef = 'c' + Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
 
   ensureToken(function(tokenErr) {
     if (tokenErr) {
       if (btn) { btn.disabled = false; btn.textContent = 'Buy Airtime'; }
+      window._airtimeBusy = false;
       airErr('Session error. Please sign out and back in.');
       return;
     }
@@ -8743,12 +9071,13 @@ function confirmAirtime() {
     var netInt = NET_INT[String(network).toUpperCase()] || _svcState.airtime.network || 1;
     var body;
     if (gAirDays === 1) {
-      body = JSON.stringify({ service: 'airtime', network: netInt, network_name: network, phone_number: phone, amount: amount });
+      body = JSON.stringify({ service: 'airtime', network: netInt, network_name: network, phone_number: phone, amount: amount, client_ref: _clientRef });
     } else {
-      body = JSON.stringify({ service: 'airtime_installment', network: netInt, network_name: network, phone_number: phone, amount: amount, payment_days: gAirDays, auto_renew: autoRenew });
+      body = JSON.stringify({ service: 'airtime_installment', network: netInt, network_name: network, phone_number: phone, amount: amount, payment_days: gAirDays, auto_renew: autoRenew, client_ref: _clientRef });
     }
     xhr('POST', FN + '/purchaseService', h, body, function(e, r) {
       if (btn) { btn.disabled = false; btn.textContent = 'Buy Airtime'; }
+      window._airtimeBusy = false;
       if (e || !r || !r.ok || (r.data && r.data.error)) {
         var msg = (r && r.data && (r.data.error || r.data.message)) || 'Failed to process. Please try again.';
         airErr(msg);
@@ -9068,6 +9397,576 @@ function aprSetStatus(id, status) {
   });
 }
 window.aprSetStatus = aprSetStatus;
+
+/* ════════ STUDY / WORK LOCK ════════ */
+var gStudyMethod = 'photo';
+var gStudyReward = 'data';
+var _studyPlans = [];
+
+function studySetReward(rt) {
+  gStudyReward = (rt === 'airtime' || rt === 'both') ? rt : 'data';
+  if ($('m-study-rt-data'))    $('m-study-rt-data').className    = 'btn ' + (gStudyReward==='data'    ? 'btn-blue' : 'btn-lite');
+  if ($('m-study-rt-airtime')) $('m-study-rt-airtime').className = 'btn ' + (gStudyReward==='airtime' ? 'btn-blue' : 'btn-lite');
+  if ($('m-study-rt-both'))    $('m-study-rt-both').className    = 'btn ' + (gStudyReward==='both'    ? 'btn-blue' : 'btn-lite');
+  if ($('m-study-plan-field'))    $('m-study-plan-field').style.display    = (gStudyReward==='airtime') ? 'none' : 'block';
+  if ($('m-study-airtime-field')) $('m-study-airtime-field').style.display = (gStudyReward==='data')    ? 'none' : 'block';
+  studyPreview();
+}
+window.studySetReward = studySetReward;
+
+function openStudyLock() {
+  if ($('m-study-err')) { $('m-study-err').style.display='none'; $('m-study-err').textContent=''; }
+  if ($('m-study-goal')) $('m-study-goal').value = '';
+  if ($('m-study-summary')) $('m-study-summary').style.display = 'none';
+  studySetMethod('photo');
+  studySetReward('data');
+  if ($('m-study-airtime')) $('m-study-airtime').value = '';
+  studyLoadList();
+  openModal('m-study');
+}
+window.openStudyLock = openStudyLock;
+
+function studyLoadUmpireTasks() {
+  var wrap = $('m-study-list');
+  if (!wrap) return;
+  rpc('list_umpire_tasks', {}, function(err, res) {
+    var rows = (res && (res.data !== undefined ? res.data : res)) || [];
+    if (typeof rows === 'string') { try { rows = JSON.parse(rows); } catch(_) { rows = []; } }
+    if (err || !rows || !rows.length) return;  // nothing to referee
+    var html = '<div style="font-size:.74rem;font-weight:800;color:#5b21b6;text-transform:uppercase;letter-spacing:.04em;margin:14px 0 8px;">&#129406; You\u2019re refereeing</div>';
+    for (var i=0;i<rows.length;i++){
+      var t = rows[i];
+      html += '<div style="border:1px solid #ddd6fe;border-radius:12px;padding:12px;margin-bottom:10px;background:#faf5ff;">' +
+        '<div style="font-size:.86rem;font-weight:800;color:#0f172a;">' + esc(t.goal_title) + '</div>' +
+        '<div style="font-size:.74rem;color:#64748b;margin-top:3px;">' + esc(t.student_email || '') + ' \u00b7 step ' + (t.milestones_done+1) + ' of ' + t.milestone_count + '</div>' +
+        '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:7px;margin-top:10px;">' +
+          '<input type="text" id="ump-code-' + esc(t.lock_id) + '" inputmode="numeric" maxlength="6" placeholder="Enter code" style="-webkit-box-flex:1;-webkit-flex:1;flex:1;height:40px;border:1.5px solid #d8b4fe;border-radius:8px;padding:0 12px;font-size:.95rem;letter-spacing:2px;text-align:center;outline:none;">' +
+          '<button onclick="umpireVerify(\'' + esc(t.lock_id) + '\')" style="padding:0 16px;border-radius:8px;border:none;background:#7c3aed;color:#fff;font-size:.82rem;font-weight:800;cursor:pointer;font-family:inherit;">Unlock</button>' +
+        '</div>' +
+      '</div>';
+    }
+    // Prepend umpire section above the user's own locks
+    wrap.innerHTML = html + wrap.innerHTML;
+  });
+}
+window.studyLoadUmpireTasks = studyLoadUmpireTasks;
+
+function umpireVerify(lockId) {
+  var code = ($('ump-code-' + lockId) ? $('ump-code-' + lockId).value : '').replace(/\D/g,'');
+  if (code.length !== 6) { toast('Enter the 6-digit code.'); return; }
+  rpc('umpire_verify_milestone', { p_lock_id: lockId, p_code: code }, function(err, res) {
+    var d = res && (res.data !== undefined ? res.data : res);
+    if (err || !d || d.success === false) { toast((d && d.error) || 'Could not verify.'); return; }
+    toast('\u2705 Verified! Their data step is unlocked.');
+    studyLoadList();
+    studyLoadUmpireTasks();
+  });
+}
+window.umpireVerify = umpireVerify;
+
+/* ════════ SPONSORED BOOST ════════ */
+function openBoost() { boostTab('help'); openModal('m-boost'); }
+window.openBoost = openBoost;
+
+function boostTab(which) {
+  var help = which !== 'mine';
+  if ($('boost-tab-help')) $('boost-tab-help').className = 'btn ' + (help?'btn-blue':'btn-lite');
+  if ($('boost-tab-mine')) $('boost-tab-mine').className = 'btn ' + (help?'btn-lite':'btn-blue');
+  if ($('boost-help-pane')) $('boost-help-pane').style.display = help ? 'block' : 'none';
+  if ($('boost-mine-pane')) $('boost-mine-pane').style.display = help ? 'none' : 'block';
+  if (help) boostLoadFeed(); else boostLoadMine();
+}
+window.boostTab = boostTab;
+
+function boostLoadFeed() {
+  var wrap = $('boost-feed'); if (!wrap) return;
+  wrap.innerHTML = '<div style="color:#94a3b8;font-size:.82rem;padding:8px 0;">Loading\u2026</div>';
+  rpc('list_boost_feed', {}, function(err, res) {
+    var rows = (res && (res.data !== undefined ? res.data : res)) || [];
+    if (typeof rows === 'string') { try { rows = JSON.parse(rows); } catch(_) { rows = []; } }
+    if (err || !rows || !rows.length) { wrap.innerHTML = '<div style="color:#94a3b8;font-size:.82rem;padding:12px 0;text-align:center;">No one needs help right now. \u2764\uFE0F</div>'; return; }
+    var html = '';
+    for (var i=0;i<rows.length;i++){
+      var r = rows[i];
+      var left = Math.max(0, (parseFloat(r.amount_needed)||0) - (parseFloat(r.amount_raised)||0));
+      html += '<div style="border:1px solid #fbcfe8;border-radius:12px;padding:12px;margin-bottom:10px;background:#fffafc;">' +
+        '<div style="font-size:.84rem;color:#0f172a;line-height:1.5;"><b>' + esc(r.requester_email||'A user') + '</b> needs a boost to complete their <b>' + esc(r.label||'plan') + '</b>.</div>' +
+        (r.note ? '<div style="font-size:.76rem;color:#64748b;margin-top:4px;font-style:italic;">\u201C' + esc(r.note) + '\u201D</div>' : '') +
+        '<div style="font-size:.78rem;color:#9d174d;font-weight:800;margin-top:6px;">' + fmtN(left) + ' to go</div>' +
+        '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:7px;margin-top:9px;">' +
+          '<input type="number" id="boost-amt-' + esc(r.id) + '" min="1" placeholder="Amount to gift" style="-webkit-box-flex:1;-webkit-flex:1;flex:1;height:40px;border:1.5px solid #fbcfe8;border-radius:8px;padding:0 12px;font-size:.9rem;outline:none;">' +
+          '<button onclick="boostGive(\'' + esc(r.id) + '\',' + left + ')" style="padding:0 16px;border-radius:8px;border:none;background:#db2777;color:#fff;font-size:.82rem;font-weight:800;cursor:pointer;font-family:inherit;">Gift</button>' +
+        '</div>' +
+      '</div>';
+    }
+    wrap.innerHTML = html;
+  });
+}
+window.boostLoadFeed = boostLoadFeed;
+
+function boostGive(reqId, maxLeft) {
+  var amt = parseFloat($('boost-amt-' + reqId) ? $('boost-amt-' + reqId).value : '0') || 0;
+  if (amt <= 0) { toast('Enter an amount to gift.'); return; }
+  if (amt > maxLeft) amt = maxLeft;
+  if (!confirm('Gift ' + fmtN(amt) + ' from your wallet to help complete this plan? This is a gift \u2014 it won\u2019t be repaid.')) return;
+  rpc('sponsor_boost', { p_request_id: reqId, p_amount: amt }, function(err, res) {
+    var d = res && (res.data !== undefined ? res.data : res);
+    if (err || !d || d.success === false) { toast((d && d.error) || 'Could not complete the gift.'); return; }
+    toast('\uD83D\uDC9D You gifted ' + fmtN(d.gifted) + '! Thank you for helping.');
+    try { loadWalletBalance(function(){}); } catch(_){}
+    boostLoadFeed();
+  });
+}
+window.boostGive = boostGive;
+
+function boostLoadMine() {
+  var wrap = $('boost-mine-list'); if (!wrap) return;
+  wrap.innerHTML = '<div style="color:#94a3b8;font-size:.82rem;padding:8px 0;">Loading\u2026</div>';
+  rpc('list_my_boost_requests', {}, function(err, res) {
+    var rows = (res && (res.data !== undefined ? res.data : res)) || [];
+    if (typeof rows === 'string') { try { rows = JSON.parse(rows); } catch(_) { rows = []; } }
+    var html = '';
+    if (rows && rows.length) {
+      for (var i=0;i<rows.length;i++){
+        var r = rows[i];
+        var raised = parseFloat(r.amount_raised)||0, need = parseFloat(r.amount_needed)||0;
+        var pct = need>0 ? Math.min(100, Math.round(raised/need*100)) : 0;
+        var done = (r.status==='fulfilled');
+        html += '<div style="border:1px solid #e2e8f0;border-radius:12px;padding:12px;margin-bottom:10px;">' +
+          '<div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;justify-content:space-between;-webkit-box-align:center;align-items:center;">' +
+            '<div style="font-size:.84rem;font-weight:800;color:#0f172a;">' + esc(r.label||'Plan') + '</div>' +
+            '<span style="font-size:.7rem;font-weight:800;padding:3px 8px;border-radius:20px;background:' + (done?'#dcfce7':'#fce7f3') + ';color:' + (done?'#166534':'#9d174d') + ';">' + (done?'Fulfilled':r.status) + '</span>' +
+          '</div>' +
+          '<div style="font-size:.76rem;color:#64748b;margin-top:3px;">' + fmtN(raised) + ' of ' + fmtN(need) + ' raised</div>' +
+          '<div style="height:7px;background:#f1f5f9;border-radius:5px;margin-top:8px;overflow:hidden;"><div style="height:100%;width:' + pct + '%;background:#db2777;"></div></div>' +
+          (r.status==='open' ? '<button onclick="boostCancel(\'' + esc(r.id) + '\')" style="margin-top:9px;padding:6px 12px;border-radius:6px;border:1px solid #e2e8f0;background:#fff;color:#64748b;font-size:.76rem;font-weight:700;cursor:pointer;font-family:inherit;">Cancel request</button>' : '') +
+        '</div>';
+      }
+    }
+    wrap.innerHTML = html || '<div style="color:#94a3b8;font-size:.82rem;padding:12px 0;text-align:center;">No boost requests yet.</div>';
+    boostLoadSponsors();
+  });
+}
+window.boostLoadMine = boostLoadMine;
+
+// Short, warm, pre-written thank-you messages.
+var BOOST_THANKS = [
+  'Thank you so much! \uD83D\uDE4F',
+  'You\u2019re a lifesaver! \u2764\uFE0F',
+  'God bless you! \uD83D\uDE4C',
+  'I really appreciate this \uD83D\uDE4A',
+  'You made my day \uD83D\uDE4C\u2728',
+  'Forever grateful \uD83D\uDC96'
+];
+
+function boostLoadSponsors() {
+  var wrap = $('boost-mine-list'); if (!wrap) return;
+  rpc('list_my_sponsors', {}, function(err, res) {
+    var rows = (res && (res.data !== undefined ? res.data : res)) || [];
+    if (typeof rows === 'string') { try { rows = JSON.parse(rows); } catch(_) { rows = []; } }
+    if (err || !rows || !rows.length) return;
+    var html = '<div style="font-size:.74rem;font-weight:800;color:#9d174d;text-transform:uppercase;letter-spacing:.04em;margin:16px 0 8px;">\uD83D\uDC9D People who helped you</div>';
+    for (var i=0;i<rows.length;i++){
+      var c = rows[i];
+      html += '<div style="border:1px solid #fbcfe8;border-radius:12px;padding:12px;margin-bottom:10px;background:#fffafc;">' +
+        '<div style="font-size:.83rem;color:#0f172a;"><b>' + esc(c.sponsor_email||'A sponsor') + '</b> gifted <b>' + fmtN(c.amount) + '</b>' + (c.label?(' toward ' + esc(c.label)):'') + '.</div>';
+      if (c.thanked) {
+        html += '<div style="font-size:.76rem;color:#16a34a;font-weight:700;margin-top:6px;">\u2713 Thanked</div>';
+      } else {
+        html += '<div style="font-size:.72rem;color:#9d174d;margin-top:8px;margin-bottom:5px;">Send a quick thank-you:</div>' +
+          '<div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;gap:6px;">';
+        for (var k=0;k<BOOST_THANKS.length;k++){
+          var msg = BOOST_THANKS[k];
+          html += '<button onclick="thankSponsor(\'' + esc(c.contribution_id) + '\',\'' + esc(msg).replace(/'/g,"\\'") + '\')" style="padding:6px 11px;border-radius:20px;border:1.5px solid #fbcfe8;background:#fff;color:#db2777;font-size:.76rem;font-weight:700;cursor:pointer;font-family:inherit;">' + esc(msg) + '</button>';
+        }
+        html += '</div>';
+      }
+      html += '</div>';
+    }
+    // Append below the requests list
+    wrap.innerHTML = wrap.innerHTML + html;
+  });
+}
+window.boostLoadSponsors = boostLoadSponsors;
+
+function thankSponsor(contribId, msg) {
+  rpc('thank_sponsor', { p_contribution_id: contribId, p_message: msg }, function(err, res) {
+    var d = res && (res.data !== undefined ? res.data : res);
+    if (err || !d || d.success === false) { toast((d && d.error) || 'Could not send thank-you.'); return; }
+    toast('\uD83D\uDC9D Thank-you sent!');
+    boostLoadMine();
+  });
+}
+window.thankSponsor = thankSponsor;
+
+/* ════════ GIFT WITH STRINGS ════════ */
+var gGiftReward = 'data';
+var gGiftCond = 'date';
+
+function openGift() { giftTab('send'); giftSetReward('data'); giftSetCond('date'); openModal('m-gift'); }
+window.openGift = openGift;
+
+function giftTab(which) {
+  var send = which !== 'recv';
+  if ($('gift-tab-send')) $('gift-tab-send').className = 'btn ' + (send?'btn-blue':'btn-lite');
+  if ($('gift-tab-recv')) $('gift-tab-recv').className = 'btn ' + (send?'btn-lite':'btn-blue');
+  if ($('gift-send-pane')) $('gift-send-pane').style.display = send ? 'block' : 'none';
+  if ($('gift-recv-pane')) $('gift-recv-pane').style.display = send ? 'none' : 'block';
+  if (!send) giftLoadReceived();
+}
+window.giftTab = giftTab;
+
+function giftSetReward(rt) {
+  gGiftReward = (rt==='airtime') ? 'airtime' : 'data';
+  if ($('m-gift-rt-data'))    $('m-gift-rt-data').className    = 'btn ' + (gGiftReward==='data'?'btn-blue':'btn-lite');
+  if ($('m-gift-rt-airtime')) $('m-gift-rt-airtime').className = 'btn ' + (gGiftReward==='airtime'?'btn-blue':'btn-lite');
+  if ($('m-gift-plan-field'))    $('m-gift-plan-field').style.display    = (gGiftReward==='data')?'block':'none';
+  if ($('m-gift-airtime-field')) $('m-gift-airtime-field').style.display = (gGiftReward==='airtime')?'block':'none';
+  giftPreview();
+}
+window.giftSetReward = giftSetReward;
+
+function giftSetCond(ct) {
+  gGiftCond = (ct==='action') ? 'action' : 'date';
+  if ($('m-gift-ct-date'))   $('m-gift-ct-date').className   = 'btn ' + (gGiftCond==='date'?'btn-blue':'btn-lite');
+  if ($('m-gift-ct-action')) $('m-gift-ct-action').className = 'btn ' + (gGiftCond==='action'?'btn-blue':'btn-lite');
+  if ($('m-gift-date-field'))   $('m-gift-date-field').style.display   = (gGiftCond==='date')?'block':'none';
+  if ($('m-gift-action-field')) $('m-gift-action-field').style.display = (gGiftCond==='action')?'block':'none';
+}
+window.giftSetCond = giftSetCond;
+
+function giftLoadPlans() {
+  var net = $('m-gift-network') ? $('m-gift-network').value : '';
+  var sel = $('m-gift-plan'); if (!sel) return;
+  sel.innerHTML = '<option value="">\u2014 Select a plan \u2014</option>';
+  if (!net) return;
+  restGet('/data_plans',
+    'is_active=eq.true&market=eq.installment&network=eq.' + encodeURIComponent(net) + '&order=selling_price&select=id,data_size,selling_price,validity_days',
+    function(e, r) {
+      if (!r || !r.ok || !r.data) return;
+      var html = '<option value="">\u2014 Select a plan \u2014</option>';
+      for (var i=0;i<r.data.length;i++){
+        var p = r.data[i]; var prem = Math.ceil(parseFloat(p.selling_price)*1.03);
+        html += '<option value="' + esc(p.id) + '" data-price="' + prem + '">' + esc(p.data_size) + ' \u00b7 ' + (p.validity_days||30) + 'd \u00b7 ' + fmtN(prem) + '</option>';
+      }
+      sel.innerHTML = html;
+    });
+}
+window.giftLoadPlans = giftLoadPlans;
+
+function giftPreview() {
+  var box = $('m-gift-summary'); if (!box) return;
+  var price = 0;
+  if (gGiftReward==='data') {
+    var ps = $('m-gift-plan');
+    price = (ps && ps.options[ps.selectedIndex]) ? parseFloat(ps.options[ps.selectedIndex].getAttribute('data-price'))||0 : 0;
+  } else {
+    var a = parseFloat($('m-gift-airtime') ? $('m-gift-airtime').value : '0')||0;
+    price = a>0 ? Math.ceil(a*1.03) : 0;
+  }
+  if (!price) { box.style.display='none'; return; }
+  box.innerHTML = '<div style="display:flex;justify-content:space-between;"><span>You pay now</span><strong>' + fmtN(price) + '</strong></div>' +
+    '<div style="display:flex;justify-content:space-between;"><span>Unlocks</span><strong>' + (gGiftCond==='date'?'on your chosen date':'after they complete the action') + '</strong></div>' +
+    '<div style="font-size:.72rem;color:#a16207;margin-top:5px;">Charged now. It stays locked for them until the condition is met, then delivers.</div>';
+  box.style.display='block';
+}
+window.giftPreview = giftPreview;
+
+function giftSend() {
+  var email = ($('m-gift-email')?$('m-gift-email').value:'').replace(/^\s+|\s+$/g,'');
+  var phone = ($('m-gift-phone')?$('m-gift-phone').value:'').replace(/^\s+|\s+$/g,'');
+  var net = $('m-gift-network')?$('m-gift-network').value:'';
+  var planId = $('m-gift-plan')?$('m-gift-plan').value:'';
+  var airAmt = parseFloat($('m-gift-airtime')?$('m-gift-airtime').value:'0')||0;
+  var msg = ($('m-gift-message')?$('m-gift-message').value:'');
+  var unlockDate = $('m-gift-date')?$('m-gift-date').value:'';
+  var action = ($('m-gift-action')?$('m-gift-action').value:'').replace(/^\s+|\s+$/g,'');
+  var errEl = $('m-gift-err');
+  function e(m){ if(errEl){ errEl.textContent=m; errEl.style.display='block'; } }
+  if (errEl){ errEl.style.display='none'; }
+  if (!email) { e('Enter the recipient\u2019s email.'); return; }
+  if (!phone) { e('Enter the phone to deliver to.'); return; }
+  if (!net)   { e('Select a network.'); return; }
+  if (gGiftReward==='data' && !planId) { e('Select a data plan.'); return; }
+  if (gGiftReward==='airtime' && airAmt<50) { e('Enter an airtime amount (min \u20A650).'); return; }
+  if (gGiftCond==='date' && !unlockDate) { e('Pick an unlock date.'); return; }
+  if (gGiftCond==='action' && !action) { e('Describe the action to unlock.'); return; }
+
+  var btn = $('m-gift-save');
+  if (btn){ btn.disabled=true; btn.textContent='Sending\u2026'; }
+  rpc('create_gift', {
+    p_recipient_email: email, p_reward_type: gGiftReward,
+    p_plan_id: gGiftReward==='data'?planId:null,
+    p_airtime_amount: gGiftReward==='airtime'?airAmt:null,
+    p_phone_number: phone, p_network: net, p_message: msg||null,
+    p_condition_type: gGiftCond,
+    p_unlock_date: gGiftCond==='date'?unlockDate:null,
+    p_action_text: gGiftCond==='action'?action:null
+  }, function(err, res) {
+    if (btn){ btn.disabled=false; btn.textContent='Send gift'; }
+    var d = res && (res.data !== undefined ? res.data : res);
+    if (err || !d || d.success === false) { e((d && d.error) || 'Could not send gift.'); return; }
+    toast('\uD83C\uDF81 Gift sent! It\u2019s locked for them until the condition is met.');
+    if ($('m-gift-email')) $('m-gift-email').value='';
+    if ($('m-gift-message')) $('m-gift-message').value='';
+    if ($('m-gift-summary')) $('m-gift-summary').style.display='none';
+    try { loadWalletBalance(function(){}); } catch(_){}
+  });
+}
+window.giftSend = giftSend;
+
+function giftLoadReceived() {
+  var wrap = $('gift-recv-list'); if (!wrap) return;
+  wrap.innerHTML = '<div style="color:#94a3b8;font-size:.82rem;padding:8px 0;">Loading\u2026</div>';
+  rpc('list_gifts_received', {}, function(err, res) {
+    var rows = (res && (res.data !== undefined ? res.data : res)) || [];
+    if (typeof rows === 'string') { try { rows = JSON.parse(rows); } catch(_) { rows = []; } }
+    if (err || !rows || !rows.length) { wrap.innerHTML = '<div style="color:#94a3b8;font-size:.82rem;padding:12px 0;text-align:center;">No gifts yet. \uD83C\uDF81</div>'; return; }
+    var html = '';
+    for (var i=0;i<rows.length;i++){
+      var g = rows[i];
+      var what = g.reward_type==='data' ? (esc(g.data_size||'Data')) : (fmtN(g.airtime_amount||g.amount_charged) + ' airtime');
+      var locked = (g.status==='locked');
+      var cond = g.condition_type==='date'
+        ? ('Unlocks on ' + esc(g.unlock_date||''))
+        : ('Unlocks after: ' + esc(g.action_text||''));
+      html += '<div style="border:1px solid #fde68a;border-radius:12px;padding:12px;margin-bottom:10px;background:#fffdf5;">' +
+        '<div style="font-size:.85rem;color:#0f172a;"><b>' + what + '</b> from <b>' + esc(g.sender_email||'someone') + '</b></div>' +
+        (g.message ? '<div style="font-size:.76rem;color:#a16207;margin-top:3px;font-style:italic;">\u201C' + esc(g.message) + '\u201D</div>' : '') +
+        '<div style="font-size:.75rem;color:#64748b;margin-top:5px;">' + (locked ? cond : '\u2713 Delivered') + '</div>';
+      if (locked && g.condition_type==='action') {
+        html += '<button onclick="giftMarkDone(\'' + esc(g.id) + '\')" style="margin-top:9px;padding:7px 13px;border-radius:6px;border:none;background:#d97706;color:#fff;font-size:.78rem;font-weight:800;cursor:pointer;font-family:inherit;">I\u2019ve done it \u2014 request unlock</button>';
+      }
+      html += '</div>';
+    }
+    wrap.innerHTML = html;
+  });
+}
+window.giftLoadReceived = giftLoadReceived;
+
+function giftMarkDone(id) {
+  rpc('gift_mark_action_done', { p_gift_id: id }, function(err, res) {
+    var d = res && (res.data !== undefined ? res.data : res);
+    if (err || !d || d.success === false) { toast((d && d.error) || 'Could not request unlock.'); return; }
+    toast('\u2705 We\u2019ve asked the sender to confirm.');
+    giftLoadReceived();
+  });
+}
+window.giftMarkDone = giftMarkDone;
+
+(function(){
+  function w(){ if ($('m-gift-x')) $('m-gift-x').onclick = function(){ closeModal('m-gift'); }; }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', w); else w();
+})();
+
+function boostCancel(id) {
+  if (!confirm('Cancel this boost request?')) return;
+  rpc('cancel_boost_request', { p_request_id: id }, function(err, res) {
+    var d = res && (res.data !== undefined ? res.data : res);
+    if (err || !d || d.success === false) { toast((d && d.error) || 'Could not cancel.'); return; }
+    toast('Request cancelled.'); boostLoadMine();
+  });
+}
+window.boostCancel = boostCancel;
+
+// Called from a plan card when the user is short: creates a request for the remaining balance.
+function requestBoostForSub(subId, remaining, label) {
+  var note = prompt('Add a short message for your sponsors (optional):', '');
+  rpc('create_boost_request', {
+    p_subscription_id: subId, p_amount_needed: remaining,
+    p_kind: 'installment', p_note: note || null, p_visibility: 'broadcast', p_targets: null
+  }, function(err, res) {
+    var d = res && (res.data !== undefined ? res.data : res);
+    if (err || !d || d.success === false) { toast((d && d.error) || 'Could not create request.'); return; }
+    toast('\uD83D\uDC9D Boost request posted! Sponsors on DataBulge can now help complete your ' + (label||'plan') + '.');
+    openBoost(); boostTab('mine');
+  });
+}
+window.requestBoostForSub = requestBoostForSub;
+
+(function(){
+  function w(){ if ($('m-boost-x')) $('m-boost-x').onclick = function(){ closeModal('m-boost'); }; }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', w); else w();
+})();
+
+function studySetMethod(m) {
+  gStudyMethod = (m === 'umpire') ? 'umpire' : 'photo';
+  if ($('m-study-vm-photo'))  $('m-study-vm-photo').className  = 'btn ' + (gStudyMethod==='photo'  ? 'btn-blue' : 'btn-lite');
+  if ($('m-study-vm-umpire')) $('m-study-vm-umpire').className = 'btn ' + (gStudyMethod==='umpire' ? 'btn-blue' : 'btn-lite');
+  if ($('m-study-umpire-field')) $('m-study-umpire-field').style.display = (gStudyMethod==='umpire') ? 'block' : 'none';
+  studyPreview();
+}
+window.studySetMethod = studySetMethod;
+
+function studyLoadPlans() {
+  var net = $('m-study-network') ? $('m-study-network').value : '';
+  var sel = $('m-study-plan');
+  if (!sel) return;
+  sel.innerHTML = '<option value="">\u2014 Select a plan \u2014</option>';
+  _studyPlans = [];
+  if (!net) return;
+  // Goal Lock is a Premium feature -> only Premium (installment) market plans.
+  restGet('/data_plans',
+    'is_active=eq.true&market=eq.installment&network=eq.' + encodeURIComponent(net) + '&order=selling_price&select=id,data_size,network,selling_price,validity_days',
+    function(e, r) {
+      if (!r || !r.ok || !r.data) return;
+      _studyPlans = r.data;
+      var html = '<option value="">\u2014 Select a plan \u2014</option>';
+      for (var i=0;i<r.data.length;i++){
+        var p = r.data[i];
+        var prem = Math.ceil(parseFloat(p.selling_price) * 1.03);
+        html += '<option value="' + esc(p.id) + '" data-price="' + prem + '">' +
+          esc(p.data_size) + ' \u00b7 ' + (p.validity_days||30) + 'd \u00b7 ' + fmtN(prem) + '</option>';
+      }
+      sel.innerHTML = html;
+    });
+}
+window.studyLoadPlans = studyLoadPlans;
+
+function studyPreview() {
+  var box = $('m-study-summary');
+  if (!box) return;
+  var planSel = $('m-study-plan');
+  var dataPrice = (gStudyReward!=='airtime' && planSel && planSel.options[planSel.selectedIndex]) ? parseFloat(planSel.options[planSel.selectedIndex].getAttribute('data-price')) || 0 : 0;
+  var airAmt = (gStudyReward!=='data') ? (parseFloat($('m-study-airtime') ? $('m-study-airtime').value : '0') || 0) : 0;
+  var airPrice = airAmt > 0 ? Math.ceil(airAmt * 1.03) : 0;
+  var total = dataPrice + airPrice;
+  var ms = parseInt($('m-study-milestones') ? $('m-study-milestones').value : '3') || 3;
+  if (!total) { box.style.display='none'; return; }
+  var rewardTxt = (gStudyReward==='both') ? 'data + airtime' : (gStudyReward==='airtime' ? 'airtime' : 'data');
+  box.innerHTML =
+    '<div style="display:flex;justify-content:space-between;"><span>Charged now</span><strong>' + fmtN(total) + '</strong></div>' +
+    (dataPrice ? '<div style="display:flex;justify-content:space-between;"><span>Data</span><strong>' + fmtN(dataPrice) + '</strong></div>' : '') +
+    (airPrice ? '<div style="display:flex;justify-content:space-between;"><span>Airtime (incl. 3%)</span><strong>' + fmtN(airPrice) + '</strong></div>' : '') +
+    '<div style="display:flex;justify-content:space-between;"><span>Unlocks in</span><strong>' + ms + ' steps</strong></div>' +
+    '<div style="display:flex;justify-content:space-between;"><span>Each step delivers</span><strong>~' + fmtN(Math.round((total/ms)*100)/100) + ' of ' + rewardTxt + '</strong></div>' +
+    '<div style="display:flex;justify-content:space-between;"><span>Verify by</span><strong>' + (gStudyMethod==='umpire'?'Umpire':'Photo proof') + '</strong></div>';
+  box.style.display = 'block';
+}
+window.studyPreview = studyPreview;
+
+function studyCreate() {
+  var goal  = ($('m-study-goal') ? $('m-study-goal').value : '').replace(/^\s+|\s+$/g,'');
+  var phone = ($('m-study-phone') ? $('m-study-phone').value : '').replace(/^\s+|\s+$/g,'');
+  var planId = $('m-study-plan') ? $('m-study-plan').value : '';
+  var ms = parseInt($('m-study-milestones') ? $('m-study-milestones').value : '3') || 3;
+  var umpEmail = ($('m-study-umpire-email') ? $('m-study-umpire-email').value : '').replace(/^\s+|\s+$/g,'');
+  var errEl = $('m-study-err');
+  function e(m){ if(errEl){ errEl.textContent=m; errEl.style.display='block'; } }
+  if (errEl){ errEl.style.display='none'; }
+  var airAmt = parseFloat($('m-study-airtime') ? $('m-study-airtime').value : '0') || 0;
+  var network = $('m-study-network') ? $('m-study-network').value : '';
+  if (!goal)   { e('Enter your goal.'); return; }
+  if (!phone)  { e('Enter the phone number for delivery.'); return; }
+  if (!network){ e('Select a network.'); return; }
+  if (gStudyReward !== 'airtime' && !planId) { e('Select a data plan.'); return; }
+  if (gStudyReward !== 'data' && airAmt < 50) { e('Enter an airtime amount (at least \u20A650).'); return; }
+  if (gStudyMethod==='umpire' && !umpEmail) { e('Enter your umpire\u2019s DataBulge email.'); return; }
+
+  var btn = $('m-study-save');
+  if (btn){ btn.disabled=true; btn.textContent='Starting\u2026'; }
+  rpc('create_study_lock', {
+    p_goal_title: goal,
+    p_plan_id: (gStudyReward==='airtime') ? null : planId,
+    p_phone_number: phone,
+    p_milestone_count: ms, p_verify_method: gStudyMethod,
+    p_umpire_email: gStudyMethod==='umpire' ? umpEmail : null,
+    p_reward_type: gStudyReward,
+    p_airtime_amount: (gStudyReward==='data') ? 0 : airAmt,
+    p_network: network
+  }, function(err, res) {
+    if (btn){ btn.disabled=false; btn.textContent='Start Goal Lock'; }
+    var d = res && (res.data !== undefined ? res.data : res);
+    if (err || !d || d.success === false) { e((d && d.error) || 'Could not start Goal Lock.'); return; }
+    toast('\uD83C\uDFAF Goal Lock started! Hit your milestones to unlock your reward.');
+    if ($('m-study-goal')) $('m-study-goal').value = '';
+    if ($('m-study-airtime')) $('m-study-airtime').value = '';
+    if ($('m-study-summary')) $('m-study-summary').style.display = 'none';
+    try { loadWalletBalance(function(){}); } catch(_){}
+    studyLoadList();
+  });
+}
+window.studyCreate = studyCreate;
+
+function studyLoadList() {
+  var wrap = $('m-study-list');
+  if (!wrap) return;
+  rpc('list_my_study_locks', {}, function(err, res) {
+    var rows = (res && (res.data !== undefined ? res.data : res)) || [];
+    if (typeof rows === 'string') { try { rows = JSON.parse(rows); } catch(_) { rows = []; } }
+    if (err || !rows || !rows.length) { wrap.innerHTML = ''; studyLoadUmpireTasks(); return; }
+    var html = '<div style="font-size:.74rem;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.04em;margin:6px 0 8px;">Your Goal Locks</div>';
+    for (var i=0;i<rows.length;i++){
+      var l = rows[i];
+      var pct = Math.round((l.milestones_done / l.milestone_count) * 100);
+      var done = (l.status === 'completed');
+      html += '<div style="border:1px solid #e2e8f0;border-radius:12px;padding:12px;margin-bottom:10px;">' +
+        '<div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;justify-content:space-between;-webkit-box-align:center;align-items:center;gap:8px;">' +
+          '<div style="font-size:.88rem;font-weight:800;color:#0f172a;">' + esc(l.goal_title) + '</div>' +
+          '<span style="font-size:.7rem;font-weight:800;padding:3px 8px;border-radius:20px;background:' + (done?'#dcfce7':'#ede9fe') + ';color:' + (done?'#166534':'#5b21b6') + ';">' + (done?'Done':(l.milestones_done + '/' + l.milestone_count)) + '</span>' +
+        '</div>' +
+        '<div style="font-size:.75rem;color:#64748b;margin-top:3px;">' + esc(l.data_size) + ' ' + esc(l.network) + ' \u00b7 ' + esc(l.phone_number) + ' \u00b7 ' + (l.verify_method==='umpire'?'Umpire':'Photo') + '</div>' +
+        '<div style="height:7px;background:#f1f5f9;border-radius:5px;margin-top:9px;overflow:hidden;"><div style="height:100%;width:' + pct + '%;background:#7c3aed;"></div></div>';
+      if (!done) {
+        if (l.verify_method === 'photo') {
+          html += '<div style="margin-top:10px;">' +
+            '<input type="file" accept="image/*" id="study-file-' + esc(l.id) + '" style="display:none;" onchange="studyUploadProof(\'' + esc(l.id) + '\', this)">' +
+            '<button onclick="document.getElementById(\'study-file-' + esc(l.id) + '\').click()" style="width:100%;padding:9px;border-radius:8px;border:none;background:#7c3aed;color:#fff;font-size:.8rem;font-weight:800;cursor:pointer;font-family:inherit;">&#128247; Upload proof to unlock next step</button>' +
+          '</div>';
+        } else {
+          // umpire path: show the next milestone's code for the student to share
+          var nextCode = '';
+          if (l.milestones) { for (var k=0;k<l.milestones.length;k++){ if (l.milestones[k].status==='pending' || l.milestones[k].status==='submitted'){ nextCode = l.milestones[k].unlock_code || ''; break; } } }
+          html += '<div style="margin-top:10px;background:#faf5ff;border:1px dashed #d8b4fe;border-radius:8px;padding:9px 11px;">' +
+            '<div style="font-size:.72rem;color:#6d5b9c;">Show this code to your umpire to unlock the next step:</div>' +
+            '<div style="font-size:1.3rem;font-weight:900;letter-spacing:3px;color:#5b21b6;margin-top:2px;">' + esc(nextCode || '\u2014') + '</div>' +
+          '</div>';
+        }
+      }
+      html += '</div>';
+    }
+    wrap.innerHTML = html;
+    studyLoadUmpireTasks();
+  });
+}
+window.studyLoadList = studyLoadList;
+
+function studyUploadProof(lockId, input) {
+  var file = input && input.files && input.files[0];
+  if (!file) return;
+  if (!gUser || !gUser.id) { toast('Please sign in again.'); return; }
+  toast('Uploading proof\u2026');
+  var path = gUser.id + '/' + lockId + '/' + Date.now() + '_' + file.name.replace(/[^a-zA-Z0-9._-]/g,'');
+  ensureToken(function(err) {
+    if (err) { toast('Session error. Please sign in again.'); return; }
+    var url = SUPA_URL + '/storage/v1/object/study-proof/' + encodeURIComponent(path);
+    var xhrU = new XMLHttpRequest();
+    xhrU.open('POST', url, true);
+    xhrU.setRequestHeader('Authorization', 'Bearer ' + gToken);
+    xhrU.setRequestHeader('x-upsert', 'true');
+    xhrU.onload = function() {
+      if (xhrU.status >= 200 && xhrU.status < 300) {
+        rpc('submit_milestone_photo', { p_lock_id: lockId, p_proof_path: path }, function(e2, r2) {
+          var d = r2 && (r2.data !== undefined ? r2.data : r2);
+          if (e2 || !d || d.success === false) { toast((d && d.error) || 'Could not verify. Try again.'); return; }
+          toast('\u2705 Milestone verified \u2014 your data chunk is on the way!');
+          studyLoadList();
+          try { loadSubs(); } catch(_){}
+        });
+      } else {
+        toast('Upload failed. Please try again.');
+      }
+    };
+    xhrU.onerror = function(){ toast('Upload failed \u2014 check your connection.'); };
+    xhrU.send(file);
+  });
+}
+window.studyUploadProof = studyUploadProof;
+
+(function(){
+  function w(){ if ($('m-study-x')) $('m-study-x').onclick = function(){ closeModal('m-study'); }; }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', w); else w();
+})();
 
 (function(){
   function w(){ if ($('m-apr-x')) $('m-apr-x').onclick = function(){ closeModal('m-autopay-recur'); }; }
