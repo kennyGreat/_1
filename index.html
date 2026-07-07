@@ -1099,24 +1099,15 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         <button class="hero-fund-btn" onclick="openFundModal()">+ Add small money</button>
       </div>
 
-      <!-- Recent Transactions / Recent Plans -->
-      <div style="font-size:.92rem;font-weight:900;color:#0f172a;margin:2px 2px 8px;" id="home-mkt-recent-title">Recent Transactions</div>
-      <div id="home-mkt-recent-list" style="margin-bottom:16px;"><div class="empty" style="font-size:.75rem;">Loading&hellip;</div></div>
-
-      <!-- Quick Actions -->
-      <div style="font-size:.92rem;font-weight:900;color:#0f172a;margin:2px 2px 8px;">Quick Actions</div>
       <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:10px;">
-        <button type="button" id="home-mkt-buydata-btn" onclick="goToMarketPlansFromHome()" style="-webkit-box-flex:1;-webkit-flex:1;flex:1;text-align:center;border:1px solid #e5e7eb;background:#fff;border-radius:14px;padding:14px 8px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;">
-          <div style="font-size:1.5rem;margin-bottom:6px;">&#128225;</div>
-          <div style="font-size:.78rem;font-weight:800;color:#111;">Buy Data</div>
+        <button type="button" id="home-mkt-buydata-btn" onclick="goToMarketPlansFromHome()" style="-webkit-box-flex:1;-webkit-flex:1;flex:1;text-align:center;border:none;background:#1A56DB;color:#fff;border-radius:14px;padding:14px 8px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;">
+          <div style="font-size:.82rem;font-weight:800;color:#fff;">Buy Data</div>
         </button>
-        <button type="button" id="home-mkt-buyairtime-btn" onclick="goToMarketAirtimeFromHome()" style="-webkit-box-flex:1;-webkit-flex:1;flex:1;text-align:center;border:1px solid #e5e7eb;background:#fff;border-radius:14px;padding:14px 8px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;">
-          <div style="font-size:1.5rem;margin-bottom:6px;">&#128222;</div>
-          <div style="font-size:.78rem;font-weight:800;color:#111;">Buy Airtime</div>
+        <button type="button" id="home-mkt-buyairtime-btn" onclick="goToMarketAirtimeFromHome()" style="-webkit-box-flex:1;-webkit-flex:1;flex:1;text-align:center;border:none;background:#1A56DB;color:#fff;border-radius:14px;padding:14px 8px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;">
+          <div style="font-size:.82rem;font-weight:800;color:#fff;">Buy Airtime</div>
         </button>
-        <button type="button" id="home-mkt-tools-btn" onclick="goToPremiumToolsFromHome()" style="display:none;-webkit-box-flex:1;-webkit-flex:1;flex:1;text-align:center;border:1px solid #e5e7eb;background:#fff;border-radius:14px;padding:14px 8px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;">
-          <div style="font-size:1.5rem;margin-bottom:6px;">&#128737;&#65039;</div>
-          <div style="font-size:.78rem;font-weight:800;color:#111;">Premium Tools</div>
+        <button type="button" id="home-mkt-tools-btn" onclick="goToPremiumToolsFromHome()" style="display:none;-webkit-box-flex:1;-webkit-flex:1;flex:1;text-align:center;border:none;background:#1A56DB;color:#fff;border-radius:14px;padding:14px 8px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;">
+          <div style="font-size:.82rem;font-weight:800;color:#fff;">Premium Tools</div>
         </button>
       </div>
     </div>
@@ -1254,7 +1245,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <div id="market-welcome" style="margin-bottom:12px;padding:12px 14px;border-radius:12px;background:#f0f4ff;border:1.5px solid #c7d4fb;font-size:.82rem;color:#374151;line-height:1.6;"></div>
 
       <!-- Goal Lock entry (Premium market only) -->
-      <button type="button" id="study-lock-card" onclick="openStudyLock()" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #c7b8f0;background:#f7f5ff;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
+      <button type="button" id="study-lock-card" onclick="warnThenRunPremiumTool(openStudyLock)" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #c7b8f0;background:#f7f5ff;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
         <span style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:10px;">
           <span style="-webkit-box-flex:1;-webkit-flex:1;flex:1;">
             <span style="display:block;font-size:.9rem;font-weight:900;color:#5b21b6;">Goal Lock</span>
@@ -1265,7 +1256,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       </button>
 
       <!-- Sponsored Boost card (Premium market only) -->
-      <button type="button" id="boost-card" onclick="openBoost()" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #fbcfe8;background:#fdf2f8;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
+      <button type="button" id="boost-card" onclick="warnThenRunPremiumTool(openBoost)" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #fbcfe8;background:#fdf2f8;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
         <span style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:10px;">
           <span style="-webkit-box-flex:1;-webkit-flex:1;flex:1;">
             <span style="display:block;font-size:.9rem;font-weight:900;color:#9d174d;">Sponsored Boost</span>
@@ -1276,7 +1267,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       </button>
 
       <!-- Gift with Strings card (Premium market only) -->
-      <button type="button" id="gift-card" onclick="openGift()" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #fde68a;background:#fffbeb;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
+      <button type="button" id="gift-card" onclick="warnThenRunPremiumTool(openGift)" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #fde68a;background:#fffbeb;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
         <span style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:10px;">
           <span style="-webkit-box-flex:1;-webkit-flex:1;flex:1;">
             <span style="display:block;font-size:.9rem;font-weight:900;color:#92400e;">Gift with Strings</span>
@@ -1287,7 +1278,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       </button>
 
       <!-- Auto-Pay card (Premium market only) -->
-      <button type="button" id="autopay-card" onclick="openAutoPaySetup()" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #cdedd9;background:#f3fbf6;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
+      <button type="button" id="autopay-card" onclick="warnThenRunPremiumTool(openAutoPaySetup)" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #cdedd9;background:#f3fbf6;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
         <span style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:10px;">
           <span style="-webkit-box-flex:1;-webkit-flex:1;flex:1;">
             <span style="display:block;font-size:.9rem;font-weight:900;color:#0f5132;">Auto-Pay</span>
@@ -1298,7 +1289,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       </button>
 
       <!-- Auto-Renew card (Premium market only) -->
-      <button type="button" id="autorenew-card" onclick="openAutoRenewSetup()" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #c7d2fe;background:#eef2ff;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
+      <button type="button" id="autorenew-card" onclick="warnThenRunPremiumTool(openAutoRenewSetup)" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #c7d2fe;background:#eef2ff;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
         <span style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:10px;">
           <span style="-webkit-box-flex:1;-webkit-flex:1;flex:1;">
             <span style="display:block;font-size:.9rem;font-weight:900;color:#3730a3;">Auto-Renew</span>
@@ -1309,7 +1300,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       </button>
 
       <!-- Auto Purchase card (Premium market only) -->
-      <button type="button" id="autopurchase-card" onclick="openAutoPayRecur()" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #fed7aa;background:#fff7ed;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
+      <button type="button" id="autopurchase-card" onclick="warnThenRunPremiumTool(openAutoPayRecur)" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #fed7aa;background:#fff7ed;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
         <span style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:10px;">
           <span style="-webkit-box-flex:1;-webkit-flex:1;flex:1;">
             <span style="display:block;font-size:.9rem;font-weight:900;color:#9a3412;">Auto Purchase</span>
@@ -1320,7 +1311,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       </button>
 
       <!-- Installments + rewards info card (Premium market only) -->
-      <button type="button" id="benefits-card" onclick="openPremiumBenefits()" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #bbf7d0;background:#f0fdf4;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
+      <button type="button" id="benefits-card" onclick="warnThenRunPremiumTool(openPremiumBenefits)" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #bbf7d0;background:#f0fdf4;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
         <span style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:10px;">
           <span style="-webkit-box-flex:1;-webkit-flex:1;flex:1;">
             <span style="display:block;font-size:.9rem;font-weight:900;color:#15803d;">Installments &amp; Rewards</span>
@@ -1331,7 +1322,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       </button>
 
       <!-- Coach card (Premium market only) -->
-      <button type="button" id="coach-card" onclick="openCoach()" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #93c5fd;background:#eff6ff;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
+      <button type="button" id="coach-card" onclick="warnThenRunPremiumTool(openCoach)" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #93c5fd;background:#eff6ff;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
         <span style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:10px;">
           <span style="-webkit-box-flex:1;-webkit-flex:1;flex:1;">
             <span style="display:block;font-size:.9rem;font-weight:900;color:#1d4ed8;">Coach</span>
@@ -1342,7 +1333,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       </button>
 
       <!-- Reporter card (Premium market only) -->
-      <button type="button" id="reporter-card" onclick="openReporter()" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #ddd6fe;background:#f5f3ff;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
+      <button type="button" id="reporter-card" onclick="warnThenRunPremiumTool(openReporter)" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #ddd6fe;background:#f5f3ff;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
         <span style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:10px;">
           <span style="-webkit-box-flex:1;-webkit-flex:1;flex:1;">
             <span style="display:block;font-size:.9rem;font-weight:900;color:#6d28d9;">Reporter</span>
@@ -1353,7 +1344,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       </button>
 
       <!-- Share card (Premium market only) — send money to a DataBulge friend -->
-      <button type="button" id="share-card" onclick="openTransferModal()" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #99f6e4;background:#f0fdfa;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
+      <button type="button" id="share-card" onclick="warnThenRunPremiumTool(openTransferModal)" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #99f6e4;background:#f0fdfa;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
         <span style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:10px;">
           <span style="-webkit-box-flex:1;-webkit-flex:1;flex:1;">
             <span style="display:block;font-size:.9rem;font-weight:900;color:#0f766e;">Share</span>
@@ -2147,6 +2138,25 @@ button.tab,button.plan-chip{box-shadow:none!important;}
     </div>
     <div class="modal-body">
       <div id="reporter-body"></div>
+    </div>
+  </div>
+</div>
+
+<!-- PREMIUM TOOL WARNING / CONSENT MODAL -->
+<div class="modal" id="m-premium-warn">
+  <div class="modal-box">
+    <div class="modal-hdr">
+      <div class="modal-title">Premium Tool Notice</div>
+      <button class="modal-x" onclick="closeModal('m-premium-warn')">&#215;</button>
+    </div>
+    <div class="modal-body">
+      <div style="font-size:.86rem;color:#333;line-height:1.7;margin-bottom:16px;">
+        Premium tools are for Premium Market users. If your next plan is not a Premium (installment) plan, that purchase will be charged the same surge as Premium pricing.
+      </div>
+      <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">
+        <button class="btn btn-lite" onclick="closeModal('m-premium-warn')" style="flex:1;margin:0;">Cancel</button>
+        <button class="btn btn-blue" onclick="_premiumWarnAgree()" style="flex:1;margin:0;">I Agree, Continue</button>
+      </div>
     </div>
   </div>
 </div>
@@ -4346,6 +4356,14 @@ function backToMarkets() {
   if (_ss)  _ss.style.display  = 'none';
   if (_ptc) _ptc.style.display = 'none';
   if (_back) _back.style.display = 'none';
+  // Leaving a market means EVERY item belonging to that market leaves with the
+  // user — Premium's tool cards must never linger once you've stepped back to
+  // the chooser, whether you then pick the same market again or the other one.
+  ['study-lock-card','boost-card','gift-card','autopay-card','autorenew-card','autopurchase-card','benefits-card'].forEach(function(id){
+    var c = document.getElementById(id);
+    if (c) c.style.display = 'none';
+  });
+  if (typeof updatePremiumToolVisibility === 'function') updatePremiumToolVisibility();
 }
 window.backToMarkets = backToMarkets;
 
@@ -4394,7 +4412,7 @@ function setMarket(m) {
     if (m === 'general') {
       _wb.style.background = '#f0f4ff';
       _wb.style.borderColor = '#c7d4fb';
-      _wb.innerHTML = '<b>&#127914; Welcome to the General Market.</b> Your funds are safe and secure. Plans here are subject to users\' experiences and feedback. Your funds are safe and secure.';
+      _wb.innerHTML = '<b>&#127914; Welcome to the General Market.</b> Plans here are subject to users\' experiences and feedback. Your funds are safe and secure.';
     } else {
       _wb.style.background = '#f0fdf4';
       _wb.style.borderColor = '#bbf7d0';
@@ -4439,7 +4457,7 @@ function openMarketHome(m) {
     if (m === 'general') {
       wb.style.background = '#f0f4ff';
       wb.style.borderColor = '#c7d4fb';
-      wb.innerHTML = '<b>&#127914; Welcome to the General Market.</b> Your funds are safe and secure. Plans here are subject to users\' experiences and feedback. Your funds are safe and secure.';
+      wb.innerHTML = '<b>&#127914; Welcome to the General Market.</b> Plans here are subject to users\' experiences and feedback. Your funds are safe and secure.';
     } else {
       wb.style.background = '#f0fdf4';
       wb.style.borderColor = '#bbf7d0';
@@ -4447,16 +4465,11 @@ function openMarketHome(m) {
     }
   }
 
-  var recentTitle = document.getElementById('home-mkt-recent-title');
-  if (recentTitle) recentTitle.textContent = (m === 'installment') ? 'Recent Plans' : 'Recent Transactions';
-
   var toolsBtn = document.getElementById('home-mkt-tools-btn');
   if (toolsBtn) toolsBtn.style.display = (m === 'installment') ? '' : 'none';
 
   var balEl = document.getElementById('home-mkt-bal');
   if (balEl && typeof dbFmtNaira === 'function') balEl.textContent = dbFmtNaira(gBal);
-
-  if (m === 'installment') { loadHomeRecentPlans(); } else { loadHomeRecentTxns(); }
 }
 window.openMarketHome = openMarketHome;
 
@@ -4465,6 +4478,10 @@ function backToHomeMarkets() {
   var dash   = document.getElementById('home-market-dash');
   if (picker) picker.style.display = '';
   if (dash)   dash.style.display   = 'none';
+  // Leaving a market means every item belonging to it leaves too — clear the
+  // market state so nothing stale carries into whichever market is picked next.
+  gMarket = null;
+  if (typeof updatePremiumToolVisibility === 'function') updatePremiumToolVisibility();
 }
 window.backToHomeMarkets = backToHomeMarkets;
 
@@ -4513,56 +4530,6 @@ function goToMarketAirtimeFromHome() {
   showTab('airtime');
 }
 window.goToMarketAirtimeFromHome = goToMarketAirtimeFromHome;
-
-function loadHomeRecentTxns() {
-  var wrap = document.getElementById('home-mkt-recent-list');
-  if (!wrap) return;
-  wrap.innerHTML = '<div class="empty" style="font-size:.75rem;">Loading&hellip;</div>';
-  ensureToken(function(err) {
-    if (err) return;
-    restGet('/wallet_transactions', 'user_id=eq.' + gUser.id + '&select=type,amount,reference,metadata,created_at&order=created_at.desc&limit=8', function(e, r) {
-      var wrap2 = document.getElementById('home-mkt-recent-list');
-      if (!wrap2) return;
-      var list = (r && r.ok && r.data) ? r.data : [];
-      if (!list.length) { wrap2.innerHTML = '<div class="empty">No transactions yet.</div>'; return; }
-      var html = '', i, t, type, icon, desc;
-      for (i = 0; i < list.length; i++) {
-        t = list[i]; type = t.type || 'credit';
-        icon = type === 'debit' ? '\u2212' : (type === 'refund' ? '\u21ba' : '+');
-        desc = (t.metadata && t.metadata.description) ? t.metadata.description : type;
-        html += '<div class="tx-row">' +
-          '<div class="tx-left"><div class="tx-ico">' + icon + '</div><div>' +
-          '<div class="tx-desc">' + esc(desc) + '</div>' +
-          '<div class="tx-date">' + esc((t.created_at || '').replace('T',' ').slice(0,16)) + '</div>' +
-          '</div></div>' +
-          '<div class="tx-amt ' + esc(type) + '">' + (type === 'debit' ? '\u2212' : '+') + fmtN(t.amount) + '</div>' +
-        '</div>';
-      }
-      wrap2.innerHTML = html;
-    });
-  });
-}
-window.loadHomeRecentTxns = loadHomeRecentTxns;
-
-function loadHomeRecentPlans() {
-  var wrap = document.getElementById('home-mkt-recent-list');
-  if (!wrap) return;
-  wrap.innerHTML = '<div class="empty" style="font-size:.75rem;">Loading&hellip;</div>';
-  ensureToken(function(err) {
-    if (err) return;
-    restGet('/subscriptions',
-      'user_id=eq.' + gUser.id + '&select=id,status,total_price,amount_paid,daily_price,phone_number,payment_days,created_at,data_plans(data_size,network,daily_price,selling_price,category)&order=created_at.desc&limit=8',
-      function(e, r) {
-        var wrap2 = document.getElementById('home-mkt-recent-list');
-        if (!wrap2) return;
-        var subs = (r && r.ok && r.data) ? r.data : [];
-        if (!subs.length) { wrap2.innerHTML = '<div class="empty">No plans yet.</div>'; return; }
-        wrap2.innerHTML = renderSubsList(subs, true);
-      }
-    );
-  });
-}
-window.loadHomeRecentPlans = loadHomeRecentPlans;
 
 /* Returns the displayed price for a plan card in current market context.
    General market:     show raw selling_price (no surge on card).
@@ -9207,29 +9174,12 @@ function _pickNugget() {
 function friendDailyAction() { if (_friendDailyAction) _friendDailyAction(); }
 
 function renderFriendDailyEverywhere() {
-  var msg = _pickNugget();
-  if (!msg) return;
-  _friendDailyAction = msg.action || null;
-  /* Inject (or update) a friend-daily card at the top of every tab container except Buy Data */
-  var tabs = ['dash','subs','wallet','inbox','earn'];
-  var safeText = (typeof safeEsc === 'function') ? safeEsc(msg.text) : String(msg.text || '');
-  for (var i = 0; i < tabs.length; i++) {
-    var tc = document.getElementById('tc-' + tabs[i]);
-    if (!tc) continue;
-    var card = tc.querySelector('.friend-daily-global');
-    if (!card) {
-      card = document.createElement('div');
-      card.className = 'friend-daily friend-daily-global';
-      card.setAttribute('role','button');
-      card.style.cursor = 'pointer';
-      card.onclick = friendDailyAction;
-      tc.insertBefore(card, tc.firstChild);
-    }
-    card.innerHTML =
-      '<div class="friend-daily-icon">' + msg.icon + '</div>' +
-      '<div><div class="friend-daily-title">Today\u2019s friendly nudge</div>' +
-      '<div class="friend-daily-sub">' + safeText + '</div></div>';
+  /* Disabled — Coach (Premium Market tool) now serves this purpose. */
+  var existing = document.querySelectorAll('.friend-daily-global');
+  for (var j = 0; j < existing.length; j++) {
+    if (existing[j] && existing[j].parentNode) existing[j].parentNode.removeChild(existing[j]);
   }
+  return;
 }
 window.renderFriendDailyEverywhere = renderFriendDailyEverywhere;
 window.friendDailyAction = friendDailyAction;
@@ -9238,6 +9188,27 @@ window.friendDailyAction = friendDailyAction;
    Same nugget pool as the daily nudge, but presented as a coach
    giving you a straight-talking tip for today, with a one-tap
    action button instead of a passive banner. */
+/* ── PREMIUM TOOL WARNING GATE ─────────────────────────────────
+   Every premium tool card routes through this first. Shown every time
+   (not just once) per the product rule: using a premium tool means if
+   your NEXT plan isn't a Premium plan, that General Market purchase
+   gets charged the Premium surge. Only proceeds to the actual tool if
+   the user taps "I Agree, Continue". */
+var _premiumWarnAction = null;
+function warnThenRunPremiumTool(actionFn) {
+  _premiumWarnAction = actionFn;
+  openModal('m-premium-warn');
+}
+window.warnThenRunPremiumTool = warnThenRunPremiumTool;
+
+function _premiumWarnAgree() {
+  closeModal('m-premium-warn');
+  var fn = _premiumWarnAction;
+  _premiumWarnAction = null;
+  if (fn) fn();
+}
+window._premiumWarnAgree = _premiumWarnAgree;
+
 function openCoach() {
   openModal('m-coach');
   var body = document.getElementById('coach-body');
