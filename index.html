@@ -50,7 +50,7 @@
 <style>
 /* ── RESET ── */
 *{-webkit-box-sizing:border-box;box-sizing:border-box;margin:0;padding:0;}
-html,body{width:100%;min-height:100%;background:#fff;font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#111;-webkit-text-size-adjust:100%;}
+html,body{width:100%;min-height:100%;background:#fff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;font-size:17px;color:#111;-webkit-text-size-adjust:100%;}
 
 /* ── PAGES ── */
 .pg{display:none;width:100%;min-height:100vh;background:#fff;}
@@ -530,7 +530,7 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 
 /* ── Small phones (< 360px) ── */
 @media(max-width:359px){
-  html,body{font-size:13px!important;}
+  html,body{font-size:15px!important;}
   .top-bar{padding:8px 10px!important;}
   .user-greeting{font-size:.85rem!important;max-width:90px!important;}
   .card-val{font-size:1.4rem!important;}
@@ -545,7 +545,7 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 
 /* ── Large phones / small tablets (600–767px) ── */
 @media(min-width:600px){
-  html,body{font-size:15px;}
+  html,body{font-size:17px;}
   .auth-wrap{max-width:480px!important;}
   #plans-list{grid-template-columns:repeat(2,minmax(0,1fr))!important;}
   .modal-box{max-width:500px!important;}
@@ -557,7 +557,7 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 
 /* ── Tablet (768px–1023px) — side-by-side layout ── */
 @media(min-width:768px){
-  html,body{background:#EEF2F8!important;font-size:15px;}
+  html,body{background:#EEF2F8!important;font-size:17px;}
 
   /* App shell becomes centered card */
   #pg-app{
@@ -600,7 +600,7 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 
 /* ── Desktop (1024px+) — full desktop layout ── */
 @media(min-width:1024px){
-  html,body{background:#E8EDF5!important;font-size:16px;}
+  html,body{background:#E8EDF5!important;font-size:18px;}
 
   /* App becomes a centered column */
   #pg-app{
@@ -1086,7 +1086,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
 
     <!-- ── HOME MARKET DASHBOARD (shown after a market is picked on Home) ── -->
     <div id="home-market-dash" style="display:none;margin-bottom:4px;">
-      <button type="button" onclick="backToHomeMarkets()" style="display:-webkit-inline-box;display:inline-flex;-webkit-box-align:center;align-items:center;gap:5px;background:none;border:none;color:#1A56DB;font-size:.84rem;font-weight:800;cursor:pointer;font-family:inherit;padding:2px 0;margin-bottom:10px;-webkit-tap-highlight-color:transparent;"><span style="font-size:1.05rem;">&larr;</span> Markets</button>
+      <button type="button" class="tab-back-btn" onclick="backToHomeMarkets()"><span>&larr;</span> Markets</button>
       <div id="home-mkt-pill" style="font-size:1.05rem;font-weight:900;color:#0f172a;margin-bottom:10px;"></div>
 
       <!-- Welcome banner (same wording/design as the in-market welcome banner) -->
@@ -1237,7 +1237,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         </button>
       </div>
       <div id="market-selector" style="display:none;margin-bottom:12px;">
-        <button id="market-back-btn" type="button" onclick="backToMarkets()" style="display:-webkit-inline-box;display:inline-flex;-webkit-box-align:center;align-items:center;gap:5px;background:none;border:none;color:#1A56DB;font-size:.84rem;font-weight:800;cursor:pointer;font-family:inherit;padding:2px 0;margin-bottom:8px;-webkit-tap-highlight-color:transparent;"><span style="font-size:1.05rem;">&larr;</span> Markets</button>
+        <button id="market-back-btn" type="button" class="tab-back-btn" onclick="backToMarkets()"><span>&larr;</span> Markets</button>
         <div id="market-current-pill" style="font-size:1.05rem;font-weight:900;color:#0f172a;"></div>
       </div>
 
@@ -1373,7 +1373,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         </div>
       </div>
 
-      <button id="gm-seg-back" onclick="backToGMSegments()">&larr; Back to services</button>
+      <button id="gm-seg-back" class="tab-back-btn" onclick="backToGMSegments()"><span>&larr;</span> Back to services</button>
       <div id="gm-segments"></div>
       <div id="service-screen"></div>
       <div id="plans-list" style="display:none;"><div class="empty">Loading plans&hellip;</div></div>
@@ -1384,6 +1384,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
 
   <!-- Airtime (own tab) -->
   <div id="tc-airtime" class="tab-content">
+      <button type="button" class="tab-back-btn" onclick="goBackTab()"><span>&larr;</span> Back</button>
       <div class="card" style="margin-bottom:12px;">
         <div class="card-title" style="margin-bottom:10px;">Buy Airtime</div>
         <div class="field" style="margin-bottom:10px;">
@@ -1457,6 +1458,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
 
   <!-- Inbox -->
   <div id="tc-inbox" class="tab-content">
+    <button type="button" class="tab-back-btn" onclick="goBackTab()"><span>&larr;</span> Back</button>
     <div class="tab-actions">
       <button class="btn btn-lite" id="mark-read-btn">Mark all read</button>
       <button class="btn btn-blue" id="compose-btn-open">New Message</button>
@@ -1467,6 +1469,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
 
   <!-- ── EARN TAB ─────────────────────────────────────────────── -->
   <div id="tc-earn" class="tab-content">
+    <button type="button" class="tab-back-btn" onclick="goBackTab()"><span>&larr;</span> Back</button>
 
     <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:10px;margin-bottom:14px;">
       <div class="card" style="margin-bottom:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;padding:14px!important;">
@@ -3538,15 +3541,19 @@ function dbConfirmWarning(opts) {
 }
 window.dbConfirmWarning = dbConfirmWarning;
 
+var gLastTab = 'dash';
 function showTab(t) {
   var tabs = ['dash','plans','airtime','subs','wallet','inbox','earn'];
   var i;
+  var prevActive = null;
   for (i = 0; i < tabs.length; i++) {
     var btn = $('tab-' + tabs[i]);
     var tc  = $('tc-' + tabs[i]);
+    if (tc && (' ' + tc.className + ' ').indexOf(' on ') > -1) prevActive = tabs[i];
     if (btn) btn.className = 'bnav-btn' + (tabs[i] === t ? ' act' : '');
     if (tc)  tc.className  = 'tab-content' + (tabs[i] === t ? ' on' : '');
   }
+  if (prevActive && prevActive !== t) gLastTab = prevActive;
   var now = Date.now();
   if (t === 'dash')   { if (now - _dashLastLoad  > STALE_MS) { _dashLastLoad  = now; loadDashCashflow(); } try { loadAutofundCard(); } catch(e) {} }
   if (t === 'subs')   { if (now - _subsLastLoad  > STALE_MS) { _subsLastLoad  = now; loadSubs(); } }
@@ -3556,6 +3563,13 @@ function showTab(t) {
   /* Ensure the friend-daily nugget is present on the newly-shown tab */
   try { if (typeof renderFriendDailyEverywhere === 'function') renderFriendDailyEverywhere(); } catch(e) {}
 }
+
+/* Used by every "back" button that leaves its tab entirely — returns the user
+   to whichever tab they were actually on before, not a hardcoded destination. */
+function goBackTab() {
+  showTab(gLastTab || 'dash');
+}
+window.goBackTab = goBackTab;
 
 function errShow(id, msg) {
   var el = $(id);
@@ -4617,6 +4631,8 @@ function goToPremiumToolsFromHome() {
   if (wb) wb.style.display = 'none';
   var pl = document.getElementById('plans-list');
   if (pl) pl.style.setProperty('display', 'none', 'important');
+  var ptc = document.getElementById('pay-toggle-card');
+  if (ptc) ptc.style.display = 'none';
   showTab('plans');
 }
 window.goToPremiumToolsFromHome = goToPremiumToolsFromHome;
@@ -5145,13 +5161,13 @@ function loadSubs() {
   ensureToken(function(err) {
     if (err) return;
     restGet('/subscriptions',
-      'user_id=eq.' + gUser.id + '&select=id,status,total_price,amount_paid,daily_price,phone_number,payment_days,created_at,data_plans(data_size,network,daily_price,selling_price,category)&order=created_at.desc&limit=20',
+      'user_id=eq.' + gUser.id + '&status=neq.cancelled&select=id,status,total_price,amount_paid,daily_price,phone_number,payment_days,created_at,data_plans(data_size,network,daily_price,selling_price,category)&order=created_at.desc&limit=20',
       function(e, r) {
         var wrap = $('subs-list');
         var dataSubs = (r && r.ok && r.data) ? r.data : [];
         // Also pull airtime installment plans and present them like data installments.
         restGet('/airtime_installments',
-          'user_id=eq.' + gUser.id + '&select=id,status,total_price,amount_paid,daily_price,phone_number,payment_days,network_name,airtime_amount,created_at&order=created_at.desc&limit=20',
+          'user_id=eq.' + gUser.id + '&status=neq.cancelled&select=id,status,total_price,amount_paid,daily_price,phone_number,payment_days,network_name,airtime_amount,created_at&order=created_at.desc&limit=20',
           function(e2, r2) {
             var airRows = (r2 && r2.ok && r2.data) ? r2.data : [];
             var airSubs = [];
@@ -8346,6 +8362,30 @@ html{scroll-padding-top:70px;}
 @media(max-width:359px){.momentum-grid{grid-template-columns:1fr}.hero-bal-amount{font-size:2rem!important}.bnav-btn span{font-size:.58rem!important}}
 @media(min-width:768px){.momentum-grid{grid-template-columns:repeat(4,1fr)}}
 @media(prefers-reduced-motion:reduce){.db-confetti{animation:none!important;display:none!important}.plan-card{transition:none!important}}
+
+/* ── READABILITY PASS — WhatsApp-style sizing: bigger, bolder, easier to tap ── */
+html,body{font-size:18px!important;}
+.card-title,.sec-title{font-size:.86rem!important;font-weight:900!important;letter-spacing:.04em!important;}
+.card-sub{font-size:.9rem!important;line-height:1.5!important;}
+.field label{font-size:.86rem!important;font-weight:800!important;color:#374151!important;}
+.empty{font-size:1rem!important;}
+.err{font-size:.88rem!important;}
+.btn{font-size:1.02rem!important;}
+.modal-title{font-size:1.15rem!important;}
+.modal-body,.terms-scroll{font-size:.95rem!important;}
+input,select,textarea{font-size:1rem!important;}
+.tx-desc,.sub-name,.plan-size,.msg-sub{font-size:.95rem!important;font-weight:800!important;}
+.tx-date,.plan-filter-title{font-size:.82rem!important;}
+
+/* Prominent, tappable back button — pill-style, high contrast, WhatsApp-esque */
+.tab-back-btn{
+  display:-webkit-inline-box;display:-webkit-inline-flex;display:inline-flex;
+  -webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:6px;
+  background:#eef3ff;border:none;color:#1A56DB;font-size:.95rem!important;font-weight:900!important;
+  cursor:pointer;font-family:inherit;padding:8px 16px 8px 12px;margin-bottom:12px;
+  border-radius:20px;-webkit-tap-highlight-color:transparent;
+}
+.tab-back-btn span{font-size:1.15rem;line-height:1;}
 </style>
 
 <!-- NOTIFICATION TOAST CONTAINER (legacy - for simple toasts) -->
@@ -10274,7 +10314,6 @@ function boostLoadFeed() {
       var left = Math.max(0, (parseFloat(r.amount_needed)||0) - (parseFloat(r.amount_raised)||0));
       html += '<div style="border:1px solid #fbcfe8;border-radius:12px;padding:12px;margin-bottom:10px;background:#fffafc;">' +
         '<div style="font-size:.84rem;color:#0f172a;line-height:1.5;"><b>' + esc(r.requester_email||'A user') + '</b> needs a boost to complete their <b>' + esc(r.label||'plan') + '</b>.</div>' +
-        (r.note ? '<div style="font-size:.76rem;color:#64748b;margin-top:4px;font-style:italic;">\u201C' + esc(r.note) + '\u201D</div>' : '') +
         '<div style="font-size:.78rem;color:#9d174d;font-weight:800;margin-top:6px;">' + fmtN(left) + ' to go</div>' +
         '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:7px;margin-top:9px;">' +
           '<input type="number" id="boost-amt-' + esc(r.id) + '" min="1" placeholder="Amount to gift" style="-webkit-box-flex:1;-webkit-flex:1;flex:1;height:40px;border:1.5px solid #fbcfe8;border-radius:8px;padding:0 12px;font-size:.9rem;outline:none;">' +
@@ -10791,10 +10830,9 @@ window.boostCancel = boostCancel;
 
 // Called from a plan card when the user is short: creates a request for the remaining balance.
 function requestBoostForSub(subId, remaining, label) {
-  var note = prompt('Add a short message for your sponsors (optional):', '');
   rpc('create_boost_request', {
     p_subscription_id: subId, p_amount_needed: remaining,
-    p_kind: 'installment', p_note: note || null, p_visibility: 'broadcast', p_targets: null
+    p_kind: 'installment', p_note: null, p_visibility: 'broadcast', p_targets: null
   }, function(err, res) {
     var d = res && (res.data !== undefined ? res.data : res);
     if (err || !d || d.success === false) { toast((d && d.error) || 'Could not create request.'); return; }
