@@ -4617,17 +4617,7 @@ function openMarketHome(m) {
   if (pill) pill.textContent = (m === 'installment') ? '\uD83D\uDEE1\uFE0F Premium Market' : '\uD83C\uDF9F\uFE0F General Market';
 
   var wb = document.getElementById('home-mkt-welcome');
-  if (wb) {
-    if (m === 'general') {
-      wb.style.background = '#f0f4ff';
-      wb.style.borderColor = '#c7d4fb';
-      wb.innerHTML = '<b>&#127914; Welcome to the General Market.</b> Plans here are subject to users\' experiences and feedback. Your funds are safe and secure.';
-    } else {
-      wb.style.background = '#f0fdf4';
-      wb.style.borderColor = '#bbf7d0';
-      wb.innerHTML = '<b>&#128737;&#65039; Welcome to the Premium Market.</b> Plans here are vetted through DataBulge\'s investigations and users\' experiences. A small 3% service fee applies for the activities here, a fair trade for the flexibility and benefits you get. Your funds are safe and secure.';
-    }
-  }
+  if (wb) { wb.innerHTML = ''; wb.style.display = 'none'; }
 
   var toolsBtn = document.getElementById('home-mkt-tools-btn');
   if (toolsBtn) toolsBtn.style.display = (m === 'installment') ? '' : 'none';
@@ -4672,7 +4662,7 @@ function goToMarketPlansFromHome() {
   var m = gMarket;
   setMarket(m);
   var wb = document.getElementById('market-welcome');
-  if (wb) wb.style.display = 'none';
+  if (wb) wb.style.display = '';
   if (m === 'installment') {
     ['study-lock-card','boost-card','gift-card','autopay-card','autorenew-card','autopurchase-card','benefits-card','coach-card','reporter-card','share-card','copurchase-card'].forEach(function(id){
       var c = document.getElementById(id);
@@ -4693,7 +4683,7 @@ function goToPremiumToolsFromHome() {
   gShowPremiumTools = true;
   if (typeof updatePremiumToolVisibility === 'function') updatePremiumToolVisibility();
   var wb = document.getElementById('market-welcome');
-  if (wb) wb.style.display = '';
+  if (wb) wb.style.display = 'none';
   var pl = document.getElementById('plans-list');
   if (pl) pl.style.setProperty('display', 'none', 'important');
   var ptc = document.getElementById('pay-toggle-card');
@@ -8455,6 +8445,7 @@ input,select,textarea{font-size:1rem!important;}
   cursor:pointer;font-family:inherit;padding:8px 16px 8px 12px;margin-bottom:12px;
   border-radius:20px;-webkit-tap-highlight-color:transparent;
 }
+.tab-back-btn span{font-size:1.15rem;line-height:1;}
 .tab-back-btn span{font-size:1.15rem;line-height:1;}
 </style>
 
