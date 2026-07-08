@@ -2167,7 +2167,20 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         <button class="btn btn-lite" id="boost-tab-mine" onclick="boostTab('mine')" style="margin:0;flex:1;font-size:.82rem;">My requests</button>
       </div>
       <div id="boost-help-pane"><div id="boost-feed" style="min-height:40px;"></div></div>
-      <div id="boost-mine-pane" style="display:none;"><div id="boost-mine-list" style="min-height:40px;"></div></div>
+      <div id="boost-mine-pane" style="display:none;">
+        <div style="border:1px solid #fbcfe8;border-radius:12px;padding:12px;margin-bottom:14px;background:#fffafc;">
+          <div style="font-size:.86rem;font-weight:900;color:#0f172a;margin-bottom:9px;">Request a Boost</div>
+          <div id="boost-req-err" class="err"></div>
+          <div class="field" style="margin-bottom:10px;">
+            <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Which of your Premium plans?</label>
+            <select id="boost-req-plan" style="display:block;width:100%;height:44px;border:1.5px solid #fbcfe8;border-radius:10px;background:#fff;padding:0 12px;font-size:.94rem;color:#111;outline:none;-webkit-appearance:none;appearance:none;">
+              <option value="">Loading&hellip;</option>
+            </select>
+          </div>
+          <button class="btn" onclick="boostRequestFromPlan()" style="margin:0;width:100%;background:#db2777;color:#fff;font-size:.86rem;">Post This Request</button>
+        </div>
+        <div id="boost-mine-list" style="min-height:40px;"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -4488,6 +4501,7 @@ window.backToMarkets = backToMarkets;
 
 function setMarket(m) {
   gMarket = m;
+  gShowPremiumTools = false;
   // Hide chooser, reveal in-market header
   var chooser = document.getElementById('market-chooser');
   if (chooser) chooser.style.display = 'none';
@@ -4495,21 +4509,25 @@ function setMarket(m) {
   if (selector) selector.style.display = '';
   var pill = document.getElementById('market-current-pill');
   if (pill) pill.textContent = (m === 'installment') ? '\uD83D\uDEE1\uFE0F Premium Market' : '\uD83C\uDF9F\uFE0F General Market';
-  // Reveal welcome banner on first market selection
+  // NOTE: welcome banner + tool cards default to HIDDEN here, regardless of
+  // market. "Buy Data" is a focused plan-buying view no matter how you reach
+  // it (Home quick action, a Coach nudge, a notification tap on a plan, the
+  // legacy dbGoSoftPay()) — only goToPremiumToolsFromHome() explicitly turns
+  // them back on for the actual Premium Tools page.
   var _wb = document.getElementById('market-welcome');
-  if (_wb) _wb.style.display = '';
+  if (_wb) _wb.style.display = 'none';
   var ptCard = document.getElementById('pay-toggle-card');
   // Show installment days toggle only in Premium market
   if (ptCard) ptCard.style.display = (m === 'installment') ? '' : 'none';
   var slCard = document.getElementById('study-lock-card');
-  if (slCard) slCard.style.display = (m === 'installment') ? 'block' : 'none';
+  if (slCard) slCard.style.display = 'none';
   var bCard = document.getElementById('boost-card');
-  if (bCard) bCard.style.display = (m === 'installment') ? 'block' : 'none';
+  if (bCard) bCard.style.display = 'none';
   var gCard = document.getElementById('gift-card');
-  if (gCard) gCard.style.display = (m === 'installment') ? 'block' : 'none';
+  if (gCard) gCard.style.display = 'none';
   ['autopay-card','autorenew-card','autopurchase-card','benefits-card'].forEach(function(id){
     var c = document.getElementById(id);
-    if (c) c.style.display = (m === 'installment') ? 'block' : 'none';
+    if (c) c.style.display = 'none';
   });
   // Coach / Reporter / Share aren't tied to a single plan, so they're gated on
   // whether this user actually has an active Premium plan right now — not just
@@ -4525,7 +4543,8 @@ function setMarket(m) {
   // plans; only the market filter changes. Keeping the cache lets plans render
   // instantly when switching markets instead of re-hitting the network.
 
-  // Welcome banner
+  // Welcome banner text (populated even while hidden, so it's ready the instant
+  // goToPremiumToolsFromHome() reveals it — no flash of stale content).
   _wb = document.getElementById('market-welcome');
   if (_wb) {
     if (m === 'general') {
@@ -4645,12 +4664,18 @@ window.goToMarketPlansFromHome = goToMarketPlansFromHome;
    plan picker where needed. */
 function goToPremiumToolsFromHome() {
   setMarket('installment');
+  gShowPremiumTools = true;
+  if (typeof updatePremiumToolVisibility === 'function') updatePremiumToolVisibility();
   var wb = document.getElementById('market-welcome');
-  if (wb) wb.style.display = 'none';
+  if (wb) wb.style.display = '';
   var pl = document.getElementById('plans-list');
   if (pl) pl.style.setProperty('display', 'none', 'important');
   var ptc = document.getElementById('pay-toggle-card');
   if (ptc) ptc.style.display = 'none';
+  ['study-lock-card','boost-card','gift-card','autopay-card','autorenew-card','autopurchase-card','benefits-card'].forEach(function(id){
+    var c = document.getElementById(id);
+    if (c) c.style.display = 'block';
+  });
   showTab('plans');
 }
 window.goToPremiumToolsFromHome = goToPremiumToolsFromHome;
@@ -4703,8 +4728,9 @@ function refreshPremiumActive(cb) {
 }
 window.refreshPremiumActive = refreshPremiumActive;
 
+var gShowPremiumTools = false; // only true while the actual Premium Tools page is showing
 function updatePremiumToolVisibility() {
-  var eligible = (gMarket === 'installment') && gPremiumActive === true;
+  var eligible = gShowPremiumTools && (gMarket === 'installment') && gPremiumActive === true;
   ['coach-card','reporter-card','share-card','copurchase-card'].forEach(function(id){
     var c = document.getElementById(id);
     if (c) c.style.display = eligible ? 'block' : 'none';
@@ -10315,9 +10341,24 @@ function boostTab(which) {
   if ($('boost-tab-mine')) $('boost-tab-mine').className = 'btn ' + (help?'btn-lite':'btn-blue');
   if ($('boost-help-pane')) $('boost-help-pane').style.display = help ? 'block' : 'none';
   if ($('boost-mine-pane')) $('boost-mine-pane').style.display = help ? 'none' : 'block';
-  if (help) boostLoadFeed(); else boostLoadMine();
+  if (help) { boostLoadFeed(); } else { boostLoadMine(); _loadInstallmentPlansInto('boost-req-plan'); }
 }
 window.boostTab = boostTab;
+
+/* Lets a user request a Boost directly from inside the tool, picking one of
+   their own active Premium installment plans, instead of needing to find it
+   on the My Plan tab first. */
+function boostRequestFromPlan() {
+  errHide('boost-req-err');
+  var sel = $('boost-req-plan');
+  var opt = sel && sel.selectedOptions ? sel.selectedOptions[0] : null;
+  if (!sel || !sel.value || !opt) { errShow('boost-req-err', 'Choose which plan you need help with.'); return; }
+  var remaining = parseFloat(opt.getAttribute('data-remaining')) || 0;
+  var label = opt.getAttribute('data-label') || 'plan';
+  if (remaining <= 0) { errShow('boost-req-err', 'This plan has nothing left owing.'); return; }
+  requestBoostForSub(sel.value, remaining, label);
+}
+window.boostRequestFromPlan = boostRequestFromPlan;
 
 function boostLoadFeed() {
   var wrap = $('boost-feed'); if (!wrap) return;
@@ -10614,7 +10655,8 @@ function _loadInstallmentPlansInto(selId, cb) {
         for (var i=0;i<rows.length;i++){
           var s = rows[i]; var pl = s.data_plans || {};
           var remaining = Math.max(0, (parseFloat(s.total_price)||0) - (parseFloat(s.amount_paid)||0));
-          html += '<option value="' + esc(s.id) + '" data-daily="' + (s.daily_price||0) + '">' +
+          var lbl = (pl.data_size||'Plan') + ' ' + (pl.network||'');
+          html += '<option value="' + esc(s.id) + '" data-daily="' + (s.daily_price||0) + '" data-remaining="' + remaining + '" data-label="' + esc(lbl) + '">' +
             esc(pl.data_size||'Plan') + ' ' + esc(pl.network||'') + ' \u00b7 ' + esc(s.phone_number||'') +
             ' \u00b7 ' + fmtN(remaining) + ' left</option>';
         }
