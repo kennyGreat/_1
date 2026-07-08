@@ -1090,7 +1090,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <div id="home-mkt-pill" style="font-size:1.05rem;font-weight:900;color:#0f172a;margin-bottom:10px;"></div>
 
       <!-- Welcome banner (same wording/design as the in-market welcome banner) -->
-      <div id="home-mkt-welcome" style="margin-bottom:12px;padding:12px 14px;border-radius:12px;background:#f0f4ff;border:1.5px solid #c7d4fb;font-size:.82rem;color:#374151;line-height:1.6;"></div>
+      <div id="home-mkt-welcome" style="margin-bottom:12px;padding:12px 14px;border-radius:12px;background:#f0f4ff;border:1.5px solid #c7d4fb;font-size:14px;color:#374151;line-height:1.6;"></div>
 
       <!-- Available Balance card -->
       <div class="hero-bal-card" style="margin-bottom:14px;">
@@ -1237,12 +1237,12 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         </button>
       </div>
       <div id="market-selector" style="display:none;margin-bottom:12px;">
-        <button id="market-back-btn" type="button" class="tab-back-btn" onclick="backToMarkets()"><span>&larr;</span> Markets</button>
+        <button id="market-back-btn" type="button" class="tab-back-btn" onclick="backToHomeMarketDash()"><span>&larr;</span> Markets</button>
         <div id="market-current-pill" style="font-size:1.05rem;font-weight:900;color:#0f172a;"></div>
       </div>
 
       <!-- ── MARKET WELCOME BANNER ── -->
-      <div id="market-welcome" style="margin-bottom:12px;padding:12px 14px;border-radius:12px;background:#f0f4ff;border:1.5px solid #c7d4fb;font-size:.82rem;color:#374151;line-height:1.6;"></div>
+      <div id="market-welcome" style="margin-bottom:12px;padding:12px 14px;border-radius:12px;background:#f0f4ff;border:1.5px solid #c7d4fb;font-size:14px;color:#374151;line-height:1.6;"></div>
 
       <!-- Goal Lock entry (Premium market only) -->
       <button type="button" id="study-lock-card" onclick="warnThenRunPremiumTool(openStudyLock)" style="display:none;-webkit-box-align:center;align-items:center;gap:10px;width:100%;text-align:left;border:1.5px dashed #c7b8f0;background:#f7f5ff;border-radius:14px;padding:13px 15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-bottom:12px;">
@@ -1384,7 +1384,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
 
   <!-- Airtime (own tab) -->
   <div id="tc-airtime" class="tab-content">
-      <button type="button" class="tab-back-btn" onclick="goBackTab()"><span>&larr;</span> Back</button>
+      <button type="button" class="tab-back-btn" onclick="backToHomeMarketDash()"><span>&larr;</span> Back</button>
       <div class="card" style="margin-bottom:12px;">
         <div class="card-title" style="margin-bottom:10px;">Buy Airtime</div>
         <div class="field" style="margin-bottom:10px;">
@@ -1881,12 +1881,13 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <!-- Goal -->
       <div class="field" style="margin-bottom:12px;">
         <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Your goal</label>
-        <input id="m-study-goal" type="text" maxlength="80" placeholder="e.g. Finish my Python course" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;">
+        <input id="m-study-goal" type="text" maxlength="80" placeholder="e.g. Finish studying before 2pm today for my test" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;">
+        <div style="font-size:.72rem;color:#888;margin-top:5px;">e.g. &ldquo;Finish studying before 2pm today for my test&rdquo; or &ldquo;Tell 10 people about my product or service before 3pm today&rdquo;</div>
       </div>
 
       <!-- Phone -->
       <div class="field" style="margin-bottom:12px;">
-        <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Deliver data to</label>
+        <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Deliver to</label>
         <input id="m-study-phone" type="tel" placeholder="08012345678" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;">
       </div>
 
@@ -4602,6 +4603,23 @@ function backToHomeMarkets() {
   if (typeof updatePremiumToolVisibility === 'function') updatePremiumToolVisibility();
 }
 window.backToHomeMarkets = backToHomeMarkets;
+
+/* Used by the "← Markets" button on Buy Data/Premium Tools and the "← Back"
+   button on Airtime — both are only ever reached FROM the Home market-dash
+   screen (balance + Buy Data/Buy Airtime/Premium Tools), so back should return
+   to exactly that screen, not all the way to the initial market picker. */
+function backToHomeMarketDash() {
+  if (gMarket) {
+    openMarketHome(gMarket);
+  } else {
+    var picker = document.getElementById('home-market-picker');
+    var dash   = document.getElementById('home-market-dash');
+    if (picker) picker.style.display = '';
+    if (dash)   dash.style.display   = 'none';
+  }
+  showTab('dash');
+}
+window.backToHomeMarketDash = backToHomeMarketDash;
 
 /* "Buy Data" quick action from Home: jump straight to the plan list,
    skip the welcome banner and (for Premium) skip the premium tool cards. */
