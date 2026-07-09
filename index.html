@@ -1126,14 +1126,15 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       </div>
 
       <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:10px;">
-        <button type="button" id="home-mkt-buydata-btn" onclick="goToMarketPlansFromHome()" style="-webkit-box-flex:1;-webkit-flex:1;flex:1;text-align:center;border:none;background:#1A56DB;color:#fff;border-radius:14px;padding:14px 8px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;">
-          <div style="font-size:.82rem;font-weight:800;color:#fff;">Buy Data</div>
+        <button type="button" id="home-mkt-buydata-btn" onclick="goToMarketPlansFromHome()" style="-webkit-box-flex:1;-webkit-flex:1;flex:1;text-align:center;border:none;background:-webkit-linear-gradient(135deg,#1A56DB,#173A73);background:linear-gradient(135deg,#1A56DB,#173A73);color:#fff;border-radius:18px;padding:20px 8px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 10px 22px rgba(26,86,219,.32);">
+          <div style="font-size:.96rem;font-weight:900;color:#fff;letter-spacing:.01em;">Buy Data</div>
         </button>
-        <button type="button" id="home-mkt-buyairtime-btn" onclick="goToMarketAirtimeFromHome()" style="-webkit-box-flex:1;-webkit-flex:1;flex:1;text-align:center;border:none;background:#1A56DB;color:#fff;border-radius:14px;padding:14px 8px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;">
-          <div style="font-size:.82rem;font-weight:800;color:#fff;">Buy Airtime</div>
+        <button type="button" id="home-mkt-buyairtime-btn" onclick="goToMarketAirtimeFromHome()" style="-webkit-box-flex:1;-webkit-flex:1;flex:1;text-align:center;border:none;background:-webkit-linear-gradient(135deg,#1A56DB,#173A73);background:linear-gradient(135deg,#1A56DB,#173A73);color:#fff;border-radius:18px;padding:20px 8px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 10px 22px rgba(26,86,219,.32);">
+          <div style="font-size:.96rem;font-weight:900;color:#fff;letter-spacing:.01em;">Buy Airtime</div>
         </button>
-        <button type="button" id="home-mkt-tools-btn" onclick="goToPremiumToolsFromHome()" style="display:none;-webkit-box-flex:1;-webkit-flex:1;flex:1;text-align:center;border:none;background:#1A56DB;color:#fff;border-radius:14px;padding:14px 8px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;">
-          <div style="font-size:.82rem;font-weight:800;color:#fff;">Premium Tools</div>
+        <button type="button" id="home-mkt-tools-btn" onclick="goToPremiumToolsFromHome()" style="display:none;-webkit-box-flex:1;-webkit-flex:1;flex:1;text-align:center;border:none;background:-webkit-linear-gradient(135deg,#0b3d2e,#0f5132);background:linear-gradient(135deg,#0b3d2e,#0f5132);color:#fff;border-radius:18px;padding:20px 8px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 10px 22px rgba(15,81,50,.32);">
+          <div style="font-size:1.3rem;line-height:1;margin-bottom:4px;">&#128737;&#65039;</div>
+          <div style="font-size:.96rem;font-weight:900;color:#fff;letter-spacing:.01em;">Premium Tools</div>
         </button>
       </div>
     </div>
@@ -1411,11 +1412,19 @@ button.tab,button.plan-chip{box-shadow:none!important;}
   <!-- Airtime (own tab) -->
   <div id="tc-airtime" class="tab-content">
       <button type="button" class="tab-back-btn" onclick="backToHomeMarketDash()"><span>&larr;</span> Back</button>
-      <div class="card" style="margin-bottom:12px;">
-        <div class="card-title" style="margin-bottom:10px;">Buy Airtime</div>
-        <div class="field" style="margin-bottom:10px;">
+
+      <!-- Hero header -->
+      <div style="border-radius:20px;padding:20px 18px;margin-bottom:14px;color:#fff;position:relative;overflow:hidden;background:-webkit-linear-gradient(135deg,#1A56DB,#173A73 65%,#0f766e 130%);background:linear-gradient(135deg,#1A56DB,#173A73 65%,#0f766e 130%);box-shadow:0 14px 30px rgba(26,86,219,.28);">
+        <div style="position:absolute;top:-26px;right:-26px;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,.08);pointer-events:none;"></div>
+        <div style="font-size:1.7rem;line-height:1;margin-bottom:6px;position:relative;z-index:1;">&#128222;</div>
+        <div style="font-size:1.2rem;font-weight:900;position:relative;z-index:1;">Buy Airtime</div>
+        <div style="font-size:.8rem;color:#dbe5ff;margin-top:4px;position:relative;z-index:1;">Top up any Nigerian line, instantly.</div>
+      </div>
+
+      <div class="card" style="margin-bottom:12px;border-radius:18px;box-shadow:0 6px 18px rgba(15,23,42,.06);">
+        <div class="field" style="margin-bottom:12px;">
           <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Network</label>
-          <select id="air-network" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;-webkit-appearance:none;appearance:none;" onchange="airAmountSuggest()">
+          <select id="air-network" style="display:block;width:100%;height:46px;border:1.5px solid #E1E5EF;border-radius:12px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;-webkit-appearance:none;appearance:none;" onchange="airAmountSuggest()">
             <option value="">— Select network —</option>
             <option value="MTN">MTN</option>
             <option value="AIRTEL">Airtel</option>
@@ -1423,38 +1432,38 @@ button.tab,button.plan-chip{box-shadow:none!important;}
             <option value="9MOBILE">9mobile</option>
           </select>
         </div>
-        <div class="field" style="margin-bottom:10px;">
+        <div class="field" style="margin-bottom:12px;">
           <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Phone Number</label>
-          <input id="air-phone" type="tel" placeholder="08012345678" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;-webkit-appearance:none;" oninput="airPhoneInput(this.value)">
-          <button type="button" onclick="airPickContact()" style="margin-top:7px;display:-webkit-inline-box;display:inline-flex;-webkit-box-align:center;align-items:center;gap:6px;padding:6px 13px;font-size:.78rem;font-weight:800;border-radius:8px;border:1.5px solid #d0d8ff;background:#f5f7ff;color:#3c4c8c;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;">&#128100; Pick from Contacts</button>
+          <input id="air-phone" type="tel" placeholder="08012345678" style="display:block;width:100%;height:46px;border:1.5px solid #E1E5EF;border-radius:12px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;-webkit-appearance:none;" oninput="airPhoneInput(this.value)">
+          <button type="button" onclick="airPickContact()" style="margin-top:8px;display:-webkit-inline-box;display:inline-flex;-webkit-box-align:center;align-items:center;gap:6px;padding:7px 14px;font-size:.78rem;font-weight:800;border-radius:20px;border:none;background:-webkit-linear-gradient(135deg,#eef3ff,#e3ecff);background:linear-gradient(135deg,#eef3ff,#e3ecff);color:#1A56DB;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;">&#128100; Pick from Contacts</button>
           <div id="air-saved-phones" style="display:none;margin-top:7px;"></div>
         </div>
-        <div class="field" style="margin-bottom:10px;">
+        <div class="field" style="margin-bottom:12px;">
           <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Amount (&#8358;)</label>
-          <input id="air-amount-input" type="number" placeholder="e.g. 200" min="100" max="50000" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;-webkit-appearance:none;" oninput="airUpdatePreview()">
-          <div style="display:-webkit-box;display:-webkit-flex;display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;" id="air-quick-amts">
-            <button type="button" onclick="airSetAmt(100)"  style="padding:5px 12px;font-size:.78rem;font-weight:700;border-radius:20px;border:1.5px solid #d0d8ff;background:#f5f7ff;color:#3c4c8c;cursor:pointer;font-family:inherit;">&#8358;100</button>
-            <button type="button" onclick="airSetAmt(200)"  style="padding:5px 12px;font-size:.78rem;font-weight:700;border-radius:20px;border:1.5px solid #d0d8ff;background:#f5f7ff;color:#3c4c8c;cursor:pointer;font-family:inherit;">&#8358;200</button>
-            <button type="button" onclick="airSetAmt(500)"  style="padding:5px 12px;font-size:.78rem;font-weight:700;border-radius:20px;border:1.5px solid #d0d8ff;background:#f5f7ff;color:#3c4c8c;cursor:pointer;font-family:inherit;">&#8358;500</button>
-            <button type="button" onclick="airSetAmt(1000)" style="padding:5px 12px;font-size:.78rem;font-weight:700;border-radius:20px;border:1.5px solid #d0d8ff;background:#f5f7ff;color:#3c4c8c;cursor:pointer;font-family:inherit;">&#8358;1,000</button>
-            <button type="button" onclick="airSetAmt(2000)" style="padding:5px 12px;font-size:.78rem;font-weight:700;border-radius:20px;border:1.5px solid #d0d8ff;background:#f5f7ff;color:#3c4c8c;cursor:pointer;font-family:inherit;">&#8358;2,000</button>
-            <button type="button" onclick="airSetAmt(5000)" style="padding:5px 12px;font-size:.78rem;font-weight:700;border-radius:20px;border:1.5px solid #d0d8ff;background:#f5f7ff;color:#3c4c8c;cursor:pointer;font-family:inherit;">&#8358;5,000</button>
+          <input id="air-amount-input" type="number" placeholder="e.g. 200" min="100" max="50000" style="display:block;width:100%;height:46px;border:1.5px solid #E1E5EF;border-radius:12px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;-webkit-appearance:none;" oninput="airUpdatePreview()">
+          <div style="display:-webkit-box;display:-webkit-flex;display:flex;flex-wrap:wrap;gap:7px;margin-top:9px;" id="air-quick-amts">
+            <button type="button" onclick="airSetAmt(100)"  style="padding:7px 14px;font-size:.8rem;font-weight:800;border-radius:20px;border:none;background:-webkit-linear-gradient(135deg,#eef3ff,#e3ecff);background:linear-gradient(135deg,#eef3ff,#e3ecff);color:#1A56DB;cursor:pointer;font-family:inherit;">&#8358;100</button>
+            <button type="button" onclick="airSetAmt(200)"  style="padding:7px 14px;font-size:.8rem;font-weight:800;border-radius:20px;border:none;background:-webkit-linear-gradient(135deg,#eef3ff,#e3ecff);background:linear-gradient(135deg,#eef3ff,#e3ecff);color:#1A56DB;cursor:pointer;font-family:inherit;">&#8358;200</button>
+            <button type="button" onclick="airSetAmt(500)"  style="padding:7px 14px;font-size:.8rem;font-weight:800;border-radius:20px;border:none;background:-webkit-linear-gradient(135deg,#eef3ff,#e3ecff);background:linear-gradient(135deg,#eef3ff,#e3ecff);color:#1A56DB;cursor:pointer;font-family:inherit;">&#8358;500</button>
+            <button type="button" onclick="airSetAmt(1000)" style="padding:7px 14px;font-size:.8rem;font-weight:800;border-radius:20px;border:none;background:-webkit-linear-gradient(135deg,#eef3ff,#e3ecff);background:linear-gradient(135deg,#eef3ff,#e3ecff);color:#1A56DB;cursor:pointer;font-family:inherit;">&#8358;1,000</button>
+            <button type="button" onclick="airSetAmt(2000)" style="padding:7px 14px;font-size:.8rem;font-weight:800;border-radius:20px;border:none;background:-webkit-linear-gradient(135deg,#eef3ff,#e3ecff);background:linear-gradient(135deg,#eef3ff,#e3ecff);color:#1A56DB;cursor:pointer;font-family:inherit;">&#8358;2,000</button>
+            <button type="button" onclick="airSetAmt(5000)" style="padding:7px 14px;font-size:.8rem;font-weight:800;border-radius:20px;border:none;background:-webkit-linear-gradient(135deg,#eef3ff,#e3ecff);background:linear-gradient(135deg,#eef3ff,#e3ecff);color:#1A56DB;cursor:pointer;font-family:inherit;">&#8358;5,000</button>
           </div>
         </div>
         <!-- Payment option -->
-        <div class="field" style="margin-bottom:10px;">
+        <div class="field" style="margin-bottom:12px;">
           <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Payment Option</label>
           <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">
-            <button class="btn btn-blue" id="air-days-1"  onclick="airSetDays(1)"  style="margin:0;flex:1;font-size:.82rem;">Pay Once</button>
-            <button class="btn btn-lite" id="air-days-7"  onclick="airSetDays(7)"  style="margin:0;flex:1;font-size:.82rem;">7 Days</button>
-            <button class="btn btn-lite" id="air-days-28" onclick="airSetDays(28)" style="margin:0;flex:1;font-size:.82rem;">28 Days</button>
+            <button class="btn btn-blue" id="air-days-1"  onclick="airSetDays(1)"  style="margin:0;flex:1;font-size:.82rem;border-radius:12px;">Pay Once</button>
+            <button class="btn btn-lite" id="air-days-7"  onclick="airSetDays(7)"  style="margin:0;flex:1;font-size:.82rem;border-radius:12px;">7 Days</button>
+            <button class="btn btn-lite" id="air-days-28" onclick="airSetDays(28)" style="margin:0;flex:1;font-size:.82rem;border-radius:12px;">28 Days</button>
           </div>
         </div>
         <!-- Preview -->
-        <div id="air-preview" style="display:none;background:#f5f7ff;border:1px solid #d0d8ff;border-radius:10px;padding:11px 13px;margin-bottom:12px;font-size:.8rem;color:#444;line-height:1.7;"></div>
+        <div id="air-preview" style="display:none;background:-webkit-linear-gradient(135deg,#f5f7ff,#eef3ff);background:linear-gradient(135deg,#f5f7ff,#eef3ff);border:1px solid #d0d8ff;border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:.8rem;color:#444;line-height:1.7;"></div>
         <div id="air-err" class="err"></div>
-        <button class="btn btn-blue" id="air-buy-btn" onclick="confirmAirtime()" style="margin-top:4px;">Buy Airtime</button>
-        <p style="font-size:.72rem;color:#888;margin-top:8px;line-height:1.5;">A fee applies based on your payment cycle. Minimum &#8358;100. If delivery fails, your wallet is automatically refunded.</p>
+        <button class="btn btn-blue" id="air-buy-btn" onclick="confirmAirtime()" style="margin-top:4px;border-radius:14px;padding:15px;font-size:.98rem;font-weight:900;box-shadow:0 10px 22px rgba(26,86,219,.3);">Buy Airtime</button>
+        <p style="font-size:.72rem;color:#888;margin-top:10px;line-height:1.5;text-align:center;">A fee applies based on your payment cycle. Minimum &#8358;100. If delivery fails, your wallet is automatically refunded.</p>
       </div>
   </div>
 
@@ -4662,7 +4671,7 @@ function goToMarketPlansFromHome() {
   var m = gMarket;
   setMarket(m);
   var wb = document.getElementById('market-welcome');
-  if (wb) wb.style.display = '';
+  if (wb) wb.style.display = 'none';
   if (m === 'installment') {
     ['study-lock-card','boost-card','gift-card','autopay-card','autorenew-card','autopurchase-card','benefits-card','coach-card','reporter-card','share-card','copurchase-card'].forEach(function(id){
       var c = document.getElementById(id);
@@ -4998,6 +5007,7 @@ function _renderPlans(allPlans) {
             '<div class="plan-sub" style="margin-top:5px;text-transform:none;letter-spacing:0;">' + (p.validity_days || 30) + '-Day Plan</div>' +
             '<div class="plan-price">' + fmtN(marketDisplayPrice(p)) + '</div>' +
             '<div style="margin-top:8px;font-size:.8rem;font-weight:700;color:#0f5132;">' + (gMarket === 'general' ? 'Pay once' : 'Pay in ' + gPayDays + ' days') + '</div>' +
+            (gMarket === 'installment' ? '<div style="margin-top:7px;padding:7px 9px;border-radius:8px;background:#f0fdf4;border:1px solid #bbf7d0;font-size:.68rem;line-height:1.5;color:#166534;">&#128737;&#65039; <b>This is a Premium plan</b> &mdash; vetted &amp; protected, earn 1% cashback per payment, unlock up to 10% off, and free access to all Premium tools. A 3% service fee applies.</div>' : '') +
           '</div>' +
           '<button class="plan-btn" onclick="openSubModal(\'id_' + String(p.id) + '\')">Subscribe</button>' +
           '' +
@@ -8423,29 +8433,25 @@ html{scroll-padding-top:70px;}
 @media(min-width:768px){.momentum-grid{grid-template-columns:repeat(4,1fr)}}
 @media(prefers-reduced-motion:reduce){.db-confetti{animation:none!important;display:none!important}.plan-card{transition:none!important}}
 
-/* ── READABILITY PASS — WhatsApp-style sizing: bigger, bolder, easier to tap ── */
-html,body{font-size:18px!important;}
-.card-title,.sec-title{font-size:.86rem!important;font-weight:900!important;letter-spacing:.04em!important;}
-.card-sub{font-size:.9rem!important;line-height:1.5!important;}
-.field label{font-size:.86rem!important;font-weight:800!important;color:#374151!important;}
-.empty{font-size:1rem!important;}
-.err{font-size:.88rem!important;}
-.btn{font-size:1.02rem!important;}
-.modal-title{font-size:1.15rem!important;}
-.modal-body,.terms-scroll{font-size:.95rem!important;}
-input,select,textarea{font-size:1rem!important;}
-.tx-desc,.sub-name,.plan-size,.msg-sub{font-size:.95rem!important;font-weight:800!important;}
-.tx-date,.plan-filter-title{font-size:.82rem!important;}
-
-/* Prominent, tappable back button — pill-style, high contrast, WhatsApp-esque */
+/* ── Back button: reverted to original plain-link style ── */
 .tab-back-btn{
   display:-webkit-inline-box;display:-webkit-inline-flex;display:inline-flex;
-  -webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:6px;
-  background:#eef3ff;border:none;color:#1A56DB;font-size:.95rem!important;font-weight:900!important;
-  cursor:pointer;font-family:inherit;padding:8px 16px 8px 12px;margin-bottom:12px;
-  border-radius:20px;-webkit-tap-highlight-color:transparent;
+  -webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:5px;
+  background:none;border:none;color:#1A56DB;font-size:.84rem;font-weight:800;
+  cursor:pointer;font-family:inherit;padding:2px 0;margin-bottom:10px;
+  -webkit-tap-highlight-color:transparent;
 }
-.tab-back-btn span{font-size:1.15rem;line-height:1;}
+.tab-back-btn span{font-size:1.05rem;line-height:1;}
+
+/* ── Home market-dash screen only (Available Balance / +Add small money /
+   Buy Data / Buy Airtime / Premium Tools) keeps its current, larger size —
+   everything else in the app reverts to its original text size/design. ── */
+#home-market-dash .hero-bal-label{font-size:13px!important;}
+#home-market-dash .hero-bal-amount{font-size:44px!important;}
+#home-market-dash .hero-fund-btn{font-size:15px!important;}
+#home-market-dash #home-mkt-buydata-btn div,
+#home-market-dash #home-mkt-buyairtime-btn div,
+#home-market-dash #home-mkt-tools-btn div{font-size:15px!important;}
 .tab-back-btn span{font-size:1.15rem;line-height:1;}
 </style>
 
@@ -10389,7 +10395,7 @@ function boostLoadFeed() {
       var r = rows[i];
       var left = Math.max(0, (parseFloat(r.amount_needed)||0) - (parseFloat(r.amount_raised)||0));
       html += '<div style="border:1px solid #fbcfe8;border-radius:12px;padding:12px;margin-bottom:10px;background:#fffafc;">' +
-        '<div style="font-size:.84rem;color:#0f172a;line-height:1.5;"><b>' + esc(r.requester_email||'A user') + '</b> needs a boost to complete their <b>' + esc(r.label||'plan') + '</b>.</div>' +
+        '<div style="font-size:.84rem;color:#0f172a;line-height:1.5;"><b>A DataBulge user</b> needs a boost to complete their <b>' + esc(r.label||'plan') + '</b>.</div>' +
         '<div style="font-size:.78rem;color:#9d174d;font-weight:800;margin-top:6px;">' + fmtN(left) + ' to go</div>' +
         '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:7px;margin-top:9px;">' +
           '<input type="number" id="boost-amt-' + esc(r.id) + '" min="1" placeholder="Amount to gift" style="-webkit-box-flex:1;-webkit-flex:1;flex:1;height:40px;border:1.5px solid #fbcfe8;border-radius:8px;padding:0 12px;font-size:.9rem;outline:none;">' +
