@@ -1132,7 +1132,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         </button>
       </div>
       <div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:center;justify-content:center;">
-        <button type="button" id="home-mkt-tools-btn" onclick="goToPremiumToolsFromHome()" style="display:none;width:33%;text-align:center;border:none;background:-webkit-linear-gradient(135deg,#0b3d2e,#0f5132);background:linear-gradient(135deg,#0b3d2e,#0f5132);color:#fff;border-radius:18px;padding:20px 8px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 10px 22px rgba(15,81,50,.32);">
+        <button type="button" id="home-mkt-tools-btn" onclick="goToPremiumToolsFromHome()" style="display:none;width:60%;text-align:center;border:none;background:-webkit-linear-gradient(135deg,#0b3d2e,#0f5132);background:linear-gradient(135deg,#0b3d2e,#0f5132);color:#fff;border-radius:18px;padding:20px 8px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 10px 22px rgba(15,81,50,.32);">
           <div style="font-size:1.3rem;line-height:1;margin-bottom:4px;">&#128737;&#65039;</div>
           <div style="font-size:.96rem;font-weight:900;color:#fff;letter-spacing:.01em;">Premium Tools</div>
         </button>
@@ -1276,84 +1276,88 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <button type="button" id="study-lock-card" onclick="warnThenRunPremiumTool(openStudyLock)" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#7c3aed,#5b21b6);background:linear-gradient(135deg,#7c3aed,#5b21b6);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(124,58,237,.28);color:#fff;">
         <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#127919;</div>
         <div style="font-size:.88rem;font-weight:900;margin-bottom:3px;">Goal Lock</div>
-        <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Pledge data or airtime to a goal, unlock in steps.</div>
+        <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Pledge data or airtime to a goal. It unlocks in steps as you hit milestones.</div>
       </button>
 
       <button type="button" id="boost-card" onclick="warnThenRunPremiumTool(openBoost)" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#db2777,#9d174d);background:linear-gradient(135deg,#db2777,#9d174d);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(219,39,119,.28);color:#fff;">
         <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#128156;</div>
         <div style="font-size:.88rem;font-weight:900;margin-bottom:3px;">Sponsored Boost</div>
-        <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Get help finishing your plan, or help someone else.</div>
+        <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Let a trusted person help complete your plan, or help someone else.</div>
       </button>
 
       <button type="button" id="gift-card" onclick="warnThenRunPremiumTool(openGift)" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#f59e0b,#92400e);background:linear-gradient(135deg,#f59e0b,#92400e);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(245,158,11,.28);color:#fff;">
         <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#127873;</div>
         <div style="font-size:.88rem;font-weight:900;margin-bottom:3px;">Gift with Strings</div>
-        <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Gift data or airtime that unlocks by date or action.</div>
+        <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Gift data or airtime that unlocks on a date or after an action.</div>
       </button>
 
       <button type="button" id="autopay-card" onclick="warnThenRunPremiumTool(openAutoPaySetup)" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#0f766e,#0b3d2e);background:linear-gradient(135deg,#0f766e,#0b3d2e);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(15,118,110,.28);color:#fff;">
         <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#128179;</div>
         <div style="font-size:.88rem;font-weight:900;margin-bottom:3px;">Auto-Pay</div>
-        <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">We pay your installments from your wallet automatically.</div>
+        <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Let the system pay your installments from your wallet, whenever and however you want.</div>
       </button>
 
       <button type="button" id="autorenew-card" onclick="warnThenRunPremiumTool(openAutoRenewSetup)" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#4f46e5,#3730a3);background:linear-gradient(135deg,#4f46e5,#3730a3);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(79,70,229,.28);color:#fff;">
         <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#128260;</div>
         <div style="font-size:.88rem;font-weight:900;margin-bottom:3px;">Auto-Renew</div>
-        <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Plans you love restart automatically when they finish.</div>
+        <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Repeat the plans you love &mdash; they restart automatically when they finish.</div>
       </button>
 
       <button type="button" id="autopurchase-card" onclick="warnThenRunPremiumTool(openAutoPayRecur)" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#ea580c,#9a3412);background:linear-gradient(135deg,#ea580c,#9a3412);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(234,88,12,.28);color:#fff;">
         <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#128722;</div>
         <div style="font-size:.88rem;font-weight:900;margin-bottom:3px;">Auto Purchase</div>
-        <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Set a budget and schedule &mdash; we buy and send it.</div>
+        <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Set an amount and how often &mdash; we buy the best plan and send it automatically.</div>
       </button>
 
       <button type="button" id="benefits-card" onclick="warnThenRunPremiumTool(openPremiumBenefits)" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#16a34a,#15803d);background:linear-gradient(135deg,#16a34a,#15803d);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(22,163,74,.28);color:#fff;">
         <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#128176;</div>
         <div style="font-size:.88rem;font-weight:900;margin-bottom:3px;">Installments &amp; Rewards</div>
-        <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Pay in small bits, earn cashback, unlock discounts.</div>
+        <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Pay big plans in small bits, earn 1% per installment, unlock up to 10% off.</div>
       </button>
 
       <button type="button" id="coach-card" onclick="warnThenRunPremiumTool(openCoach)" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#2563eb,#1d4ed8);background:linear-gradient(135deg,#2563eb,#1d4ed8);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(37,99,235,.28);color:#fff;">
         <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#129504;</div>
         <div style="font-size:.88rem;font-weight:900;margin-bottom:3px;">Coach</div>
-        <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Your daily nudge on what to do next to stay on track.</div>
+        <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Your daily nudge &mdash; straight talk on what to do next to stay on track.</div>
       </button>
 
       <button type="button" id="reporter-card" onclick="warnThenRunPremiumTool(openReporter)" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#8b5cf6,#6d28d9);background:linear-gradient(135deg,#8b5cf6,#6d28d9);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(139,92,246,.28);color:#fff;">
         <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#128202;</div>
         <div style="font-size:.88rem;font-weight:900;margin-bottom:3px;">Reporter</div>
-        <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Your numbers at a glance &mdash; funding, streaks, rewards.</div>
+        <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Your numbers at a glance &mdash; funding, streaks, plans and rewards.</div>
       </button>
 
       <button type="button" id="share-card" onclick="warnThenRunPremiumTool(openTransferModal)" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#14b8a6,#0f766e);background:linear-gradient(135deg,#14b8a6,#0f766e);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(20,184,166,.28);color:#fff;">
         <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#128184;</div>
         <div style="font-size:.88rem;font-weight:900;margin-bottom:3px;">Share</div>
-        <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Send money to a DataBulge friend's wallet, instantly.</div>
+        <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Send money straight to a DataBulge friend's wallet, instantly.</div>
       </button>
 
       <button type="button" id="copurchase-card" onclick="warnThenRunPremiumTool(openCoPurchase)" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#d97706,#92400e);background:linear-gradient(135deg,#d97706,#92400e);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(217,119,6,.28);color:#fff;">
         <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#129309;</div>
         <div style="font-size:.88rem;font-weight:900;margin-bottom:3px;">Co-Purchase</div>
-        <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Team up with others to jointly fund and split a plan.</div>
+        <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Team up with other users to jointly fund a plan and split it by contribution.</div>
       </button>
 
       <button type="button" id="magic-shopper-card" onclick="warnThenRunPremiumTool(openMagicShopper)" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#a855f7,#6d28d9);background:linear-gradient(135deg,#a855f7,#6d28d9);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(168,85,247,.28);color:#fff;">
         <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#129497;</div>
         <div style="font-size:.88rem;font-weight:900;margin-bottom:3px;">Magic Shopper</div>
-        <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Cheapest plan across every market, hunted for you.</div>
+        <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">We hunt every market for the cheapest plan in your budget &mdash; you never see which one.</div>
       </button>
 
       </div>
 
-      <div id="pay-toggle-card" style="display:none;margin-bottom:12px;" class="card">
-        <div class="sec-title">Payment Option</div>
-        <div id="pay-toggle-wrap" style="display:flex;gap:8px;">
-          <button class="btn btn-lite" id="pay-days-7" style="margin:0;flex:1;">7 Days</button>
-          <button class="btn btn-blue" id="pay-days-28" style="margin:0;flex:1;">28 Days</button>
-        </div>
-      </div>
+      <button type="button" id="plans-top-install-btn" onclick="goToPremiumToolsFromHome()" style="display:block;width:100%;text-align:left;border:none;border-radius:14px;padding:12px 14px;margin-bottom:12px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;">
+        <span style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:9px;">
+          <span style="font-size:1.3rem;line-height:1;">&#10024;</span>
+          <span style="min-width:0;">
+            <span style="display:block;font-size:.9rem;font-weight:900;color:#fff;">Activate Premium Tool</span>
+            <span id="plans-top-install-rotator" style="display:block;font-size:.72rem;color:rgba(255,255,255,.88);margin-top:2px;">To get someone to pay for your data</span>
+          </span>
+        </span>
+      </button>
+
+      <div id="pay-toggle-card" style="display:none;"></div>
 
       <button id="gm-seg-back" class="tab-back-btn" onclick="backToGMSegments()"><span>&larr;</span> Back to services</button>
       <div id="gm-segments"></div>
@@ -1377,6 +1381,15 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       </div>
 
       <div class="card" style="margin-bottom:12px;border-radius:18px;box-shadow:0 6px 18px rgba(15,23,42,.06);">
+        <button type="button" id="air-top-install-btn" onclick="goToPremiumToolsFromHome()" style="display:block;width:100%;text-align:left;border:none;border-radius:14px;padding:12px 14px;margin-bottom:14px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;">
+          <span style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:9px;">
+            <span style="font-size:1.3rem;line-height:1;">&#10024;</span>
+            <span style="min-width:0;">
+              <span style="display:block;font-size:.9rem;font-weight:900;color:#fff;">Activate Premium Tool</span>
+              <span id="air-top-install-rotator" style="display:block;font-size:.72rem;color:rgba(255,255,255,.88);margin-top:2px;">To get someone to pay for your data</span>
+            </span>
+          </span>
+        </button>
         <div class="field" style="margin-bottom:12px;">
           <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Network</label>
           <select id="air-network" style="display:block;width:100%;height:46px;border:1.5px solid #E1E5EF;border-radius:12px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;-webkit-appearance:none;appearance:none;" onchange="airAmountSuggest()">
@@ -1413,21 +1426,11 @@ button.tab,button.plan-chip{box-shadow:none!important;}
             <button class="btn btn-lite" id="air-days-7"  onclick="airSetDays(7)"  style="margin:0;flex:1;font-size:.82rem;border-radius:12px;">7 Days</button>
             <button class="btn btn-lite" id="air-days-28" onclick="airSetDays(28)" style="margin:0;flex:1;font-size:.82rem;border-radius:12px;">28 Days</button>
           </div>
-          <button type="button" id="air-days-install" onclick="_installRotatorGoToTool(false)" style="display:block;width:100%;text-align:left;border:none;border-radius:12px;padding:9px 11px;margin-top:8px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;">
-            <span style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:7px;">
-              <span style="font-size:1.15rem;line-height:1;">&#10024;</span>
-              <span style="min-width:0;">
-                <span style="display:block;font-size:.8rem;font-weight:900;color:#fff;white-space:nowrap;">Activate Premium Tool</span>
-                <span id="air-install-rotator" style="display:block;font-size:.65rem;color:rgba(255,255,255,.88);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">works like&hellip; to buy cheap data</span>
-              </span>
-            </span>
-          </button>
         </div>
         <!-- Preview -->
         <div id="air-preview" style="display:none;background:-webkit-linear-gradient(135deg,#f5f7ff,#eef3ff);background:linear-gradient(135deg,#f5f7ff,#eef3ff);border:1px solid #d0d8ff;border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:.8rem;color:#444;line-height:1.7;"></div>
         <div id="air-err" class="err"></div>
         <button class="btn btn-blue" id="air-buy-btn" onclick="confirmAirtime()" style="margin-top:4px;border-radius:14px;padding:15px;font-size:.98rem;font-weight:900;box-shadow:0 10px 22px rgba(26,86,219,.3);">Buy Airtime</button>
-        <p style="font-size:.72rem;color:#888;margin-top:10px;line-height:1.5;text-align:center;">A fee applies based on your payment cycle. Minimum &#8358;100. If delivery fails, your wallet is automatically refunded.</p>
       </div>
   </div>
 
@@ -1650,15 +1653,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         <div class="field" id="m-sub-paymode-field">
           <label style="font-weight:700;color:#333;margin-bottom:7px;display:block;">How do you want to pay?</label>
           <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">
-            <button class="btn btn-blue" id="m-sub-mode-install" type="button" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;text-align:left;padding:9px 11px;">
-              <span style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:7px;">
-                <span style="font-size:1.15rem;line-height:1;">&#10024;</span>
-                <span style="min-width:0;">
-                  <span style="display:block;font-size:.8rem;font-weight:900;color:#fff;white-space:nowrap;">Activate Premium Tool</span>
-                  <span id="m-sub-install-rotator" style="display:block;font-size:.65rem;color:rgba(255,255,255,.88);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">works like&hellip; to buy cheap data</span>
-                </span>
-              </span>
-            </button>
+            <button class="btn btn-blue" id="m-sub-mode-install" type="button" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;">Pay in installments</button>
             <button class="btn btn-lite" id="m-sub-mode-once" type="button" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;">Pay once</button>
           </div>
           <div id="m-sub-once-note" style="display:none;font-size:.74rem;color:#0f5132;margin-top:6px;line-height:1.4;">You will pay the full amount now from your wallet and your data is delivered immediately.</div>
@@ -5018,7 +5013,6 @@ function _renderPlans(allPlans) {
             '<div class="plan-sub" style="margin-top:5px;text-transform:none;letter-spacing:0;">' + (p.validity_days || 30) + '-Day Plan</div>' +
             '<div class="plan-price">' + fmtN(marketDisplayPrice(p)) + '</div>' +
             '<div style="margin-top:8px;font-size:.8rem;font-weight:700;color:#0f5132;">' + (gMarket === 'general' ? 'Pay once' : 'Pay in ' + gPayDays + ' days') + '</div>' +
-            (gMarket === 'installment' ? '<div style="margin-top:7px;padding:7px 9px;border-radius:8px;background:#f0fdf4;border:1px solid #bbf7d0;font-size:.68rem;line-height:1.5;color:#166534;">&#128737;&#65039; <b>This is a Premium plan</b> &mdash; vetted &amp; protected, earn 1% cashback per payment, unlock up to 10% off, and free access to all Premium tools. No extra fee when you buy it here \u2014 the 3% service fee only applies when a purchase is made through a Premium tool.</div>' : '') +
           '</div>' +
           '<button class="plan-btn" onclick="openSubModal(\'id_' + String(p.id) + '\')">Subscribe</button>' +
           '' +
@@ -5921,7 +5915,7 @@ function _configSubModalForMarket(plan) {
     if ($('m-sub-autopay'))      $('m-sub-autopay').checked = false;
     if ($('m-sub-autopurchase')) $('m-sub-autopurchase').checked = false;
     // Relabel: install button becomes the ad placeholder, once button active
-    if ($('m-sub-mode-install')) { $('m-sub-mode-install').className = 'btn btn-lite'; }
+    if ($('m-sub-mode-install')) { $('m-sub-mode-install').className = 'btn btn-lite'; $('m-sub-mode-install').textContent = 'Pay in installments'; }
     if ($('m-sub-mode-once'))    { $('m-sub-mode-once').className = 'btn btn-blue'; }
   }
 }
@@ -7278,13 +7272,23 @@ function wire() {
   $('m-fund-x').onclick = function() { closeModal('m-fund'); };
   if ($('m-fund-btn')) $('m-fund-btn').onclick = confirmFund;
   $('m-va-x').onclick = function() { closeModal('m-va'); };
-  $('pay-days-7').onclick  = function() { setPayDays(7); };
-  $('pay-days-28').onclick = function() { setPayDays(28); };
+  if ($('pay-days-7'))  $('pay-days-7').onclick  = function() { setPayDays(7); };
+  if ($('pay-days-28')) $('pay-days-28').onclick = function() { setPayDays(28); };
   // Subscribe modal day buttons
   $('m-sub-days-7').onclick  = function() { gModalPayDays = 7;  updateSubDaysUI(); };
   $('m-sub-days-28').onclick = function() { gModalPayDays = 28; updateSubDaysUI(); };
   if ($('m-sub-mode-install')) $('m-sub-mode-install').onclick = function() {
-    _installRotatorGoToTool(true);
+    var mkt = (gSelPlan && gSelPlan.market) || gMarket || 'general';
+    if (mkt !== 'installment') {
+      // General market: installment is a Premium-only feature — advertise it.
+      toast('Installment plans are available in the Premium market only');
+      gPayOnce = true;
+      updateSubPayModeUI();
+      if ($('m-sub-mode-once'))    $('m-sub-mode-once').className = 'btn btn-blue';
+      if ($('m-sub-mode-install')) $('m-sub-mode-install').className = 'btn btn-lite';
+      return;
+    }
+    gPayOnce = false; updateSubPayModeUI();
   };
   if ($('m-sub-mode-once'))    $('m-sub-mode-once').onclick    = function() { gPayOnce = true;  updateSubPayModeUI(); };
   // Subscribe modal toggles
@@ -8455,13 +8459,11 @@ html{scroll-padding-top:70px;}
 #home-market-dash #home-mkt-tools-btn div{font-size:15px!important;}
 .tab-back-btn span{font-size:1.15rem;line-height:1;}
 
-/* "Activate Premium Tool" fancy button — must always win over whatever
-   .btn-blue/.btn-lite class gets toggled onto it for state-tracking. */
-#m-sub-mode-install,#air-days-install{
+/* "Activate Premium Tool" — top-of-page fancy button on Buy Data and Airtime */
+#plans-top-install-btn,#air-top-install-btn{
   background:-webkit-linear-gradient(135deg,#7c3aed,#5b21b6)!important;
   background:linear-gradient(135deg,#7c3aed,#5b21b6)!important;
-  border:none!important;
-  box-shadow:0 6px 14px rgba(124,58,237,.28)!important;
+  box-shadow:0 8px 18px rgba(124,58,237,.28)!important;
 }
 </style>
 
@@ -9414,45 +9416,29 @@ window.friendDailyAction = friendDailyAction;
    Same nugget pool as the daily nudge, but presented as a coach
    giving you a straight-talking tip for today, with a one-tap
    action button instead of a passive banner. */
+
 /* ── "Activate Premium Tool" rotating description ──────────────
-   Cycles the subtitle under the fancy button on both the Buy Data checkout
-   and the Airtime page, showcasing different reasons to use a premium tool.
-   Each phrase maps to the specific tool it describes — clicking the button
-   while that phrase is showing opens that exact tool. */
-var _installRotatorPhrases = [
-  { text: 'works like\u2026 to buy cheap data',                     tool: 'magic' },
-  { text: 'works like\u2026 to pay in installments',                tool: 'benefits' },
-  { text: 'works like\u2026 to achieve a goal',                     tool: 'goallock' },
-  { text: 'works like\u2026 to buy data with others',               tool: 'copurchase' },
-  { text: 'works like\u2026 to get someone to pay for your data',   tool: 'boost_request' },
-  { text: 'works like\u2026 to help someone pay for their data',    tool: 'boost_help' }
+   Top-of-page fancy button on Buy Data and Airtime. Cycles the subtitle
+   every 5 seconds through different reasons to explore Premium tools.
+   Clicking always opens the full Premium Tools page so the user can browse
+   and pick whichever tool fits — the message is enticing copy, not a link
+   to one specific tool. */
+var _installTopPhrases = [
+  'To buy cheap data',
+  'To pay in installments',
+  'To achieve a goal',
+  'To buy data with others',
+  'To get someone to pay for your data',
+  'To help someone pay for their data'
 ];
-var _installRotatorIdx = 0;
-function _rotateInstallLabel() {
-  var els = [document.getElementById('m-sub-install-rotator'), document.getElementById('air-install-rotator')];
-  _installRotatorIdx = (_installRotatorIdx + 1) % _installRotatorPhrases.length;
-  var txt = _installRotatorPhrases[_installRotatorIdx].text;
-  for (var i = 0; i < els.length; i++) { if (els[i]) els[i].textContent = txt; }
-}
+var _installTopIdx = 0;
 setInterval(function(){
   if (typeof document.hidden !== 'undefined' && document.hidden) return;
-  _rotateInstallLabel();
-}, 3000);
-
-/* Opens whichever tool the CURRENTLY showing rotator phrase describes.
-   closeSub=true also closes the Buy Data checkout modal first (called from
-   there); the Airtime page has no modal to close. */
-function _installRotatorGoToTool(closeSub) {
-  var tool = _installRotatorPhrases[_installRotatorIdx].tool;
-  if (closeSub) closeModal('m-sub');
-  if (tool === 'magic')          { warnThenRunPremiumTool(openMagicShopper); }
-  else if (tool === 'benefits')  { warnThenRunPremiumTool(openPremiumBenefits); }
-  else if (tool === 'goallock')  { warnThenRunPremiumTool(openStudyLock); }
-  else if (tool === 'copurchase'){ warnThenRunPremiumTool(openCoPurchase); }
-  else if (tool === 'boost_request') { warnThenRunPremiumTool(function(){ openBoost(); boostTab('mine'); }); }
-  else if (tool === 'boost_help')    { warnThenRunPremiumTool(function(){ openBoost(); boostTab('browse'); }); }
-}
-window._installRotatorGoToTool = _installRotatorGoToTool;
+  _installTopIdx = (_installTopIdx + 1) % _installTopPhrases.length;
+  var txt = _installTopPhrases[_installTopIdx];
+  var els = [document.getElementById('plans-top-install-rotator'), document.getElementById('air-top-install-rotator')];
+  for (var i = 0; i < els.length; i++) { if (els[i]) els[i].textContent = txt; }
+}, 5000);
 
 /* ── PREMIUM TOOL WARNING GATE ─────────────────────────────────
    Every premium tool card routes through this first. Shown every time
