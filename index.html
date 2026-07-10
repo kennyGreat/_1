@@ -1137,6 +1137,12 @@ button.tab,button.plan-chip{box-shadow:none!important;}
           <div style="font-size:.96rem;font-weight:900;color:#fff;letter-spacing:.01em;">Premium Tools</div>
         </button>
       </div>
+
+      <button type="button" id="home-mkt-tool-showcase" onclick="_stickyToolRotatorGo()" style="display:block;width:100%;text-align:left;border:none;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-top:14px;padding:0;">
+        <div class="hero-bal-card" style="margin-bottom:0;">
+          <div id="home-mkt-tool-showcase-text" style="color:#fff;font-size:1.05rem;font-weight:800;line-height:1.4;">Pledge data or airtime to a goal. It unlocks in steps as you hit milestones.</div>
+        </div>
+      </button>
     </div>
 
     <!-- ── LEGACY HOME CONTENT — hidden for now, Great will say where each piece goes next ── -->
@@ -1273,73 +1279,73 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <!-- Goal Lock entry (Premium market only) -->
       <div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;gap:12px;margin-bottom:4px;">
 
-      <button type="button" id="study-lock-card" onclick="warnThenRunPremiumTool(openStudyLock)" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#7c3aed,#5b21b6);background:linear-gradient(135deg,#7c3aed,#5b21b6);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(124,58,237,.28);color:#fff;">
+      <button type="button" id="study-lock-card" onclick="openStudyLock()" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#7c3aed,#5b21b6);background:linear-gradient(135deg,#7c3aed,#5b21b6);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(124,58,237,.28);color:#fff;">
         <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#127919;</div>
         <div style="font-size:.88rem;font-weight:900;margin-bottom:3px;">Goal Lock</div>
         <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Pledge data or airtime to a goal. It unlocks in steps as you hit milestones.</div>
       </button>
 
-      <button type="button" id="boost-card" onclick="warnThenRunPremiumTool(openBoost)" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#db2777,#9d174d);background:linear-gradient(135deg,#db2777,#9d174d);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(219,39,119,.28);color:#fff;">
+      <button type="button" id="boost-card" onclick="openBoost()" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#db2777,#9d174d);background:linear-gradient(135deg,#db2777,#9d174d);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(219,39,119,.28);color:#fff;">
         <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#128156;</div>
         <div style="font-size:.88rem;font-weight:900;margin-bottom:3px;">Sponsored Boost</div>
         <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Let a trusted person help complete your plan, or help someone else.</div>
       </button>
 
-      <button type="button" id="gift-card" onclick="warnThenRunPremiumTool(openGift)" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#f59e0b,#92400e);background:linear-gradient(135deg,#f59e0b,#92400e);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(245,158,11,.28);color:#fff;">
+      <button type="button" id="gift-card" onclick="openGift()" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#f59e0b,#92400e);background:linear-gradient(135deg,#f59e0b,#92400e);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(245,158,11,.28);color:#fff;">
         <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#127873;</div>
         <div style="font-size:.88rem;font-weight:900;margin-bottom:3px;">Gift with Strings</div>
         <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Gift data or airtime that unlocks on a date or after an action.</div>
       </button>
 
-      <button type="button" id="autopay-card" onclick="warnThenRunPremiumTool(openAutoPaySetup)" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#0f766e,#0b3d2e);background:linear-gradient(135deg,#0f766e,#0b3d2e);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(15,118,110,.28);color:#fff;">
+      <button type="button" id="autopay-card" onclick="openAutoPaySetup()" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#0f766e,#0b3d2e);background:linear-gradient(135deg,#0f766e,#0b3d2e);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(15,118,110,.28);color:#fff;">
         <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#128179;</div>
         <div style="font-size:.88rem;font-weight:900;margin-bottom:3px;">Auto-Pay</div>
         <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Let the system pay your installments from your wallet, whenever and however you want.</div>
       </button>
 
-      <button type="button" id="autorenew-card" onclick="warnThenRunPremiumTool(openAutoRenewSetup)" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#4f46e5,#3730a3);background:linear-gradient(135deg,#4f46e5,#3730a3);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(79,70,229,.28);color:#fff;">
+      <button type="button" id="autorenew-card" onclick="openAutoRenewSetup()" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#4f46e5,#3730a3);background:linear-gradient(135deg,#4f46e5,#3730a3);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(79,70,229,.28);color:#fff;">
         <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#128260;</div>
         <div style="font-size:.88rem;font-weight:900;margin-bottom:3px;">Auto-Renew</div>
         <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Repeat the plans you love &mdash; they restart automatically when they finish.</div>
       </button>
 
-      <button type="button" id="autopurchase-card" onclick="warnThenRunPremiumTool(openAutoPayRecur)" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#ea580c,#9a3412);background:linear-gradient(135deg,#ea580c,#9a3412);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(234,88,12,.28);color:#fff;">
+      <button type="button" id="autopurchase-card" onclick="openAutoPayRecur()" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#ea580c,#9a3412);background:linear-gradient(135deg,#ea580c,#9a3412);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(234,88,12,.28);color:#fff;">
         <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#128722;</div>
         <div style="font-size:.88rem;font-weight:900;margin-bottom:3px;">Auto Purchase</div>
         <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Set an amount and how often &mdash; we buy the best plan and send it automatically.</div>
       </button>
 
-      <button type="button" id="benefits-card" onclick="warnThenRunPremiumTool(openPremiumBenefits)" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#16a34a,#15803d);background:linear-gradient(135deg,#16a34a,#15803d);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(22,163,74,.28);color:#fff;">
+      <button type="button" id="benefits-card" onclick="openPremiumBenefits()" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#16a34a,#15803d);background:linear-gradient(135deg,#16a34a,#15803d);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(22,163,74,.28);color:#fff;">
         <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#128176;</div>
         <div style="font-size:.88rem;font-weight:900;margin-bottom:3px;">Installments &amp; Rewards</div>
         <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Pay big plans in small bits, earn 1% per installment, unlock up to 10% off.</div>
       </button>
 
-      <button type="button" id="coach-card" onclick="warnThenRunPremiumTool(openCoach)" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#2563eb,#1d4ed8);background:linear-gradient(135deg,#2563eb,#1d4ed8);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(37,99,235,.28);color:#fff;">
+      <button type="button" id="coach-card" onclick="openCoach()" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#2563eb,#1d4ed8);background:linear-gradient(135deg,#2563eb,#1d4ed8);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(37,99,235,.28);color:#fff;">
         <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#129504;</div>
         <div style="font-size:.88rem;font-weight:900;margin-bottom:3px;">Coach</div>
         <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Your daily nudge &mdash; straight talk on what to do next to stay on track.</div>
       </button>
 
-      <button type="button" id="reporter-card" onclick="warnThenRunPremiumTool(openReporter)" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#8b5cf6,#6d28d9);background:linear-gradient(135deg,#8b5cf6,#6d28d9);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(139,92,246,.28);color:#fff;">
+      <button type="button" id="reporter-card" onclick="openReporter()" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#8b5cf6,#6d28d9);background:linear-gradient(135deg,#8b5cf6,#6d28d9);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(139,92,246,.28);color:#fff;">
         <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#128202;</div>
         <div style="font-size:.88rem;font-weight:900;margin-bottom:3px;">Reporter</div>
         <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Your numbers at a glance &mdash; funding, streaks, plans and rewards.</div>
       </button>
 
-      <button type="button" id="share-card" onclick="warnThenRunPremiumTool(openTransferModal)" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#14b8a6,#0f766e);background:linear-gradient(135deg,#14b8a6,#0f766e);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(20,184,166,.28);color:#fff;">
+      <button type="button" id="share-card" onclick="openTransferModal()" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#14b8a6,#0f766e);background:linear-gradient(135deg,#14b8a6,#0f766e);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(20,184,166,.28);color:#fff;">
         <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#128184;</div>
         <div style="font-size:.88rem;font-weight:900;margin-bottom:3px;">Share</div>
         <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Send money straight to a DataBulge friend's wallet, instantly.</div>
       </button>
 
-      <button type="button" id="copurchase-card" onclick="warnThenRunPremiumTool(openCoPurchase)" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#d97706,#92400e);background:linear-gradient(135deg,#d97706,#92400e);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(217,119,6,.28);color:#fff;">
+      <button type="button" id="copurchase-card" onclick="openCoPurchase()" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#d97706,#92400e);background:linear-gradient(135deg,#d97706,#92400e);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(217,119,6,.28);color:#fff;">
         <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#129309;</div>
         <div style="font-size:.88rem;font-weight:900;margin-bottom:3px;">Co-Purchase</div>
         <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Team up with other users to jointly fund a plan and split it by contribution.</div>
       </button>
 
-      <button type="button" id="magic-shopper-card" onclick="warnThenRunPremiumTool(openMagicShopper)" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#a855f7,#6d28d9);background:linear-gradient(135deg,#a855f7,#6d28d9);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(168,85,247,.28);color:#fff;">
+      <button type="button" id="magic-shopper-card" onclick="openMagicShopper()" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#a855f7,#6d28d9);background:linear-gradient(135deg,#a855f7,#6d28d9);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(168,85,247,.28);color:#fff;">
         <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#129497;</div>
         <div style="font-size:.88rem;font-weight:900;margin-bottom:3px;">Magic Shopper</div>
         <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">We hunt for the cheapest plan in your budget &mdash; you never see which one.</div>
@@ -2176,24 +2182,6 @@ button.tab,button.plan-chip{box-shadow:none!important;}
   </div>
 </div>
 
-<!-- PREMIUM TOOL WARNING / CONSENT MODAL -->
-<div class="modal" id="m-premium-warn">
-  <div class="modal-box">
-    <div class="modal-hdr">
-      <div class="modal-title">Premium Tool Notice</div>
-      <button class="modal-x" onclick="closeModal('m-premium-warn')">&#215;</button>
-    </div>
-    <div class="modal-body">
-      <div style="font-size:.86rem;color:#333;line-height:1.7;margin-bottom:16px;">
-        Premium tools are for Premium Market users. If your next plan is not a Premium (installment) plan, that purchase will be charged the same surge as Premium pricing.
-      </div>
-      <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;">
-        <button class="btn btn-lite" onclick="closeModal('m-premium-warn')" style="flex:1;margin:0;">Cancel</button>
-        <button class="btn btn-blue" onclick="_premiumWarnAgree()" style="flex:1;margin:0;">I Agree, Continue</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- CO-PURCHASE MODAL -->
 <div class="modal" id="m-copurchase">
@@ -2269,7 +2257,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
 
       <div class="field" style="margin-bottom:12px;">
         <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Network</label>
-        <select id="m-magic-network" onchange="magicBudgetPreview()" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;-webkit-appearance:none;appearance:none;">
+        <select id="m-magic-network" onchange="magicLoadOptions()" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;-webkit-appearance:none;appearance:none;">
           <option value="">&mdash; Select network &mdash;</option>
           <option value="MTN">MTN</option>
           <option value="AIRTEL">Airtel</option>
@@ -2278,10 +2266,25 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         </select>
       </div>
 
+      <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:10px;margin-bottom:12px;">
+        <div class="field" style="-webkit-box-flex:1;-webkit-flex:1;flex:1;margin-bottom:0;">
+          <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Size <span style="font-weight:400;color:#999;">(optional)</span></label>
+          <select id="m-magic-size" onchange="magicBudgetPreview()" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.9rem;color:#111;outline:none;-webkit-appearance:none;appearance:none;">
+            <option value="">Any size</option>
+          </select>
+        </div>
+        <div class="field" style="-webkit-box-flex:1;-webkit-flex:1;flex:1;margin-bottom:0;">
+          <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Validity <span style="font-weight:400;color:#999;">(optional)</span></label>
+          <select id="m-magic-validity" onchange="magicBudgetPreview()" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.9rem;color:#111;outline:none;-webkit-appearance:none;appearance:none;">
+            <option value="">Any validity</option>
+          </select>
+        </div>
+      </div>
+
       <div class="field" style="margin-bottom:12px;">
         <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Budget per purchase (&#8358;)</label>
         <input id="m-magic-budget" type="number" placeholder="e.g. 500" min="50" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;-webkit-appearance:none;" oninput="magicBudgetPreview()">
-        <div style="font-size:.72rem;color:#888;margin-top:5px;">We&rsquo;ll buy the cheapest plan on this network at or under this amount, from any market.</div>
+        <div style="font-size:.72rem;color:#888;margin-top:5px;">We&rsquo;ll match your size/validity choices (if set) and find the cheapest option at or under this amount.</div>
         <div id="m-magic-breakdown" style="display:none;margin-top:9px;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:10px;padding:12px 13px;">
           <div id="m-magic-match-info" style="font-size:.85rem;color:#4c1d95;line-height:1.6;margin-bottom:9px;"></div>
           <button class="btn btn-blue" id="m-magic-buy-now" onclick="magicBuyNow()" style="margin:0;width:100%;background:#6d28d9;font-size:.85rem;">Buy This Now</button>
@@ -5227,8 +5230,25 @@ window.clearPlanSearch  = clearPlanSearch;
 
 var _gSubsCache = [];   // most recent loadSubs result — used by openSubModal for progress context
 
+var gBoostedSubIds = {};
+function refreshBoostedSubIds(cb) {
+  rpc('list_my_boost_requests', {}, function(err, res) {
+    var rows = (res && (res.data !== undefined ? res.data : res)) || [];
+    gBoostedSubIds = {};
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i].status === 'open' || rows[i].status === 'funded') gBoostedSubIds[rows[i].subscription_id] = true;
+    }
+    if (cb) cb();
+  });
+}
+window.refreshBoostedSubIds = refreshBoostedSubIds;
+
 function loadSubs() {
   try { renderBucketSection(); } catch(e) {}
+  refreshBoostedSubIds(function() {
+    var w = $('subs-list');
+    if (w && _gSubsCache && _gSubsCache.length) w.innerHTML = renderSubsList(_gSubsCache, false);
+  });
   ensureToken(function(err) {
     if (err) return;
     restGet('/subscriptions',
@@ -5404,7 +5424,8 @@ function renderSubsList(subs, compact) {
     } else if ((isActive || isPending) && remaining > 0) {
       html += '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:7px;margin-top:4px;">' +
         '<button class="pay-btn" style="flex:1;" onclick="openPayModal(\'' + esc(s.id) + '\',' + (dailyPrice||0) + ',' + remaining + ',' + (s._isAirtime ? 'true' : 'false') + ')">Pay Now</button>' +
-        ((parseInt(s.payment_days) > 1 || s._isAirtime) ? '<button style="padding:8px 12px;background:#fdf2f8;border:1.5px solid #fbcfe8;color:#db2777;border-radius:6px;font-size:.78rem;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="requestBoostForSub(\'' + esc(s.id) + '\',' + remaining + ',\'' + esc(displayName + ' ' + displayNetwork) + '\')">Ask for a boost</button>' : '') +
+        (gBoostedSubIds[s.id] ? '<span style="padding:8px 12px;background:#f0fdf4;border:1.5px solid #bbf7d0;color:#15803d;border-radius:6px;font-size:.78rem;font-weight:800;white-space:nowrap;display:-webkit-inline-box;display:inline-flex;-webkit-box-align:center;align-items:center;gap:4px;">&#128994; Boosting</span>' :
+        ((parseInt(s.payment_days) > 1 || s._isAirtime) ? '<button style="padding:8px 12px;background:#fdf2f8;border:1.5px solid #fbcfe8;color:#db2777;border-radius:6px;font-size:.78rem;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="requestBoostForSub(\'' + esc(s.id) + '\',' + remaining + ',\'' + esc(displayName + ' ' + displayNetwork) + '\')">Ask for a boost</button>' : '')) +
         (s._isAirtime ? '' : '<button style="padding:8px 12px;background:#fff;border:1.5px solid #2A3FA3;color:#2A3FA3;border-radius:6px;font-size:.78rem;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="openUpgradeModal(\'' + esc(s.id) + '\')" ontouchstart="">Upgrade</button>') +
         /* Report Issue button hidden per product decision — keep markup & handler for easy re-enable */
         '<button style="display:none;padding:8px 10px;background:#fff;border:1px solid #e5e7eb;color:#374151;border-radius:6px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="openRefundModal(\'' + esc(s.id) + '\',\'' + esc(displayName + ' ' + displayNetwork) + '\',\'' + esc(s.phone_number || '') + '\')">&#9888; Report Issue</button>' +
@@ -8323,7 +8344,7 @@ html,body{background:radial-gradient(circle at top left,#EEF6FF 0,#F6F8FC 34%,#F
 .friend-sticky-inner button{border:0;border-radius:16px;padding:12px 12px;font-size:.82rem;font-weight:950;font-family:Arial,Helvetica,sans-serif;-webkit-box-flex:1;-webkit-flex:1;flex:1;}
 .friend-sticky-inner .fund{background:linear-gradient(135deg,#0f5132,#2F7D49);color:#fff;}
 .friend-sticky-inner .plans{background:#EFF4FF;color:#1A56DB;}
-#sticky-tool-rotator-text{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font-size:.66rem;font-weight:800;line-height:1.25;}
+
 body.friend-show-sticky .friend-sticky-cta{display:block;}
 @-webkit-keyframes friendFloat{0%,100%{-webkit-transform:translateY(0)}50%{-webkit-transform:translateY(-4px)}}
 @keyframes friendFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
@@ -9407,13 +9428,13 @@ window.friendDailyAction = friendDailyAction;
    giving you a straight-talking tip for today, with a one-tap
    action button instead of a passive banner. */
 
-/* ── Sticky bar tool rotator ─────────────────────────────────
-   Sits next to the permanent "Fund account" button. Cycles every 10s
-   through each Premium tool's own description exactly as written on its
-   card (no rewording), and opens that specific tool's modal on tap —
-   whichever one is showing at the moment you tap it. Share is excluded
-   (retired as a tool). Runs through the same warning gate every tool card
-   uses. */
+/* ── Home "Premium Tool of the Moment" rotator ─────────────────
+   Lives in the duplicated blue balance-style card under the Premium Tools
+   button on Home. Cycles every 10s through each Premium tool's own
+   description exactly as written on its card (no rewording), and opens
+   that specific tool's modal on tap — whichever one is showing at the
+   moment you tap it. Share is excluded (retired as a tool). Runs through
+   the same warning gate every tool card uses. */
 var _stickyToolRotatorList = [
   { text: 'Pledge data or airtime to a goal. It unlocks in steps as you hit milestones.', fn: function(){ openStudyLock(); } },
   { text: 'Let a trusted person help complete your plan, or help someone else.', fn: function(){ openBoost(); } },
@@ -9430,7 +9451,7 @@ var _stickyToolRotatorList = [
 var _stickyToolRotatorIdx = 0;
 setInterval(function(){
   if (typeof document.hidden !== 'undefined' && document.hidden) return;
-  var el = document.getElementById('sticky-tool-rotator-text');
+  var el = document.getElementById('home-mkt-tool-showcase-text');
   if (!el) return;
   _stickyToolRotatorIdx = (_stickyToolRotatorIdx + 1) % _stickyToolRotatorList.length;
   el.textContent = _stickyToolRotatorList[_stickyToolRotatorIdx].text;
@@ -9439,31 +9460,9 @@ setInterval(function(){
 function _stickyToolRotatorGo() {
   var item = _stickyToolRotatorList[_stickyToolRotatorIdx];
   if (!item) return;
-  if (typeof warnThenRunPremiumTool === 'function') warnThenRunPremiumTool(item.fn);
-  else item.fn();
+  item.fn();
 }
 window._stickyToolRotatorGo = _stickyToolRotatorGo;
-
-/* ── PREMIUM TOOL WARNING GATE ─────────────────────────────────
-   Every premium tool card routes through this first. Shown every time
-   (not just once) per the product rule: using a premium tool means if
-   your NEXT plan isn't a Premium plan, that General Market purchase
-   gets charged the Premium surge. Only proceeds to the actual tool if
-   the user taps "I Agree, Continue". */
-var _premiumWarnAction = null;
-function warnThenRunPremiumTool(actionFn) {
-  _premiumWarnAction = actionFn;
-  openModal('m-premium-warn');
-}
-window.warnThenRunPremiumTool = warnThenRunPremiumTool;
-
-function _premiumWarnAgree() {
-  closeModal('m-premium-warn');
-  var fn = _premiumWarnAction;
-  _premiumWarnAction = null;
-  if (fn) fn();
-}
-window._premiumWarnAgree = _premiumWarnAgree;
 
 function openCoach() {
   openModal('m-coach');
@@ -10306,9 +10305,11 @@ window.aprSetStatus = aprSetStatus;
 
 function openMagicShopper() {
   gMagicMatch = null;
-  if ($('m-magic-phone'))   $('m-magic-phone').value = '';
-  if ($('m-magic-network')) $('m-magic-network').value = '';
-  if ($('m-magic-budget'))  $('m-magic-budget').value = '';
+  if ($('m-magic-phone'))    $('m-magic-phone').value = '';
+  if ($('m-magic-network'))  $('m-magic-network').value = '';
+  if ($('m-magic-size'))     $('m-magic-size').innerHTML = '<option value="">Any size</option>';
+  if ($('m-magic-validity')) $('m-magic-validity').innerHTML = '<option value="">Any validity</option>';
+  if ($('m-magic-budget'))   $('m-magic-budget').value = '';
   if ($('m-magic-breakdown')) $('m-magic-breakdown').style.display = 'none';
   errHide('m-magic-err');
   openModal('m-magic');
@@ -10338,6 +10339,32 @@ function magicPickContact() {
 }
 window.magicPickContact = magicPickContact;
 
+/* Loads the REAL sizes/validities available on General Market for the chosen
+   network, so Size/Validity are genuine choices, not guesses. */
+function magicLoadOptions() {
+  var network = $('m-magic-network') ? $('m-magic-network').value : '';
+  var sizeSel = $('m-magic-size'), valSel = $('m-magic-validity');
+  if (sizeSel) sizeSel.innerHTML = '<option value="">Any size</option>';
+  if (valSel)  valSel.innerHTML  = '<option value="">Any validity</option>';
+  magicBudgetPreview();
+  if (!network) return;
+  rpc('list_magic_shopper_options', { p_network: network }, function(err, res) {
+    var d = res && (res.data !== undefined ? res.data : res);
+    if (err || !d) return;
+    if (sizeSel && d.sizes) {
+      var sh = '<option value="">Any size</option>';
+      for (var i = 0; i < d.sizes.length; i++) sh += '<option value="' + esc(d.sizes[i]) + '">' + esc(d.sizes[i]) + '</option>';
+      sizeSel.innerHTML = sh;
+    }
+    if (valSel && d.validities) {
+      var vh = '<option value="">Any validity</option>';
+      for (var j = 0; j < d.validities.length; j++) vh += '<option value="' + d.validities[j] + '">' + d.validities[j] + ' days</option>';
+      valSel.innerHTML = vh;
+    }
+  });
+}
+window.magicLoadOptions = magicLoadOptions;
+
 /* Shows the ACTUAL cheapest matching plan once network + budget are entered —
    a real plan (data size, network, validity) with ONE combined price (5% fee
    already included, never shown separately) — and lets the user buy it right
@@ -10349,22 +10376,25 @@ function magicBudgetPreview() {
   if (!box || !info) return;
   var budget = parseFloat($('m-magic-budget') ? $('m-magic-budget').value : '0') || 0;
   var network = $('m-magic-network') ? $('m-magic-network').value : '';
+  var size = $('m-magic-size') ? $('m-magic-size').value : '';
+  var validity = $('m-magic-validity') && $('m-magic-validity').value ? parseInt($('m-magic-validity').value, 10) : null;
   if (budget < 50 || !network) { box.style.display = 'none'; gMagicMatch = null; return; }
   var seq = ++_magicPreviewSeq;
   info.textContent = 'Looking for a plan cheaper than Premium Market\u2026';
   box.style.display = '';
   if ($('m-magic-buy-now')) $('m-magic-buy-now').style.display = 'none';
-  rpc('preview_magic_shopper_match', { p_network: network, p_budget_amount: budget }, function(err, res) {
+  rpc('preview_magic_shopper_match', { p_network: network, p_budget_amount: budget, p_data_size: size || null, p_validity_days: validity }, function(err, res) {
     if (seq !== _magicPreviewSeq) return; // a newer input arrived, ignore this stale response
     var d = res && (res.data !== undefined ? res.data : res);
     if (err || !d || !d.found) {
       gMagicMatch = null;
-      info.textContent = (d && d.error) || ('No plan cheaper than Premium Market found for ' + network + ' at or under ' + fmtN(budget) + '.');
+      info.textContent = (d && d.error) || ('No plan cheaper than Premium Market found for ' + network + ' matching those filters.');
       if ($('m-magic-buy-now')) $('m-magic-buy-now').style.display = 'none';
       return;
     }
     gMagicMatch = { network: d.network, phone: null, budget: budget };
-    info.innerHTML = '<b>' + esc(d.data_size) + ' ' + esc(d.network) + '</b>' + (d.validity_days ? ' \u00b7 ' + d.validity_days + ' days' : '') +
+    info.innerHTML = (d.exact === false ? '<div style="font-size:.7rem;font-weight:800;color:#b45309;background:#fffbeb;border:1px solid #fde68a;border-radius:6px;padding:4px 8px;display:inline-block;margin-bottom:6px;">Closest match \u2014 exact filters not available</div><br>' : '') +
+      '<b>' + esc(d.data_size) + ' ' + esc(d.network) + '</b>' + (d.validity_days ? ' \u00b7 ' + d.validity_days + ' days' : '') +
       '<div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;justify-content:space-between;margin-top:6px;"><span>Plan price</span><strong>' + fmtN(d.price) + '</strong></div>' +
       '<div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;justify-content:space-between;margin-top:2px;"><span>Service fee (5%)</span><strong>' + fmtN(d.fee) + '</strong></div>' +
       '<div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;justify-content:space-between;margin-top:5px;padding-top:5px;border-top:1px solid #ddd6fe;font-weight:900;"><span>Total</span><strong>' + fmtN(d.total) + '</strong></div>';
@@ -10378,11 +10408,13 @@ function magicBuyNow() {
   var phone = ($('m-magic-phone') ? $('m-magic-phone').value : '').replace(/^\s+|\s+$/g, '');
   var network = $('m-magic-network') ? $('m-magic-network').value : '';
   var budget = parseFloat($('m-magic-budget') ? $('m-magic-budget').value : '0') || 0;
+  var size = $('m-magic-size') ? $('m-magic-size').value : '';
+  var validity = $('m-magic-validity') && $('m-magic-validity').value ? parseInt($('m-magic-validity').value, 10) : null;
   errHide('m-magic-err');
   if (!phone)   { errShow('m-magic-err', 'Please enter a phone number.'); return; }
   if (!network || budget < 50 || !gMagicMatch) { errShow('m-magic-err', 'Pick a network and budget first.'); return; }
   btnLoad('m-magic-buy-now', true, 'Buying\u2026');
-  rpc('buy_magic_shopper_now', { p_network: network, p_phone_number: phone, p_budget_amount: budget }, function(err, res) {
+  rpc('buy_magic_shopper_now', { p_network: network, p_phone_number: phone, p_budget_amount: budget, p_data_size: size || null, p_validity_days: validity }, function(err, res) {
     btnLoad('m-magic-buy-now', false, 'Buy This Now');
     var d = res && (res.data !== undefined ? res.data : res);
     if (err || !d || d.success === false) { errShow('m-magic-err', (d && d.error) || 'Could not complete this purchase.'); return; }
@@ -11389,7 +11421,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
     if(byId('friend-sticky-cta')) return;
     var d=document.createElement('div');
     d.className='friend-sticky-cta'; d.id='friend-sticky-cta';
-    d.innerHTML='<div class="friend-sticky-inner"><button class="fund" onclick="openFundModal()">\uD83D\uDC9A Fund account</button><button class="plans" id="sticky-tool-rotator-btn" onclick="_stickyToolRotatorGo()"><span id="sticky-tool-rotator-text">Pledge data or airtime to a goal. It unlocks in steps as you hit milestones.</span></button></div>';
+    d.innerHTML='<div class="friend-sticky-inner"><button class="fund" onclick="openFundModal()">\uD83D\uDC9A Fund account</button></div>';
     document.body.appendChild(d);
     document.body.className += ' friend-show-sticky';
   }
