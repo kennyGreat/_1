@@ -519,11 +519,11 @@ html,body{background:var(--db-bg)!important;color:var(--db-text)!important;}
 @-webkit-keyframes pinShake{0%,100%{-webkit-transform:translateX(0);}20%,60%{-webkit-transform:translateX(-8px);}40%,80%{-webkit-transform:translateX(8px);}}
 @keyframes pinShake{0%,100%{transform:translateX(0);}20%,60%{transform:translateX(-8px);}40%,80%{transform:translateX(8px);}}
 .pin-hidden-input{position:absolute;opacity:0;height:1px;width:1px;pointer-events:none;}
-.pin-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:6px 8px;margin:22px auto 4px;max-width:330px;}
-.pin-key{height:62px;border:none;border-radius:18px;background:transparent;font-size:1.7rem;font-weight:800;color:#0f172a;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;-webkit-transition:background .12s,transform .08s;transition:background .12s,transform .08s;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;}
-.pin-key:active{background:#eef2ff;-webkit-transform:scale(.92);transform:scale(.92);}
+.pin-keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:4px 10px;margin:16px auto 4px;max-width:270px;}
+.pin-key{height:48px;width:48px;margin:0 auto;border:none;border-radius:50%;background:#fff;font-size:1.25rem;font-weight:600;color:#1a1a1a;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;-webkit-transition:background .12s,transform .08s;transition:background .12s,transform .08s;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;}
+.pin-key:active{background:#f0f1f3;-webkit-transform:scale(.92);transform:scale(.92);}
 .pin-key.blank{background:transparent;cursor:default;}
-.pin-key.act{color:#1A56DB;font-size:1.5rem;font-weight:800;}
+.pin-key.act{color:#1A56DB;font-size:1.1rem;font-weight:600;background:transparent;}
 .pin-forgot{display:block;width:100%;text-align:center;margin-top:16px;background:none;border:none;color:#1A56DB;font-size:.84rem;font-weight:800;cursor:pointer;font-family:inherit;}
 .pin-close-x{position:absolute;top:14px;right:18px;background:none;border:none;font-size:1.7rem;color:#94a3b8;cursor:pointer;line-height:1;z-index:2;}
 .sec-row{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;padding:14px 0;border-bottom:1px solid #eef1f6;}
@@ -2189,6 +2189,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <button class="modal-x" onclick="closeModal('m-reporter')">&#215;</button>
     </div>
     <div class="modal-body">
+      <div style="margin-bottom:14px;font-size:.74rem;color:#7c3aed;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:8px 10px;">A small 0.25% fee is added to your next plan purchase for using Reporter.</div>
       <div id="reporter-body"></div>
     </div>
   </div>
@@ -4028,6 +4029,13 @@ function loadWalletBalance(cb) {
         }
         if ($('d-va')) $('d-va').textContent = va;
         if ($('d-va-dash')) $('d-va-dash').textContent = va;
+        // Update Home's balance display and any other mirrors — this is the
+        // main startup fetch, so this must not depend on a realtime event
+        // firing later to actually show the real balance.
+        var _mirrors = document.querySelectorAll ? document.querySelectorAll('[data-wallet-balance]') : [];
+        for (var _mi = 0; _mi < _mirrors.length; _mi++) {
+          if (_mirrors[_mi].id !== 'd-bal-dash') { _mirrors[_mi].textContent = balStr; }
+        }
         if (typeof gRetention !== 'undefined' && gRetention) { try { renderDynamicStrip(); } catch(e){} }
         updateWalletLabel();
       }
@@ -4679,7 +4687,7 @@ function goToMarketPlansFromHome() {
   var wb = document.getElementById('market-welcome');
   if (wb) wb.style.display = 'none';
   if (m === 'installment') {
-    ['study-lock-card','boost-card','gift-card','autopay-card','autorenew-card','autopurchase-card','benefits-card','coach-card','reporter-card','share-card','copurchase-card','magic-shopper-card'].forEach(function(id){
+    ['study-lock-card','boost-card','gift-card','autopay-card','autorenew-card','autopurchase-card','benefits-card','coach-card','reporter-card','copurchase-card','magic-shopper-card'].forEach(function(id){
       var c = document.getElementById(id);
       if (c) c.style.display = 'none';
     });
@@ -4744,14 +4752,31 @@ function marketDisplayPrice(plan) {
    if you have an active Premium plan, buying from General Market charges
    the same 3% Premium surge instead of General's normal 0% (enforced on
    the backend in enforce_plan_markup — this is just an accurate preview). */
-var gPremiumActive = null; // null = not checked yet
-function refreshPremiumActive(cb) {
+var gPremiumActive = (function(){
+  try { var c = localStorage.getItem('db_premium_active'); if (c !== null) return c === '1'; } catch(_) {}
+  return null; // null = not checked yet, no cache available
+})();
+function refreshPremiumActive(cb, _isRetry) {
   if (!gUser) { gPremiumActive = false; if (cb) cb(false); return; }
   ensureToken(function(err) {
-    if (err) { if (cb) cb(gPremiumActive); return; }
+    if (err) {
+      // Session/network hiccup — do NOT conclude "not active" and hide the
+      // tools. Keep whatever we last knew (cached or current) and retry once.
+      if (!_isRetry) setTimeout(function(){ refreshPremiumActive(cb, true); }, 3000);
+      else if (cb) cb(gPremiumActive);
+      return;
+    }
     rpc('user_is_premium_active', '{}', function(e, r) {
-      var active = !!(r && r.ok && r.data === true);
+      if (e || !r || r.ok === false) {
+        // Request failed outright — same rule: don't overwrite a known/cached
+        // true with false just because this one call failed. Retry once.
+        if (!_isRetry) { setTimeout(function(){ refreshPremiumActive(cb, true); }, 3000); return; }
+        if (cb) cb(gPremiumActive);
+        return;
+      }
+      var active = !!(r && r.data === true);
       gPremiumActive = active;
+      try { localStorage.setItem('db_premium_active', active ? '1' : '0'); } catch(_) {}
       updatePremiumToolVisibility();
       if (cb) cb(active);
     });
@@ -4762,7 +4787,7 @@ window.refreshPremiumActive = refreshPremiumActive;
 var gShowPremiumTools = false; // only true while the actual Premium Tools page is showing
 function updatePremiumToolVisibility() {
   var eligible = gShowPremiumTools && (gMarket === 'installment') && gPremiumActive === true;
-  ['coach-card','reporter-card','share-card','copurchase-card','magic-shopper-card'].forEach(function(id){
+  ['coach-card','reporter-card','copurchase-card','magic-shopper-card'].forEach(function(id){
     var c = document.getElementById(id);
     if (c) c.style.display = eligible ? 'block' : 'none';
   });
@@ -9463,6 +9488,7 @@ window._premiumWarnAgree = _premiumWarnAgree;
 
 function openCoach() {
   openModal('m-coach');
+  try { rpc('mark_advisory_tool_used', {}, function(){}); } catch(_) {}
   var body = document.getElementById('coach-body');
   if (!body) return;
   var msg = (typeof _pickNugget === 'function') ? _pickNugget() : null;
@@ -9472,6 +9498,7 @@ function openCoach() {
   }
   var icon = msg.icon || '\uD83C\uDFAF';
   body.innerHTML =
+    '<div style="margin-bottom:14px;font-size:.74rem;color:#7c3aed;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:8px 10px;">A small 0.25% fee is added to your next plan purchase for using Coach.</div>' +
     '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:12px;-webkit-box-align:start;-webkit-align-items:flex-start;align-items:flex-start;margin-bottom:16px;">' +
       '<div style="width:42px;height:42px;border-radius:50%;background:#eff6ff;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;font-size:1.25rem;-webkit-flex-shrink:0;flex-shrink:0;">' + icon + '</div>' +
       '<div><div style="font-weight:900;color:#1d4ed8;margin-bottom:4px;">Coach says</div><div>' + esc(msg.text) + '</div></div>' +
@@ -9506,6 +9533,7 @@ function _reporterMovePieces() {
 }
 function openReporter() {
   openModal('m-reporter');
+  try { rpc('mark_advisory_tool_used', {}, function(){}); } catch(_) {}
   _reporterMovePieces();
   if (typeof loadRetentionData === 'function') loadRetentionData();
   if (typeof loadAutofundCard === 'function') loadAutofundCard();
@@ -11043,13 +11071,15 @@ window.boostCancel = boostCancel;
 
 // Called from a plan card when the user is short: creates a request for the remaining balance.
 function requestBoostForSub(subId, remaining, label) {
+  var estFee = Math.ceil(remaining * 0.01);
+  if (!confirm('Requesting a Sponsored Boost adds a 1% fee to your plan\u2019s remaining cost \u2014 ' + fmtN(remaining) + ' becomes ' + fmtN(remaining + estFee) + '. Continue?')) return;
   rpc('create_boost_request', {
     p_subscription_id: subId, p_amount_needed: remaining,
     p_kind: 'installment', p_note: null, p_visibility: 'broadcast', p_targets: null
   }, function(err, res) {
     var d = res && (res.data !== undefined ? res.data : res);
     if (err || !d || d.success === false) { toast((d && d.error) || 'Could not create request.'); return; }
-    toast('Boost request posted! Sponsors on DataBulge can now help complete your ' + (label||'plan') + '.');
+    toast('Boost request posted for ' + fmtN(d.amount_needed) + '! Sponsors on DataBulge can now help complete your ' + (label||'plan') + '.');
     openBoost(); boostTab('mine');
   });
 }
