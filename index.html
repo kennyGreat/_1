@@ -1342,20 +1342,10 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <button type="button" id="magic-shopper-card" onclick="warnThenRunPremiumTool(openMagicShopper)" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#a855f7,#6d28d9);background:linear-gradient(135deg,#a855f7,#6d28d9);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(168,85,247,.28);color:#fff;">
         <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#129497;</div>
         <div style="font-size:.88rem;font-weight:900;margin-bottom:3px;">Magic Shopper</div>
-        <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">We hunt every market for the cheapest plan in your budget &mdash; you never see which one.</div>
+        <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">We hunt for the cheapest plan in your budget &mdash; you never see which one.</div>
       </button>
 
       </div>
-
-      <button type="button" id="plans-top-install-btn" onclick="goToPremiumToolsFromHome()" style="display:block;width:100%;text-align:left;border:none;border-radius:14px;padding:12px 14px;margin-bottom:12px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;">
-        <span style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:9px;">
-          <span style="font-size:1.3rem;line-height:1;">&#10024;</span>
-          <span style="min-width:0;">
-            <span style="display:block;font-size:.9rem;font-weight:900;color:#fff;">Activate Premium Tool</span>
-            <span id="plans-top-install-rotator" style="display:block;font-size:.72rem;color:rgba(255,255,255,.88);margin-top:2px;">To get someone to pay for your data</span>
-          </span>
-        </span>
-      </button>
 
       <div id="pay-toggle-card" style="display:none;"></div>
 
@@ -1381,15 +1371,6 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       </div>
 
       <div class="card" style="margin-bottom:12px;border-radius:18px;box-shadow:0 6px 18px rgba(15,23,42,.06);">
-        <button type="button" id="air-top-install-btn" onclick="goToPremiumToolsFromHome()" style="display:block;width:100%;text-align:left;border:none;border-radius:14px;padding:12px 14px;margin-bottom:14px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;">
-          <span style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:9px;">
-            <span style="font-size:1.3rem;line-height:1;">&#10024;</span>
-            <span style="min-width:0;">
-              <span style="display:block;font-size:.9rem;font-weight:900;color:#fff;">Activate Premium Tool</span>
-              <span id="air-top-install-rotator" style="display:block;font-size:.72rem;color:rgba(255,255,255,.88);margin-top:2px;">To get someone to pay for your data</span>
-            </span>
-          </span>
-        </button>
         <div class="field" style="margin-bottom:12px;">
           <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Network</label>
           <select id="air-network" style="display:block;width:100%;height:46px;border:1.5px solid #E1E5EF;border-radius:12px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;-webkit-appearance:none;appearance:none;" onchange="airAmountSuggest()">
@@ -2275,8 +2256,8 @@ button.tab,button.plan-chip{box-shadow:none!important;}
     </div>
     <div class="modal-body">
       <div style="margin-bottom:12px;border-radius:12px;padding:12px 14px;background:#f5f3ff;border:1px solid #c4b5fd;font-size:.8rem;color:#5b21b6;line-height:1.6;">
-        Give us your budget and we&rsquo;ll hunt every market for the cheapest matching plan &mdash; you never choose or see which market it came from.
-        <div style="margin-top:7px;padding-top:7px;border-top:1px solid #ddd6fe;font-weight:800;">&#9888;&#65039; A flat 5% service fee applies to every plan bought this way, shown separately from the plan cost below.</div>
+        Give us your budget and we&rsquo;ll hunt for the cheapest matching plan &mdash; you never choose or see which market it came from.
+        <div style="margin-top:7px;padding-top:7px;border-top:1px solid #ddd6fe;font-weight:800;">&#9888;&#65039; A flat 5% service fee applies to every plan bought this way.</div>
       </div>
       <div id="m-magic-err" class="err"></div>
 
@@ -2288,7 +2269,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
 
       <div class="field" style="margin-bottom:12px;">
         <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Network</label>
-        <select id="m-magic-network" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;-webkit-appearance:none;appearance:none;">
+        <select id="m-magic-network" onchange="magicBudgetPreview()" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;-webkit-appearance:none;appearance:none;">
           <option value="">&mdash; Select network &mdash;</option>
           <option value="MTN">MTN</option>
           <option value="AIRTEL">Airtel</option>
@@ -2301,21 +2282,11 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Budget per purchase (&#8358;)</label>
         <input id="m-magic-budget" type="number" placeholder="e.g. 500" min="50" style="display:block;width:100%;height:44px;border:1.5px solid #E1E5EF;border-radius:10px;background:#FBFCFF;padding:0 12px;font-size:.94rem;color:#111;outline:none;-webkit-appearance:none;" oninput="magicBudgetPreview()">
         <div style="font-size:.72rem;color:#888;margin-top:5px;">We&rsquo;ll buy the cheapest plan on this network at or under this amount, from any market.</div>
-        <div id="m-magic-breakdown" style="display:none;margin-top:9px;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:10px;padding:10px 12px;font-size:.8rem;color:#4c1d95;line-height:1.7;"></div>
-      </div>
-
-      <div class="field" style="margin-bottom:12px;">
-        <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">How often?</label>
-        <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;-webkit-flex-wrap:wrap;flex-wrap:wrap;">
-          <button class="btn btn-lite" id="m-magic-f-1"  onclick="magicSetFreq(1)"  style="margin:0;flex:1;min-width:64px;font-size:.8rem;">Daily</button>
-          <button class="btn btn-lite" id="m-magic-f-7"  onclick="magicSetFreq(7)"  style="margin:0;flex:1;min-width:64px;font-size:.8rem;">Weekly</button>
-          <button class="btn btn-blue" id="m-magic-f-30" onclick="magicSetFreq(30)" style="margin:0;flex:1;min-width:64px;font-size:.8rem;">Monthly</button>
+        <div id="m-magic-breakdown" style="display:none;margin-top:9px;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:10px;padding:12px 13px;">
+          <div id="m-magic-match-info" style="font-size:.85rem;color:#4c1d95;line-height:1.6;margin-bottom:9px;"></div>
+          <button class="btn btn-blue" id="m-magic-buy-now" onclick="magicBuyNow()" style="margin:0;width:100%;background:#6d28d9;font-size:.85rem;">Buy This Now</button>
         </div>
       </div>
-
-      <button class="btn btn-blue" id="m-magic-save" onclick="magicSave()" style="margin-top:2px;background:#6d28d9;">Turn on Magic Shopper</button>
-
-      <div id="m-magic-list" style="margin-top:16px;"></div>
     </div>
   </div>
 </div>
@@ -2376,7 +2347,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
 <div class="modal" id="m-upgrade">
   <div class="modal-card" style="max-width:420px;">
     <div class="modal-head">
-      <h3 style="margin:0;font-size:1.05rem;font-weight:900;color:#111;">\u2B06\uFE0F Upgrade Plan</h3>
+      <h3 style="margin:0;font-size:1.05rem;font-weight:900;color:#111;">Upgrade Plan</h3>
       <button class="modal-x" onclick="closeModal('m-upgrade')" ontouchstart="">&times;</button>
     </div>
     <div class="modal-body" id="upgrade-body">
@@ -5434,7 +5405,7 @@ function renderSubsList(subs, compact) {
       html += '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:7px;margin-top:4px;">' +
         '<button class="pay-btn" style="flex:1;" onclick="openPayModal(\'' + esc(s.id) + '\',' + (dailyPrice||0) + ',' + remaining + ',' + (s._isAirtime ? 'true' : 'false') + ')">Pay Now</button>' +
         ((parseInt(s.payment_days) > 1 || s._isAirtime) ? '<button style="padding:8px 12px;background:#fdf2f8;border:1.5px solid #fbcfe8;color:#db2777;border-radius:6px;font-size:.78rem;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="requestBoostForSub(\'' + esc(s.id) + '\',' + remaining + ',\'' + esc(displayName + ' ' + displayNetwork) + '\')">Ask for a boost</button>' : '') +
-        (s._isAirtime ? '' : '<button style="padding:8px 12px;background:#fff;border:1.5px solid #2A3FA3;color:#2A3FA3;border-radius:6px;font-size:.78rem;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="openUpgradeModal(\'' + esc(s.id) + '\')" ontouchstart="">\u2B06\uFE0F Upgrade</button>') +
+        (s._isAirtime ? '' : '<button style="padding:8px 12px;background:#fff;border:1.5px solid #2A3FA3;color:#2A3FA3;border-radius:6px;font-size:.78rem;font-weight:800;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="openUpgradeModal(\'' + esc(s.id) + '\')" ontouchstart="">Upgrade</button>') +
         /* Report Issue button hidden per product decision — keep markup & handler for easy re-enable */
         '<button style="display:none;padding:8px 10px;background:#fff;border:1px solid #e5e7eb;color:#374151;border-radius:6px;font-size:.78rem;font-weight:700;cursor:pointer;font-family:inherit;white-space:nowrap;" onclick="openRefundModal(\'' + esc(s.id) + '\',\'' + esc(displayName + ' ' + displayNetwork) + '\',\'' + esc(s.phone_number || '') + '\')">&#9888; Report Issue</button>' +
       '</div>';
@@ -8352,6 +8323,7 @@ html,body{background:radial-gradient(circle at top left,#EEF6FF 0,#F6F8FC 34%,#F
 .friend-sticky-inner button{border:0;border-radius:16px;padding:12px 12px;font-size:.82rem;font-weight:950;font-family:Arial,Helvetica,sans-serif;-webkit-box-flex:1;-webkit-flex:1;flex:1;}
 .friend-sticky-inner .fund{background:linear-gradient(135deg,#0f5132,#2F7D49);color:#fff;}
 .friend-sticky-inner .plans{background:#EFF4FF;color:#1A56DB;}
+#sticky-tool-rotator-text{display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;font-size:.66rem;font-weight:800;line-height:1.25;}
 body.friend-show-sticky .friend-sticky-cta{display:block;}
 @-webkit-keyframes friendFloat{0%,100%{-webkit-transform:translateY(0)}50%{-webkit-transform:translateY(-4px)}}
 @keyframes friendFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
@@ -8483,13 +8455,6 @@ html{scroll-padding-top:70px;}
 #home-market-dash #home-mkt-buyairtime-btn div,
 #home-market-dash #home-mkt-tools-btn div{font-size:15px!important;}
 .tab-back-btn span{font-size:1.15rem;line-height:1;}
-
-/* "Activate Premium Tool" — top-of-page fancy button on Buy Data and Airtime */
-#plans-top-install-btn,#air-top-install-btn{
-  background:-webkit-linear-gradient(135deg,#7c3aed,#5b21b6)!important;
-  background:linear-gradient(135deg,#7c3aed,#5b21b6)!important;
-  box-shadow:0 8px 18px rgba(124,58,237,.28)!important;
-}
 </style>
 
 <!-- NOTIFICATION TOAST CONTAINER (legacy - for simple toasts) -->
@@ -9442,28 +9407,42 @@ window.friendDailyAction = friendDailyAction;
    giving you a straight-talking tip for today, with a one-tap
    action button instead of a passive banner. */
 
-/* ── "Activate Premium Tool" rotating description ──────────────
-   Top-of-page fancy button on Buy Data and Airtime. Cycles the subtitle
-   every 5 seconds through different reasons to explore Premium tools.
-   Clicking always opens the full Premium Tools page so the user can browse
-   and pick whichever tool fits — the message is enticing copy, not a link
-   to one specific tool. */
-var _installTopPhrases = [
-  'To buy cheap data',
-  'To pay in installments',
-  'To achieve a goal',
-  'To buy data with others',
-  'To get someone to pay for your data',
-  'To help someone pay for their data'
+/* ── Sticky bar tool rotator ─────────────────────────────────
+   Sits next to the permanent "Fund account" button. Cycles every 10s
+   through each Premium tool's own description exactly as written on its
+   card (no rewording), and opens that specific tool's modal on tap —
+   whichever one is showing at the moment you tap it. Share is excluded
+   (retired as a tool). Runs through the same warning gate every tool card
+   uses. */
+var _stickyToolRotatorList = [
+  { text: 'Pledge data or airtime to a goal. It unlocks in steps as you hit milestones.', fn: function(){ openStudyLock(); } },
+  { text: 'Let a trusted person help complete your plan, or help someone else.', fn: function(){ openBoost(); } },
+  { text: 'Gift data or airtime that unlocks on a date or after an action.', fn: function(){ openGift(); } },
+  { text: 'Let the system pay your installments from your wallet, whenever and however you want.', fn: function(){ openAutoPaySetup(); } },
+  { text: 'Repeat the plans you love \u2014 they restart automatically when they finish.', fn: function(){ openAutoRenewSetup(); } },
+  { text: 'Set an amount and how often \u2014 we buy the best plan and send it automatically.', fn: function(){ openAutoPayRecur(); } },
+  { text: 'Pay big plans in small bits, earn 1% per installment, unlock up to 10% off.', fn: function(){ openPremiumBenefits(); } },
+  { text: 'Your daily nudge \u2014 straight talk on what to do next to stay on track.', fn: function(){ openCoach(); } },
+  { text: 'Your numbers at a glance \u2014 funding, streaks, plans and rewards.', fn: function(){ openReporter(); } },
+  { text: 'Team up with other users to jointly fund a plan and split it by contribution.', fn: function(){ openCoPurchase(); } },
+  { text: 'We hunt for the cheapest plan in your budget \u2014 you never see which one.', fn: function(){ openMagicShopper(); } }
 ];
-var _installTopIdx = 0;
+var _stickyToolRotatorIdx = 0;
 setInterval(function(){
   if (typeof document.hidden !== 'undefined' && document.hidden) return;
-  _installTopIdx = (_installTopIdx + 1) % _installTopPhrases.length;
-  var txt = _installTopPhrases[_installTopIdx];
-  var els = [document.getElementById('plans-top-install-rotator'), document.getElementById('air-top-install-rotator')];
-  for (var i = 0; i < els.length; i++) { if (els[i]) els[i].textContent = txt; }
-}, 5000);
+  var el = document.getElementById('sticky-tool-rotator-text');
+  if (!el) return;
+  _stickyToolRotatorIdx = (_stickyToolRotatorIdx + 1) % _stickyToolRotatorList.length;
+  el.textContent = _stickyToolRotatorList[_stickyToolRotatorIdx].text;
+}, 10000);
+
+function _stickyToolRotatorGo() {
+  var item = _stickyToolRotatorList[_stickyToolRotatorIdx];
+  if (!item) return;
+  if (typeof warnThenRunPremiumTool === 'function') warnThenRunPremiumTool(item.fn);
+  else item.fn();
+}
+window._stickyToolRotatorGo = _stickyToolRotatorGo;
 
 /* ── PREMIUM TOOL WARNING GATE ─────────────────────────────────
    Every premium tool card routes through this first. Shown every time
@@ -9693,7 +9672,7 @@ function copLoadMine() {
            delivered ? '<div style="font-size:.72rem;color:#1d4ed8;margin-top:6px;">Data has landed on ' + esc(r.sim_phone_number) + ' \u2014 waiting to be shared out to everyone.</div>' :
            (r.status === 'funded') ? '<div style="font-size:.72rem;color:#92400e;margin-top:6px;">Fully paid \u2014 delivery to ' + esc(r.sim_phone_number) + ' is in progress.</div>' : '') +
           (r.is_creator && delivered && !shared ? '<button onclick="copMarkShared(\'' + esc(r.id) + '\')" id="cop-share-btn-' + esc(r.id) + '" style="margin-top:9px;width:100%;padding:9px;border-radius:8px;border:none;background:#1A56DB;color:#fff;font-size:.8rem;font-weight:800;cursor:pointer;font-family:inherit;">I\u2019ve Shared The Data \u2014 Mark Done</button>' : '') +
-          (r.is_creator && r.status === 'open' ? '<button onclick="copCancel(\'' + esc(r.id) + '\')" style="margin-top:9px;width:100%;padding:9px;border-radius:8px;border:1px solid #fecaca;background:#fff5f5;color:#b91c1c;font-size:.8rem;font-weight:800;cursor:pointer;font-family:inherit;">Cancel &amp; Refund Contributors</button>' : '') +
+          (r.is_creator && (r.contributor_count || 0) === 0 ? '<button onclick="copCancel(\'' + esc(r.id) + '\')" style="margin-top:9px;width:100%;padding:9px;border-radius:8px;border:1px solid #fecaca;background:#fff5f5;color:#b91c1c;font-size:.8rem;font-weight:800;cursor:pointer;font-family:inherit;">Cancel Request</button>' : '') +
         '</div>';
       }
     }
@@ -9721,7 +9700,7 @@ function copCancel(reqId) {
   rpc('cancel_co_purchase', JSON.stringify({ p_request_id: reqId }), function(err, res) {
     var d = res && (res.data !== undefined ? res.data : res);
     if (err || !d || d.success === false) { toast((d && d.error) || 'Could not cancel this.'); return; }
-    toast('\u21a9\ufe0f Cancelled \u2014 contributors have been refunded.');
+    toast('\u21a9\ufe0f Co-Purchase request cancelled.');
     copLoadMine();
   });
 }
@@ -10314,7 +10293,6 @@ function aprLoadList() {
 window.aprLoadList = aprLoadList;
 
 function aprSetStatus(id, status) {
-  if (status === 'cancelled' && !confirm('Cancel this Auto Purchase? It will stop buying data.')) return;
   rpc('set_recurring_data_status', { p_id: id, p_status: status }, function(err, res) {
     var d = res && (res.data !== undefined ? res.data : res);
     if (err || !d || d.success === false) { toast('Could not update. Please try again.'); return; }
@@ -10325,17 +10303,14 @@ function aprSetStatus(id, status) {
 window.aprSetStatus = aprSetStatus;
 
 /* ════════ MAGIC SHOPPER (cheapest plan, any market, never revealed) ════════ */
-var gMagicFreq = 30;
 
 function openMagicShopper() {
-  gMagicFreq = 30;
-  magicSetFreq(30);
+  gMagicMatch = null;
   if ($('m-magic-phone'))   $('m-magic-phone').value = '';
   if ($('m-magic-network')) $('m-magic-network').value = '';
   if ($('m-magic-budget'))  $('m-magic-budget').value = '';
   if ($('m-magic-breakdown')) $('m-magic-breakdown').style.display = 'none';
   errHide('m-magic-err');
-  magicLoadList();
   openModal('m-magic');
 }
 window.openMagicShopper = openMagicShopper;
@@ -10363,98 +10338,60 @@ function magicPickContact() {
 }
 window.magicPickContact = magicPickContact;
 
-/* Shows the plan-cost/fee split BEFORE saving, using the entered budget as the
-   ceiling: since the exact plan is only known at purchase time (cheapest match
-   each cycle), this previews the max plan cost affordable and the flat 5% fee
-   on top of it — always shown as two separate numbers, never just one total. */
+/* Shows the ACTUAL cheapest matching plan once network + budget are entered —
+   a real plan (data size, network, validity) with ONE combined price (5% fee
+   already included, never shown separately) — and lets the user buy it right
+   now as a single pay-once purchase, same as a normal General Market buy. */
+var _magicPreviewSeq = 0;
 function magicBudgetPreview() {
   var box = $('m-magic-breakdown');
-  if (!box) return;
+  var info = $('m-magic-match-info');
+  if (!box || !info) return;
   var budget = parseFloat($('m-magic-budget') ? $('m-magic-budget').value : '0') || 0;
-  if (budget < 50) { box.style.display = 'none'; return; }
-  var planCost = Math.floor(budget / 1.05);
-  var fee = budget - planCost;
+  var network = $('m-magic-network') ? $('m-magic-network').value : '';
+  if (budget < 50 || !network) { box.style.display = 'none'; gMagicMatch = null; return; }
+  var seq = ++_magicPreviewSeq;
+  info.textContent = 'Looking for a plan cheaper than Premium Market\u2026';
   box.style.display = '';
-  box.innerHTML =
-    '<div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;justify-content:space-between;"><span>Plan cost (up to)</span><strong>' + fmtN(planCost) + '</strong></div>' +
-    '<div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;justify-content:space-between;margin-top:3px;"><span>Service fee (5%)</span><strong>' + fmtN(fee) + '</strong></div>' +
-    '<div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;justify-content:space-between;margin-top:5px;padding-top:5px;border-top:1px solid #ddd6fe;font-weight:900;"><span>Your budget</span><strong>' + fmtN(budget) + '</strong></div>';
+  if ($('m-magic-buy-now')) $('m-magic-buy-now').style.display = 'none';
+  rpc('preview_magic_shopper_match', { p_network: network, p_budget_amount: budget }, function(err, res) {
+    if (seq !== _magicPreviewSeq) return; // a newer input arrived, ignore this stale response
+    var d = res && (res.data !== undefined ? res.data : res);
+    if (err || !d || !d.found) {
+      gMagicMatch = null;
+      info.textContent = (d && d.error) || ('No plan cheaper than Premium Market found for ' + network + ' at or under ' + fmtN(budget) + '.');
+      if ($('m-magic-buy-now')) $('m-magic-buy-now').style.display = 'none';
+      return;
+    }
+    gMagicMatch = { network: d.network, phone: null, budget: budget };
+    info.innerHTML = '<b>' + esc(d.data_size) + ' ' + esc(d.network) + '</b>' + (d.validity_days ? ' \u00b7 ' + d.validity_days + ' days' : '') +
+      '<div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;justify-content:space-between;margin-top:6px;"><span>Plan price</span><strong>' + fmtN(d.price) + '</strong></div>' +
+      '<div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;justify-content:space-between;margin-top:2px;"><span>Service fee (5%)</span><strong>' + fmtN(d.fee) + '</strong></div>' +
+      '<div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;justify-content:space-between;margin-top:5px;padding-top:5px;border-top:1px solid #ddd6fe;font-weight:900;"><span>Total</span><strong>' + fmtN(d.total) + '</strong></div>';
+    if ($('m-magic-buy-now')) $('m-magic-buy-now').style.display = 'block';
+  });
 }
 window.magicBudgetPreview = magicBudgetPreview;
 
-function magicSetFreq(d) {
-  gMagicFreq = d;
-  ['1','7','30'].forEach(function(k){
-    var b = $('m-magic-f-' + k);
-    if (b) b.className = 'btn ' + (String(d) === k ? 'btn-blue' : 'btn-lite');
-  });
-}
-window.magicSetFreq = magicSetFreq;
-
-function magicSave() {
-  var phone   = ($('m-magic-phone') ? $('m-magic-phone').value : '').replace(/^\s+|\s+$/g, '');
+var gMagicMatch = null;
+function magicBuyNow() {
+  var phone = ($('m-magic-phone') ? $('m-magic-phone').value : '').replace(/^\s+|\s+$/g, '');
   var network = $('m-magic-network') ? $('m-magic-network').value : '';
-  var budget  = parseFloat($('m-magic-budget') ? $('m-magic-budget').value : '0') || 0;
+  var budget = parseFloat($('m-magic-budget') ? $('m-magic-budget').value : '0') || 0;
   errHide('m-magic-err');
   if (!phone)   { errShow('m-magic-err', 'Please enter a phone number.'); return; }
-  if (!network) { errShow('m-magic-err', 'Please select a network.'); return; }
-  if (budget < 50) { errShow('m-magic-err', 'Minimum budget is \u20a650.'); return; }
-  if (!gMagicFreq || gMagicFreq < 1) { errShow('m-magic-err', 'Please choose how often.'); return; }
-
-  btnLoad('m-magic-save', true, 'Saving\u2026');
-  rpc('set_magic_shopper', {
-    p_phone_number: phone, p_network: network,
-    p_budget_amount: budget, p_frequency_days: gMagicFreq
-  }, function(err, res) {
-    btnLoad('m-magic-save', false, 'Turn on Magic Shopper');
+  if (!network || budget < 50 || !gMagicMatch) { errShow('m-magic-err', 'Pick a network and budget first.'); return; }
+  btnLoad('m-magic-buy-now', true, 'Buying\u2026');
+  rpc('buy_magic_shopper_now', { p_network: network, p_phone_number: phone, p_budget_amount: budget }, function(err, res) {
+    btnLoad('m-magic-buy-now', false, 'Buy This Now');
     var d = res && (res.data !== undefined ? res.data : res);
-    if (err || !d || d.success === false) { errShow('m-magic-err', (d && d.error) || 'Could not set Magic Shopper. Please try again.'); return; }
-    toast('\u2728 Magic Shopper is on \u2014 hunting the cheapest ' + network + ' deal up to ' + fmtN(budget) + ' (incl. 5%), ' + aprFreqLabel(gMagicFreq) + '.');
-    if ($('m-magic-budget')) $('m-magic-budget').value = '';
-    magicLoadList();
+    if (err || !d || d.success === false) { errShow('m-magic-err', (d && d.error) || 'Could not complete this purchase.'); return; }
+    toast('\u2728 Bought the cheapest ' + d.network + ' deal and sent it to ' + phone + '! Plan ' + fmtN(d.plan_cost) + ' + fee ' + fmtN(d.fee) + ' = ' + fmtN(d.price) + ' from your wallet.');
+    try { loadWalletBalance(function(){}); } catch(_) {}
+    closeModal('m-magic');
   });
 }
-window.magicSave = magicSave;
-
-function magicLoadList() {
-  var wrap = $('m-magic-list');
-  if (!wrap) return;
-  rpc('list_my_recurring_data', {}, function(err, res) {
-    var allRows = (res && (res.data !== undefined ? res.data : res)) || [];
-    var rows = [];
-    for (var k = 0; k < allRows.length; k++) { if (allRows[k].is_magic) rows.push(allRows[k]); }
-    if (err || !rows || !rows.length) { wrap.innerHTML = ''; return; }
-    var html = '<div style="font-size:.74rem;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:.04em;margin-bottom:8px;">Your Magic Shoppers</div>';
-    for (var i = 0; i < rows.length; i++) {
-      var r = rows[i];
-      var paused = (r.status === 'paused');
-      html += '<div style="border:1px solid #e2e8f0;border-radius:10px;padding:11px 13px;margin-bottom:8px;">' +
-        '<div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:justify;justify-content:space-between;-webkit-box-align:center;align-items:center;gap:8px;">' +
-          '<div style="font-size:.86rem;font-weight:800;color:#0f172a;">' + esc(r.network) + ' &middot; up to ' + fmtN(r.budget_amount) + '</div>' +
-          '<span style="font-size:.7rem;font-weight:800;padding:3px 8px;border-radius:20px;background:' + (paused?'#fef9c3':'#dcfce7') + ';color:' + (paused?'#854d0e':'#166534') + ';">' + (paused?'Paused':'Active') + '</span>' +
-        '</div>' +
-        '<div style="font-size:.76rem;color:#64748b;margin-top:3px;">' + esc(r.phone_number) + ' &middot; ' + aprFreqLabel(r.frequency_days) + '</div>' +
-        '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:7px;margin-top:9px;">' +
-          '<button onclick="magicSetStatus(\'' + esc(r.id) + '\',\'' + (paused?'active':'paused') + '\')" style="flex:1;padding:7px;border-radius:6px;border:1.5px solid #cbd5e1;background:#fff;color:#334155;font-size:.76rem;font-weight:800;cursor:pointer;font-family:inherit;">' + (paused?'Resume':'Pause') + '</button>' +
-          '<button onclick="magicSetStatus(\'' + esc(r.id) + '\',\'cancelled\')" style="flex:1;padding:7px;border-radius:6px;border:none;background:#c0392b;color:#fff;font-size:.76rem;font-weight:800;cursor:pointer;font-family:inherit;">Cancel</button>' +
-        '</div>' +
-      '</div>';
-    }
-    wrap.innerHTML = html;
-  });
-}
-window.magicLoadList = magicLoadList;
-
-function magicSetStatus(id, status) {
-  if (status === 'cancelled' && !confirm('Cancel this Magic Shopper? It will stop buying data.')) return;
-  rpc('set_recurring_data_status', { p_id: id, p_status: status }, function(err, res) {
-    var d = res && (res.data !== undefined ? res.data : res);
-    if (err || !d || d.success === false) { toast('Could not update. Please try again.'); return; }
-    toast(status === 'cancelled' ? 'Magic Shopper cancelled.' : (status === 'paused' ? 'Magic Shopper paused.' : 'Magic Shopper resumed.'));
-    magicLoadList();
-  });
-}
-window.magicSetStatus = magicSetStatus;
+window.magicBuyNow = magicBuyNow;
 
 /* ════════ STUDY / WORK LOCK ════════ */
 var gStudyMethod = 'photo';
@@ -10584,7 +10521,6 @@ function boostGive(reqId, maxLeft) {
   if (amt <= 0) { toast('Enter an amount to gift.'); return; }
   if (amt > maxLeft) amt = maxLeft;
   var anon = !!($('boost-anon-' + reqId) && $('boost-anon-' + reqId).checked);
-  if (!confirm('Gift ' + fmtN(amt) + ' from your wallet to help complete this plan? This is a gift \u2014 it won\u2019t be repaid.')) return;
   rpc('sponsor_boost', { p_request_id: reqId, p_amount: amt, p_anonymous: anon }, function(err, res) {
     var d = res && (res.data !== undefined ? res.data : res);
     if (err || !d || d.success === false) { toast((d && d.error) || 'Could not complete the gift.'); return; }
@@ -11060,7 +10996,6 @@ window.openPremiumBenefits = openPremiumBenefits;
 })();
 
 function boostCancel(id) {
-  if (!confirm('Cancel this boost request?')) return;
   rpc('cancel_boost_request', { p_request_id: id }, function(err, res) {
     var d = res && (res.data !== undefined ? res.data : res);
     if (err || !d || d.success === false) { toast((d && d.error) || 'Could not cancel.'); return; }
@@ -11071,8 +11006,6 @@ window.boostCancel = boostCancel;
 
 // Called from a plan card when the user is short: creates a request for the remaining balance.
 function requestBoostForSub(subId, remaining, label) {
-  var estFee = Math.ceil(remaining * 0.01);
-  if (!confirm('Requesting a Sponsored Boost adds a 1% fee to your plan\u2019s remaining cost \u2014 ' + fmtN(remaining) + ' becomes ' + fmtN(remaining + estFee) + '. Continue?')) return;
   rpc('create_boost_request', {
     p_subscription_id: subId, p_amount_needed: remaining,
     p_kind: 'installment', p_note: null, p_visibility: 'broadcast', p_targets: null
@@ -11456,7 +11389,7 @@ window.detectAndSaveLocation = detectAndSaveLocation;
     if(byId('friend-sticky-cta')) return;
     var d=document.createElement('div');
     d.className='friend-sticky-cta'; d.id='friend-sticky-cta';
-    d.innerHTML='<div class="friend-sticky-inner"><button class="fund" onclick="openFundModal()">\uD83D\uDC9A Fund account</button><div style="-webkit-box-flex:1;-webkit-flex:1;flex:1;"></div></div>';
+    d.innerHTML='<div class="friend-sticky-inner"><button class="fund" onclick="openFundModal()">\uD83D\uDC9A Fund account</button><button class="plans" id="sticky-tool-rotator-btn" onclick="_stickyToolRotatorGo()"><span id="sticky-tool-rotator-text">Pledge data or airtime to a goal. It unlocks in steps as you hit milestones.</span></button></div>';
     document.body.appendChild(d);
     document.body.className += ' friend-show-sticky';
   }
@@ -12071,8 +12004,8 @@ function doUpgrade(newPlanId) {
     closeModal('m-upgrade');
     if (typeof toast === 'function') {
       toast(d.completed
-        ? '\u2B06\uFE0F Upgraded to ' + d.new_plan + ' \u2014 fully paid, data on its way!'
-        : '\u2B06\uFE0F Upgraded to ' + d.new_plan + '. ' + fmtN(d.remaining) + ' left to complete.');
+        ? 'Upgraded to ' + d.new_plan + ' \u2014 fully paid, data on its way!'
+        : 'Upgraded to ' + d.new_plan + '. ' + fmtN(d.remaining) + ' left to complete.');
     }
     if (typeof loadSubs === 'function') loadSubs();
     if (typeof loadWalletBalance === 'function') loadWalletBalance(function(){});
