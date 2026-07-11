@@ -1138,11 +1138,54 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         </button>
       </div>
 
-      <button type="button" id="home-mkt-tool-showcase" onclick="_stickyToolRotatorGo()" style="display:block;width:100%;text-align:left;border:none;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;margin-top:14px;padding:0;">
-        <div class="hero-bal-card" style="margin-bottom:0;">
-          <div id="home-mkt-tool-showcase-text" style="color:#fff;font-size:1.05rem;font-weight:800;line-height:1.4;">Pledge data or airtime to a goal. It unlocks in steps as you hit milestones.</div>
+      <div id="home-mkt-tools-grid" style="display:none;background:#fff;border-radius:18px;padding:16px 10px 8px;margin-top:14px;box-shadow:0 6px 18px rgba(15,23,42,.06);">
+        <div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-flex-wrap:wrap;flex-wrap:wrap;">
+          <button type="button" onclick="openStudyLock()" style="-webkit-box-flex:1;-webkit-flex:1 1 25%;flex:1 1 25%;border:none;background:none;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;padding:8px 4px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:6px;">
+            <span style="width:48px;height:48px;border-radius:50%;background:#f7f5ff;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;font-size:1.4rem;">&#127919;</span>
+            <span style="font-size:.68rem;font-weight:700;color:#333;text-align:center;line-height:1.2;">Goal Lock</span>
+          </button>
+          <button type="button" onclick="openBoost()" style="-webkit-box-flex:1;-webkit-flex:1 1 25%;flex:1 1 25%;border:none;background:none;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;padding:8px 4px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:6px;">
+            <span style="width:48px;height:48px;border-radius:50%;background:#fdf2f8;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;font-size:1.4rem;">&#128156;</span>
+            <span style="font-size:.68rem;font-weight:700;color:#333;text-align:center;line-height:1.2;">Sponsored Boost</span>
+          </button>
+          <button type="button" onclick="openGift()" style="-webkit-box-flex:1;-webkit-flex:1 1 25%;flex:1 1 25%;border:none;background:none;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;padding:8px 4px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:6px;">
+            <span style="width:48px;height:48px;border-radius:50%;background:#fffbeb;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;font-size:1.4rem;">&#127873;</span>
+            <span style="font-size:.68rem;font-weight:700;color:#333;text-align:center;line-height:1.2;">Gift with Strings</span>
+          </button>
+          <button type="button" onclick="openAutoPaySetup()" style="-webkit-box-flex:1;-webkit-flex:1 1 25%;flex:1 1 25%;border:none;background:none;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;padding:8px 4px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:6px;">
+            <span style="width:48px;height:48px;border-radius:50%;background:#f0fdfa;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;font-size:1.4rem;">&#128179;</span>
+            <span style="font-size:.68rem;font-weight:700;color:#333;text-align:center;line-height:1.2;">Auto-Pay</span>
+          </button>
+          <button type="button" onclick="openAutoRenewSetup()" style="-webkit-box-flex:1;-webkit-flex:1 1 25%;flex:1 1 25%;border:none;background:none;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;padding:8px 4px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:6px;">
+            <span style="width:48px;height:48px;border-radius:50%;background:#eef2ff;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;font-size:1.4rem;">&#128260;</span>
+            <span style="font-size:.68rem;font-weight:700;color:#333;text-align:center;line-height:1.2;">Auto-Renew</span>
+          </button>
+          <button type="button" onclick="openAutoPayRecur()" style="-webkit-box-flex:1;-webkit-flex:1 1 25%;flex:1 1 25%;border:none;background:none;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;padding:8px 4px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:6px;">
+            <span style="width:48px;height:48px;border-radius:50%;background:#fff7ed;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;font-size:1.4rem;">&#128722;</span>
+            <span style="font-size:.68rem;font-weight:700;color:#333;text-align:center;line-height:1.2;">Auto Purchase</span>
+          </button>
+          <button type="button" onclick="openPremiumBenefits()" style="-webkit-box-flex:1;-webkit-flex:1 1 25%;flex:1 1 25%;border:none;background:none;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;padding:8px 4px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:6px;">
+            <span style="width:48px;height:48px;border-radius:50%;background:#f0fdf4;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;font-size:1.4rem;">&#128176;</span>
+            <span style="font-size:.68rem;font-weight:700;color:#333;text-align:center;line-height:1.2;">Installments &amp; Rewards</span>
+          </button>
+          <button type="button" onclick="openCoach()" style="-webkit-box-flex:1;-webkit-flex:1 1 25%;flex:1 1 25%;border:none;background:none;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;padding:8px 4px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:6px;">
+            <span style="width:48px;height:48px;border-radius:50%;background:#eff6ff;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;font-size:1.4rem;">&#129504;</span>
+            <span style="font-size:.68rem;font-weight:700;color:#333;text-align:center;line-height:1.2;">Coach</span>
+          </button>
+          <button type="button" onclick="openReporter()" style="-webkit-box-flex:1;-webkit-flex:1 1 25%;flex:1 1 25%;border:none;background:none;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;padding:8px 4px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:6px;">
+            <span style="width:48px;height:48px;border-radius:50%;background:#f5f3ff;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;font-size:1.4rem;">&#128202;</span>
+            <span style="font-size:.68rem;font-weight:700;color:#333;text-align:center;line-height:1.2;">Reporter</span>
+          </button>
+          <button type="button" onclick="openCoPurchase()" style="-webkit-box-flex:1;-webkit-flex:1 1 25%;flex:1 1 25%;border:none;background:none;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;padding:8px 4px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:6px;">
+            <span style="width:48px;height:48px;border-radius:50%;background:#fffbeb;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;font-size:1.4rem;">&#129309;</span>
+            <span style="font-size:.68rem;font-weight:700;color:#333;text-align:center;line-height:1.2;">Co-Purchase</span>
+          </button>
+          <button type="button" onclick="openMagicShopper()" style="-webkit-box-flex:1;-webkit-flex:1 1 25%;flex:1 1 25%;border:none;background:none;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;padding:8px 4px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:6px;">
+            <span style="width:48px;height:48px;border-radius:50%;background:#f5f3ff;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;font-size:1.4rem;">&#129497;</span>
+            <span style="font-size:.68rem;font-weight:700;color:#333;text-align:center;line-height:1.2;">Magic Shopper</span>
+          </button>
         </div>
-      </button>
+      </div>
     </div>
 
     <!-- ── LEGACY HOME CONTENT — hidden for now, Great will say where each piece goes next ── -->
@@ -4618,6 +4661,9 @@ function openMarketHome(m) {
 
   var toolsBtn = document.getElementById('home-mkt-tools-btn');
   if (toolsBtn) toolsBtn.style.display = (m === 'installment') ? '' : 'none';
+
+  var toolsGrid = document.getElementById('home-mkt-tools-grid');
+  if (toolsGrid) toolsGrid.style.display = (m === 'installment') ? '' : 'none';
 
   var balEl = document.getElementById('home-mkt-bal');
   if (balEl && typeof dbFmtNaira === 'function') balEl.textContent = dbFmtNaira(gBal);
@@ -9427,42 +9473,6 @@ window.friendDailyAction = friendDailyAction;
    Same nugget pool as the daily nudge, but presented as a coach
    giving you a straight-talking tip for today, with a one-tap
    action button instead of a passive banner. */
-
-/* ── Home "Premium Tool of the Moment" rotator ─────────────────
-   Lives in the duplicated blue balance-style card under the Premium Tools
-   button on Home. Cycles every 10s through each Premium tool's own
-   description exactly as written on its card (no rewording), and opens
-   that specific tool's modal on tap — whichever one is showing at the
-   moment you tap it. Share is excluded (retired as a tool). Runs through
-   the same warning gate every tool card uses. */
-var _stickyToolRotatorList = [
-  { text: 'Pledge data or airtime to a goal. It unlocks in steps as you hit milestones.', fn: function(){ openStudyLock(); } },
-  { text: 'Let a trusted person help complete your plan, or help someone else.', fn: function(){ openBoost(); } },
-  { text: 'Gift data or airtime that unlocks on a date or after an action.', fn: function(){ openGift(); } },
-  { text: 'Let the system pay your installments from your wallet, whenever and however you want.', fn: function(){ openAutoPaySetup(); } },
-  { text: 'Repeat the plans you love \u2014 they restart automatically when they finish.', fn: function(){ openAutoRenewSetup(); } },
-  { text: 'Set an amount and how often \u2014 we buy the best plan and send it automatically.', fn: function(){ openAutoPayRecur(); } },
-  { text: 'Pay big plans in small bits, earn 1% per installment, unlock up to 10% off.', fn: function(){ openPremiumBenefits(); } },
-  { text: 'Your daily nudge \u2014 straight talk on what to do next to stay on track.', fn: function(){ openCoach(); } },
-  { text: 'Your numbers at a glance \u2014 funding, streaks, plans and rewards.', fn: function(){ openReporter(); } },
-  { text: 'Team up with other users to jointly fund a plan and split it by contribution.', fn: function(){ openCoPurchase(); } },
-  { text: 'We hunt for the cheapest plan in your budget \u2014 you never see which one.', fn: function(){ openMagicShopper(); } }
-];
-var _stickyToolRotatorIdx = 0;
-setInterval(function(){
-  if (typeof document.hidden !== 'undefined' && document.hidden) return;
-  var el = document.getElementById('home-mkt-tool-showcase-text');
-  if (!el) return;
-  _stickyToolRotatorIdx = (_stickyToolRotatorIdx + 1) % _stickyToolRotatorList.length;
-  el.textContent = _stickyToolRotatorList[_stickyToolRotatorIdx].text;
-}, 10000);
-
-function _stickyToolRotatorGo() {
-  var item = _stickyToolRotatorList[_stickyToolRotatorIdx];
-  if (!item) return;
-  item.fn();
-}
-window._stickyToolRotatorGo = _stickyToolRotatorGo;
 
 function openCoach() {
   openModal('m-coach');
