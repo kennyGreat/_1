@@ -1992,9 +1992,10 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <button class="modal-x" id="m-gift-x">&#215;</button>
     </div>
     <div class="modal-body">
-      <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;margin-bottom:14px;">
-        <button class="btn btn-blue" id="gift-tab-send" onclick="giftTab('send')" style="margin:0;flex:1;font-size:.82rem;">Send a gift</button>
-        <button class="btn btn-lite" id="gift-tab-recv" onclick="giftTab('recv')" style="margin:0;flex:1;font-size:.82rem;">My gifts</button>
+      <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:6px;margin-bottom:14px;">
+        <button class="btn btn-blue" id="gift-tab-send" onclick="giftTab('send')" style="margin:0;flex:1;font-size:.78rem;padding-left:4px;padding-right:4px;">Send a gift</button>
+        <button class="btn btn-lite" id="gift-tab-recv" onclick="giftTab('recv')" style="margin:0;flex:1;font-size:.78rem;padding-left:4px;padding-right:4px;">Received</button>
+        <button class="btn btn-lite" id="gift-tab-sent" onclick="giftTab('sent')" style="margin:0;flex:1;font-size:.78rem;padding-left:4px;padding-right:4px;">Sent</button>
       </div>
 
       <div id="gift-send-pane">
@@ -2065,6 +2066,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       </div>
 
       <div id="gift-recv-pane" style="display:none;"><div id="gift-recv-list" style="min-height:40px;"></div></div>
+      <div id="gift-sent-pane" style="display:none;"><div id="gift-sent-list" style="min-height:40px;"></div></div>
     </div>
   </div>
 </div>
@@ -10825,12 +10827,15 @@ function openGift() { giftTab('send'); giftSetReward('data'); giftSetCond('date'
 window.openGift = openGift;
 
 function giftTab(which) {
-  var send = which !== 'recv';
-  if ($('gift-tab-send')) $('gift-tab-send').className = 'btn ' + (send?'btn-blue':'btn-lite');
-  if ($('gift-tab-recv')) $('gift-tab-recv').className = 'btn ' + (send?'btn-lite':'btn-blue');
-  if ($('gift-send-pane')) $('gift-send-pane').style.display = send ? 'block' : 'none';
-  if ($('gift-recv-pane')) $('gift-recv-pane').style.display = send ? 'none' : 'block';
-  if (!send) giftLoadReceived();
+  var tab = (which==='recv' || which==='sent') ? which : 'send';
+  if ($('gift-tab-send')) $('gift-tab-send').className = 'btn ' + (tab==='send'?'btn-blue':'btn-lite');
+  if ($('gift-tab-recv')) $('gift-tab-recv').className = 'btn ' + (tab==='recv'?'btn-blue':'btn-lite');
+  if ($('gift-tab-sent')) $('gift-tab-sent').className = 'btn ' + (tab==='sent'?'btn-blue':'btn-lite');
+  if ($('gift-send-pane')) $('gift-send-pane').style.display = (tab==='send') ? 'block' : 'none';
+  if ($('gift-recv-pane')) $('gift-recv-pane').style.display = (tab==='recv') ? 'block' : 'none';
+  if ($('gift-sent-pane')) $('gift-sent-pane').style.display = (tab==='sent') ? 'block' : 'none';
+  if (tab==='recv') giftLoadReceived();
+  if (tab==='sent') giftLoadSent();
 }
 window.giftTab = giftTab;
 
@@ -10971,6 +10976,50 @@ function giftMarkDone(id) {
   });
 }
 window.giftMarkDone = giftMarkDone;
+
+function giftLoadSent() {
+  var wrap = $('gift-sent-list'); if (!wrap) return;
+  wrap.innerHTML = '<div style="color:#94a3b8;font-size:.82rem;padding:8px 0;">Loading\u2026</div>';
+  rpc('list_gifts_sent', {}, function(err, res) {
+    var rows = (res && (res.data !== undefined ? res.data : res)) || [];
+    if (typeof rows === 'string') { try { rows = JSON.parse(rows); } catch(_) { rows = []; } }
+    if (err || !rows || !rows.length) { wrap.innerHTML = '<div style="color:#94a3b8;font-size:.82rem;padding:12px 0;text-align:center;">You haven\u2019t sent any gifts yet.</div>'; return; }
+    var html = '';
+    for (var i=0;i<rows.length;i++){
+      var g = rows[i];
+      var what = g.reward_type==='data' ? (esc(g.data_size||'Data')) : (fmtN(g.amount_charged) + ' airtime');
+      var locked = (g.status==='locked');
+      var cond = g.condition_type==='date'
+        ? ('Unlocks on ' + esc(g.unlock_date||''))
+        : ('Unlocks after: ' + esc(g.action_text||''));
+      var statusLine = g.status==='delivered' ? '\u2713 Delivered' : (g.status==='cancelled' ? 'Cancelled' : cond);
+      html += '<div style="border:1px solid #dbeafe;border-radius:12px;padding:12px;margin-bottom:10px;background:#f8fbff;">' +
+        '<div style="font-size:.85rem;color:#0f172a;"><b>' + what + '</b> to <b>' + esc(g.recipient_email||'someone') + '</b></div>' +
+        '<div style="font-size:.75rem;color:#64748b;margin-top:5px;">' + statusLine + '</div>';
+      if (locked && g.condition_type==='action') {
+        html += '<button onclick="giftConfirmAction(\'' + esc(g.id) + '\', this)" style="margin-top:9px;padding:7px 13px;border-radius:6px;border:none;background:#2563eb;color:#fff;font-size:.78rem;font-weight:800;cursor:pointer;font-family:inherit;">Confirm &amp; release gift</button>';
+      }
+      html += '</div>';
+    }
+    wrap.innerHTML = html;
+  });
+}
+window.giftLoadSent = giftLoadSent;
+
+function giftConfirmAction(id, btnEl) {
+  if (btnEl) { btnEl.disabled = true; btnEl.textContent = 'Releasing\u2026'; }
+  rpc('gift_confirm_action', { p_gift_id: id }, function(err, res) {
+    var d = res && (res.data !== undefined ? res.data : res);
+    if (err || !d || d.success === false) {
+      if (btnEl) { btnEl.disabled = false; btnEl.textContent = 'Confirm & release gift'; }
+      toast((d && d.error) || 'Could not release this gift.');
+      return;
+    }
+    toast('\uD83C\uDF81 Gift released!');
+    giftLoadSent();
+  });
+}
+window.giftConfirmAction = giftConfirmAction;
 
 /* ════════ AUTO-PAY / AUTO-RENEW STANDALONE SETUP + BENEFITS INFO ════════ */
 // Load the caller's active INSTALLMENT plans (payment_days>1, not complete) into a select.
