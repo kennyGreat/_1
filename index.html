@@ -1132,9 +1132,11 @@ button.tab,button.plan-chip{box-shadow:none!important;}
         </button>
       </div>
       <div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:center;justify-content:center;">
-        <button type="button" id="home-mkt-tools-btn" onclick="goToPremiumToolsFromHome()" style="display:none;width:60%;text-align:center;border:none;background:-webkit-linear-gradient(135deg,#0b3d2e,#0f5132);background:linear-gradient(135deg,#0b3d2e,#0f5132);color:#fff;border-radius:18px;padding:20px 8px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 10px 22px rgba(15,81,50,.32);">
-          <div style="font-size:1.3rem;line-height:1;margin-bottom:4px;">&#128737;&#65039;</div>
-          <div style="font-size:.96rem;font-weight:900;color:#fff;letter-spacing:.01em;">Premium Tools</div>
+        <button type="button" id="home-mkt-tools-btn" onclick="goToPremiumToolsFromHome()" style="display:none;background:none;border:none;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;padding:8px 0;">
+          <span style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:8px;">
+            <span style="font-size:1.2rem;line-height:1;">&#128737;&#65039;</span>
+            <span style="font-size:1.05rem;font-weight:900;color:#0f5132;letter-spacing:.01em;">Premium Tools</span>
+          </span>
         </button>
       </div>
 
@@ -1161,7 +1163,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
             <span style="font-size:.68rem;font-weight:700;color:#333;text-align:center;line-height:1.2;">Auto-Renew</span>
           </button>
           <button type="button" onclick="openAutoPayRecur()" style="-webkit-box-flex:1;-webkit-flex:1 1 25%;flex:1 1 25%;border:none;background:none;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;padding:8px 4px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:6px;">
-            <span style="width:48px;height:48px;border-radius:50%;background:#fff7ed;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;font-size:1.4rem;">&#128722;</span>
+            <span style="width:48px;height:48px;border-radius:50%;background:#fff7ed;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;font-size:1.4rem;">&#128717;&#65039;</span>
             <span style="font-size:.68rem;font-weight:700;color:#333;text-align:center;line-height:1.2;">Auto Purchase</span>
           </button>
           <button type="button" onclick="openPremiumBenefits()" style="-webkit-box-flex:1;-webkit-flex:1 1 25%;flex:1 1 25%;border:none;background:none;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;padding:8px 4px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:6px;">
@@ -1181,8 +1183,12 @@ button.tab,button.plan-chip{box-shadow:none!important;}
             <span style="font-size:.68rem;font-weight:700;color:#333;text-align:center;line-height:1.2;">Co-Purchase</span>
           </button>
           <button type="button" onclick="openMagicShopper()" style="-webkit-box-flex:1;-webkit-flex:1 1 25%;flex:1 1 25%;border:none;background:none;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;padding:8px 4px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:6px;">
-            <span style="width:48px;height:48px;border-radius:50%;background:#f5f3ff;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;font-size:1.4rem;">&#129497;</span>
+            <span style="width:48px;height:48px;border-radius:50%;background:#f5f3ff;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;font-size:1.4rem;">&#128722;</span>
             <span style="font-size:.68rem;font-weight:700;color:#333;text-align:center;line-height:1.2;">Magic Shopper</span>
+          </button>
+          <button type="button" onclick="openFundModal();setTimeout(function(){if(typeof switchFundTab==='function')switchFundTab('af')},150);" style="-webkit-box-flex:1;-webkit-flex:1 1 25%;flex:1 1 25%;border:none;background:none;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;padding:8px 4px;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-orient:vertical;-webkit-flex-direction:column;flex-direction:column;-webkit-box-align:center;-webkit-align-items:center;align-items:center;gap:6px;">
+            <span style="width:48px;height:48px;border-radius:50%;background:#eff6ff;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;-webkit-box-pack:center;justify-content:center;font-size:1.4rem;">&#128179;</span>
+            <span style="font-size:.68rem;font-weight:700;color:#333;text-align:center;line-height:1.2;">Auto-Fund</span>
           </button>
         </div>
       </div>
@@ -1353,7 +1359,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       </button>
 
       <button type="button" id="autopurchase-card" onclick="openAutoPayRecur()" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#ea580c,#9a3412);background:linear-gradient(135deg,#ea580c,#9a3412);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(234,88,12,.28);color:#fff;">
-        <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#128722;</div>
+        <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#128717;&#65039;</div>
         <div style="font-size:.88rem;font-weight:900;margin-bottom:3px;">Auto Purchase</div>
         <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Set an amount and how often &mdash; we buy the best plan and send it automatically.</div>
       </button>
@@ -1389,9 +1395,15 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       </button>
 
       <button type="button" id="magic-shopper-card" onclick="openMagicShopper()" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#a855f7,#6d28d9);background:linear-gradient(135deg,#a855f7,#6d28d9);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(168,85,247,.28);color:#fff;">
-        <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#129497;</div>
+        <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#128722;</div>
         <div style="font-size:.88rem;font-weight:900;margin-bottom:3px;">Magic Shopper</div>
         <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">We hunt for the cheapest plan in your budget &mdash; you never see which one.</div>
+      </button>
+
+      <button type="button" id="autofund-tool-card" onclick="openFundModal();setTimeout(function(){if(typeof switchFundTab==='function')switchFundTab('af')},150);" style="display:none;-webkit-box-flex:1;-webkit-flex:1 1 calc(50% - 6px);flex:1 1 calc(50% - 6px);text-align:left;border:none;background:-webkit-linear-gradient(135deg,#2563eb,#1e3a8a);background:linear-gradient(135deg,#2563eb,#1e3a8a);border-radius:16px;padding:15px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;box-shadow:0 8px 18px rgba(37,99,235,.28);color:#fff;">
+        <div style="font-size:1.4rem;line-height:1;margin-bottom:6px;">&#128179;</div>
+        <div style="font-size:.88rem;font-weight:900;margin-bottom:3px;">Auto-Fund</div>
+        <div style="font-size:.72rem;line-height:1.4;color:rgba(255,255,255,.85);">Your card tops up your wallet automatically, on the schedule you set. Free.</div>
       </button>
 
       </div>
@@ -1753,19 +1765,15 @@ button.tab,button.plan-chip{box-shadow:none!important;}
           </div>
         </div>
 
-        <div class="field" id="m-sub-autopurchase-field" style="border:1px solid #fed7aa;border-radius:8px;padding:12px;background:#fff7ed;margin-bottom:12px;">
-          <div style="font-size:.87rem;font-weight:800;color:#9a3412;margin-bottom:6px;">&#128722; Auto Purchase</div>
-          <p style="font-size:.76rem;color:#555;margin-bottom:10px;line-height:1.5;">Keep this plan coming automatically. We&rsquo;ll re-buy this exact plan for this number from your DataBulge wallet on the schedule you choose &mdash; whenever and however you want it. The first purchase is this subscription; the repeats start after. Cancel anytime.</p>
+        <div class="field" id="m-sub-boost-field" style="border:1px solid #fbcfe8;border-radius:8px;padding:12px;background:#fdf2f8;margin-bottom:12px;">
+          <div style="font-size:.87rem;font-weight:800;color:#9d174d;margin-bottom:6px;">&#128156; Sponsored Boost</div>
+          <p style="font-size:.76rem;color:#555;margin-bottom:10px;line-height:1.5;">Post this plan for other DataBulge users to help complete, right after you start it. Anyone can gift toward what you still owe &mdash; you can cancel the request anytime before someone contributes.</p>
           <div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;gap:8px;margin-bottom:0;">
-            <span style="font-size:.82rem;color:#333;font-weight:600;">Enable Auto Purchase</span>
+            <span style="font-size:.82rem;color:#333;font-weight:600;">Enable Sponsored Boost</span>
             <label style="position:relative;display:inline-block;width:40px;height:22px;-webkit-flex-shrink:0;flex-shrink:0;">
-              <input type="checkbox" id="m-sub-autopurchase" style="opacity:0;width:0;height:0;position:absolute;">
-              <span id="m-sub-autopurchase-sl" style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:22px;-webkit-transition:.25s;transition:.25s;"></span>
+              <input type="checkbox" id="m-sub-boost" style="opacity:0;width:0;height:0;position:absolute;">
+              <span id="m-sub-boost-sl" style="position:absolute;cursor:pointer;top:0;left:0;right:0;bottom:0;background:#ccc;border-radius:22px;-webkit-transition:.25s;transition:.25s;"></span>
             </label>
-          </div>
-          <div id="m-autopurchase-fields" style="display:none;margin-top:10px;">
-            <label style="font-size:.77rem;color:#555;margin-bottom:4px;display:block;">Repeat every (days)</label>
-            <input type="number" id="m-autopurchase-freq" min="1" max="365" placeholder="e.g. 30" value="30" style="display:block;width:100%;padding:10px 12px;border:1.5px solid #ddd;border-radius:6px;font-size:.93rem;color:#111;background:#fff;outline:none;-webkit-appearance:none;">
           </div>
         </div>
       </div>
@@ -1805,7 +1813,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
 <div class="modal" id="m-autopay-recur">
   <div class="modal-box">
     <div class="modal-hdr">
-      <div class="modal-title">&#128722; Auto Purchase</div>
+      <div class="modal-title">&#128717;&#65039; Auto Purchase</div>
       <button class="modal-x" id="m-apr-x">&#215;</button>
     </div>
     <div class="modal-body">
@@ -2112,10 +2120,6 @@ button.tab,button.plan-chip{box-shadow:none!important;}
     </div>
     <div class="modal-body">
       <div style="font-size:.86rem;color:#333;line-height:1.7;">
-        <p style="margin:0 0 12px;">You are entitled to <b>pay on installments</b> &mdash; a smart way to ease the burden of paying a large sum all at once.</p>
-        <p style="margin:0 0 12px;"><b>Auto-Pay</b> lets the system pay for data on your behalf and credit it to your phone whenever and however you want it.</p>
-        <p style="margin:0 0 12px;"><b>Auto-Renew</b> repeats the plans you love.</p>
-        <p style="margin:0 0 12px;"><b>Auto Purchase</b> buys the best plan within your budget on a schedule you set.</p>
         <p style="margin:0 0 12px;">Plus <b>1% earnings on every installment</b> you pay, and loyal users unlock up to <b>10% off</b> future plans &mdash; rewards unlock the moment your plan completes.</p>
         <p style="margin:0;color:#555;">A small <b>3% service fee</b> applies, a fair trade for the flexibility and benefits you get.</p>
       </div>
@@ -2190,6 +2194,15 @@ button.tab,button.plan-chip{box-shadow:none!important;}
               <option value="">Loading&hellip;</option>
             </select>
           </div>
+          <label style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:7px;margin-bottom:10px;font-size:.8rem;color:#9d174d;font-weight:700;cursor:pointer;">
+            <input type="checkbox" id="boost-req-private" onchange="document.getElementById('boost-req-private-field').style.display=this.checked?'block':'none';" style="margin:0;">
+            Ask a specific person privately
+          </label>
+          <div id="boost-req-private-field" style="display:none;margin-bottom:10px;">
+            <label style="font-size:.78rem;font-weight:700;color:#555;display:block;margin-bottom:5px;">Their DataBulge email</label>
+            <input type="email" id="boost-req-private-email" placeholder="name@email.com" style="display:block;width:100%;height:44px;border:1.5px solid #fbcfe8;border-radius:10px;background:#fff;padding:0 12px;font-size:.9rem;color:#111;outline:none;-webkit-appearance:none;">
+            <div style="font-size:.7rem;color:#888;margin-top:5px;">Only this person sees the request &mdash; it won&rsquo;t appear in the public feed.</div>
+          </div>
           <button class="btn" onclick="boostRequestFromPlan()" style="margin:0;width:100%;background:#db2777;color:#fff;font-size:.86rem;">Post This Request</button>
         </div>
         <div id="boost-mine-list" style="min-height:40px;"></div>
@@ -2219,7 +2232,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
       <button class="modal-x" onclick="closeModal('m-reporter')">&#215;</button>
     </div>
     <div class="modal-body">
-      <div style="margin-bottom:14px;font-size:.74rem;color:#7c3aed;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:8px 10px;">A small 0.25% fee is added to your next plan purchase for using Reporter.</div>
+      <div style="margin-bottom:14px;font-size:.74rem;color:#15803d;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:8px 10px;">Reporter is free to use.</div>
       <div id="reporter-body"></div>
     </div>
   </div>
@@ -2287,8 +2300,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
     </div>
     <div class="modal-body">
       <div style="margin-bottom:12px;border-radius:12px;padding:12px 14px;background:#f5f3ff;border:1px solid #c4b5fd;font-size:.8rem;color:#5b21b6;line-height:1.6;">
-        Give us your budget and we&rsquo;ll hunt for the cheapest matching plan &mdash; you never choose or see which market it came from.
-        <div style="margin-top:7px;padding-top:7px;border-top:1px solid #ddd6fe;font-weight:800;">&#9888;&#65039; A flat 5% service fee applies to every plan bought this way.</div>
+        Give us your budget and we&rsquo;ll hunt for the cheapest matching plan.
       </div>
       <div id="m-magic-err" class="err"></div>
 
@@ -4707,7 +4719,7 @@ function goToMarketPlansFromHome() {
   var wb = document.getElementById('market-welcome');
   if (wb) wb.style.display = 'none';
   if (m === 'installment') {
-    ['study-lock-card','boost-card','gift-card','autopay-card','autorenew-card','autopurchase-card','benefits-card','coach-card','reporter-card','copurchase-card','magic-shopper-card'].forEach(function(id){
+    ['study-lock-card','boost-card','gift-card','autopay-card','autorenew-card','autopurchase-card','benefits-card','coach-card','reporter-card','copurchase-card','magic-shopper-card','autofund-tool-card'].forEach(function(id){
       var c = document.getElementById(id);
       if (c) c.style.display = 'none';
     });
@@ -4807,7 +4819,7 @@ window.refreshPremiumActive = refreshPremiumActive;
 var gShowPremiumTools = false; // only true while the actual Premium Tools page is showing
 function updatePremiumToolVisibility() {
   var eligible = gShowPremiumTools && (gMarket === 'installment') && gPremiumActive === true;
-  ['coach-card','reporter-card','copurchase-card','magic-shopper-card'].forEach(function(id){
+  ['coach-card','reporter-card','copurchase-card','magic-shopper-card','autofund-tool-card'].forEach(function(id){
     var c = document.getElementById(id);
     if (c) c.style.display = eligible ? 'block' : 'none';
   });
@@ -5938,7 +5950,7 @@ function _configSubModalForMarket(plan) {
   var durF   = document.getElementById('m-sub-dur-field');
   var arF    = document.getElementById('m-sub-autorenew-field');
   var apF    = document.getElementById('m-sub-autopay-field');
-  var axF    = document.getElementById('m-sub-autopurchase-field');
+  var axF    = document.getElementById('m-sub-boost-field');
   var step3  = document.querySelector('.m-sub-step[data-step="3"]');
   var onceNote = document.getElementById('m-sub-once-note');
 
@@ -5961,7 +5973,7 @@ function _configSubModalForMarket(plan) {
   } else {
     // General: SHOW pay-once / pay-in-installment buttons.
     // Pay-once is functional; Pay-in-installment is a placeholder ad (Premium only).
-    // Hide duration (7/28) and ALL automation (auto-renew, auto-pay, auto-purchase).
+    // Hide duration (7/28) and ALL automation (auto-renew, auto-pay, sponsored boost).
     if (payF)  payF.style.display  = '';      // show the two buttons
     if (durF)  durF.style.display  = 'none';  // no 7/28 in general
     if (arF)   arF.style.display   = 'none';
@@ -5976,7 +5988,7 @@ function _configSubModalForMarket(plan) {
     _subStepMax = 2;
     if ($('m-sub-autorenew'))    $('m-sub-autorenew').checked = false;
     if ($('m-sub-autopay'))      $('m-sub-autopay').checked = false;
-    if ($('m-sub-autopurchase')) $('m-sub-autopurchase').checked = false;
+    if ($('m-sub-boost'))        $('m-sub-boost').checked = false;
     // Relabel: install button becomes the ad placeholder, once button active
     if ($('m-sub-mode-install')) { $('m-sub-mode-install').className = 'btn btn-lite'; $('m-sub-mode-install').textContent = 'Pay in installments'; }
     if ($('m-sub-mode-once'))    { $('m-sub-mode-once').className = 'btn btn-blue'; }
@@ -6129,10 +6141,8 @@ function openSubModal(planIdx) {
   if (apFields) apFields.style.display = 'none';
   var apAmt = $('m-autopay-amt');
   if (apAmt) apAmt.value = '';
-  var apurInput = $('m-sub-autopurchase');
-  if (apurInput) { apurInput.checked = false; _syncSl('m-sub-autopurchase-sl', false); }
-  var apurFields = $('m-autopurchase-fields');
-  if (apurFields) apurFields.style.display = 'none';
+  var apurInput = $('m-sub-boost');
+  if (apurInput) { apurInput.checked = false; _syncSl('m-sub-boost-sl', false); }
   _renderSavedPhones();
   if (typeof subStepShow === 'function') subStepShow(1);
   openModal('m-sub');
@@ -6428,13 +6438,12 @@ function confirmSub() {
           }
         });
       }
-      // Auto Purchase (Premium only): schedule recurring re-buy of this plan.
-      var autoPurOn  = (_isPremMkt && $('m-sub-autopurchase')) ? $('m-sub-autopurchase').checked : false;
-      var autoPurFreq = autoPurOn ? (parseInt($('m-autopurchase-freq') && $('m-autopurchase-freq').value) || 30) : 0;
-      if (autoPurOn && autoPurFreq >= 1 && gSelPlan && gSelPlan.id) {
-        rpc('set_plan_auto_purchase', { p_plan_id: gSelPlan.id, p_phone_number: phone, p_frequency_days: autoPurFreq }, function(xe, xr) {
+      // Sponsored Boost (Premium only): post a request for this plan right away.
+      var boostOn = (_isPremMkt && $('m-sub-boost')) ? $('m-sub-boost').checked : false;
+      if (boostOn && r && r.data && r.data.id) {
+        rpc('create_boost_request', { p_subscription_id: r.data.id, p_amount_needed: null, p_kind: 'installment', p_note: null, p_visibility: 'broadcast', p_targets: null }, function(xe, xr) {
           var xd = xr && (xr.data !== undefined ? xr.data : xr);
-          if (!xe && xd && xd.success) { toast('\uD83D\uDECD\uFE0F Auto Purchase on \u2014 we\u2019ll re-buy this plan every ' + autoPurFreq + ' day(s).'); }
+          if (!xe && xd && xd.success) { toast('\uD83D\uDC9C Sponsored Boost posted \u2014 other DataBulge users can now help complete this plan.'); }
         });
       }
       setTimeout(function() { loadDashboard(); loadDashCashflow(); }, 1500);
@@ -6575,6 +6584,11 @@ function updateSubPayModeUI() {
   // When paying once, the installment duration is irrelevant — hide it.
   var dur = $('m-sub-dur-field'); if (dur) dur.style.display = gPayOnce ? 'none' : '';
   var note = $('m-sub-once-note'); if (note) note.style.display = gPayOnce ? 'block' : 'none';
+  // Automation (optional) is an installment-only step — Pay Once users never see it.
+  _subStepMax = gPayOnce ? 2 : 3;
+  var dot3 = document.querySelector('#m-sub-steps .sub-step-dot[data-step="3"]');
+  if (dot3) dot3.style.display = gPayOnce ? 'none' : '';
+  if (gPayOnce && _subStepCur > 2) subStepShow(2);
   try { updateSubInfo(); } catch (e) {}
 }
 window.updateSubPayModeUI = updateSubPayModeUI;
@@ -7363,10 +7377,8 @@ function wire() {
     var f = $('m-autopay-fields');
     if (f) f.style.display = $('m-sub-autopay').checked ? 'block' : 'none';
   };
-  if ($('m-sub-autopurchase')) $('m-sub-autopurchase').onchange = function() {
-    _syncSl('m-sub-autopurchase-sl', $('m-sub-autopurchase').checked);
-    var f = $('m-autopurchase-fields');
-    if (f) f.style.display = $('m-sub-autopurchase').checked ? 'block' : 'none';
+  if ($('m-sub-boost')) $('m-sub-boost').onchange = function() {
+    _syncSl('m-sub-boost-sl', $('m-sub-boost').checked);
   };
   // Fund modal
   if ($('d-fund-btn'))    $('d-fund-btn').onclick    = openFundModal;
@@ -8520,7 +8532,6 @@ html{scroll-padding-top:70px;}
 #home-market-dash .hero-fund-btn{font-size:15px!important;}
 #home-market-dash #home-mkt-buydata-btn div,
 #home-market-dash #home-mkt-buyairtime-btn div,
-#home-market-dash #home-mkt-tools-btn div{font-size:15px!important;}
 .tab-back-btn span{font-size:1.15rem;line-height:1;}
 </style>
 
@@ -9445,6 +9456,22 @@ function _buildNuggetPool() {
     nuggets.push({ icon: '\uD83D\uDCA1', text: 'Pick a plan, make your first payment, then tap Pay Now daily until it is complete. Once fully paid your data is delivered automatically — no extra steps.', action: (function(pid){ return function(){ nuggetLaunchFeature('plan', pid); }; })(_cPlanId) });
     nuggets.push({ icon: '\uD83D\uDCF1', text: 'Think of DataBulge like a savings box for your data. Drop money in daily, watch the progress bar fill up, and collect your data when it hits 100%.', action: (function(pid){ return function(){ nuggetLaunchFeature('plan', pid); }; })(_cPlanId) });
   }
+
+  // Coach also teaches users what each Premium tool actually does for them —
+  // benefits and uses many wouldn't think to try on their own. These are
+  // always in the pool regardless of subscription state.
+  nuggets.push({ icon: '\uD83C\uDFAF', text: 'Turn a data plan into a discipline tool: with Goal Lock, you pledge data or airtime toward a goal and only unlock it in steps as you actually hit your milestones. Great for holding yourself (or your kids) accountable.', action: function(){ openStudyLock(); } });
+  nuggets.push({ icon: '\uD83D\uDC9C', text: 'Running short mid-plan? Post a Sponsored Boost and other DataBulge users can help finish it for you. Works both ways too — helping someone else finish theirs costs you nothing but a gift you choose.', action: function(){ openBoost(); } });
+  nuggets.push({ icon: '\uD83C\uDF81', text: 'Gift with Strings lets you send data or airtime that only unlocks on a specific date or after the person does something you set — a birthday surprise, an exam-day reward, or a nudge with a deadline attached.', action: function(){ openGift(); } });
+  nuggets.push({ icon: '\u26A1', text: 'Set Auto-Pay once and a busy week can never cost you a missed payment again — it quietly pulls your daily amount from your wallet on schedule until the plan is done.', action: function(){ openAutoPaySetup(); } });
+  nuggets.push({ icon: '\uD83D\uDD04', text: 'Got a plan you buy like clockwork every month? Turn on Auto-Renew once and stop thinking about it — it restarts itself the moment the old one finishes.', action: function(){ openAutoRenewSetup(); } });
+  nuggets.push({ icon: '\uD83D\uDECD\uFE0F', text: 'Auto Purchase does the shopping for you: set a budget and a schedule, and it buys the best plan it can afford on its own — no manual browsing, no forgetting.', action: function(){ openAutoPayRecur(); } });
+  nuggets.push({ icon: '\uD83D\uDCB0', text: 'Every installment you pay through Installments & Rewards quietly earns 1% back, and staying loyal unlocks up to 10% off future plans. Paying in small bits pays you back too.', action: function(){ openPremiumBenefits(); } });
+  nuggets.push({ icon: '\uD83D\uDCCA', text: 'Curious where your money actually goes? Reporter lays out your funding, streaks, plans and rewards in one place — numbers most people never bother to check, for free.', action: function(){ openReporter(); } });
+  nuggets.push({ icon: '\uD83E\uDD1D', text: 'Splitting a big plan with roommates or family? Co-Purchase lets everyone chip in together and share it by how much each person contributed — no one carries the whole cost alone.', action: function(){ openCoPurchase(); } });
+  nuggets.push({ icon: '\uD83D\uDECD\uFE0F', text: 'Not loyal to one network or size? Magic Shopper quietly compares every option for you and only ever buys something genuinely cheaper than what Premium itself would charge.', action: function(){ openMagicShopper(); } });
+  nuggets.push({ icon: '\uD83D\uDCB3', text: 'The real unlock most people skip: link a card to Auto-Fund once, and your wallet tops itself up automatically from then on — you never have to remember to fund it again.', action: function(){ openFundModal(); setTimeout(function(){ if (typeof switchFundTab === 'function') switchFundTab('af'); }, 150); } });
+
   return nuggets;
 }
 
@@ -9486,7 +9513,7 @@ function openCoach() {
   }
   var icon = msg.icon || '\uD83C\uDFAF';
   body.innerHTML =
-    '<div style="margin-bottom:14px;font-size:.74rem;color:#7c3aed;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:8px 10px;">A small 0.25% fee is added to your next plan purchase for using Coach.</div>' +
+    '<div style="margin-bottom:14px;font-size:.74rem;color:#7c3aed;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:8px 10px;">A small 0.125% fee is added to your next plan purchase for using Coach.</div>' +
     '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:12px;-webkit-box-align:start;-webkit-align-items:flex-start;align-items:flex-start;margin-bottom:16px;">' +
       '<div style="width:42px;height:42px;border-radius:50%;background:#eff6ff;display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:center;-webkit-justify-content:center;justify-content:center;font-size:1.25rem;-webkit-flex-shrink:0;flex-shrink:0;">' + icon + '</div>' +
       '<div><div style="font-weight:900;color:#1d4ed8;margin-bottom:4px;">Coach says</div><div>' + esc(msg.text) + '</div></div>' +
@@ -9521,7 +9548,6 @@ function _reporterMovePieces() {
 }
 function openReporter() {
   openModal('m-reporter');
-  try { rpc('mark_advisory_tool_used', {}, function(){}); } catch(_) {}
   _reporterMovePieces();
   if (typeof loadRetentionData === 'function') loadRetentionData();
   if (typeof loadAutofundCard === 'function') loadAutofundCard();
@@ -10526,7 +10552,13 @@ function boostRequestFromPlan() {
   var remaining = parseFloat(opt.getAttribute('data-remaining')) || 0;
   var label = opt.getAttribute('data-label') || 'plan';
   if (remaining <= 0) { errShow('boost-req-err', 'This plan has nothing left owing.'); return; }
-  requestBoostForSub(sel.value, remaining, label);
+  var isPrivate = !!($('boost-req-private') && $('boost-req-private').checked);
+  var targetEmail = '';
+  if (isPrivate) {
+    targetEmail = ($('boost-req-private-email') ? $('boost-req-private-email').value : '').trim();
+    if (!targetEmail || targetEmail.indexOf('@') === -1) { errShow('boost-req-err', 'Enter a valid email for the person you want to ask privately.'); return; }
+  }
+  requestBoostForSub(sel.value, remaining, label, isPrivate ? targetEmail : null);
 }
 window.boostRequestFromPlan = boostRequestFromPlan;
 
@@ -11047,14 +11079,19 @@ function boostCancel(id) {
 window.boostCancel = boostCancel;
 
 // Called from a plan card when the user is short: creates a request for the remaining balance.
-function requestBoostForSub(subId, remaining, label) {
+function requestBoostForSub(subId, remaining, label, targetEmail) {
+  var isPrivate = !!(targetEmail && targetEmail.trim());
   rpc('create_boost_request', {
     p_subscription_id: subId, p_amount_needed: remaining,
-    p_kind: 'installment', p_note: null, p_visibility: 'broadcast', p_targets: null
+    p_kind: 'installment', p_note: null,
+    p_visibility: isPrivate ? 'targeted' : 'broadcast',
+    p_targets: isPrivate ? [targetEmail.trim()] : null
   }, function(err, res) {
     var d = res && (res.data !== undefined ? res.data : res);
     if (err || !d || d.success === false) { toast((d && d.error) || 'Could not create request.'); return; }
-    toast('Boost request posted for ' + fmtN(d.amount_needed) + '! Sponsors on DataBulge can now help complete your ' + (label||'plan') + '.');
+    toast(isPrivate
+      ? ('Private boost request sent to ' + targetEmail.trim() + ' for ' + fmtN(d.amount_needed) + '!')
+      : ('Boost request posted for ' + fmtN(d.amount_needed) + '! Sponsors on DataBulge can now help complete your ' + (label||'plan') + '.'));
     openBoost(); boostTab('mine');
   });
 }
