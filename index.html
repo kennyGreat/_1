@@ -10708,10 +10708,11 @@ function boostLoadFeed() {
       var r = rows[i];
       var left = Math.max(0, (parseFloat(r.amount_needed)||0) - (parseFloat(r.amount_raised)||0));
       html += '<div style="border:1px solid #fbcfe8;border-radius:12px;padding:12px;margin-bottom:10px;background:#fffafc;">' +
-        '<div style="font-size:.84rem;color:#0f172a;line-height:1.5;"><b>A DataBulge user</b> needs a boost to complete their <b>' + esc(r.label||'plan') + '</b>.</div>' +
-        '<div style="font-size:.78rem;color:#9d174d;font-weight:800;margin-top:6px;">' + fmtN(left) + ' to go</div>' +
+        '<div style="font-size:.84rem;color:#0f172a;line-height:1.5;"><b>A DataBulge user</b> needs a boost toward their <b>' + esc(r.label||'plan') + '</b>.</div>' +
+        '<div style="font-size:.78rem;color:#9d174d;font-weight:800;margin-top:6px;">' + fmtN(left) + ' still giftable</div>' +
+        '<div style="font-size:.7rem;color:#a16207;margin-top:2px;">You can help fund most of it \u2014 they pay a small share themselves to finish.</div>' +
         '<div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:7px;margin-top:9px;">' +
-          '<input type="number" id="boost-amt-' + esc(r.id) + '" min="1" placeholder="Amount to gift" style="-webkit-box-flex:1;-webkit-flex:1;flex:1;height:40px;border:1.5px solid #fbcfe8;border-radius:8px;padding:0 12px;font-size:.9rem;outline:none;">' +
+          '<input type="number" id="boost-amt-' + esc(r.id) + '" min="1" max="' + left + '" placeholder="Amount to gift" style="-webkit-box-flex:1;-webkit-flex:1;flex:1;height:40px;border:1.5px solid #fbcfe8;border-radius:8px;padding:0 12px;font-size:.9rem;outline:none;">' +
           '<button onclick="boostGive(\'' + esc(r.id) + '\',' + left + ')" style="padding:0 16px;border-radius:8px;border:none;background:#db2777;color:#fff;font-size:.82rem;font-weight:800;cursor:pointer;font-family:inherit;">Gift</button>' +
         '</div>' +
         '<label style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:6px;margin-top:8px;font-size:.74rem;color:#9d174d;cursor:pointer;">' +
@@ -10732,7 +10733,9 @@ function boostGive(reqId, maxLeft) {
   rpc('sponsor_boost', { p_request_id: reqId, p_amount: amt, p_anonymous: anon }, function(err, res) {
     var d = res && (res.data !== undefined ? res.data : res);
     if (err || !d || d.success === false) { toast((d && d.error) || 'Could not complete the gift.'); return; }
-    toast('You gifted ' + fmtN(d.gifted) + '! Thank you for helping.');
+    var m = 'You gifted ' + fmtN(d.gifted) + '! Thank you for helping.';
+    if (d.request_status === 'fulfilled') { m = 'You gifted ' + fmtN(d.gifted) + '! Their sponsored share is now complete \u2014 they just pay a small remainder to finish. \uD83D\uDC9D'; }
+    toast(m);
     try { loadWalletBalance(function(){}); } catch(_){}
     boostLoadFeed();
   });
@@ -10757,7 +10760,7 @@ function boostLoadMine() {
             '<div style="font-size:.84rem;font-weight:800;color:#0f172a;">' + esc(r.label||'Plan') + '</div>' +
             '<span style="font-size:.7rem;font-weight:800;padding:3px 8px;border-radius:20px;background:' + (done?'#dcfce7':'#fce7f3') + ';color:' + (done?'#166534':'#9d174d') + ';">' + (done?'Fulfilled':r.status) + '</span>' +
           '</div>' +
-          '<div style="font-size:.76rem;color:#64748b;margin-top:3px;">' + fmtN(raised) + ' of ' + fmtN(need) + ' raised</div>' +
+          '<div style="font-size:.76rem;color:#64748b;margin-top:3px;">' + fmtN(raised) + ' of ' + fmtN(need) + ' sponsored' + (done ? '' : ' \u2014 you pay the small rest to finish') + '</div>' +
           '<div style="height:7px;background:#f1f5f9;border-radius:5px;margin-top:8px;overflow:hidden;"><div style="height:100%;width:' + pct + '%;background:#db2777;"></div></div>' +
           (r.status==='open' ? '<button onclick="boostCancel(\'' + esc(r.id) + '\')" style="margin-top:9px;padding:6px 12px;border-radius:6px;border:1px solid #e2e8f0;background:#fff;color:#64748b;font-size:.76rem;font-weight:700;cursor:pointer;font-family:inherit;">Cancel request</button>' : '') +
         '</div>';
