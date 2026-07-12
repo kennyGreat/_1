@@ -1131,11 +1131,20 @@ button.tab,button.plan-chip{box-shadow:none!important;}
           <div style="font-size:.96rem;font-weight:900;color:#fff;letter-spacing:.01em;">Buy Airtime</div>
         </button>
       </div>
-      <div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:center;justify-content:center;">
-        <button type="button" id="home-mkt-tools-btn" onclick="goToPremiumToolsFromHome()" style="display:none;background:none;border:none;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;padding:8px 0;">
+      <div id="home-mkt-tools-btn" style="display:none;-webkit-box-pack:center;justify-content:center;">
+        <div id="home-mkt-tools-plain" style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-pack:center;justify-content:center;padding:8px 0;">
           <span style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:8px;">
             <span style="font-size:1.2rem;line-height:1;">&#128737;&#65039;</span>
             <span style="font-size:1.05rem;font-weight:900;color:#0f5132;letter-spacing:.01em;">Premium Tools</span>
+          </span>
+        </div>
+        <button type="button" id="home-mkt-notif-board" onclick="_homeNotifBoardTap()" style="display:none;width:100%;text-align:left;border:none;border-radius:14px;padding:11px 14px;cursor:pointer;font-family:inherit;-webkit-tap-highlight-color:transparent;background:-webkit-linear-gradient(135deg,#0b3d2e,#0f5132);background:linear-gradient(135deg,#0b3d2e,#0f5132);box-shadow:0 8px 18px rgba(15,81,50,.25);">
+          <span style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;align-items:center;gap:9px;">
+            <span id="home-mkt-notif-board-icon" style="font-size:1.2rem;line-height:1;-webkit-flex-shrink:0;flex-shrink:0;">&#128276;</span>
+            <span style="min-width:0;">
+              <span id="home-mkt-notif-board-title" style="display:block;font-size:.82rem;font-weight:900;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></span>
+              <span id="home-mkt-notif-board-msg" style="display:block;font-size:.7rem;color:rgba(255,255,255,.85);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"></span>
+            </span>
           </span>
         </button>
       </div>
@@ -1699,7 +1708,6 @@ button.tab,button.plan-chip{box-shadow:none!important;}
             <button class="btn btn-lite" id="m-sub-mode-once" type="button" style="margin:0;-webkit-box-flex:1;-webkit-flex:1;flex:1;">Pay once</button>
           </div>
           <div id="m-sub-once-note" style="display:none;font-size:.74rem;color:#0f5132;margin-top:6px;line-height:1.4;">You will pay the full amount now from your wallet and your data is delivered immediately.</div>
-          <div id="m-sub-surge-warn" style="display:none;font-size:.78rem;color:#92400e;background:#fffbeb;border:1px solid #fde68a;border-radius:10px;padding:9px 12px;margin-top:8px;line-height:1.5;font-weight:700;">&#9888;&#65039; You have an active Premium plan, so this General Market purchase is charged Premium pricing (3%) instead of General's normal price.</div>
         </div>
 
         <div class="field" id="m-sub-dur-field">
@@ -1767,7 +1775,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
 
         <div class="field" id="m-sub-boost-field" style="border:1px solid #fbcfe8;border-radius:8px;padding:12px;background:#fdf2f8;margin-bottom:12px;">
           <div style="font-size:.87rem;font-weight:800;color:#9d174d;margin-bottom:6px;">&#128156; Sponsored Boost</div>
-          <p style="font-size:.76rem;color:#555;margin-bottom:10px;line-height:1.5;">Post this plan for other DataBulge users to help complete, right after you start it. Anyone can gift toward what you still owe &mdash; you can cancel the request anytime before someone contributes.</p>
+          <p style="font-size:.76rem;color:#555;margin-bottom:10px;line-height:1.5;">This enables a trusted person to help you complete this plan or installment &mdash; they gift it, it is not a debt. You can also gift someone else and help them stay connected.</p>
           <div style="display:-webkit-box;display:-webkit-flex;display:flex;-webkit-box-align:center;-webkit-align-items:center;align-items:center;-webkit-box-pack:justify;-webkit-justify-content:space-between;justify-content:space-between;gap:8px;margin-bottom:0;">
             <span style="font-size:.82rem;color:#333;font-weight:600;">Enable Sponsored Boost</span>
             <label style="position:relative;display:inline-block;width:40px;height:22px;-webkit-flex-shrink:0;flex-shrink:0;">
@@ -2177,7 +2185,7 @@ button.tab,button.plan-chip{box-shadow:none!important;}
     </div>
     <div class="modal-body">
       <div style="margin-bottom:12px;border-radius:12px;padding:12px 14px;background:#fdf2f8;border:1px solid #fbcfe8;font-size:.8rem;color:#9d174d;line-height:1.6;">
-        A trusted person can help you complete a plan or installment &mdash; they gift it, you never owe anything. Or you can help someone else on DataBulge.
+        A trusted person can help you complete a plan or installment &mdash; they gift it, it is not a debt. You can also gift someone else and help them stay connected.
       </div>
       <div style="display:-webkit-box;display:-webkit-flex;display:flex;gap:8px;margin-bottom:14px;">
         <button class="btn btn-blue" id="boost-tab-help" onclick="boostTab('help')" style="margin:0;flex:1;font-size:.82rem;">Help others</button>
@@ -4660,6 +4668,8 @@ function setMarket(m) {
    straight into the full Buy Data page. */
 function openMarketHome(m) {
   gMarket = m;
+  try { refreshHomeToolBadges(); } catch(_) {}
+  try { refreshHomeNotifBoard(); } catch(_) {}
   var picker = document.getElementById('home-market-picker');
   var dash   = document.getElementById('home-market-dash');
   if (picker) picker.style.display = 'none';
@@ -4816,6 +4826,115 @@ function refreshPremiumActive(cb, _isRetry) {
 }
 window.refreshPremiumActive = refreshPremiumActive;
 
+/* ── Home: per-tool notification badges + Premium Tools notification board ── */
+var _toolOpenFnMap = {
+  'study-lock-card': function(){ openStudyLock(); }, 'boost-card': function(){ openBoost(); },
+  'gift-card': function(){ openGift(); }, 'autopay-card': function(){ openAutoPaySetup(); },
+  'autorenew-card': function(){ openAutoRenewSetup(); }, 'autopurchase-card': function(){ openAutoPayRecur(); },
+  'benefits-card': function(){ openPremiumBenefits(); }, 'copurchase-card': function(){ openCoPurchase(); },
+  'magic-shopper-card': function(){ openMagicShopper(); }
+};
+var _toolOpenFnMapByKey = {
+  'study-lock': function(){ openStudyLock(); }, 'boost': function(){ openBoost(); },
+  'gift': function(){ openGift(); }, 'autopay': function(){ openAutoPaySetup(); },
+  'autorenew': function(){ openAutoRenewSetup(); }, 'autopurchase': function(){ openAutoPayRecur(); },
+  'benefits': function(){ openPremiumBenefits(); }, 'copurchase': function(){ openCoPurchase(); },
+  'magic-shopper': function(){ openMagicShopper(); }
+};
+var _toolBtnFnNames = {
+  'study-lock-card': 'openStudyLock', 'boost-card': 'openBoost', 'gift-card': 'openGift',
+  'autopay-card': 'openAutoPaySetup', 'autorenew-card': 'openAutoRenewSetup', 'autopurchase-card': 'openAutoPayRecur',
+  'benefits-card': 'openPremiumBenefits', 'copurchase-card': 'openCoPurchase', 'magic-shopper-card': 'openMagicShopper'
+};
+
+function refreshHomeToolBadges() {
+  var grid = document.getElementById('home-mkt-tools-grid');
+  if (!grid) return;
+  rpc('get_tool_notification_badges', {}, function(err, res) {
+    var d = (res && (res.data !== undefined ? res.data : res)) || {};
+    var buttons = grid.querySelectorAll('button');
+    for (var key in _toolBtnFnNames) {
+      var fnName = _toolBtnFnNames[key];
+      var count = (d && d[key]) || 0;
+      for (var i = 0; i < buttons.length; i++) {
+        var b = buttons[i];
+        var oc = b.getAttribute('onclick') || '';
+        if (oc.indexOf(fnName + '(') !== 0) continue;
+        var icon = b.querySelector('span');
+        if (!icon) continue;
+        icon.style.position = 'relative';
+        var dot = icon.querySelector('.tool-badge-dot');
+        if (count > 0) {
+          if (!dot) {
+            dot = document.createElement('span');
+            dot.className = 'tool-badge-dot';
+            dot.style.cssText = 'position:absolute;top:-2px;right:-2px;width:13px;height:13px;border-radius:50%;background:#ef4444;border:2px solid #fff;';
+            icon.appendChild(dot);
+          }
+          dot.style.display = 'block';
+        } else if (dot) {
+          dot.style.display = 'none';
+        }
+      }
+    }
+  });
+}
+window.refreshHomeToolBadges = refreshHomeToolBadges;
+
+var _homeNotifBoardList = [];
+var _homeNotifBoardIdx = 0;
+var _homeNotifBoardTimer = null;
+
+function refreshHomeNotifBoard() {
+  rpc('list_tool_notifications_for_board', {}, function(err, res) {
+    var rows = (res && (res.data !== undefined ? res.data : res)) || [];
+    _homeNotifBoardList = rows || [];
+    _homeNotifBoardIdx = 0;
+    var plain = document.getElementById('home-mkt-tools-plain');
+    var board = document.getElementById('home-mkt-notif-board');
+    if (_homeNotifBoardTimer) { clearInterval(_homeNotifBoardTimer); _homeNotifBoardTimer = null; }
+    if (!board || !plain) return;
+    if (!_homeNotifBoardList.length) {
+      plain.style.display = '';
+      board.style.display = 'none';
+      return;
+    }
+    plain.style.display = 'none';
+    board.style.display = 'block';
+    _renderHomeNotifBoardItem();
+    if (_homeNotifBoardList.length > 1) {
+      _homeNotifBoardTimer = setInterval(function() {
+        _homeNotifBoardIdx = (_homeNotifBoardIdx + 1) % _homeNotifBoardList.length;
+        _renderHomeNotifBoardItem();
+      }, 5000);
+    }
+  });
+}
+window.refreshHomeNotifBoard = refreshHomeNotifBoard;
+
+function _renderHomeNotifBoardItem() {
+  var n = _homeNotifBoardList[_homeNotifBoardIdx];
+  if (!n) return;
+  var icon = document.getElementById('home-mkt-notif-board-icon');
+  var title = document.getElementById('home-mkt-notif-board-title');
+  var msg = document.getElementById('home-mkt-notif-board-msg');
+  if (icon) icon.textContent = n.icon || '\uD83D\uDD14';
+  if (title) title.textContent = n.title || '';
+  if (msg) msg.textContent = n.message || '';
+}
+
+function _homeNotifBoardTap() {
+  var n = _homeNotifBoardList[_homeNotifBoardIdx];
+  if (!n) return;
+  if (gUser && gUser.id) {
+    rpc('mark_notification_read', { p_user_id: gUser.id, p_notif_id: n.id }, function(){});
+  }
+  var fn = n.tool && _toolOpenFnMapByKey[n.tool];
+  if (fn) { fn(); } else if (typeof openNotifDrawer === 'function') { openNotifDrawer(); }
+  setTimeout(function() { refreshHomeNotifBoard(); refreshHomeToolBadges(); }, 400);
+}
+window._homeNotifBoardTap = _homeNotifBoardTap;
+
 var gShowPremiumTools = false; // only true while the actual Premium Tools page is showing
 function updatePremiumToolVisibility() {
   var eligible = gShowPremiumTools && (gMarket === 'installment') && gPremiumActive === true;
@@ -4829,9 +4948,26 @@ window.updatePremiumToolVisibility = updatePremiumToolVisibility;
 function marketCheckoutTotal(plan, payOnce) {
   var base = parseFloat(plan.selling_price) || 0;
   var mkt  = plan.market || gMarket;
-  if (mkt === 'installment') return Math.ceil(base);          // premium via plain Buy Data: 0%, no surge
-  if (gPremiumActive === true) return Math.ceil(base * 1.03); // General Market surge penalty for Premium-active users
-  return Math.ceil(base);                                     // general: 0%, pay-once only
+  if (mkt === 'installment') return Math.ceil(base); // premium via plain Buy Data: 0%, no surge
+
+  // General Market: close 20% of the price gap to Premium's equivalent plan
+  // (same network + data size), matching the database trigger exactly. If no
+  // Premium equivalent exists, flat 20% markup on General's own price instead.
+  // No extra surge on top of this for anyone.
+  var genAdjusted = base * 1.20;
+  if (typeof _plansCache !== 'undefined' && _plansCache && _plansCache.length) {
+    var premPrice = null;
+    for (var i = 0; i < _plansCache.length; i++) {
+      var p = _plansCache[i];
+      if (p.market === 'installment' && p.network === plan.network && p.data_size === plan.data_size) {
+        var pp = parseFloat(p.selling_price) || 0;
+        if (premPrice === null || pp < premPrice) premPrice = pp;
+      }
+    }
+    if (premPrice !== null && premPrice > base) genAdjusted = base + 0.20 * (premPrice - base);
+  }
+
+  return Math.ceil(genAdjusted);
 }
 
 /* === BUCKET === */
@@ -5955,10 +6091,6 @@ function _configSubModalForMarket(plan) {
   var onceNote = document.getElementById('m-sub-once-note');
 
   if (prem) prem.style.display = isPremium ? 'block' : 'none';
-  if (isPremium) {
-    var surgeWarnP = document.getElementById('m-sub-surge-warn');
-    if (surgeWarnP) surgeWarnP.style.display = 'none';
-  }
 
   if (isPremium) {
     // Full premium experience
@@ -5981,8 +6113,6 @@ function _configSubModalForMarket(plan) {
     if (axF)   axF.style.display   = 'none';
     if (step3) step3.style.display = 'none';
     if (onceNote) onceNote.style.display = 'block';
-    var surgeWarn = document.getElementById('m-sub-surge-warn');
-    if (surgeWarn) surgeWarn.style.display = (gPremiumActive === true) ? 'block' : 'none';
     gPayOnce = true;
     gModalPayDays = 1;
     _subStepMax = 2;
@@ -10207,7 +10337,7 @@ function aprLoadPlans() {
   sel.innerHTML = '<option value="">\uD83C\uDFAF Auto-match my budget</option>';
   _aprPlans = [];
   if (!net) return;
-  var q = 'is_active=eq.true&network=eq.' + encodeURIComponent(net);
+  var q = 'is_active=eq.true&network=eq.' + encodeURIComponent(net) + '&market=eq.installment';
   q += '&order=selling_price&select=id,data_size,network,selling_price,validity_days,market';
   restGet('/data_plans', q,
     function(e, r) {
@@ -10216,9 +10346,8 @@ function aprLoadPlans() {
       var html = '<option value="">\uD83C\uDFAF Auto-match my budget</option>';
       for (var i = 0; i < r.data.length; i++) {
         var p = r.data[i];
-        var mk = (p.market === 'installment') ? 'Premium' : 'General';
         html += '<option value="' + esc(p.id) + '" data-price="' + p.selling_price + '">' +
-          esc(p.data_size) + ' \u00b7 ' + (p.validity_days || 30) + 'd \u00b7 ' + fmtN(p.selling_price) + ' (' + mk + ')</option>';
+          esc(p.data_size) + ' \u00b7 ' + (p.validity_days || 30) + 'd \u00b7 ' + fmtN(p.selling_price) + '</option>';
       }
       sel.innerHTML = html;
     }
